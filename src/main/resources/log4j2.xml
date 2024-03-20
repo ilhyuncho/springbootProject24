@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="INFO">
+
+    <!--    프로퍼티 정의-->
+    <Properties>
+        <Property name="LOG_PATTERN">
+<!--            %highlight{%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}-->
+
+            %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} %logger{36}.%M() @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 콜솔 -->
+        <!--        <Console name="console" target="SYSTEM_OUT">-->
+        <!--            <PatternLayout charset="UTF-8" pattern="%d{hh:mm:ss} %5p [%c] %m%n"/>-->
+        <!--        </Console>-->
+
+        <Console name="console" target="SYSTEM_OUT">
+            <!--            <PatternLayout disableAnsi="false"  pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}"/>-->
+            <PatternLayout disableAnsi="false"  pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="FileAppender"
+                     fileName="logs/application-log4j2.log"
+                     filePattern="logs/application-log4j2-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB" />
+                <TimeBasedTriggeringPolicy interval="7"/>
+                <DefaultRolloverStrategy max="10"/>
+            </Policies>
+        </RollingFile>
+
+        <Console name="console_error" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %-5level %logger{35} - %msg%n" />
+        </Console>
+    </Appenders>
+
+    <loggers>
+
+        <logger name="org.springframework" level="INFO" additivity="false" >
+            <appender-ref ref="console" />
+        </logger>
+
+        <!--        mybatis mapper 로그를 좀더 자세하게-->
+<!--        <logger name="com.cih.shoppingmallcih.mappers.TimeMapper" level="TRACE" additivity="false" >-->
+<!--            <appender-ref ref="console" />-->
+<!--        </logger>-->
+
+        <logger name="com.example" level="INFO" additivity="false" >
+            <appender-ref ref="console" />
+        </logger>
+
+<!--        <logger name="com.example.cih" level="WARN" >-->
+<!--            <appender-ref ref="FileAppender" />-->
+<!--        </logger>-->
+
+        <root level="INFO">
+            <AppenderRef ref="console"/>
+        </root>
+
+    </loggers>
+
+</configuration>
