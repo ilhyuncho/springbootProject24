@@ -25,7 +25,7 @@ public class BoardController {
 
     @GetMapping
     @Operation(summary="게시판 목록")
-    public List<Board> boardList() {
+    public List<BoardResponseDTO> boardList() {
 
         return boardService.list();
     }

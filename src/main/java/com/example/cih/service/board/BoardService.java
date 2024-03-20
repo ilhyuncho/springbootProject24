@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BoardService {
 
-    List<Board> list();
+    List<BoardResponseDTO> list();
 }
