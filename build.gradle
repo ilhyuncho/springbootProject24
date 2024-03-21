@@ -53,6 +53,11 @@ dependencies {
 
     // modelmapper ( 24.03.20 )
     implementation 'org.modelmapper:modelmapper:3.1.0'
+
+    // Thymeleaf layout ( 24.03.21 )
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+    // Thymeleaf java8time ( 24.03.21 )
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
 }
 
 tasks.named('test') {
