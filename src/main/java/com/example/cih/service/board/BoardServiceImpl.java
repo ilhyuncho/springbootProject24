@@ -2,7 +2,7 @@ package com.example.cih.service.board;
 
 import com.example.cih.domain.board.Board;
 import com.example.cih.dto.board.BoardResponseDTO;
-import com.example.cih.repository.board.BoardRepository;
+import com.example.cih.domain.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

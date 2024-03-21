@@ -1,4 +1,4 @@
-package com.example.cih.repository.board;
+package com.example.cih.domain.board;
 
 import com.example.cih.domain.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
