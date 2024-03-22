@@ -2,6 +2,7 @@ package com.example.cih.domain.car;
 
 
 import com.example.cih.common.CarSizeConverter;
+import com.example.cih.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @Table(name="Cars")
-public class Car {
+public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="carId", length = 50, nullable = false)

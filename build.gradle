@@ -58,6 +58,11 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
     // Thymeleaf java8time ( 24.03.21 )
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
+
+
+
+//    // JSTL ( 24.03.22 )
+//    implementation group: 'jstl', name: 'jstl', version:'1.2'
 }
 
 tasks.named('test') {

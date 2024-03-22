@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -31,4 +32,7 @@ public class CarResponseDTO {
     private Long carKm;
     @NotEmpty
     private Long userId;
+
+    private LocalDateTime regDate;
+    private LocalDateTime modDate;
 }

@@ -3,13 +3,41 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
 
+
+
 <div layout:fragment="content">
     <h1> Car List</h1>
 
-    <th:block th:each="str: ${list}">
-        <li>[[${str}]]</li>
-    </th:block>
-
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Car ID</th>
+            <th scope="col">Car Number</th>
+            <th scope="col">Car Grade</th>
+            <th scope="col">Car Model</th>
+            <th scope="col">Car Years</th>
+            <th scope="col">Car Colors</th>
+            <th scope="col">Car KM</th>
+            <th scope="col">User ID</th>
+            <th scope="col">Reg Date</th>
+            <th scope="col">Mod Date</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="dto:${list}">
+                <th scope="row">[[${dto.carId}]]</th>
+                <td>[[${dto.carNumber}]]</td>
+                <td>[[${dto.carGrade}]]</td>
+                <td>[[${dto.carModel}]]</td>
+                <td>[[${dto.carYears}]]</td>
+                <td>[[${dto.carColors}]]</td>
+                <td>[[${dto.carKm}]]</td>
+                <td>[[${dto.userId}]]</td>
+                <td>[[ ${ #temporals.format(dto.regDate, 'yyyy-MM-dd') } ]]</td>
+                <td>[[ ${ #temporals.format(dto.modDate, 'yyyy-MM-dd') } ]]</td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 
