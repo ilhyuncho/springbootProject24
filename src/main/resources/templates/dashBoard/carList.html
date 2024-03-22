@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+    <h1> Car List</h1>
+
+    <th:block th:each="str: ${list}">
+        <li>[[${str}]]</li>
+    </th:block>
+
+
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    console.log("carList.html()~~~~")
+</script>
