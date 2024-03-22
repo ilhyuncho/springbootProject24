@@ -4,11 +4,16 @@ import com.example.cih.domain.board.Board;
 import com.example.cih.domain.board.BoardRepository;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
+import com.example.cih.domain.car.CarSize;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.board.BoardResponseDTO;
 import com.example.cih.dto.car.CarResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,16 +30,48 @@ public class CarServiceImpl implements CarService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<CarResponseDTO> list() {
+    public PageResponseDTO<Car> list(PageRequestDTO pageRequestDTO) {
 
-        List<Car> findResult = carRepository.findAll();
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("carGrade");
 
-        List<CarResponseDTO> result = findResult.stream()
-                .map(car -> modelMapper.map(car, CarResponseDTO.class))
-                .collect(Collectors.toList());
+        //List<Car> findResult = carRepository.findAll();
 
-        result.forEach(log::error);
+//        List<CarResponseDTO> result = findResult.stream()
+//                .map(car -> modelMapper.map(car, CarResponseDTO.class))
+//                .collect(Collectors.toList());
+//
+//        result.forEach(log::error);
 
-        return result;
+        Page<Car> result = carRepository.findAll(pageable);
+
+        log.error("=================list=====================");
+        //content.forEach(log::error);
+
+        return PageResponseDTO.<Car>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<Car> searchCarByKeyword(PageRequestDTO pageRequestDTO) {
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("carGrade");
+
+        keyword ="model4";
+        final Page<Car> result = carRepository.findByCarModelContaining(keyword, pageable);
+
+        log.error("===============searchCarByKeyword=======================");
+        //content.forEach(log::error);
+
+        return PageResponseDTO.<Car>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
     }
 }
