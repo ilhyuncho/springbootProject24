@@ -19,7 +19,6 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {BoardNotFoundException.class})
     public ResponseEntity<?> handleBoardNotFound(BoardNotFoundException e, WebRequest request){
 
-        log.error("RestExceptionAdvice~~~: handleCourceNotFound()");
         return super.handleExceptionInternal(
                 e,
                 e.getMessage(),
@@ -31,7 +30,6 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseEntity<?> handleRuntimeException(RuntimeException e, WebRequest request){
 
-        log.error("RuntimeException~~~: RuntimeException()");
         return super.handleExceptionInternal(
                 e,
                 e.getMessage(),
@@ -49,8 +47,6 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
         // 기존 방식으로 처리 함.. stack trace 내용이 다 보여서 공통된 양식으로 보내줄 필요가 있음
         //return super.handleMissingPathVariable(ex, headers, status, request);
-
-        log.error("handleMissingPathVariable()~~");
 
         return super.handleExceptionInternal(
                 ex,

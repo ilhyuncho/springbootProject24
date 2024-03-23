@@ -3,12 +3,15 @@ package com.example.cih.common.aspect;
 import com.example.cih.dto.PageRequestDTO;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Aspect
 @Component
@@ -21,7 +24,7 @@ public class ArgumentLoggingAspect {
 
     @Before("execution(* *(com.example.cih.dto.PageRequestDTO,..))")
     // PageRequestDTO 인자를 받는 모든 메서드가 대상
-    public void printCourceRequestArgument(JoinPoint joinPoint) {
+    public void printPageRequestDTOArgument(JoinPoint joinPoint) {
 
         String argumentValue = Arrays.stream(joinPoint.getArgs())
                 .filter(obj-> PageRequestDTO.class.equals(obj.getClass()))  // 인자 중 같은 클래스 타입인 객체만 필터링
@@ -30,9 +33,7 @@ public class ArgumentLoggingAspect {
                 .map(PageRequestDTO -> PageRequestDTO.toString())
                 .orElseThrow();
 
-
         log.error(joinPoint.getSignature().toShortString());
         log.error("Argument info : {}", argumentValue);
     }
-
 }
