@@ -9,6 +9,9 @@
 
             %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} %logger{36}.%M() @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}
         </Property>
+        <Property name="LOG_ASPECT_PATTERN">
+            %d{HH:mm:ss.SSS} [%thread] %highlight{%-5level}{FATAL=red blink, ERROR=red} @%L - %highlight{%msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}
+        </Property>
     </Properties>
 
     <Appenders>
@@ -20,6 +23,10 @@
         <Console name="console" target="SYSTEM_OUT">
             <!--            <PatternLayout disableAnsi="false"  pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}"/>-->
             <PatternLayout disableAnsi="false"  pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <Console name="console_aspect_error" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern="${LOG_ASPECT_PATTERN}" />
         </Console>
 
         <RollingFile name="FileAppender"
@@ -34,10 +41,6 @@
                 <DefaultRolloverStrategy max="10"/>
             </Policies>
         </RollingFile>
-
-        <Console name="console_error" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %-5level %logger{35} - %msg%n" />
-        </Console>
     </Appenders>
 
     <loggers>
@@ -53,6 +56,10 @@
 
         <logger name="com.example" level="INFO" additivity="false" >
             <appender-ref ref="console" />
+        </logger>
+
+        <logger name="com.example.cih.common.aspect" level="INFO" additivity="false" >
+            <appender-ref ref="console_aspect_error" />
         </logger>
 
 <!--        <logger name="com.example.cih" level="WARN" >-->

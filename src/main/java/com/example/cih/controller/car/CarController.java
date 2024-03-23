@@ -24,9 +24,6 @@ public class CarController {
 
     @GetMapping("/carList")
     public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
-        log.error("CarController list()~~~~~~~~~~");
-        log.error("pageRequestDto: " + pageRequestDTO);
-
 
         PageResponseDTO<Car> list = carService.list(pageRequestDTO);
         model.addAttribute("list", list.getDtoList());
@@ -35,9 +32,6 @@ public class CarController {
     }
     @GetMapping("/carSearch")
     public String carSearch(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
-        log.error("CarController list()~~~~~~~~~~");
-        log.error("pageRequestDto: " + pageRequestDTO);
-
 
         PageResponseDTO<Car> list = carService.searchCarByKeyword(pageRequestDTO);
         model.addAttribute("list", list.getDtoList());
@@ -46,11 +40,8 @@ public class CarController {
     }
 
     @GetMapping("/carInfo")
-    public String carInfo(Long carId,  PageRequestDTO pageRequestDTO, Model model){
-        log.error("CarController carInfo()~~~~~~~~~~");
+    public String carInfo(PageRequestDTO pageRequestDTO, Long carId, Model model){
         log.error("carId: " + carId);
-        log.error("pageRequestDTO : " + pageRequestDTO);
-
 
         CarDTO carDTO = carService.readOne(carId);
         model.addAttribute("dto", carDTO);
