@@ -1,4 +1,4 @@
-package com.example.cih.exception;
+package com.example.cih.common.exception;
 
 public class BoardNotFoundException extends RuntimeException{
 
