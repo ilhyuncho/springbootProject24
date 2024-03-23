@@ -53,12 +53,15 @@
             <th scope="col">Mod Date</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody th:with="link = ${pageRequestDto.getLink()}">
             <tr th:each="dto:${list}">
                 <th scope="row">[[${dto.carId}]]</th>
                 <td>[[${dto.carNumber}]]</td>
                 <td>[[${dto.carGrade}]]</td>
-                <td>[[${dto.carModel}]]</td>
+                <td>
+                 <a th:href="|@{/dashBoard/carInfo(carId=${dto.carId})} &${link}|" class="text-decoration-none"> [[${dto.carModel}]]</a>
+                </td>
+<!--                <td>[[${dto.carModel}]]</td>-->
                 <td>[[${dto.carYears}]]</td>
                 <td>[[${dto.carColors}]]</td>
                 <td>[[${dto.carKm}]]</td>

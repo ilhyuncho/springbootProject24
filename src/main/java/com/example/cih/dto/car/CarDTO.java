@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarResponseDTO {
+public class CarDTO {
 
     private Long carId;
 

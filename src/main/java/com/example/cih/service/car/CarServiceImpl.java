@@ -1,14 +1,12 @@
 package com.example.cih.service.car;
 
-import com.example.cih.domain.board.Board;
-import com.example.cih.domain.board.BoardRepository;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.CarSize;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.board.BoardResponseDTO;
-import com.example.cih.dto.car.CarResponseDTO;
+
+import com.example.cih.dto.car.CarDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -17,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -73,5 +70,14 @@ public class CarServiceImpl implements CarService {
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public CarDTO readOne(Long carId) {
+        Optional<Car> result = carRepository.findById(carId);
+
+        Car car = result.orElseThrow();
+
+        return modelMapper.map(car, CarDTO.class);
     }
 }
