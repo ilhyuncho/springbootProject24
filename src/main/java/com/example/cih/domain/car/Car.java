@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="carId", length = 50, nullable = false)
+    @Column(name="carId")
     private Long carId;
 
     @Column(name="carNumber", length = 50, nullable = false)
