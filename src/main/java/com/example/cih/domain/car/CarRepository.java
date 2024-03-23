@@ -1,7 +1,6 @@
 package com.example.cih.domain.car;
 
-import com.example.cih.domain.board.Board;
-import com.example.cih.dto.car.CarResponseDTO;
+import com.example.cih.dto.car.CarDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
