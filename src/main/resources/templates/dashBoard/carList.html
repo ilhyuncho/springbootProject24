@@ -52,7 +52,7 @@
         </tr>
         </thead>
         <tbody th:with="link = ${pageRequestDto.getLink()}">
-            <tr th:each="dto:${list}">
+            <tr th:each="dto:${responseDTO.dtoList}">
                 <th scope="row">[[${dto.carId}]]</th>
                 <td>[[${dto.carNumber}]]</td>
                 <td>[[${dto.carGrade}]]</td>
@@ -71,25 +71,25 @@
     </table>
 
     <!-- 페이지 번호 출력-->
-<!--    <div class="float-end">-->
-<!--        <ul class="pagination flex-wrap">-->
+    <div class="float-end">
+        <ul class="pagination flex-wrap">
 
-<!--            <li class="page-item" th:if="${dto.prev}">-->
-<!--                <a class="page-link" th:data-num="${dto.start -1}">Previous</a>-->
-<!--            </li>-->
+            <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+            </li>
 
-<!--            <th:block th:each="i : ${#numbers.sequence(dto.start, dto.end)}">-->
+            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+            </th:block>
 
-<!--                <li th:class="${dto.page == i}?' page-item acitve' : 'page-item'">-->
+            <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+            </li>
 
-<!--                </li>-->
-<!--            </th:block>-->
-
-<!--            <li class="page-item" th:if="${dto.next}">-->
-<!--                <a class="page-link" th:data-num="${dto.end +1}">next</a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
+        </ul>
+    </div>
     <!-- 페이지 번호 출력-->
 
 </div>

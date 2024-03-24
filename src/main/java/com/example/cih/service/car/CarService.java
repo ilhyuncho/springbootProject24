@@ -9,8 +9,8 @@ import com.example.cih.dto.car.CarDTO;
 import java.util.List;
 
 public interface CarService {
-    PageResponseDTO<Car> list(PageRequestDTO pageRequestDTO);
-    PageResponseDTO<Car> searchCarByKeyword(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<CarDTO> list(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<CarDTO> searchCarByKeyword(PageRequestDTO pageRequestDTO);
     CarDTO readOne(Long carId);
 
 }

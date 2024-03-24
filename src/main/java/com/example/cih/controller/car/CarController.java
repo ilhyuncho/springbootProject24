@@ -25,16 +25,16 @@ public class CarController {
     @GetMapping("/carList")
     public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO<Car> list = carService.list(pageRequestDTO);
-        model.addAttribute("list", list.getDtoList());
+        PageResponseDTO<CarDTO> responseDTO = carService.list(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
 
         return "/dashBoard/carList";
     }
     @GetMapping("/carSearch")
     public String carSearch(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO<Car> list = carService.searchCarByKeyword(pageRequestDTO);
-        model.addAttribute("list", list.getDtoList());
+        PageResponseDTO<CarDTO> responseDTO = carService.searchCarByKeyword(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
 
         return "/dashBoard/carList";
     }

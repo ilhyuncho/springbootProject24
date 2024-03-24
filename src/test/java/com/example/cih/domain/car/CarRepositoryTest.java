@@ -18,13 +18,13 @@ class CarRepositoryTest {
 
     @BeforeEach()
     public void beforeEach(){
-        carRepository.deleteAll();
+        //carRepository.deleteAll();
         log.error("beforeEach()~~~~~~~~~~~~~~~");
     }
     @Test
     public void insertCar(){
 
-        IntStream.rangeClosed(1,10).forEach(i -> {
+        IntStream.rangeClosed(1,100).forEach(i -> {
             Car car = Car.builder()
                     .carNumber("35마319" + (i-1))
                     .carGrade(CarSize.MIDDLE_LARGE)
