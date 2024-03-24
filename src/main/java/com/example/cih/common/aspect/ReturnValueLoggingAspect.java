@@ -15,13 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ReturnValueLoggingAspect {
-
-    //@Before("execution(* *(com.example.cih.dto.PageRequestDTO,..))")
-
     @AfterReturning(pointcut = "execution(* com.example.cih.service..*.*(..))", returning = "retVals")
     public void printReturnObject(JoinPoint joinPoint, PageResponseDTO<?> retVals) throws Throwable{
         log.error( "ReturnObject : " + retVals.toString());
-        //retVals : ProductResponseDTO(number=1, name=스프링 부트 jpa12, price=5000, stock=500)
     }
 
     @AfterThrowing(pointcut = "execution(* com.example.cih.service..*.*(..))", throwing="th")
