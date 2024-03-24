@@ -35,8 +35,6 @@ public class CarServiceImpl implements CarService {
 
         Page<Car> result = carRepository.findAll(pageable);
 
-
-        log.error("=================list=====================");
         //content.forEach(log::error);
 
         return PageResponseDTO.<Car>withAll()
@@ -52,10 +50,8 @@ public class CarServiceImpl implements CarService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("carGrade");
 
-
         final Page<Car> result = carRepository.findByCarModelContaining(keyword, pageable);
 
-        log.error("===============searchCarByKeyword=======================");
         //content.forEach(log::error);
 
         return PageResponseDTO.<Car>withAll()
