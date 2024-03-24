@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Car Register</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Car Info
+                </div>
+                <div class="card-body">
+                    <form action="/myPage/carRegister" method="post">
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CarNumber</span>
+                            <input type="text" name="carNumber" class="form-control" th:value="35마3983" value="th:value안될때">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CarGrade</span>
+                            <input type="text" name="carGrade" class="form-control" th:value="MIDDLE_LARGE">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CarModel</span>
+                            <input type="text" name="carModel" class="form-control" th:value="model1">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CarColors</span>
+                            <input type="text" name="carColors" class="form-control" th:value="white">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">CarYears</span>
+                            <input type="text" name="CarYears" class="form-control" th:value="2013">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">carKm</span>
+                            <input type="text" name="carKm" class="form-control" th:value="10000">
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- <div class="card-body">-->
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
