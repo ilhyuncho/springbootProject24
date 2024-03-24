@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class SellingCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="sellingId", length = 50, nullable = false)
+    @Column(name="sellingId", nullable = false)
     private Long sellingId;
 
     private SellingType sellingType;

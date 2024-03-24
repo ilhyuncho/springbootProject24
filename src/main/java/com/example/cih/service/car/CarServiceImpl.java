@@ -33,15 +33,8 @@ public class CarServiceImpl implements CarService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("carGrade");
 
-        //List<Car> findResult = carRepository.findAll();
-
-//        List<CarResponseDTO> result = findResult.stream()
-//                .map(car -> modelMapper.map(car, CarResponseDTO.class))
-//                .collect(Collectors.toList());
-//
-//        result.forEach(log::error);
-
         Page<Car> result = carRepository.findAll(pageable);
+
 
         log.error("=================list=====================");
         //content.forEach(log::error);
@@ -59,7 +52,7 @@ public class CarServiceImpl implements CarService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("carGrade");
 
-        keyword ="model4";
+
         final Page<Car> result = carRepository.findByCarModelContaining(keyword, pageable);
 
         log.error("===============searchCarByKeyword=======================");

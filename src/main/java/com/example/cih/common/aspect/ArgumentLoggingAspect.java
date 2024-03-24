@@ -22,7 +22,7 @@ public class ArgumentLoggingAspect {
     // @Before 어드바이스는 코드 레벨에서 대상 객체의 메서드를 호출하지 않아도 된다.
     // 프록시 객체가 어드바이스의 코드를 실행한 후 대상 객체의 메서드를 호출하므로 어드바이스에 ProceedingJoinPoint를 주입받을 필요 없다
 
-    @Before("execution(* *(com.example.cih.dto.PageRequestDTO,..))")
+    @Before("execution(* com.example.cih.controller..*.*(com.example.cih.dto.PageRequestDTO,..))")
     // PageRequestDTO 인자를 받는 모든 메서드가 대상
     public void printPageRequestDTOArgument(JoinPoint joinPoint) {
 
