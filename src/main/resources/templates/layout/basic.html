@@ -16,7 +16,7 @@
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" th:href="|@{/dashboard/list}|">Start Bootstrap</a>
+    <a class="navbar-brand ps-3" th:href="|@{/dashBoard/carList}|">Start Bootstrap</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
@@ -137,6 +137,13 @@
 </div>
 <script th:src="@{/js/scripts.js}"></script>
 
+<!--자바스크립트를 위한 <th:block> 추가 by cihg1-->
+<th:block layout:fragment="script">
+
+</th:block>
 
 </body>
+
+
+
 </html>
