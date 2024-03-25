@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -39,15 +40,18 @@ public class MyPageController {
         return "/myPage/carRegister";
     }
     @PostMapping("/carRegister")
-    public String register(@Valid CarRegisterDTO carRegisterDTO, BindingResult bindingResult) throws BindException {
+    public String register(@Valid CarRegisterDTO carRegisterDTO, BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) throws BindException {
 
         if(bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
+           // throw new BindException(bindingResult);
+            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/myPage/carRegister";
         }
 
         Long bno = userCarService.register(carRegisterDTO);
-
-
         return "redirect:/myPage/myCarInfo";
     }
 
