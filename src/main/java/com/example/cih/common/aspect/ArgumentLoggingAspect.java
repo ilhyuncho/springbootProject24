@@ -36,4 +36,11 @@ public class ArgumentLoggingAspect {
         log.error(joinPoint.getSignature().toShortString());
         log.error("Argument info : {}", argumentValue);
     }
+
+    @Before("execution(* com.example.cih.controller.myPage..*.*(..))")
+    // PageRequestDTO 인자를 받는 모든 메서드가 대상
+    public void printMyPageArgument(JoinPoint joinPoint) {
+
+        log.error("Aspect - " + joinPoint.getSignature().toShortString());
+    }
 }

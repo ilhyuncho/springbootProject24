@@ -28,6 +28,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {BoardNotFoundException.class})
     public ResponseEntity<?> handleBoardNotFound(BoardNotFoundException e, WebRequest request){
 
+        log.error("RestExceptionAdvice - BoardNotFoundException!!! ");
         return super.handleExceptionInternal(
                 e,
                 e.getMessage(),
@@ -43,7 +44,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
         // 기존 방식으로 처리 되는 것 주석 처리.. stack trace 내용이 다 보여서 공통된 양식으로 보내줄 필요가 있음
         //return super.handleMissingPathVariable(ex, headers, status, request);
-
+        log.error("RestExceptionAdvice - MissingPathVariableException!!! ");
         return super.handleExceptionInternal(
                 ex,
                 ex.getMessage(),
@@ -66,7 +67,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 errorMap.put(fieldError.getField(), fieldError.getCode());
             });
         }
-
+        log.error("RestExceptionAdvice - BindException!!! ");
         return super.handleExceptionInternal(
                 e,
                 errorMap,
