@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/myPage")
@@ -38,11 +39,18 @@ public class MyPageController {
         return "/myPage/carRegister";
     }
     @PostMapping("/carRegister")
-    public String register(CarRegisterDTO carRegisterDTO){
+    public String register(@Valid CarRegisterDTO carRegisterDTO, BindingResult bindingResult) throws BindException {
+
+        if(bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
 
         Long bno = userCarService.register(carRegisterDTO);
 
 
         return "redirect:/myPage/myCarInfo";
     }
+
+
+
 }
