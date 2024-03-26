@@ -62,6 +62,9 @@ dependencies {
     // AOP 적용 ( 24.03.23 )
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    // spring security (24.03.26 )
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
 //    // JSTL ( 24.03.22 )
 //    implementation group: 'jstl', name: 'jstl', version:'1.2'
 }
