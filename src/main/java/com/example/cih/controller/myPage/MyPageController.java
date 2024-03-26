@@ -9,6 +9,7 @@ import com.example.cih.service.car.CarService;
 import com.example.cih.service.car.UserCarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 @RequestMapping("/myPage")
 @RequiredArgsConstructor
 @Log4j2
+@PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
     private final UserCarService userCarService;
@@ -39,6 +41,7 @@ public class MyPageController {
 
         return "/myPage/carRegister";
     }
+
     @PostMapping("/carRegister")
     public String register(@Valid CarRegisterDTO carRegisterDTO, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) throws BindException {
