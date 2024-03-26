@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Log4j2
+
 public class AuthController {
 
     @GetMapping("/login")
-    public void login(){
+    public void login(String error, String logout){
 
     }
     @GetMapping("/register")

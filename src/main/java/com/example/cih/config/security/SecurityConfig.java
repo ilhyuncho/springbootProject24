@@ -22,7 +22,10 @@ public class SecurityConfig {
         log.info("----------configure------------");
 
         // 로그인 화면에서 로그인 진행
-        http.formLogin();
+        http.formLogin().loginPage("/auth/login");
+
+        // CSRF 토큰 비활성화
+        http.csrf().disable();
 
         // 모든 경로에 접근 가능
         return http.build();
