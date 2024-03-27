@@ -65,6 +65,9 @@ dependencies {
     // spring security (24.03.26 )
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    // 타임리프에서 인증 정보 활용 ( 24.03.27 )
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
 //    // JSTL ( 24.03.22 )
 //    implementation group: 'jstl', name: 'jstl', version:'1.2'
 }
