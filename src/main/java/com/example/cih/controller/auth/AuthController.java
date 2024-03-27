@@ -16,6 +16,12 @@ public class AuthController {
     @GetMapping("/login")
     public void login(String error, String logout){
 
+        log.error("login get................");
+
+        // 로그아웃 호출 URL : http://localhost:8090/auth/login?logout
+        if( logout != null){
+            log.error("user logout======================");
+        }
     }
     @GetMapping("/register")
     public void register(){
