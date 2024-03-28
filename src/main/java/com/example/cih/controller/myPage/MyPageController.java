@@ -18,19 +18,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/myPage")
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
     private final UserCarService userCarService;
 
-    @GetMapping("/myCarInfo")
-    public void myCarInfo(){
+    @GetMapping("/carInfo")
+    public String carInfo(PageRequestDTO pageRequestDTO, String UserId, Model model){
 
+        // 임시
+        Long tempUserId = 3L;
+        List<CarRegisterDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, tempUserId);
+
+        model.addAttribute("list", listCarDTO);
+
+        return "/myPage/myCarInfo";
     }
 
     @GetMapping("/carRegister")

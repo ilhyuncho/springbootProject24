@@ -5,6 +5,7 @@ import com.example.cih.domain.car.Car;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarDTO;
+import com.example.cih.dto.car.CarRegisterDTO;
 import com.example.cih.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CarController {
     private final CarService carService;
 
+    @GetMapping("/carInfo")
+    public String carInfo(Long carId, Model model){
+
+        log.error("carInfo=============== : " + carId);
+
+        CarDTO carDTO = carService.readOne(carId);
+
+        log.info("get-read:" + carDTO);
+
+        model.addAttribute("responseDTO", carDTO);
+
+        return "/dashBoard/carInfo";
+    }
+
     @GetMapping("/carList")
     public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
@@ -37,16 +52,6 @@ public class CarController {
         model.addAttribute("responseDTO", responseDTO);
 
         return "/dashBoard/carList";
-    }
-
-    @GetMapping("/carInfo")
-    public String carInfo(PageRequestDTO pageRequestDTO, Long carId, Model model){
-        log.error("carId: " + carId);
-
-        CarDTO carDTO = carService.readOne(carId);
-        model.addAttribute("dto", carDTO);
-
-        return "/dashBoard/carInfo";
     }
 
 }

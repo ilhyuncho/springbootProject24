@@ -1,10 +1,7 @@
 package com.example.cih.dto.car;
 
 import com.example.cih.domain.car.CarSize;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Pattern;
 
@@ -12,6 +9,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CarRegisterDTO {
 
     private Long    carId;

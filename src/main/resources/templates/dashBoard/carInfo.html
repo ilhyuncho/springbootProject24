@@ -18,22 +18,22 @@
           <!--            dto 값 출력 부분-->
           <div class="input-group mb-3">
             <span class="input-group-text">CarID</span>
-            <input type="text" class="form-control" th:value="${dto.carId}" readonly>
+            <input type="text" class="form-control" th:value="${responseDTO.carId}" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarNumber</span>
-            <input type="text" class="form-control" th:value="${dto.carNumber}" readonly>
+            <input type="text" class="form-control" th:value="${responseDTO.carNumber}" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarGrade</span>
-            <textarea class="form-control col-sm-5" rows="5" readonly>[[${dto.carGrade}]]</textarea>
+            <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.carGrade}]]</textarea>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarModel</span>
-            <input type="text" class="form-control" th:value="${dto.carModel}" readonly>
+            <input type="text" class="form-control" th:value="${responseDTO.carModel}" readonly>
           </div>
 
         </div><!-- <div class="card-body">-->

@@ -9,6 +9,51 @@
 
 <div layout:fragment="content">
 
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Car Info
+        </div>
+        <div class="card-body">
+
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">carId</th>
+              <th scope="col">carColors</th>
+              <th scope="col">carGrade</th>
+              <th scope="col">carKm</th>
+              <th scope="col">carModel</th>
+              <th scope="col">carNumber</th>
+              <th scope="col">carYears</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto:${list}">
+              <th scope="row">[[${dto.carId}]]</th>
+              <th scope="row">[[${dto.carColors}]]</th>
+              <th scope="row">[[${dto.carGrade}]]</th>
+              <th scope="row">[[${dto.carKm}]]</th>
+              <th scope="row">[[${dto.carModel}]]</th>
+              <th scope="row">[[${dto.carNumber}]]</th>
+              <th scope="row">[[${dto.carYears}]]</th>
+
+            </tr>
+            </tbody>
+          </table>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+
+
+
+
 
 
 </div> <!--<div layout:fragment="content">-->

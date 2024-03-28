@@ -7,6 +7,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 
 import com.example.cih.dto.car.CarDTO;
+import com.example.cih.dto.car.CarRegisterDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -27,6 +28,16 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final ModelMapper modelMapper;
+
+    @Override
+    public CarDTO readOne(Long carId){
+
+        Optional<Car> result = carRepository.findById(carId);
+
+        Car car = result.orElseThrow();
+
+        return modelMapper.map(car, CarDTO.class);
+    }
 
     @Override
     public PageResponseDTO<CarDTO> list(PageRequestDTO pageRequestDTO) {
@@ -72,12 +83,5 @@ public class CarServiceImpl implements CarService {
                 .build();
     }
 
-    @Override
-    public CarDTO readOne(Long carId) {
-        Optional<Car> result = carRepository.findById(carId);
 
-        Car car = result.orElseThrow();
-
-        return modelMapper.map(car, CarDTO.class);
-    }
 }
