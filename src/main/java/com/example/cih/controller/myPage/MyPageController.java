@@ -3,8 +3,8 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarDTO;
-import com.example.cih.dto.car.CarRegisterDTO;
+import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.car.UserCarService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,9 @@ public class MyPageController {
 
         // 임시
         Long tempUserId = 3L;
-        List<CarRegisterDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, tempUserId);
+        List<CarInfoDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, tempUserId);
+
+        listCarDTO.forEach(log::error);
 
         model.addAttribute("list", listCarDTO);
 
@@ -44,14 +46,11 @@ public class MyPageController {
     @GetMapping("/carRegister")
     public String list(){
 
-//        PageResponseDTO<CarDTO> responseDTO = carService.list(pageRequestDTO);
-//        model.addAttribute("responseDTO", responseDTO);
-
         return "/myPage/carRegister";
     }
 
     @PostMapping("/carRegister")
-    public String register(@Valid CarRegisterDTO carRegisterDTO, BindingResult bindingResult,
+    public String register(@Valid CarSpecDTO carSpecDTO, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) throws BindException {
 
         if(bindingResult.hasErrors()) {
@@ -62,7 +61,7 @@ public class MyPageController {
             return "redirect:/myPage/carRegister";
         }
 
-        Long bno = userCarService.register(carRegisterDTO);
+        Long bno = userCarService.register(carSpecDTO);
         return "redirect:/myPage/myCarInfo";
     }
 

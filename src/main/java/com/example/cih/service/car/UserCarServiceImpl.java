@@ -4,7 +4,8 @@ import com.example.cih.domain.board.Board;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.car.CarRegisterDTO;
+import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarSpecDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -23,11 +24,11 @@ public class UserCarServiceImpl implements UserCarService {
 
     private final CarRepository carRepository;
     @Override
-    public Long register(CarRegisterDTO carRegisterDTO) {
+    public Long register(CarSpecDTO carSpecDTO) {
 
-        //log.error(carRegisterDTO.toString());
+        //log.error(CarSpecDTO.toString());
 
-        Car car = this.dtoToEntity(carRegisterDTO);
+        Car car = this.dtoToEntity(carSpecDTO);
 
         Long carId = carRepository.save(car).getCarId();
 
@@ -35,17 +36,18 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public List<CarRegisterDTO> readMyCarInfo(PageRequestDTO pageRequestDTO, Long UserID){
+    public List<CarInfoDTO> readMyCarInfo(PageRequestDTO pageRequestDTO, Long UserID){
 
         Page<Car> result = carRepository.findByUserId(UserID, pageRequestDTO.getPageable());
 
-        List<CarRegisterDTO> listResult = new ArrayList<>();
+        List<CarInfoDTO> listResult = new ArrayList<>();
 
         List<Car> content = result.getContent();
         for (Car car : content) {
-            CarRegisterDTO carRegisterDTO = this.entityToDTO(car);
-            listResult.add(carRegisterDTO);
-            log.error("listResult : " + carRegisterDTO.toString());
+
+            CarInfoDTO carInfoDTO = this.entityToDTO(car);
+            listResult.add(carInfoDTO);
+            log.error("listResult1 : " + carInfoDTO.toString());
         }
 
         return listResult;

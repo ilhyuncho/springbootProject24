@@ -1,11 +1,9 @@
 package com.example.cih.controller.car;
 
 
-import com.example.cih.domain.car.Car;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarDTO;
-import com.example.cih.dto.car.CarRegisterDTO;
+import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,11 +26,11 @@ public class CarController {
 
         log.error("carInfo=============== : " + carId);
 
-        CarDTO carDTO = carService.readOne(carId);
+        CarInfoDTO carInfoDTO = carService.readOne(carId);
 
-        log.info("get-read:" + carDTO);
+        log.info("get-read:" + carInfoDTO);
 
-        model.addAttribute("responseDTO", carDTO);
+        model.addAttribute("responseDTO", carInfoDTO);
 
         return "/dashBoard/carInfo";
     }
@@ -40,7 +38,7 @@ public class CarController {
     @GetMapping("/carList")
     public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO<CarDTO> responseDTO = carService.list(pageRequestDTO);
+        PageResponseDTO<CarInfoDTO> responseDTO = carService.list(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
 
         return "/dashBoard/carList";
@@ -48,7 +46,7 @@ public class CarController {
     @GetMapping("/carSearch")
     public String carSearch(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO, Model model){
 
-        PageResponseDTO<CarDTO> responseDTO = carService.searchCarByKeyword(pageRequestDTO);
+        PageResponseDTO<CarInfoDTO> responseDTO = carService.searchCarByKeyword(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
 
         return "/dashBoard/carList";

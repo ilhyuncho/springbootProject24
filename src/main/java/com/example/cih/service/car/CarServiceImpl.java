@@ -6,8 +6,7 @@ import com.example.cih.domain.car.CarSize;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 
-import com.example.cih.dto.car.CarDTO;
-import com.example.cih.dto.car.CarRegisterDTO;
+import com.example.cih.dto.car.CarInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -30,17 +29,17 @@ public class CarServiceImpl implements CarService {
     private final ModelMapper modelMapper;
 
     @Override
-    public CarDTO readOne(Long carId){
+    public CarInfoDTO readOne(Long carId){
 
         Optional<Car> result = carRepository.findById(carId);
 
         Car car = result.orElseThrow();
 
-        return modelMapper.map(car, CarDTO.class);
+        return modelMapper.map(car, CarInfoDTO.class);
     }
 
     @Override
-    public PageResponseDTO<CarDTO> list(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<CarInfoDTO> list(PageRequestDTO pageRequestDTO) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -48,15 +47,15 @@ public class CarServiceImpl implements CarService {
 
         Page<Car> result = carRepository.findAll(pageable);
 
-        List<CarDTO> dtoList = result.getContent().stream()
-                .map(car -> modelMapper.map(car, CarDTO.class)).collect(Collectors.toList());
+        List<CarInfoDTO> dtoList = result.getContent().stream()
+                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
 
 //        dtoList.forEach(log::error);
 //        log.error(result.getTotalPages());
 //        log.error(result.getTotalElements());
 //        log.error(result.getTotalPages());
 
-        return PageResponseDTO.<CarDTO>withAll()
+        return PageResponseDTO.<CarInfoDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())
@@ -64,19 +63,19 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public PageResponseDTO<CarDTO> searchCarByKeyword(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<CarInfoDTO> searchCarByKeyword(PageRequestDTO pageRequestDTO) {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("carGrade");
 
         final Page<Car> result = carRepository.findByCarModelContaining(keyword, pageable);
 
-        List<CarDTO> dtoList = result.getContent().stream()
-                .map(car -> modelMapper.map(car, CarDTO.class)).collect(Collectors.toList());
+        List<CarInfoDTO> dtoList = result.getContent().stream()
+                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
 
         //content.forEach(log::error);
 
-        return PageResponseDTO.<CarDTO>withAll()
+        return PageResponseDTO.<CarInfoDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())
