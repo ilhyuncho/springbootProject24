@@ -40,8 +40,6 @@ public class MyPageController {
         UserDTO userDTO = userService.findByUserName(userName);
         log.error("userDTO: " + userDTO);
 
-        // 임시
-        Long tempUserId = 3L;
         List<CarInfoDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, userDTO.getUserID());
 
         listCarDTO.forEach(log::error);
