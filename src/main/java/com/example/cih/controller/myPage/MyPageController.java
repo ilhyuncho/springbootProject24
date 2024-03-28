@@ -5,8 +5,10 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
+import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.car.UserCarService;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,17 +26,23 @@ import java.util.List;
 @RequestMapping("/myPage")
 @RequiredArgsConstructor
 @Log4j2
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
     private final UserCarService userCarService;
+    private final UserService userService;
 
     @GetMapping("/carInfo")
-    public String carInfo(PageRequestDTO pageRequestDTO, String UserId, Model model){
+    public String carInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+
+        log.error("userName: " + userName);
+
+        UserDTO userDTO = userService.findByUserName(userName);
+        log.error("userDTO: " + userDTO);
 
         // 임시
         Long tempUserId = 3L;
-        List<CarInfoDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, tempUserId);
+        List<CarInfoDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, userDTO.getUserID());
 
         listCarDTO.forEach(log::error);
 
