@@ -45,8 +45,11 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     // swagger ui ( 24.03.20 )
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+//    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    // 파일 업로드 실패로 버전 업
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
     // validation ( 24.03.20 )
     implementation 'org.springframework.boot:spring-boot-starter-validation'
