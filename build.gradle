@@ -71,6 +71,10 @@ dependencies {
     // 타임리프에서 인증 정보 활용 ( 24.03.27 )
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
+    // Thumbnailator (24.03.29)
+    implementation 'net.coobird:thumbnailator:0.4.16'
+
+
 //    // JSTL ( 24.03.22 )
 //    implementation group: 'jstl', name: 'jstl', version:'1.2'
 }
