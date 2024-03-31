@@ -59,6 +59,7 @@ public class MyPageController {
     public String register(@Valid CarSpecDTO carSpecDTO, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) throws BindException {
 
+        log.error("carSpecDTO : " + carSpecDTO);
         if(bindingResult.hasErrors()) {
            // throw new BindException(bindingResult);
             // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
@@ -68,7 +69,7 @@ public class MyPageController {
         }
 
         Long bno = userCarService.register(carSpecDTO);
-        return "redirect:/myPage/myCarInfo";
+        return "redirect:/dashBoard/carList";
     }
 
 
