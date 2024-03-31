@@ -1,5 +1,7 @@
 package com.example.cih.service.car;
 
+import com.example.cih.common.fileHandler.FileHandler;
+import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.board.Board;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
@@ -23,14 +25,19 @@ import java.util.List;
 public class UserCarServiceImpl implements UserCarService {
 
     private final CarRepository carRepository;
+    private final FileHandler fileHandler;
+
     @Override
-    public Long register(CarSpecDTO carSpecDTO) {
+    public Long register(CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO) {
 
         //log.error(CarSpecDTO.toString());
 
         Car car = this.dtoToEntity(carSpecDTO);
 
         Long carId = carRepository.save(car).getCarId();
+
+        // 파일 저장
+        fileHandler.fileUpload(uploadFileDTO);
 
         return carId;
     }

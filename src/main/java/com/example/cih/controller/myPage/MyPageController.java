@@ -1,6 +1,8 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.controller.fileUpload.UploadFileDTO;
+import com.example.cih.controller.fileUpload.UploadResultDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarInfoDTO;
@@ -11,6 +13,9 @@ import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +25,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/myPage")
@@ -55,11 +67,14 @@ public class MyPageController {
         return "/myPage/carRegister";
     }
 
-    @PostMapping("/carRegister")
-    public String register(@Valid CarSpecDTO carSpecDTO, BindingResult bindingResult,
+    @PostMapping(value="/carRegister", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String register(@Valid CarSpecDTO carSpecDTO,
+                           UploadFileDTO uploadFileDTO,
+                           BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) throws BindException {
 
         log.error("carSpecDTO : " + carSpecDTO);
+
         if(bindingResult.hasErrors()) {
            // throw new BindException(bindingResult);
             // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
@@ -68,7 +83,8 @@ public class MyPageController {
             return "redirect:/myPage/carRegister";
         }
 
-        Long bno = userCarService.register(carSpecDTO);
+        Long bno = userCarService.register(carSpecDTO, uploadFileDTO);
+
         return "redirect:/dashBoard/carList";
     }
 
