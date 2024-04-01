@@ -15,7 +15,7 @@ public interface UserCarService {
 
     Long register(CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
 
-    List<CarInfoDTO> readMyCarInfo(PageRequestDTO pageRequestDTO, Long UserID);
+    List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, Long UserID);
 
     // DTO를 엔티티로 변환하기
     default Car dtoToEntity(CarSpecDTO carSpecDTO) {

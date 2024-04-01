@@ -43,7 +43,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public List<CarInfoDTO> readMyCarInfo(PageRequestDTO pageRequestDTO, Long UserID){
+    public List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, Long UserID){
 
         Page<Car> result = carRepository.findByUserId(UserID, pageRequestDTO.getPageable());
 
@@ -59,4 +59,7 @@ public class UserCarServiceImpl implements UserCarService {
 
         return listResult;
     }
+
+
+
 }

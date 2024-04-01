@@ -43,22 +43,35 @@ public class MyPageController {
 
     private final UserCarService userCarService;
     private final UserService userService;
+    private final CarService carService;
 
-    @GetMapping("/carInfo")
-    public String carInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+    @GetMapping("/myCarInfo")
+    public String myCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
         log.error("userName: " + userName);
 
         UserDTO userDTO = userService.findByUserName(userName);
         log.error("userDTO: " + userDTO);
 
-        List<CarInfoDTO> listCarDTO = userCarService.readMyCarInfo(pageRequestDTO, userDTO.getUserID());
+        List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserID());
 
         listCarDTO.forEach(log::error);
 
         model.addAttribute("list", listCarDTO);
 
         return "/myPage/myCarInfo";
+    }
+
+    @GetMapping("/myCarRead")
+    public String myCarRead(PageRequestDTO pageRequestDTO, Long carId, Model model){
+
+        CarInfoDTO carInfoDTO = carService.readOne(carId);
+
+        log.info("get-read:" + carInfoDTO);
+
+        model.addAttribute("responseDTO", carInfoDTO);
+
+        return "/myPage/myCarRead";
     }
 
     @GetMapping("/carRegister")

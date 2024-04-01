@@ -20,32 +20,51 @@
 
           <table class="table">
             <thead>
-            <tr>
-              <th scope="col">carId</th>
-              <th scope="col">carColors</th>
-              <th scope="col">carGrade</th>
-              <th scope="col">carKm</th>
-              <th scope="col">carModel</th>
-              <th scope="col">carNumber</th>
-              <th scope="col">carYears</th>
-              <th scope="col">userId</th>
-            </tr>
+              <tr>
+                <th scope="col">carNumber</th>
+                <th scope="col">carId</th>
+                <th scope="col">carColors</th>
+                <th scope="col">carGrade</th>
+                <th scope="col">carKm</th>
+                <th scope="col">carModel</th>
+                <th scope="col">carYears</th>
+                <th scope="col">userId</th>
+              </tr>
             </thead>
 
             <tbody>
-            <tr th:each="dto:${list}">
-              <th scope="row">[[${dto.carId}]]</th>
-              <th scope="row">[[${dto.carColors}]]</th>
-              <th scope="row">[[${dto.carGrade}]]</th>
-              <th scope="row">[[${dto.carKm}]]</th>
-              <th scope="row">[[${dto.carModel}]]</th>
-              <th scope="row">[[${dto.carNumber}]]</th>
-              <th scope="row">[[${dto.carYears}]]</th>
-              <th scope="row">[[${dto.userId}]]</th>
+              <tr th:each="dto:${list}">
+                <th scope="row">
+                  <a th:href="|@{/myPage/myCarRead(carId=${dto.carId})}|" class="text-decoration-none"> [[${dto.carNumber}]]</a>
+                  <!--                  댓글 갯수 표시-->
+                  <span class="badge progress-bar-success" style="background-color: #0a53be">[[${dto.carKm}]]</span>
+                  <!--                  <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">-->
+                  <!--                    <img style="width:100px" th:each="boardImage: ${dto.boardImages}"-->
+                  <!--                         th:src="|/view/s_${boardImage.uuid}_${boardImage.filename}|">-->
+                  <!--                  </div>-->
+                </th>
 
-            </tr>
-            </tbody>
+
+                <td>[[${dto.carId}]]</td>
+                <td>[[${dto.carColors}]]</td>
+                <td>[[${dto.carGrade}]]</td>
+                <td>[[${dto.carKm}]]</td>
+                <td>[[${dto.carModel}]]</td>
+                <td>>[[${dto.carYears}]]</td>
+                <td>[[${dto.userId}]]</td>
+
+              </tr>
+              </tbody>
           </table>
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/myPage/carRegister}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">New</button>
+              </a>
+            </div>
+          </div>
+
 
         </div><!-- <div class="card-body">-->
       </div>

@@ -36,7 +36,7 @@
 
                 <!-- 고객이 로그인 했다면.. 표시-->
                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
-                    <li><a class="dropdown-item" th:href="|@{/myPage/carInfo(userName=${#authentication.principal.username})}|">내차정보</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/myPage/myCarInfo.html(userName=${#authentication.principal.username})}|">내차정보</a></li>
                 </div>
 
                 <li><a class="dropdown-item" href="#!">Activity Log</a></li>
