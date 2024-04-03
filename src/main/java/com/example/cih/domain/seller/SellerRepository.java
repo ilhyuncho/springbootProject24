@@ -1,4 +1,4 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.domain.seller;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

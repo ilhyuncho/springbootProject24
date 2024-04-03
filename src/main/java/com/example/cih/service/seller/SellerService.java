@@ -1,4 +1,4 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.service.seller;
 
 public interface SellerService {
 

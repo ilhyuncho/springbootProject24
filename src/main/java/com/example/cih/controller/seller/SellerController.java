@@ -1,4 +1,4 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.controller.seller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
