@@ -9,24 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.IntStream;
 
-@SpringBootTest
 @Log4j2
-class CarRepositoryTest {
+public class CarRepositoryTest extends ApplicationTests {
 
-    @Autowired
-    private CarRepository carRepository;
-
-    @BeforeEach()
-    public void beforeEach(){
-        //carRepository.deleteAll();
-        log.error("beforeEach()~~~~~~~~~~~~~~~");
-    }
     @Test
     public void insertCar(){
 
         IntStream.rangeClosed(1,100).forEach(i -> {
             Car car = Car.builder()
-                    .carNumber("35마319" + (i-1))
+                    .carNumber("45마319" + (i-1))
                     .carGrade(CarSize.MIDDLE_LARGE)
                     .carModel("model" + (i % 10))
                     .carYears(2010 + (i % 10))
