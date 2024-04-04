@@ -30,6 +30,6 @@ public class CustomApplicationRunner implements ApplicationRunner {
 
     public void ServerExecTimeLog(){
 
-        systemLogService.systemLog("서버 로딩");
+        systemLogService.systemLog("서버 로딩","두번째 param!!!");
     }
 }

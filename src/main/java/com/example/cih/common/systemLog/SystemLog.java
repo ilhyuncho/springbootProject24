@@ -21,9 +21,19 @@ public class SystemLog extends OnlyRegDateBaseEntity {
     @Column(name="systemLogId")
     private Long systemLogId;
 
-    @Column(name="text1", length = 50)
+    @Transient
+   // @Column(name="text1", length = 50)
     private String text1;
 
-    @Column(name="text2",length = 50)
+    @Transient
+    //@Column(name="text2",length = 50)
     private String text2;
+
+    @Setter
+    private String fullMsg;
+
+    @Access(AccessType.PROPERTY)
+    public String getFullMsg(){
+        return text1  + ", " + text2;
+    }
 }
