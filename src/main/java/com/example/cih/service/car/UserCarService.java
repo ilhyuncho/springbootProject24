@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public interface UserCarService {
 
-    Long register(CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
+    Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
 
-    List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, Long UserID);
+    List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String UserName);
 
     // DTO를 엔티티로 변환하기
     default Car dtoToEntity(CarSpecDTO carSpecDTO) {
@@ -28,7 +28,7 @@ public interface UserCarService {
                 .carYears(carSpecDTO.getCarYears())
                 .carColors(carSpecDTO.getCarColors())
                 .carKm(carSpecDTO.getCarKm())
-                .userId(40L)     // 임시
+               // .userId(40L)     // 임시
                 .build();
         return car;
     }
@@ -42,7 +42,11 @@ public interface UserCarService {
                 .carGrade(car.getCarGrade())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
-                .userId(car.getUserId())
+
+                .modDate(car.getModDate())
+                .regDate(car.getRegDate())
+                .userId(car.getUser().getUserId())
+               // .userId(car.getUserId())
                 .build();
 
         return carInfoDTO;

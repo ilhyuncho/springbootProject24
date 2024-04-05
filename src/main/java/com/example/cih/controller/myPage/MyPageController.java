@@ -1,10 +1,7 @@
 package com.example.cih.controller.myPage;
 
 
-import com.example.cih.controller.fileUpload.UploadFileDTO;
-import com.example.cih.controller.fileUpload.UploadResultDTO;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.dto.user.UserDTO;
@@ -13,9 +10,6 @@ import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnailator;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/myPage")
@@ -53,7 +41,7 @@ public class MyPageController {
         UserDTO userDTO = userService.findByUserName(userName);
         log.error("userDTO: " + userDTO);
 
-        List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserID());
+        List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
         listCarDTO.forEach(log::error);
 
@@ -80,13 +68,14 @@ public class MyPageController {
         return "/myPage/carRegister";
     }
 
-    @PostMapping(value="/carRegister", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value="/carRegister")
     public String register(@Valid CarSpecDTO carSpecDTO,
-                           UploadFileDTO uploadFileDTO,
+                           Principal principal,     // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) throws BindException {
 
         log.error("carSpecDTO : " + carSpecDTO);
+        log.error("user : " + principal.getName());
 
         if(bindingResult.hasErrors()) {
            // throw new BindException(bindingResult);
@@ -96,7 +85,7 @@ public class MyPageController {
             return "redirect:/myPage/carRegister";
         }
 
-        Long bno = userCarService.register(carSpecDTO, uploadFileDTO);
+        Long bno = userCarService.register(principal.getName(), carSpecDTO, null);
 
         return "redirect:/dashBoard/carList";
     }
