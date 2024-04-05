@@ -43,8 +43,6 @@ public class MyPageController {
 
         List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
-        listCarDTO.forEach(log::error);
-
         model.addAttribute("list", listCarDTO);
 
         return "/myPage/myCarInfo";

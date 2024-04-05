@@ -1,16 +1,19 @@
 package com.example.cih.domain.user;
 
 
+import com.example.cih.domain.car.Car;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "ownCars")
 @Table(name="Users")
 public class User {
     @Id
@@ -23,4 +26,8 @@ public class User {
 
     @Column(name="address",length = 100, nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "user")       // 반대뽁 매핑의 필드 이름 값
+    private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
+
 }

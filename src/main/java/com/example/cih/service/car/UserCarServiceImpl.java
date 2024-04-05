@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -61,22 +62,33 @@ public class UserCarServiceImpl implements UserCarService {
     @Override
     public List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String UserName){
 
-        List<CarInfoDTO> listResult = new ArrayList<>();
-
         // 고객 정보 get
         Optional<User> user = userRepository.findByUserName(UserName);
         User userInfo = user.orElseThrow();
 
         // 보유 차량 get
-        Page<Car> result = carRepository.findByUser(userInfo, pageRequestDTO.getPageable());
+        // 1차 작업
+        //        Page<Car> result = carRepository.findByUser(userInfo, pageRequestDTO.getPageable());
+        //
+        //        List<Car> content = result.getContent();
+        //        for (Car car : content) {
+        //
+        //            CarInfoDTO carInfoDTO = this.entityToDTO(car);
+        //            listResult.add(carInfoDTO);
+        //           // log.error("listResult1 : " + carInfoDTO.toString());
+        //        }
 
-        List<Car> content = result.getContent();
-        for (Car car : content) {
+        // 2차 작업
+        //        List<CarInfoDTO> listResult = new ArrayList<>();
+        //        for (Car car : userInfo.getOwnCars()) {
+        //            CarInfoDTO carInfoDTO = this.entityToDTO(car);
+        //            listResult.add(carInfoDTO);
+        //            log.error("listResult1 : " + carInfoDTO.toString());
+        //        }
 
-            CarInfoDTO carInfoDTO = this.entityToDTO(car);
-            listResult.add(carInfoDTO);
-            log.error("listResult1 : " + carInfoDTO.toString());
-        }
+        // 3차 작업
+        List<CarInfoDTO> listResult = userInfo.getOwnCars().stream()
+                .map(this::entityToDTO).collect(Collectors.toList());
 
         return listResult;
     }

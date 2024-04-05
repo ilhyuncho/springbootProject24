@@ -44,6 +44,10 @@ public class Car extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     // 고객 정보를 id 에서 User 객체로 변경
     // @Column(name="userId", nullable = false)
     // private Long userId;
