@@ -2,6 +2,7 @@ package com.example.cih.domain.user;
 
 
 import com.example.cih.domain.car.Car;
+import com.example.cih.sampleCode.temp.UserCredit;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,5 +31,9 @@ public class User {
     @OneToMany(mappedBy = "user")       // 반대뽁 매핑의 필드 이름 값
                                         // mappedBy를 소유 한것은 주인이 아니다
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
+
+    @OneToOne
+    @JoinColumn(name="userCreditsId")   // pk(외래키)가 user테이블(주테이블)에 생성
+    private UserCredit userCredit;
 
 }

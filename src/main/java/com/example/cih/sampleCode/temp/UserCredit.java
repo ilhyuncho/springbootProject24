@@ -1,6 +1,7 @@
 package com.example.cih.sampleCode.temp;
 
 
+import com.example.cih.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,8 @@ public class UserCredit {
     @Column(name="bankAccount", length = 20, nullable = false)
     private String bankAccount;
 
+    @OneToOne(mappedBy = "userCredit")  // 일대일-양방향에서 주인이 아니다
+    private User user;
 
 
 }
