@@ -14,7 +14,7 @@
         <div class="card-header">
           결제-Info
         </div>
-        <div class="card-body">
+        <div class="card-body" th:if="${not #strings.isEmpty(responseDTO)}">
 
           <div class="input-group mb-3">
             <span class="input-group-text">UserCreditID</span>
@@ -36,17 +36,16 @@
             <input type="text" class="form-control" th:value="${responseDTO.bankAccount}" readonly>
           </div>
 
-
-          <div class="my-4">
-            <div class="float-end">
-              <a th:href="|@{/myPage/creditRegister}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">New</button>
-              </a>
-            </div>
-          </div>
-
-
         </div><!-- <div class="card-body">-->
+
+        <div class="my-4">
+          <div class="float-end">
+            <a th:href="|@{/myPage/creditRegister}|" class="text-decoration-none">
+              <button type="button" class="btn btn-primary">New</button>
+            </a>
+          </div>
+        </div>
+
 
       </div>
     </div>

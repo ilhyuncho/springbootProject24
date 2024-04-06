@@ -43,19 +43,23 @@ public class UserCreditServiceImpl implements UserCreditService {
     @Override
     public UserCreditDTO readCreditInfo(User user){
 
+        UserCreditDTO userCreditDTO = null;
+
         Optional<UserCredit> byUser = userCreditRepository.findByUser(user);
 
-        UserCredit userCredit = byUser.orElseThrow();
+        if(byUser.isPresent()) {
+            UserCredit userCredit = byUser.get();
 
-        log.error("readCreditInfo() - userCredit=" + userCredit);
+            log.error("readCreditInfo() - userCredit=" + userCredit);
 
+            userCreditDTO = UserCreditDTO.builder()
+                    .userCreditID(userCredit.getUserCreditsId())
+                    .userId(userCredit.getUser().getUserId())
+                    .bankAccount(userCredit.getBankAccount())
+                    .bankName(userCredit.getBankName())
+                    .build();
+        }
 
-        UserCreditDTO userCreditDTO = UserCreditDTO.builder()
-                .userCreditID(userCredit.getUserCreditsId())
-                .userId(userCredit.getUser().getUserId())
-                .bankAccount(userCredit.getBankAccount())
-                .bankName(userCredit.getBankName())
-                .build();
 
         return userCreditDTO;
     }

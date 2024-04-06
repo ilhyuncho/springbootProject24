@@ -100,11 +100,7 @@ public class MyPageController {
 
         log.error("myCreditInfo: userName: " + userName);
 
-        UserCreditDTO userCreditDTO = UserCreditDTO.builder()
-                .userCreditID(1L)
-                .userId(2L)
-                .bankAccount("bankAccount")
-                .bankName("우리은행").build();
+        UserCreditDTO userCreditDTO = null;
 
         UserDTO userDTO = userService.findByUserName(userName);
         if( userDTO != null) {
