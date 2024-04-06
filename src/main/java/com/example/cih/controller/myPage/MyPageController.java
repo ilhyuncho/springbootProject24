@@ -1,15 +1,19 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.dto.user.UserDTO;
+import com.example.cih.sampleCode.temp.UserCreditDTO;
+import com.example.cih.sampleCode.temp.UserCreditService;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +34,11 @@ import java.util.List;
 public class MyPageController {
 
     private final UserCarService userCarService;
+    private final UserCreditService userCreditService;
     private final UserService userService;
     private final CarService carService;
+
+    private final ModelMapper modelMapper;
 
     @GetMapping("/myCarInfo")
     public String myCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
@@ -88,6 +95,58 @@ public class MyPageController {
         return "redirect:/dashBoard/carList";
     }
 
+    @GetMapping("/myCreditInfo")
+    public String myCreditInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
+        log.error("myCreditInfo: userName: " + userName);
+
+        UserCreditDTO userCreditDTO = UserCreditDTO.builder()
+                .userCreditID(1L)
+                .userId(2L)
+                .bankAccount("bankAccount")
+                .bankName("우리은행").build();
+
+        UserDTO userDTO = userService.findByUserName(userName);
+        if( userDTO != null) {
+
+            log.error("userDTO: " + userDTO);
+
+            User user = modelMapper.map(userDTO, User.class);
+
+            userCreditDTO = userCreditService.readCreditInfo(user);
+
+            log.info("get-read:" + userCreditDTO);
+        }
+
+        model.addAttribute("responseDTO", userCreditDTO);
+
+        return "/myPage/myCreditInfo";
+    }
+
+    @GetMapping("/creditRegister")
+    public String myCredit(PageRequestDTO pageRequestDTO, Long carId, Model model){
+
+        return "/myPage/creditRegister";
+    }
+    @PostMapping(value="/creditRegister")
+    public String myCredit(@Valid UserCreditDTO userCreditDTO,
+                           Principal principal,     // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) throws BindException {
+
+        log.error("userCreditDTO : " + userCreditDTO);
+
+        if(bindingResult.hasErrors()) {
+            // throw new BindException(bindingResult);
+            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/myPage/carRegister";
+        }
+
+        Long bno = userCreditService.register(principal.getName(), userCreditDTO);
+
+        return "redirect:/myPage/myCreditInfo?userName=" + principal.getName();
+    }
 
 }

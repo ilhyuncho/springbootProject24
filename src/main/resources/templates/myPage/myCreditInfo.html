@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>결제 Info</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          결제-Info
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">UserCreditID</span>
+            <input type="text" class="form-control" th:value="${responseDTO.userCreditID}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">UserId</span>
+            <input type="text" class="form-control" th:value="${responseDTO.userId}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">BankName</span>
+            <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.bankName}]]</textarea>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">BankAccount</span>
+            <input type="text" class="form-control" th:value="${responseDTO.bankAccount}" readonly>
+          </div>
+
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/myPage/creditRegister}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">New</button>
+              </a>
+            </div>
+          </div>
+
+
+        </div><!-- <div class="card-body">-->
+
+      </div>
+    </div>
+  </div>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
