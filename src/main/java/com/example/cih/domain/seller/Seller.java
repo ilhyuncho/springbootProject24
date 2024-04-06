@@ -21,6 +21,4 @@ public class Seller {
     @Column(name="userId", nullable = false)
     private Long userId;
 
-    @Column(name="bankAccount", nullable = false)
-    private Long bankAccount;
 }

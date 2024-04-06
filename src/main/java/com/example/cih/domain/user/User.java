@@ -28,6 +28,7 @@ public class User {
     private String address;
 
     @OneToMany(mappedBy = "user")       // 반대뽁 매핑의 필드 이름 값
+                                        // mappedBy를 소유 한것은 주인이 아니다
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
 
 }
