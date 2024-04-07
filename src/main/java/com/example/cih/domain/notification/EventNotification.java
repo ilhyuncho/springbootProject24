@@ -18,6 +18,4 @@ import java.time.LocalDateTime;
 public class EventNotification extends Notification {
 
     private LocalDateTime expiredDate;
-
-
 }

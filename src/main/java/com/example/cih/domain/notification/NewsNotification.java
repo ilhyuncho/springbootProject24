@@ -18,6 +18,4 @@ public class NewsNotification extends Notification{
 
     @Column(name="notiTarget", length = 30, nullable = false)
     private String notiTarget;
-
-
 }
