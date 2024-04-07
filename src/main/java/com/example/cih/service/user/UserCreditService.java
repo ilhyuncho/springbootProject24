@@ -1,7 +1,7 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.service.user;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.car.CarSpecDTO;
+import com.example.cih.dto.user.UserCreditDTO;
 
 public interface UserCreditService {
 

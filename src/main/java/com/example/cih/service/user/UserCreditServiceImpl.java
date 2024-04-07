@@ -1,7 +1,10 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.service.user;
 
 import com.example.cih.domain.user.User;
+import com.example.cih.domain.user.UserCredit;
+import com.example.cih.domain.user.UserCreditRepository;
 import com.example.cih.domain.user.UserRepository;
+import com.example.cih.dto.user.UserCreditDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

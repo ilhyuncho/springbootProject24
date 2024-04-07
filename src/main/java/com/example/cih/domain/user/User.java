@@ -2,7 +2,6 @@ package com.example.cih.domain.user;
 
 
 import com.example.cih.domain.car.Car;
-import com.example.cih.sampleCode.temp.UserCredit;
 import lombok.*;
 
 import javax.persistence.*;

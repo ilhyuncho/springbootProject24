@@ -1,7 +1,7 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.controller.myPage;
 
 
-import com.example.cih.service.car.CarService;
+import com.example.cih.service.user.UserCreditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
