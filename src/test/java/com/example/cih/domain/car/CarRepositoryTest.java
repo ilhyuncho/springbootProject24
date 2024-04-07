@@ -1,11 +1,7 @@
 package com.example.cih.domain.car;
 
-import com.example.cih.domain.board.Board;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.IntStream;
 
@@ -23,7 +19,7 @@ public class CarRepositoryTest extends ApplicationTests {
                     .carYears(2010 + (i % 10))
                     .carColors("color" + i)
                     .carKm(10000L + (i % 10) )
-                    .userId(Long.valueOf(i))
+                    //.userId(Long.valueOf(i))      // 임시 주석
                     .build();
 
             Car result = carRepository.save(car);

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>News</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Today's news
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">notiId</th>
+                            <th scope="col">notiMessage</th>
+                            <th scope="col">notiTarget</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="dto:${list}">
+                            <td>[[${dto.notiId}]]</td>
+                            <td>[[${dto.notiMessage}]]</td>
+                            <td>[[${dto.notiTarget}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div><!-- <div class="card-body">-->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
