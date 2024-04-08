@@ -1,0 +1,42 @@
+package com.example.cih.domain.user;
+
+
+import lombok.*;
+
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+
+@Embeddable
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+@AllArgsConstructor
+@Builder
+public class Address implements Serializable {
+
+    @NotEmpty
+    private String zipcode;
+
+    @NotEmpty
+    private String city;
+
+    @NotEmpty
+    private String street;
+
+    @NotEmpty
+    private String detailAddress;
+
+
+//    @Override
+//    public int hashCode() {
+//        return super.hashCode();
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        return super.equals(obj);
+//    }
+
+
+}

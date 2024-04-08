@@ -24,8 +24,8 @@ public class User {
     @Column(name="userName", length = 10, nullable = false)
     private String userName;
 
-    @Column(name="address",length = 100, nullable = false)
-    private String address;
+    @Embedded
+    private Address address;
 
     @OneToMany(mappedBy = "user")       // 반대뽁 매핑의 필드 이름 값
                                         // mappedBy를 소유 한것은 주인이 아니다
