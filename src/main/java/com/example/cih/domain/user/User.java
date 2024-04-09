@@ -27,8 +27,9 @@ public class User {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "user")       // 반대뽁 매핑의 필드 이름 값
-                                        // mappedBy를 소유 한것은 주인이 아니다
+    @OneToMany(mappedBy = "user"        // 반대쪽 매핑의 필드 이름 값
+            , fetch = FetchType.LAZY    // 지연 로딩 설정
+    )
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
 
 //    @OneToOne

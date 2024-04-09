@@ -1,5 +1,6 @@
 package com.example.cih.domain.user;
 
+import com.example.cih.domain.car.Car;
 import lombok.extern.log4j.Log4j2;
 
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -68,6 +70,24 @@ public class UserRepositoryTest {
 
         Assertions.assertEquals(user1, user2);
     }
+
+    @Test
+    @Transactional
+    public void selectWithCars(){
+
+        Optional<User> user1 = userRepository.findByUserName("user1");
+        User user = user1.get();
+
+        List<Car> ownCars = user.getOwnCars();
+
+        log.error("---------------이후 로딩---------------------------");
+        for (Car ownCar : ownCars) {
+            log.error(ownCar);
+        }
+        
+
+    }
+
 
 
 
