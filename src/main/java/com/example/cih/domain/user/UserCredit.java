@@ -31,7 +31,7 @@ public class UserCredit {
 //    @OneToOne(mappedBy = "userCredit")  // 일대일-양방향에서 주인이 아니다
 //    private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="UserId")   // pk(외래키)가 user테이블(주테이블)에 생성
     private User user;
 

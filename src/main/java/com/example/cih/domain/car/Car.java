@@ -42,7 +42,7 @@ public class Car extends BaseEntity {
     @Column(name="carKm", nullable = false)
     private Long carKm;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="uId")
     private User user;
 
