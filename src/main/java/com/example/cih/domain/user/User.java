@@ -30,7 +30,8 @@ public class User {
     @OneToMany(mappedBy = "user"        // 반대쪽 매핑의 필드 이름 값
             , fetch = FetchType.LAZY    // 지연 로딩 설정
             , cascade = CascadeType.ALL     // 자식 엔티티도 같이 저장 되도록
-    )
+            , orphanRemoval = true          //부모 엔티티가 자식 엔티티와의 관계를 제거하면 자식은 고아로 취급되어 그대로 사라진다.
+    )                                       // 추가적으로 부모가 삭제 되면 자식도 삭제 됨
     @Builder.Default        // 빌더로 인스턴스 생성 시 초기화할 값을 정할 수 있음.
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
 

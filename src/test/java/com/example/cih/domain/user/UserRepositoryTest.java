@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.modelmapper.internal.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -119,10 +120,31 @@ public class UserRepositoryTest {
         for (Car ownCar : ownCars) {
             log.error(ownCar);
         }
-        
-
     }
 
+    @Test
+    @Transactional
+    @Commit
+    public void deleteCars() {
+        Optional<User> user1 = userRepository.findByUserName("user3");
+        User user = user1.get();
+
+        user.getOwnCars().clear();
+
+        //컬렉션에서 엔티티를 제거하면 db 삭제 가 자동으로 된다
+        log.error("------------------------------------------");
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    public void deleteUser() {
+        userRepository.deleteByUserName("user3");
+
+        // 부모를 삭제 하면 자동으로 자식도 삭제됨
+        // orphanRemoval = true
+        log.error("------------------------------------------");
+    }
 
 
 
