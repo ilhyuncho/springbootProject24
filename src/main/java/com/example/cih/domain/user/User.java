@@ -30,6 +30,7 @@ public class User {
     @OneToMany(mappedBy = "user"        // 반대쪽 매핑의 필드 이름 값
             , fetch = FetchType.LAZY    // 지연 로딩 설정
     )
+    @Builder.Default        // 빌더로 인스턴스 생성 시 초기화할 값을 정할 수 있음.
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
 
 //    @OneToOne
