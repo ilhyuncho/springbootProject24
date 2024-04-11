@@ -24,7 +24,7 @@ public class User {
     @Column(name="userName", length = 10, nullable = false)
     private String userName;
 
-    @Embedded
+    @Embedded   // 임베디드 타입 (복합값)
     private Address address;
 
     @OneToMany(mappedBy = "user"        // 반대쪽 매핑의 필드 이름 값

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED) // 조인 전략
 @Table(name="Notification")
 public abstract class Notification {
     @Id
