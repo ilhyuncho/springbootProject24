@@ -1,6 +1,7 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
@@ -54,6 +55,23 @@ public class MyPageController {
 
         return "/myPage/myCarInfo";
     }
+    @GetMapping("/myCarSummaryInfo")
+    public String myCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+
+        log.error("userName: " + userName);
+
+        UserDTO userDTO = userService.findByUserName(userName);
+        log.error("userDTO: " + userDTO);
+
+        // Projection 타입으로 리턴
+        List<Projection.CarSummary> carSummaries = userCarService.readMyCarSummaryList(pageRequestDTO, userDTO.getUserName());
+
+        model.addAttribute("list", carSummaries);
+
+        return "/myPage/myCarSummaryInfo";
+    }
+
+
 
     @GetMapping("/myCarRead")
     public String myCarRead(PageRequestDTO pageRequestDTO, Long carId, Model model){

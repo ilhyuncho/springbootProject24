@@ -2,6 +2,7 @@ package com.example.cih.service.car;
 
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
+import com.example.cih.domain.car.Projection;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
@@ -16,6 +17,8 @@ public interface UserCarService {
     Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
 
     List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String UserName);
+    List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String UserName);
+
 
     // DTO를 엔티티로 변환하기
     default Car dtoToEntity(CarSpecDTO carSpecDTO) {

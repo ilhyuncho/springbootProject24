@@ -4,6 +4,7 @@ import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
+import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.PageRequestDTO;
@@ -93,6 +94,24 @@ public class UserCarServiceImpl implements UserCarService {
         return listResult;
     }
 
+    @Override
+    public List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String UserName){
+
+        // 고객 정보 get
+        Optional<User> user = userRepository.findByUserName(UserName);
+        User userInfo = user.orElseThrow();
+
+        // 보유 차량 get
+        List<Projection.CarSummary> carSummaryList = carRepository.findByUser(userInfo);
+
+        for (Projection.CarSummary carSummary : carSummaryList) {
+            log.error(carSummary.getCarInfo());
+            log.error(carSummary.getCarNumber());
+        }
+
+        return carSummaryList;
+
+    }
 
 
 }
