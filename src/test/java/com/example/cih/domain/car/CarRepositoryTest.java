@@ -1,8 +1,11 @@
 package com.example.cih.domain.car;
 
+import com.example.cih.domain.user.User;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Log4j2
@@ -27,6 +30,23 @@ public class CarRepositoryTest extends ApplicationTests {
             log.info("BNO: " + result.getCarId());
         });
     }
+
+    @Test
+    public void selectCar(){
+
+        // 고객 정보 get
+        Optional<User> user = userRepository.findByUserName("user1");
+        User userInfo = user.orElseThrow();
+
+
+        List<Projection.CarSummary2> allByUser = carRepository.findAllByUser(userInfo);
+
+        log.error(allByUser.get(0).getCarNumber());
+        log.error(allByUser.get(0).getCarModel());
+        log.error(allByUser.get(1).getCarNumber());
+        log.error(allByUser.get(1).getCarModel());
+    }
+
 
 
 }

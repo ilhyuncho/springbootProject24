@@ -1,6 +1,7 @@
 package com.example.cih.domain.car;
 
 
+import com.example.cih.domain.user.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ abstract class ApplicationTests {
 
     @Autowired
     CarRepository carRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @BeforeAll()
     public void beforeAll(){

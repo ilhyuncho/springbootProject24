@@ -17,5 +17,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     Page<Car> findByCarModelContaining(@Param("q") String name, Pageable pageable);
 
     List<Projection.CarSummary> findByUser(User user);
+    List<Projection.CarSummary2> findAllByUser(User user);
 
 }
