@@ -35,14 +35,11 @@ import java.util.List;
 public class MyPageController {
 
     private final UserCarService userCarService;
-    private final UserCreditService userCreditService;
     private final UserService userService;
     private final CarService carService;
 
-    private final ModelMapper modelMapper;
-
-    @GetMapping("/myCarInfo")
-    public String myCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+    @GetMapping("/userCarInfo")
+    public String userCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
         log.error("userName: " + userName);
 
@@ -53,10 +50,10 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
-        return "/myPage/myCarInfo";
+        return "/myPage/userCarInfo";
     }
-    @GetMapping("/myCarSummaryInfo")
-    public String myCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+    @GetMapping("/userCarSummaryInfo")
+    public String userCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
         log.error("userName: " + userName);
 
@@ -68,13 +65,10 @@ public class MyPageController {
 
         model.addAttribute("list", carSummaries);
 
-        return "/myPage/myCarSummaryInfo";
+        return "/myPage/userCarSummaryInfo";
     }
-
-
-
-    @GetMapping("/myCarRead")
-    public String myCarRead(PageRequestDTO pageRequestDTO, Long carId, Model model){
+    @GetMapping("/userCarRead")
+    public String userCarRead(PageRequestDTO pageRequestDTO, Long carId, Model model){
 
         CarInfoDTO carInfoDTO = carService.readOne(carId);
 
@@ -82,20 +76,20 @@ public class MyPageController {
 
         model.addAttribute("responseDTO", carInfoDTO);
 
-        return "/myPage/myCarRead";
+        return "/myPage/userCarRead";
     }
 
-    @GetMapping("/carRegister")
+    @GetMapping("/userCarRegister")
     public String list(){
-
-        return "/myPage/carRegister";
+        return "/myPage/userCarRegister";
     }
 
-    @PostMapping(value="/carRegister")
+    @PostMapping(value="/userCarRegister")
     public String register(@Valid CarSpecDTO carSpecDTO,
-                           Principal principal,     // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
                            BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes) throws BindException {
+                           RedirectAttributes redirectAttributes,
+                           Principal principal    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
+    ) {
 
         log.error("carSpecDTO : " + carSpecDTO);
         log.error("user : " + principal.getName());
@@ -105,62 +99,11 @@ public class MyPageController {
             // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/myPage/carRegister";
+            return "redirect:/myPage/userCarRegister";
         }
 
         Long bno = userCarService.register(principal.getName(), carSpecDTO, null);
 
-        return "redirect:/dashBoard/carList";
+        return "redirect:/myPage/userCarInfo?userName=" + principal.getName();
     }
-
-    @GetMapping("/myCreditInfo")
-    public String myCreditInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
-
-        log.error("myCreditInfo: userName: " + userName);
-
-        UserCreditDTO userCreditDTO = null;
-
-        UserDTO userDTO = userService.findByUserName(userName);
-        if( userDTO != null) {
-
-            log.error("userDTO: " + userDTO);
-
-            User user = modelMapper.map(userDTO, User.class);
-
-            userCreditDTO = userCreditService.readCreditInfo(user);
-
-            log.info("get-read:" + userCreditDTO);
-        }
-
-        model.addAttribute("responseDTO", userCreditDTO);
-
-        return "/myPage/myCreditInfo";
-    }
-
-    @GetMapping("/creditRegister")
-    public String myCredit(PageRequestDTO pageRequestDTO, Long carId, Model model){
-
-        return "/myPage/creditRegister";
-    }
-    @PostMapping(value="/creditRegister")
-    public String myCredit(@Valid UserCreditDTO userCreditDTO,
-                           Principal principal,     // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
-                           BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes) throws BindException {
-
-        log.error("userCreditDTO : " + userCreditDTO);
-
-        if(bindingResult.hasErrors()) {
-            // throw new BindException(bindingResult);
-            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/myPage/carRegister";
-        }
-
-        Long bno = userCreditService.register(principal.getName(), userCreditDTO);
-
-        return "redirect:/myPage/myCreditInfo?userName=" + principal.getName();
-    }
-
 }
