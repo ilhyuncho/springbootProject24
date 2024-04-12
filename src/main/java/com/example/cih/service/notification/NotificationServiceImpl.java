@@ -30,6 +30,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
 
+//        for (NewsNotification newsNotification : newsNotifications) {
+//            newsNotification.setNotiTarget("수정4!!!!");
+//            newsNotificationRepository.save(newsNotification);  // DB에는 업데이트 되지 않는다
+//        }
+
         List<NotificationDTO> dtoList = newsNotifications.stream().map(noti -> modelMapper.map(noti, NotificationDTO.class))
                 .collect(Collectors.toList());
 
