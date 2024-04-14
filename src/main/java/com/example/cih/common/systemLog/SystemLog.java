@@ -21,7 +21,7 @@ public class SystemLog extends OnlyRegDateBaseEntity {
     @Column(name="systemLogId")
     private Long systemLogId;
 
-    @Transient
+    @Transient  // 자바 직렬화와 영속화 에서 필드를 제외
    // @Column(name="text1", length = 50)
     private String text1;
 

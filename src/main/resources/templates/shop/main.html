@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>악세서리 샵</title>
+</head>
+
+<div layout:fragment="content">
+
+  <form action="/shop/order" method="post">
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">itemID</span>
+      <input type="text" name="itemID" class="form-control">
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">count</span>
+      <input type="text" name="count" class="form-control">
+    </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text">userName</span>
+      <input type="text" name="userName" class="form-control">
+    </div>
+
+
+    <div class="my-4">
+      <div class="float-end">
+        <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+      </div>
+    </div>
+
+
+  </form>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
