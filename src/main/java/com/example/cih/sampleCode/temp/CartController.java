@@ -27,12 +27,19 @@ public class CartController {
                        Model model,
                        Principal principal ){
 
-
         PageResponseDTO<CartDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
-
 
         model.addAttribute("responseDTO", cartAll);
 
         return "/cart/list";
+    }
+    @GetMapping("/orderDetail")
+    public String get(Long orderId,
+                      Model model){
+
+        CartDetailDTO orderDetailDto = cartService.getOrderDetail(orderId);
+
+        model.addAttribute("responseDTO", orderDetailDto);
+        return "/cart/orderDetail";
     }
 }

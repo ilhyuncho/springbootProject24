@@ -37,10 +37,10 @@
                             <td>[[${dto.itemName}]]</td>
                             <td>[[${dto.itemPrice}]]</td>
                             <td>
-                                <a th:href="|@{/myPage/userCarRead(carId=${dto.shopItemId})}|" class="text-decoration-none">조회</a>
+                                <a th:href="|@{/cart/orderDetail(orderId=${dto.orderId})}|" class="text-decoration-none">조회</a>
                             </td>
                             <td>
-                                <a th:href="|@{/myPage/userCarRead(carId=${dto.shopItemId})}|" class="text-decoration-none">구매 취소</a>
+                                <a th:href="|@{/shop/userCarRead(carId=${dto.shopItemId})}|" class="text-decoration-none">구매 취소</a>
                             </td>
                         </tr>
                         </tbody>

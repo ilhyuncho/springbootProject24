@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    주문 상세
+                </div>
+                <div class="card-body">
+                    <!--            dto 값 출력 부분-->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">itemName</span>
+                        <input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">orderCount</span>
+                        <input type="text" class="form-control" th:value="${responseDTO.orderCount}" readonly>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">itemPrice</span>
+                        <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.itemPrice}]]</textarea>
+                    </div>
+
+<!--                    <div class="input-group mb-3">-->
+<!--                        <span class="input-group-text">CarModel</span>-->
+<!--                        <input type="text" class="form-control" th:value="${responseDTO.carModel}" readonly>-->
+<!--                    </div>-->
+
+                </div><!-- <div class="card-body">-->
+
+            </div>
+        </div>
+    </div>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>

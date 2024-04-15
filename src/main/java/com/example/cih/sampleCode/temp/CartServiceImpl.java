@@ -3,6 +3,7 @@ package com.example.cih.sampleCode.temp;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.shop.Order;
 import com.example.cih.domain.shop.OrderItem;
+import com.example.cih.domain.shop.OrderItemRepository;
 import com.example.cih.domain.shop.OrderRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
@@ -31,7 +32,7 @@ public class CartServiceImpl implements CartService {
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
-
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     public PageResponseDTO<CartDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName) {
@@ -76,5 +77,27 @@ public class CartServiceImpl implements CartService {
                 .dtoList(cartDTOList)
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public CartDetailDTO getOrderDetail(Long orderId) {
+
+        Optional<OrderItem> result = orderItemRepository.getOrderItemByOrderItemId(orderId);
+
+        if(result.isPresent()){
+            OrderItem orderItem = result.get();
+
+            log.error("getOrderDetail : " + orderItem.getShopItem().getName());
+
+
+            CartDetailDTO cartDetailDTO = CartDetailDTO.builder()
+                    .orderCount(orderItem.getOrderCount())
+                    .itemName(orderItem.getShopItem().getName())
+                    .itemPrice(orderItem.getShopItem().getPrice())
+                    .build();
+            return cartDetailDTO;
+        }
+
+        return null;
     }
 }
