@@ -100,4 +100,22 @@ public class CartServiceImpl implements CartService {
 
         return null;
     }
+
+    @Override
+    public Order orderCancel(Long orderId) throws Exception {
+
+        log.error("orderCancel:  orderId = " +orderId);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> {
+                    log.info("User expected to delete cart but was empty. orderId = '{}',"
+                            , orderId);
+                    return new Exception("장바구니가 비어있습니다");
+                });
+
+        log.error("orderCancel" + order.getOrderId());
+        orderRepository.delete(order);
+
+
+        return order;
+    }
 }
