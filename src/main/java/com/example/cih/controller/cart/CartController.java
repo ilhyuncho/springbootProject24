@@ -30,8 +30,7 @@ public class CartController {
     public String add(@Valid CartDTO cartDTO,
                       BindingResult bindingResult,
                       RedirectAttributes redirectAttributes,
-                      Principal principal
-                       ){
+                      Principal principal){
 
         // 구현 하기
         cartService.addCart(cartDTO, principal.getName());
