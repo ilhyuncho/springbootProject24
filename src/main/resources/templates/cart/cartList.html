@@ -34,7 +34,7 @@
                             <td>[[${dto.itemCount}]]</td>
                             <td>[[${dto.itemOption}]]</td>
                             <td>
-                                <a th:href="|@{/shop/userCarRead(carId=${dto.shopItemId})}|" class="text-decoration-none">삭제</a>
+                                <a th:href="|@{/cart/cancel(cartId=${dto.cartId})}|" class="text-decoration-none">삭제</a>
                             </td>
                         </tr>
                         </tbody>

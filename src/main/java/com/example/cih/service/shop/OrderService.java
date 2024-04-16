@@ -8,9 +8,8 @@ import com.example.cih.dto.PageResponseDTO;
 
 public interface OrderService {
 
-    Long order(String userName, Long itemId, int count) throws Exception;
-
+    Long order(String userName, Long itemId, int count);
     PageResponseDTO<OrderDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName);
     OrderDetailDTO getOrderDetail(Long orderId);
-    Order cancelOrder(Long orderId) throws Exception;
+    Order cancelOrder(Long orderId);
 }

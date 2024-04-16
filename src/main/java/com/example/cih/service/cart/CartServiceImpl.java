@@ -1,8 +1,8 @@
 package com.example.cih.service.cart;
 
-import com.example.cih.domain.shop.Order;
-import com.example.cih.domain.shop.OrderItemRepository;
-import com.example.cih.domain.shop.OrderRepository;
+import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.common.exception.UserNotFoundException;
+import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.PageRequestDTO;
@@ -10,6 +10,8 @@ import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartDTO;
 import com.example.cih.domain.cart.CartRepository;
+import com.example.cih.dto.user.UserDTO;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -30,10 +32,29 @@ public class CartServiceImpl implements CartService {
 
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
+    private final ShopItemRepository shopItemRepository;
 
+    private final UserService userService;
 
-    private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
+    @Override
+    public Cart addCart(CartDTO cartDTO, String userName) {
+
+        User user = userService.findUser(userName);
+
+        ShopItem shopItem = shopItemRepository.findById(cartDTO.getShopItemId())
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
+        Cart cart = Cart.builder()
+                        .shopItem(shopItem)
+                        .itemCount(cartDTO.getItemCount())
+                        .itemOption(cartDTO.getItemOption())
+                        .user(user)
+                        .build();
+
+        cartRepository.save(cart);
+
+        return cart;
+    }
 
     @Override
     public PageResponseDTO<CartDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName) {
@@ -42,10 +63,9 @@ public class CartServiceImpl implements CartService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("cartId");
 
-        Optional<User> user = userRepository.findByUserName(userName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
-        Page<Cart> result = cartRepository.findByUser(userInfo, pageable );
+        Page<Cart> result = cartRepository.findByUser(user, pageable );
         List<Cart> cartList = result.getContent();
 
 //        List<CarInfoDTO> dtoList = result.getContent().stream()
@@ -75,20 +95,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Order deleteInCart(Long orderId) throws Exception {
+    public Cart deleteInCart(Long cartId) {
 
-        log.error("deleteInCart:  orderId = " +orderId);
-        Order order = orderRepository.findById(orderId)
+        log.error("deleteInCart:  cartId = " +cartId);
+        Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> {
-                    log.info("User expected to delete cart but was empty. orderId = '{}',"
-                            , orderId);
-                    return new Exception("장바구니가 비어있습니다");
+                    log.info("User expected to delete cart but was empty. cartId = '{}',"
+                            , cartId);
+                    return new ItemNotFoundException("선택 상품이 없습니다");
                 });
 
-        log.error("deleteInCart" + order.getOrderId());
-        orderRepository.delete(order);
+        log.error("deleteInCart" + cart.getCartId());
+        cartRepository.delete(cart);
 
 
-        return order;
+        return cart;
     }
 }

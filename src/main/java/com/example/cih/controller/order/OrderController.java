@@ -27,7 +27,7 @@ public class OrderController {
 
     @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
     @PostMapping("/add")
-    public String add(OrderDTO orderDTO, String userName) throws Exception {
+    public String add(OrderDTO orderDTO, String userName){
 
         Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
         return "/shop/main";
@@ -59,7 +59,7 @@ public class OrderController {
     @ApiOperation(value = "주문 취소", notes = "")
     @PostMapping("/cancel")
     public String cancel(Long orderId,
-                              Model model) throws Exception {
+                              Model model){
 
         log.error("orderCancel()~~~ ");
 

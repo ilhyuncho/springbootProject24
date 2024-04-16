@@ -26,7 +26,7 @@ public class ShopController {
 
     @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
     @PostMapping("/order")
-    public String Sample(OrderDTO orderDTO, String userName) throws Exception {
+    public String Sample(OrderDTO orderDTO, String userName){
 
         Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
 

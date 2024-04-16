@@ -1,5 +1,6 @@
 package com.example.cih.service.shop;
 
+import com.example.cih.common.exception.orderNotFoundException;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
@@ -8,6 +9,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.dto.order.OrderDetailDTO;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -26,27 +28,28 @@ import java.util.Optional;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
-    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
-    private final ShopItemService shopItemService;
+
     private final OrderItemRepository orderItemRepository;
 
+    private final UserService userService;
+    private final ShopItemService shopItemService;
+
     @Override
-    public Long order(String userName, Long itemId, int count) throws Exception {
+    public Long order(String userName, Long itemId, int count){
 
         log.error(userName + "," + itemId + "," + count);
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName(userName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
         ShopItem shopItem = shopItemService.findOne(itemId);
 
-        Delivery delivery = new Delivery(userInfo.getAddress());
+        Delivery delivery = new Delivery(user.getAddress());
         // 주문 상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
 
 
-        Order order = Order.createOrder(userInfo, delivery, orderItem);
+        Order order = Order.createOrder(user, delivery, orderItem);
 
         orderRepository.save(order);
 
@@ -60,10 +63,9 @@ public class OrderServiceImpl implements OrderService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("orderStatus");
 
-        Optional<User> user = userRepository.findByUserName(userName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
-        Page<Order> result = orderRepository.findByUser(userInfo, pageable );
+        Page<Order> result = orderRepository.findByUser(user, pageable );
         List<Order> orderList = result.getContent();
 
 //        List<CarInfoDTO> dtoList = result.getContent().stream()
@@ -120,14 +122,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order cancelOrder(Long orderId) throws Exception {
+    public Order cancelOrder(Long orderId){
 
         log.error("cancelOrder:  orderId = " +orderId);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
                     log.info("User expected to delete cart but was empty. orderId = '{}',"
                             , orderId);
-                    return new Exception("장바구니가 비어있습니다");
+                    return new orderNotFoundException("장바구니가 비어있습니다");
                 });
 
         log.error("cancelOrder" + order.getOrderId());

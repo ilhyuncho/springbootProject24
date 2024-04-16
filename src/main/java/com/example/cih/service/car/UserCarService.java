@@ -16,8 +16,8 @@ public interface UserCarService {
 
     Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
 
-    List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String UserName);
-    List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String UserName);
+    List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
+    List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName);
 
 
     // DTO를 엔티티로 변환하기

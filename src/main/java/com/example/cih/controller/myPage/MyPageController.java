@@ -41,9 +41,7 @@ public class MyPageController {
     @GetMapping("/userCarInfo")
     public String userCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
-        log.error("userName: " + userName);
-
-        UserDTO userDTO = userService.findByUserName(userName);
+        UserDTO userDTO = userService.findUserDTO(userName);
         log.error("userDTO: " + userDTO);
 
         List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
@@ -57,7 +55,7 @@ public class MyPageController {
 
         log.error("userName: " + userName);
 
-        UserDTO userDTO = userService.findByUserName(userName);
+        UserDTO userDTO = userService.findUserDTO(userName);
         log.error("userDTO: " + userDTO);
 
         // Projection 타입으로 리턴

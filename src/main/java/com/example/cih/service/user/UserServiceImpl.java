@@ -1,5 +1,6 @@
 package com.example.cih.service.user;
 
+import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.user.UserDTO;
@@ -22,10 +23,21 @@ public class UserServiceImpl implements UserService{
     private final ModelMapper modelMapper;
 
     @Override
-    public UserDTO findByUserName(String userName){
-        Optional<User> user = userRepository.findByUserName(userName);
+    public UserDTO findUserDTO(String userName){
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;
     }
+
+    @Override
+    public User findUser(String userName) {
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
+
+        return user;
+    }
+
+
 }

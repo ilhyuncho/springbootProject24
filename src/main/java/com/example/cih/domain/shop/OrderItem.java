@@ -29,7 +29,7 @@ public class OrderItem {
     private int orderPrice;
     private int orderCount;
 
-    public static OrderItem createOrderItem(ShopItem shopItem, int count) throws Exception {
+    public static OrderItem createOrderItem(ShopItem shopItem, int count){
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)

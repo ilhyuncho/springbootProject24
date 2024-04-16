@@ -5,6 +5,7 @@ import com.example.cih.domain.user.UserCredit;
 import com.example.cih.domain.user.UserCreditRepository;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.user.UserCreditDTO;
+import com.example.cih.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -24,17 +25,16 @@ public class UserCreditServiceImpl implements UserCreditService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    private final UserService userService;
+
     @Override
     public Long register(String userName, UserCreditDTO userCreditDTO){
 
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName(userName);
-        User userInfo = user.orElseThrow();
-
-        log.error("userInfo: " + userInfo);
+        User user = userService.findUser(userName);
 
         UserCredit userCredit = UserCredit.builder()
-                .user(userInfo)
+                .user(user)
                 .bankName(userCreditDTO.getBankName())
                 .bankAccount(userCreditDTO.getBankAccount())
                 .build();

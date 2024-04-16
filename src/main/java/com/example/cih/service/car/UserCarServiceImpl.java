@@ -1,5 +1,6 @@
 package com.example.cih.service.car;
 
+import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
@@ -10,6 +11,7 @@ import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -32,14 +34,15 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserRepository userRepository;
     private final FileHandler fileHandler;
 
+    private UserService userService;
+
     @Override
     public Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO) {
 
         log.error(carSpecDTO.toString());
 
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName(userName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
 
         // Car car = this.dtoToEntity(carSpecDTO);
@@ -50,7 +53,7 @@ public class UserCarServiceImpl implements UserCarService {
                 .carKm(carSpecDTO.getCarKm())
                 .carNumber(carSpecDTO.getCarNumber())
                 .carGrade(carSpecDTO.getCarGrade())
-                .user(userInfo).build();
+                .user(user).build();
 
         Long carId = carRepository.save(car).getCarId();
 
@@ -61,11 +64,10 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String UserName){
+    public List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
 
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName(UserName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
         // 보유 차량 get
         // 1차 작업
@@ -88,21 +90,20 @@ public class UserCarServiceImpl implements UserCarService {
         //        }
 
         // 3차 작업
-        List<CarInfoDTO> listResult = userInfo.getOwnCars().stream()
+        List<CarInfoDTO> listResult = user.getOwnCars().stream()
                 .map(this::entityToDTO).collect(Collectors.toList());
 
         return listResult;
     }
 
     @Override
-    public List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String UserName){
+    public List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName){
 
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName(UserName);
-        User userInfo = user.orElseThrow();
+        User user = userService.findUser(userName);
 
         // 보유 차량 get
-        List<Projection.CarSummary> carSummaryList = carRepository.findByUser(userInfo);
+        List<Projection.CarSummary> carSummaryList = carRepository.findByUser(user);
 
         for (Projection.CarSummary carSummary : carSummaryList) {
             log.error(carSummary.getCarInfo());

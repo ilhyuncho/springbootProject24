@@ -42,7 +42,7 @@ public class UserCreditController {
 
         UserCreditDTO userCreditDTO = null;
 
-        UserDTO userDTO = userService.findByUserName(userName);
+        UserDTO userDTO = userService.findUserDTO(userName);
         if( userDTO != null) {
 
             log.error("userDTO: " + userDTO);

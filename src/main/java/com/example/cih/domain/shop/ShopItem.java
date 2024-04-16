@@ -1,6 +1,7 @@
 package com.example.cih.domain.shop;
 
 
+import com.example.cih.common.exception.NotEnoughStockCountException;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,9 +30,9 @@ public class ShopItem {
 //    @JoinColumn(name = "uId")
 //    private List<Category> categoryList = new ArrayList<>();
 
-    public int removeStock(int count) throws Exception {
+    public int removeStock(int count) {
         if( stockCount < count){
-            throw new Exception("need more Stock");
+            throw new NotEnoughStockCountException("need more Stock");
         }
         stockCount -= count;
         return stockCount;
