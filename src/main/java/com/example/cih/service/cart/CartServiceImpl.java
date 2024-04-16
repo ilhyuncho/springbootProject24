@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -66,26 +67,33 @@ public class CartServiceImpl implements CartService {
         User user = userService.findUser(userName);
 
         Page<Cart> result = cartRepository.findByUser(user, pageable );
-        List<Cart> cartList = result.getContent();
 
-//        List<CarInfoDTO> dtoList = result.getContent().stream()
-//                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
+        // Page는 map을 지원해서 내부 데이터를 다른것으로 변경 가능
+        List<CartDTO> cartDTOList = result.map(cart -> CartDTO.builder()
+                .cartId(cart.getCartId())
+                .shopItemId(cart.getShopItem().getShopItemId())
+                .itemName(cart.getShopItem().getName())
+                .itemCount(cart.getItemCount())
+                .itemOption(cart.getItemOption())
+                .build()).stream()
+                .collect(Collectors.toList());
 
-        List<CartDTO> cartDTOList = new ArrayList<>();
-
-        for (Cart cart : cartList) {
-            log.error("CartID-" + cart.getCartId());
-
-            CartDTO cartDTO = CartDTO.builder()
-                            .cartId(cart.getCartId())
-                            .shopItemId(cart.getShopItem().getShopItemId())
-                            .itemName(cart.getShopItem().getName())
-                            .itemCount(cart.getItemCount())
-                            .itemOption(cart.getItemOption())
-                            .build();
-
-            cartDTOList.add(cartDTO);
-        }
+//        List<Cart> cartList = result.getContent();
+//        List<CartDTO> cartDTOList = new ArrayList<>();
+//
+//        for (Cart cart : cartList) {
+//            log.error("CartID-" + cart.getCartId());
+//
+//            CartDTO cartDTO = CartDTO.builder()
+//                            .cartId(cart.getCartId())
+//                            .shopItemId(cart.getShopItem().getShopItemId())
+//                            .itemName(cart.getShopItem().getName())
+//                            .itemCount(cart.getItemCount())
+//                            .itemOption(cart.getItemOption())
+//                            .build();
+//
+//            cartDTOList.add(cartDTO);
+//        }
 
         return PageResponseDTO.<CartDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
