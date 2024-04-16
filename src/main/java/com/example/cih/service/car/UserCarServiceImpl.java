@@ -34,7 +34,7 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserRepository userRepository;
     private final FileHandler fileHandler;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO) {

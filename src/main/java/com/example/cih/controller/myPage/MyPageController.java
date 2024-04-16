@@ -1,6 +1,7 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
@@ -38,6 +39,8 @@ public class MyPageController {
     private final UserService userService;
     private final CarService carService;
 
+    private final ModelMapper modelMapper;
+
     @GetMapping("/userCarInfo")
     public String userCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
@@ -66,12 +69,15 @@ public class MyPageController {
         return "/myPage/userCarSummaryInfo";
     }
     @GetMapping("/userCarRead")
-    public String userCarRead(PageRequestDTO pageRequestDTO, Long carId, Model model){
+    public String userCarRead(PageRequestDTO pageRequestDTO
+                             ,@RequestParam("carId") Car car        // 도메인 클래스 컨버터 기능
+                             ,Model model){
+        
+        // 이미 Param에서 Car 엔티티 정보 로딩 됨.. 단 조회 용으로 만
+        // 그리고 이기능은 많이 쓰이지 않는다
+        //CarInfoDTO carInfoDTO = carService.readOne(car.getCarId());
 
-        CarInfoDTO carInfoDTO = carService.readOne(carId);
-
-        log.info("get-read:" + carInfoDTO);
-
+        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
         model.addAttribute("responseDTO", carInfoDTO);
 
         return "/myPage/userCarRead";
