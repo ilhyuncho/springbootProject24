@@ -1,8 +1,9 @@
 package com.example.cih.controller.shop;
 
 
-import com.example.cih.domain.shop.OrderDTO;
+import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.service.shop.OrderService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -23,11 +24,18 @@ public class ShopController {
 
     }
 
+    @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
     @PostMapping("/order")
     public String Sample(OrderDTO orderDTO, String userName) throws Exception {
 
-        Long order = orderService.order(userName, orderDTO.getItemID(), orderDTO.getCount());
+        Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
 
         return "/shop/main";
     }
+
+
+
+
+
+    
 }

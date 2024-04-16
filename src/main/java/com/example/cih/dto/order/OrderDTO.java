@@ -1,4 +1,4 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.dto.order;
 
 
 import lombok.AllArgsConstructor;
@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartDetailDTO {
-    //private int orderStatus;
+public class OrderDTO {
+    private Long orderId;
+    private int orderStatus;
     private int orderCount;
-   // private Long shopItemId;
+    private Long shopItemId;
     private String itemName;
     private int itemPrice;
 }

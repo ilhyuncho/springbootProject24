@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <!--          HTML 테그의 속성이 아니라 HTML 콘텐츠 영역안에서 직접 데이터를 출력하고 싶으면 다음과 같이 [[...]] 를 사용하면 됩니다.-->
+                    [[${pageRequestDto.size}]]
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">주문 List</h5>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Order Count</th>
+                            <th scope="col">ShopItem ID</th>
+                            <th scope="col">Item Name</th>
+                            <th scope="col">Item Price</th>
+                            <th scope="col">주문 상세</th>
+                            <th scope="col">주문 상태</th>
+                        </tr>
+                        </thead>
+                        <tbody th:with="link = ${pageRequestDto.getLink()}">
+                        <tr th:each="dto:${responseDTO.dtoList}">
+                            <th scope="row">[[${dto.orderId}]]</th>
+                            <td>[[${dto.orderStatus}]]</td>
+                            <td>[[${dto.orderCount}]]</td>
+                            <td>[[${dto.shopItemId}]]</td>
+                            <td>[[${dto.itemName}]]</td>
+                            <td>[[${dto.itemPrice}]]</td>
+                            <td>
+                                <a th:href="|@{/order/orderDetail(orderId=${dto.orderId})}|" class="text-decoration-none">조회</a>
+                            </td>
+                            <td>
+                                <a th:href="|@{/shop/userCarRead(carId=${dto.shopItemId})}|" class="text-decoration-none">구매 취소</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 페이지 번호 출력-->
+                    <div class="float-end">
+                        <ul class="pagination flex-wrap">
+
+                            <li class="page-item" th:if="${responseDTO.prev}">
+                                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                            </li>
+
+                            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                                </li>
+                            </th:block>
+
+                            <li class="page-item" th:if="${responseDTO.next}">
+                                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- 페이지 번호 출력-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script layout:fragment="script" th:inline="javascript">
+    console.log("cart List.html()~~~~")
+
+    // clear 버튼 클릭 이벤트 begin ------------------
+    document.querySelector(".clearBtn").addEventListener("click", function(e){
+
+        console.log("clearBtn.click()~~~~")
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location = '/dashBoard/carList'
+    },false)
+    // clear 버튼 클릭 이벤트 end ------------------
+
+    // 페이지 버튼 클릭 이벤트 begin ------------------
+    document.querySelector(".pagination").addEventListener("click", function(e){
+
+        e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+        e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+        const target = e.target   // a 태그
+        if(target.tagName !== 'A'){
+            return
+        }
+
+        const num = target.getAttribute("data-num")
+        const formObj = document.querySelector("form")
+
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+        formObj.submit();
+
+    }, false)
+    // 페이지 버튼 클릭 이벤트 begin ------------------
+
+
+</script>

@@ -1,12 +1,12 @@
-package com.example.cih.sampleCode.temp;
+package com.example.cih.service.cart;
 
 import com.example.cih.domain.shop.Order;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.cart.CartDTO;
 
 
 public interface CartService {
     PageResponseDTO<CartDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName);
-    CartDetailDTO getOrderDetail(Long orderId);
-    Order orderCancel(Long orderId) throws Exception;
+    Order deleteInCart(Long orderId) throws Exception;
 }
