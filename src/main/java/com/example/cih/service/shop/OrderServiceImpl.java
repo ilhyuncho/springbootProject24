@@ -1,5 +1,7 @@
 package com.example.cih.service.shop;
 
+import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.common.exception.UserCreditNotFoundException;
 import com.example.cih.common.exception.orderNotFoundException;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
@@ -102,23 +104,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailDTO getOrderDetail(Long orderId) {
-        Optional<OrderItem> result = orderItemRepository.getOrderItemByOrderItemId(orderId);
 
-        if(result.isPresent()){
-            OrderItem orderItem = result.get();
+       OrderItem orderItem = orderItemRepository.getOrderItemByOrderItemId(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("orderItem이 존재하지않습니다"));;
 
-            log.error("getOrderDetail : " + orderItem.getShopItem().getName());
+        log.error("getOrderDetail : " + orderItem.getShopItem().getName());
 
+        OrderDetailDTO orderDetailDTO = OrderDetailDTO.builder()
+                .orderCount(orderItem.getOrderCount())
+                .itemName(orderItem.getShopItem().getName())
+                .itemPrice(orderItem.getShopItem().getPrice())
+                .build();
 
-            OrderDetailDTO orderDetailDTO = OrderDetailDTO.builder()
-                    .orderCount(orderItem.getOrderCount())
-                    .itemName(orderItem.getShopItem().getName())
-                    .itemPrice(orderItem.getShopItem().getPrice())
-                    .build();
-            return orderDetailDTO;
-        }
-
-        return null;
+        return orderDetailDTO;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.cih.service.user;
 
+import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.common.exception.UserCreditNotFoundException;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserCredit;
 import com.example.cih.domain.user.UserCreditRepository;
@@ -46,23 +48,17 @@ public class UserCreditServiceImpl implements UserCreditService {
     @Override
     public UserCreditDTO readCreditInfo(User user){
 
-        UserCreditDTO userCreditDTO = null;
+        UserCredit userCredit = userCreditRepository.findByUser(user)
+                                        .orElseThrow(() -> new UserCreditNotFoundException("결제 정보가 존재하지않습니다"));
 
-        Optional<UserCredit> byUser = userCreditRepository.findByUser(user);
+        log.error("readCreditInfo() - userCredit=" + userCredit);
 
-        if(byUser.isPresent()) {
-            UserCredit userCredit = byUser.get();
-
-            log.error("readCreditInfo() - userCredit=" + userCredit);
-
-            userCreditDTO = UserCreditDTO.builder()
-                    .userCreditID(userCredit.getUserCreditsId())
-                    .userId(userCredit.getUser().getUserId())
-                    .bankAccount(userCredit.getBankAccount())
-                    .bankName(userCredit.getBankName())
-                    .build();
-        }
-
+        UserCreditDTO userCreditDTO = UserCreditDTO.builder()
+                .userCreditID(userCredit.getUserCreditsId())
+                .userId(userCredit.getUser().getUserId())
+                .bankAccount(userCredit.getBankAccount())
+                .bankName(userCredit.getBankName())
+                .build();
 
         return userCreditDTO;
     }
