@@ -9,27 +9,27 @@
 
 <div layout:fragment="content">
 
-  <form action="/shop/order" method="post">
+  <form action="/cart/add" method="post">
 
     <div class="input-group mb-3">
-      <span class="input-group-text">itemID</span>
-      <input type="text" name="itemID" class="form-control">
+      <span class="input-group-text">itemName</span>
+      <input type="text" name="itemName" class="form-control">
     </div>
 
     <div class="input-group mb-3">
-      <span class="input-group-text">count</span>
-      <input type="text" name="count" class="form-control">
+      <span class="input-group-text">itemCount</span>
+      <input type="text" name="itemCount" class="form-control">
     </div>
 
     <div class="input-group mb-3">
-      <span class="input-group-text">userName</span>
-      <input type="text" name="userName" class="form-control">
+      <span class="input-group-text">itemOption</span>
+      <input type="text" name="itemOption" class="form-control">
     </div>
 
 
     <div class="my-4">
       <div class="float-end">
-        <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+        <button type="submit" class="btn btn-primary submitBtn">장바구니 넣기</button>
       </div>
     </div>
 

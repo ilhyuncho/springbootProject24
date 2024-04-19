@@ -22,7 +22,7 @@ public class ShopItem {
     @Column(name="SHOP_ITEM_ID")
     private Long shopItemId;
 
-    private String name;
+    private String itemName;
     private int price;
     private int stockCount;     // 재고수량
 

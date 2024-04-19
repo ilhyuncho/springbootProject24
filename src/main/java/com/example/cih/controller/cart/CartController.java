@@ -26,16 +26,23 @@ import java.security.Principal;
 public class CartController {
     private final CartService cartService;
 
+    @ApiOperation(value = "장바구니 넣기", notes = "장바구니에 있는 모든 상품을 조회")
     @PostMapping("/add")
     public String add(@Valid CartDTO cartDTO,
                       BindingResult bindingResult,
                       RedirectAttributes redirectAttributes,
                       Principal principal){
 
-        // 구현 하기
+        if(bindingResult.hasErrors()){
+            log.info("has errors........");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            return "redirect:/shop/main";
+        }
+
         cartService.addCart(cartDTO, principal.getName());
         
-        return "/cart/add"; // 어디로 이동할지 정해야 함
+        return "/shop/main"; // 어디로 이동할지 정해야 함
     }
 
     @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")

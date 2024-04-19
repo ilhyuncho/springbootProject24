@@ -81,13 +81,13 @@ public class OrderServiceImpl implements OrderService {
             List<OrderItem> orderItemList = order.getOrderItemList();
             for (OrderItem orderItem : orderItemList) {
                 log.error("OrderItemID-" + orderItem.getOrderItemId());
-                log.error("ShopItem Name-" + orderItem.getShopItem().getName());
+                log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
                 OrderDTO orderDTO = OrderDTO.builder()
                         .orderId(order.getOrderId())
                         .orderStatus(order.getOrderStatus())
                         .orderCount(orderItem.getOrderCount())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
-                        .itemName(orderItem.getShopItem().getName())
+                        .itemName(orderItem.getShopItem().getItemName())
                         .itemPrice(orderItem.getShopItem().getPrice())
                         .build();
 
@@ -108,11 +108,11 @@ public class OrderServiceImpl implements OrderService {
        OrderItem orderItem = orderItemRepository.getOrderItemByOrderItemId(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("orderItem이 존재하지않습니다"));;
 
-        log.error("getOrderDetail : " + orderItem.getShopItem().getName());
+        log.error("getOrderDetail : " + orderItem.getShopItem().getItemName());
 
         OrderDetailDTO orderDetailDTO = OrderDetailDTO.builder()
                 .orderCount(orderItem.getOrderCount())
-                .itemName(orderItem.getShopItem().getName())
+                .itemName(orderItem.getShopItem().getItemName())
                 .itemPrice(orderItem.getShopItem().getPrice())
                 .build();
 

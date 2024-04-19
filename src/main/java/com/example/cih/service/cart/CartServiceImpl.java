@@ -42,8 +42,9 @@ public class CartServiceImpl implements CartService {
 
         User user = userService.findUser(userName);
 
-        ShopItem shopItem = shopItemRepository.findById(cartDTO.getShopItemId())
+        ShopItem shopItem = shopItemRepository.findByItemName(cartDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
 
         Cart cart = Cart.builder()
                         .shopItem(shopItem)
@@ -72,7 +73,7 @@ public class CartServiceImpl implements CartService {
         List<CartDTO> cartDTOList = result.map(cart -> CartDTO.builder()
                 .cartId(cart.getCartId())
                 .shopItemId(cart.getShopItem().getShopItemId())
-                .itemName(cart.getShopItem().getName())
+                .itemName(cart.getShopItem().getItemName())
                 .itemCount(cart.getItemCount())
                 .itemOption(cart.getItemOption())
                 .build()).stream()
