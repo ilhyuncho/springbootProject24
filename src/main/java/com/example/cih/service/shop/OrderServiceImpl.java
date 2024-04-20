@@ -1,11 +1,9 @@
 package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
-import com.example.cih.common.exception.UserCreditNotFoundException;
 import com.example.cih.common.exception.orderNotFoundException;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserRepository;
 import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;

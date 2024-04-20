@@ -48,19 +48,27 @@ public class UserCreditServiceImpl implements UserCreditService {
     @Override
     public UserCreditDTO readCreditInfo(User user){
 
-        UserCredit userCredit = userCreditRepository.findByUser(user)
-                                        .orElseThrow(() -> new UserCreditNotFoundException("결제 정보가 존재하지않습니다"));
+        //UserCredit userCredit = userCreditRepository.findByUser(user).
+               // .orElseThrow(() -> new UserCreditNotFoundException("결제 정보가 존재하지않습니다"));
 
-        log.error("readCreditInfo() - userCredit=" + userCredit);
+        Optional<UserCredit> result = userCreditRepository.findByUser(user);
 
-        UserCreditDTO userCreditDTO = UserCreditDTO.builder()
-                .userCreditID(userCredit.getUserCreditsId())
-                .userId(userCredit.getUser().getUserId())
-                .bankAccount(userCredit.getBankAccount())
-                .bankName(userCredit.getBankName())
-                .build();
+        if( result.isPresent()){
+            UserCredit userCredit = result.get();
 
-        return userCreditDTO;
+            log.error("readCreditInfo() - userCredit=" + userCredit);
+
+            UserCreditDTO userCreditDTO = UserCreditDTO.builder()
+                    .userCreditID(userCredit.getUserCreditsId())
+                    .userId(userCredit.getUser().getUserId())
+                    .bankAccount(userCredit.getBankAccount())
+                    .bankName(userCredit.getBankName())
+                    .build();
+
+            return userCreditDTO;
+        }
+
+        return null;
     }
 
 }
