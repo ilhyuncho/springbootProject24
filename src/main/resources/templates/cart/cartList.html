@@ -23,7 +23,40 @@
                             </ul>
                         </div>
                     </div>
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            <ul class="pagination cartListPaging">
+                                <!--                댓글 페이징 처리-->
+                            </ul>
+                        </div>
+                    </div>
+
                 </div><!-- <div class="card-body">-->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modifyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title replyHeader"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 정보</span>
+                        <input type="text" class="form-control cartIdText">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info modifyBtn">Modify</button>
+                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    <button type="button" class="btn btn-outline-dark closeModifyBtn">Close</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -33,41 +66,69 @@
     <script src="/js/cart.js"></script>
 </div>
 
-
-
-
 <script layout:fragment="script" th:inline="javascript">
 
-    const currentUser = [[${#authentication.principal.username}]]
-    const cartList = document.querySelector('.cartList')  // 댓글 목록 DOM
+    // 페이지 번호 클릭
+    let page = 1
+    let size = 5
 
-    // 비동기 처리
-    // getList(currentUser) 호출시 Promise가 반환
-    getList(currentUser).then(data => {
-        //console.log(data)
-        printList(data.dtoList) // 목록 처리
-    }).catch(e=>{
-        console.error(e)
-    })
+    const currentUser = [[${#authentication.principal.username}]]
+
+    const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
+    const cartIdText = document.querySelector(".cartIdText")
+    const cartList = document.querySelector('.cartList')        // 목록 DOM
+    const cartListPaging = document.querySelector('.cartListPaging')  // 페이지 목록 DOM
+    const modifyBtn = document.querySelector(".modifyBtn")
+    const removeBtn = document.querySelector(".removeBtn")
+    const closeModifyBtn = document.querySelector(".closeModifyBtn")
+
+    function printCartList(page,size,goLast){
+        // getList(currentUser) 호출시 Promise가 반환
+        getList({page,size,currentUser}).then(data => {
+            // console.log(data)
+            printList(data.dtoList) // 목록 처리
+            printPages(data)        // 페이지 처리
+
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
+
+    printCartList(1,5,true)
 
     function printList(dtoList){    // 목록 출력
         let str = '';
 
         if(dtoList && dtoList.length > 0){
             for(const dto of dtoList){
-                str += `<li class="list-group-item d-flex replyItem">
+                str += `<li class="list-group-item d-flex cartItem">
                     <span class="col-2">${dto.cartId}</span>
                     <span class="col-2">${dto.shopItemId}</span>
                     <span class="col-2">${dto.itemName}</span>
                     <span class="col-2">${dto.itemCount}</span>
-                    <span class="col-2" data-rno="${dto.shopItemId}">취소</span>
+                    <span class="col-2" data-rno="${dto.cartId}">취소</span>
                     </li>`
             }
         }
         cartList.innerHTML = str
     }
 
-    cartList.addEventListener("click", function(e){
+    function printPages(data){
+        let pageStr = '';
+
+        if(data.prev){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+        }
+        for(let i = data.start; i <= data.end; i++){
+            pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+        }
+        if(data.next){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
+        }
+        cartListPaging.innerHTML = pageStr
+    }
+
+    cartList.addEventListener("click", function(e){     // 장바구니 상품 삭제
         e.preventDefault()
         e.stopPropagation()
 
@@ -77,12 +138,14 @@
             return
         }
 
-        const rno = target.getAttribute("data-rno")
-        if(!rno){
+        const cartId = target.getAttribute("data-rno")
+        if(!cartId){
             return
         }
 
-        alert("항목 조회")
+        cartIdText.value = cartId
+
+        modifyModal.show()
 
         // getReply(rno).then(reply => {
         //     console.log(reply)
@@ -91,11 +154,40 @@
         //
         //     modifyModal.show()
         //
-        //     hasAuth = currentUser === reply.replyer     // 댓글의 작성자와 현재 사용자 일치 여부 확인
+        //
         //
         // }).catch(e => alert('error'))
 
     }, false)
+
+    removeBtn.addEventListener("click", function(e) {
+        const cartId = cartIdText.value
+
+        removeCartItem(cartId).then(result=>{
+            alert(result.cartId + '상품이 삭제되었습니다')
+
+            cartIdText.value = ''
+            modifyModal.hide()
+
+            printCartList(1,5,true)
+        }).catch(e=>{
+            console.log(e)
+        })
+    },false)
+
+    cartListPaging.addEventListener("click", function(e){
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        if(!target || target.tagName !== 'A'){
+            return
+        }
+        page = target.getAttribute("data-page")
+        printCartList(page,size)
+
+    },false)
 
 
 
