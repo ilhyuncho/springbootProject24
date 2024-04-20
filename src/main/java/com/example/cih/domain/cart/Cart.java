@@ -34,4 +34,8 @@ public class Cart extends BaseEntity {
 
     @Column(name="itemOption", nullable = false)
     private Integer itemOption;        // 추후 타입 변경 예정
+
+    public void changeItemCount(int itemCount) {
+        this.itemCount = itemCount;
+    }
 }

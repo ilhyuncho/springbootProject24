@@ -47,8 +47,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        <span class="input-group-text">상품 정보</span>
-                        <input type="text" class="form-control cartIdText">
+                        <span class="input-group-text">상품 이름</span>
+                        <input type="text" class="form-control cartIdText" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">구매 갯수</span>
+                        <input type="text" class="form-control cartItemCount">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -76,6 +80,7 @@
 
     const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
     const cartIdText = document.querySelector(".cartIdText")
+    const cartItemCount = document.querySelector(".cartItemCount")
     const cartList = document.querySelector('.cartList')        // 목록 DOM
     const cartListPaging = document.querySelector('.cartListPaging')  // 페이지 목록 DOM
     const modifyBtn = document.querySelector(".modifyBtn")
@@ -106,7 +111,7 @@
                     <span class="col-2">${dto.shopItemId}</span>
                     <span class="col-2">${dto.itemName}</span>
                     <span class="col-2">${dto.itemCount}</span>
-                    <span class="col-2" data-rno="${dto.cartId}">취소</span>
+                    <span class="col-2" data-cartId="${dto.cartId}" data-itemCount="${dto.itemCount}">수정</span>
                     </li>`
             }
         }
@@ -128,7 +133,7 @@
         cartListPaging.innerHTML = pageStr
     }
 
-    cartList.addEventListener("click", function(e){     // 장바구니 상품 삭제
+    cartList.addEventListener("click", function(e){     // 장바구니 상품 정보 수정 ( & 삭제 )
         e.preventDefault()
         e.stopPropagation()
 
@@ -138,12 +143,15 @@
             return
         }
 
-        const cartId = target.getAttribute("data-rno")
-        if(!cartId){
+        const cartId = target.getAttribute("data-cartId")
+        const itemCount = target.getAttribute("data-itemCount")
+
+        if(!cartId || itemCount <= 0){
             return
         }
 
         cartIdText.value = cartId
+        cartItemCount.value = itemCount
 
         modifyModal.show()
 
@@ -160,11 +168,33 @@
 
     }, false)
 
+    modifyBtn.addEventListener("click", function(e) {
+        const cartId = cartIdText.value
+        const itemCount = cartItemCount.value
+
+        const itemObj = {
+            cartId:cartId,
+            itemCount:itemCount
+        }
+
+        modifyCartItem(itemObj).then(result=>{
+            alert(result.cartId + '상품이 수정 되었습니다')
+
+            cartIdText.value = ''
+            cartItemCount.value = ''
+            modifyModal.hide()
+
+            printCartList(1,5,true)
+        }).catch(e=>{
+            console.log(e)
+        })
+    },false)
+
     removeBtn.addEventListener("click", function(e) {
         const cartId = cartIdText.value
 
         removeCartItem(cartId).then(result=>{
-            alert(result.cartId + '상품이 삭제되었습니다')
+            alert(result.cartId + '상품이 삭제 되었습니다')
 
             cartIdText.value = ''
             modifyModal.hide()
@@ -173,6 +203,10 @@
         }).catch(e=>{
             console.log(e)
         })
+    },false)
+
+    closeModifyBtn.addEventListener("click", function(e){
+        modifyModal.hide()
     },false)
 
     cartListPaging.addEventListener("click", function(e){

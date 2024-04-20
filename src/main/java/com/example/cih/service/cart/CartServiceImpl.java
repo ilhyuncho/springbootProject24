@@ -116,8 +116,21 @@ public class CartServiceImpl implements CartService {
 
         log.error("deleteInCart" + cart.getCartId());
         cartRepository.delete(cart);
-
-
         return cart;
+    }
+
+    @Override
+    public void modify(CartDTO cartDTO) {
+
+        Cart cart = cartRepository.findById(cartDTO.getCartId())
+                .orElseThrow(() -> {
+                    log.info("User expected to delete cart but was empty. cartId = '{}',"
+                            , cartDTO.getCartId());
+                    return new ItemNotFoundException("선택 상품이 없습니다");
+                });
+
+        cart.changeItemCount(cartDTO.getItemCount());
+
+        cartRepository.save(cart);
     }
 }

@@ -5,12 +5,23 @@
 
 //async : 해당 함수가 비동기 처리를 위한 함수 라는 표시
 //await : async 함수 내에서 비동기 호출하는 부분
-async function getList({page, size, userName}){
+async function getList({page, size, userName, goLast}){
     const result = await axios.get(`/cartRest/list`, {params: {page, size, userName}})
 
     console.log(result)
 
+    if(goLast){
+        const total = result.data.total
+        const lastPage = parseInt(Math.ceil(total/size))
+        return getList({page:lastPage, size:size, userName:userName})
+    }
+
     return result.data
+}
+
+async function modifyCartItem(itemObj){
+    const response = await axios.put(`/cartRest/${itemObj.cartId}`, itemObj)
+    return response.data
 }
 
 async function removeCartItem(cartId){

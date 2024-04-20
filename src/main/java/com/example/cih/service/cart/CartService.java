@@ -12,4 +12,5 @@ public interface CartService {
     Cart addCart(CartDTO cartDTO, String userName);
     PageResponseDTO<CartDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName);
     Cart deleteInCart(Long cartId);
+    void modify(CartDTO cartDTO);
 }

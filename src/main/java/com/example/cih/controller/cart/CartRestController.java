@@ -9,6 +9,7 @@ import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,17 @@ public class CartRestController {
 
         return resultMap;
     }
+    @ApiOperation(value="장바구니 아이템 수량 변경", notes = "PUT 방식으로")
+    @PutMapping(value="/{cartId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Long> modify( @PathVariable("cartId") Long cartId, @RequestBody CartDTO cartDTO){
 
+        cartDTO.setCartId(cartId);
+        cartService.modify(cartDTO);
+
+        Map<String, Long> resultMap = new HashMap<>();
+        resultMap.put("cartId", cartId);
+
+        return resultMap;
+    }
 
 }
