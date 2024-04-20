@@ -10,102 +10,108 @@
             <div class="card">
                 <div class="card-header">
                     <!--          HTML 테그의 속성이 아니라 HTML 콘텐츠 영역안에서 직접 데이터를 출력하고 싶으면 다음과 같이 [[...]] 를 사용하면 됩니다.-->
-                    [[${pageRequestDto.size}]]
+<!--                    [[${pageRequestDto.size}]]-->
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">장바구니 List</h5>
 
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">cart ID</th>
-                            <th scope="col">shopItemId</th>
-                            <th scope="col">itemName</th>
-                            <th scope="col">itemCount</th>
-                            <th scope="col">itemOption</th>
-                            <th scope="col">주문 상태</th>
-                        </tr>
-                        </thead>
-                        <tbody th:with="link = ${pageRequestDto.getLink()}">
-                        <tr th:each="dto:${responseDTO.dtoList}">
-                            <th scope="row">[[${dto.cartId}]]</th>
-                            <td>[[${dto.shopItemId}]]</td>
-                            <td>[[${dto.itemName}]]</td>
-                            <td>[[${dto.itemCount}]]</td>
-                            <td>[[${dto.itemOption}]]</td>
-                            <td>
-                                <a th:href="|@{/cart/cancel(cartId=${dto.cartId})}|" class="text-decoration-none">삭제</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- 페이지 번호 출력-->
-                    <div class="float-end">
-                        <ul class="pagination flex-wrap">
-
-                            <li class="page-item" th:if="${responseDTO.prev}">
-                                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
-                            </li>
-
-                            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
-                                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-                                </li>
-                            </th:block>
-
-                            <li class="page-item" th:if="${responseDTO.next}">
-                                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
-                            </li>
-
-                        </ul>
+                    <!--    댓글 처리 영역-->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <ul class="list-group cartList">
+                                <!-- 장바구니 리스트 영역-->
+                            </ul>
+                        </div>
                     </div>
-                    <!-- 페이지 번호 출력-->
-
-                </div>
+                </div><!-- <div class="card-body">-->
             </div>
         </div>
     </div>
 
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/cart.js"></script>
 </div>
 
 
 
 
 <script layout:fragment="script" th:inline="javascript">
-    console.log("cart List.html()~~~~")
 
-    // clear 버튼 클릭 이벤트 begin ------------------
-    document.querySelector(".clearBtn").addEventListener("click", function(e){
+    const currentUser = [[${#authentication.principal.username}]]
+    const cartList = document.querySelector('.cartList')  // 댓글 목록 DOM
 
-        console.log("clearBtn.click()~~~~")
+    // 비동기 처리
+    // getList(currentUser) 호출시 Promise가 반환
+    getList(currentUser).then(data => {
+        //console.log(data)
+        printList(data.dtoList) // 목록 처리
+    }).catch(e=>{
+        console.error(e)
+    })
 
+    function printList(dtoList){    // 목록 출력
+        let str = '';
+
+        if(dtoList && dtoList.length > 0){
+            for(const dto of dtoList){
+                str += `<li class="list-group-item d-flex replyItem">
+                    <span class="col-2">${dto.cartId}</span>
+                    <span class="col-2">${dto.shopItemId}</span>
+                    <span class="col-2">${dto.itemName}</span>
+                    <span class="col-2">${dto.itemCount}</span>
+                    <span class="col-2" data-rno="${dto.shopItemId}">취소</span>
+                    </li>`
+            }
+        }
+        cartList.innerHTML = str
+    }
+
+    cartList.addEventListener("click", function(e){
         e.preventDefault()
         e.stopPropagation()
 
-        self.location = '/dashBoard/carList'
-    },false)
-    // clear 버튼 클릭 이벤트 end ------------------
+        const target = e.target
 
-    // 페이지 버튼 클릭 이벤트 begin ------------------
-    document.querySelector(".pagination").addEventListener("click", function(e){
-
-        e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-        e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
-
-        const target = e.target   // a 태그
-        if(target.tagName !== 'A'){
+        if(!target || target.tagName !== 'SPAN'){
             return
         }
 
-        const num = target.getAttribute("data-num")
-        const formObj = document.querySelector("form")
+        const rno = target.getAttribute("data-rno")
+        if(!rno){
+            return
+        }
 
-        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-        formObj.submit();
+        alert("항목 조회")
+
+        // getReply(rno).then(reply => {
+        //     console.log(reply)
+        //     replyHeader.innerHTML = reply.rno
+        //     modifyText.value = reply.replyText
+        //
+        //     modifyModal.show()
+        //
+        //     hasAuth = currentUser === reply.replyer     // 댓글의 작성자와 현재 사용자 일치 여부 확인
+        //
+        // }).catch(e => alert('error'))
 
     }, false)
-    // 페이지 버튼 클릭 이벤트 begin ------------------
+
+
+
+
+    // clear 버튼 클릭 이벤트 begin ------------------
+    // document.querySelector(".clearBtn").addEventListener("click", function(e){
+    //
+    //     console.log("clearBtn.click()~~~~")
+    //
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    //
+    //     self.location = '/dashBoard/carList'
+    // },false)
+    // clear 버튼 클릭 이벤트 end ------------------
+
 
 
 </script>

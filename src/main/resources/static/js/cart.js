@@ -5,9 +5,10 @@
 
 //async : 해당 함수가 비동기 처리를 위한 함수 라는 표시
 //await : async 함수 내에서 비동기 호출하는 부분
+async function getList(userName){
+    const result = await axios.get(`/cartRest/list`, {params: {userName}})
 
+     console.log(result)
 
-async function cancelOrder(rno){
-    const response = await axios.delete(`/cart/${rno}`)
-    return response.data
+    return result.data
 }
