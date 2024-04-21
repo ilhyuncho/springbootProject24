@@ -6,7 +6,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,8 +34,11 @@ public class User {
             , cascade = CascadeType.ALL     // 자식 엔티티도 같이 저장 되도록
             , orphanRemoval = true          //부모 엔티티가 자식 엔티티와의 관계를 제거하면 자식은 고아로 취급되어 그대로 사라진다.
     )                                       // 추가적으로 부모가 삭제 되면 자식도 삭제 됨
+
     @Builder.Default        // 빌더로 인스턴스 생성 시 초기화할 값을 정할 수 있음.
     private List<Car> ownCars = new ArrayList<>();  // 고객 소유 자동차 list
+//    @OrderBy("carYears desc")   // set은 순서 지정이 x, @OrderBy를 사용하면 정렬 가능
+//    private Set<Car> ownCars = new HashSet<Car>();
 
 //    @OneToOne
 //    @JoinColumn(name="userCreditsId")   // pk(외래키)가 user테이블(주테이블)에 생성
