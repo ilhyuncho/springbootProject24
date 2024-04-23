@@ -7,8 +7,10 @@ import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -50,6 +52,11 @@ public class Cart extends BaseEntity {
     )
     private double metricWeight;
 
+    @CreationTimestamp      // 하이버네이트 제공 ( 요즘은 하이버네이트 구현체를 많이 안쓰는 추세 )
+    @ColumnTransformer(     // db 저장,불러올때 값 변환
+            write = "date_add(?, interval 5 DAY)"   // db 함수를 지정
+    )
+    private LocalDateTime expiredDate;    // 장바구니에 넣고 자동 취소 되는 시간
 
     public void changeItemCount(int itemCount) {
         this.itemCount = itemCount;
