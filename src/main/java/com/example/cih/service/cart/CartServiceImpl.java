@@ -50,6 +50,7 @@ public class CartServiceImpl implements CartService {
                 .shopItem(shopItem)
                 .itemCount(cartDTO.getItemCount())
                 .user(user)
+                .metricWeight(10)   // 학습용
                 .build();
 
         if(0 != cartDTO.getItemOption()){

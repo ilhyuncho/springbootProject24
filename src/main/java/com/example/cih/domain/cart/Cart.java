@@ -6,6 +6,7 @@ import com.example.cih.domain.shop.ItemOption;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.user.User;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
 
@@ -41,6 +42,14 @@ public class Cart extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemOptionId")
     private ItemOption itemOption;
+
+    @Column(name = "IMPERIAL_WEIGHT")
+    @ColumnTransformer(     // db 저장,불러올때 값 변환
+            read = "IMPERIAL_WEIGHT / 2",
+            write = "? * 2"
+    )
+    private double metricWeight;
+
 
     public void changeItemCount(int itemCount) {
         this.itemCount = itemCount;
