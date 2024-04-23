@@ -15,5 +15,5 @@ public class CartDTO {
     private Long shopItemId;
     private String itemName;
     private int itemCount;
-    private int itemOption;
+    private Long itemOption;
 }

@@ -5,6 +5,7 @@ import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.cart.CartDTO;
+import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class CartRestController {
 
     @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
     @GetMapping("/list")
-    public PageResponseDTO<CartDTO> list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+    public PageResponseDTO<CartResponseDTO> list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                        Model model,
                        Principal principal){
 
         log.error("cart/cartList, userName: " + principal.getName());
 
-        PageResponseDTO<CartDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
+        PageResponseDTO<CartResponseDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
 
         return cartAll;
     }

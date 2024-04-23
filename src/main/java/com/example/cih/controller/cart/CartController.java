@@ -5,6 +5,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.dto.cart.CartDTO;
+import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class CartController {
                        Model model,
                        Principal principal){
 
-        PageResponseDTO<CartDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
+        PageResponseDTO<CartResponseDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
         model.addAttribute("responseDTO", cartAll);
 
         return "/cart/cartList";

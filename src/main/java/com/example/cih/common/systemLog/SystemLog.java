@@ -32,7 +32,7 @@ public class SystemLog extends OnlyRegDateBaseEntity {
     @Setter
     private String fullMsg;
 
-    @Access(AccessType.PROPERTY)
+    @Access(AccessType.PROPERTY)    // 기본 동작 방식을 재정의 (게터를 통한 접근)
     public String getFullMsg(){
         return text1  + ", " + text2;
     }
