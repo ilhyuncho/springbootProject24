@@ -29,6 +29,14 @@ public class User {
     @Embedded   // 임베디드 타입 (복합값)
     private Address address;
 
+    @Embedded
+    @AttributeOverride(name = "zipcode", column = @Column(name="billing_zipcode", nullable = false))  // 임베드된 클래스의 프로퍼티 매핑을 재정의
+    @AttributeOverride(name = "city", column = @Column(name="billing_city"))
+    @AttributeOverride(name = "street", column = @Column(name="billing_street"))
+    @AttributeOverride(name = "detailAddress", column = @Column(name="billing_detailAddress"))
+    private Address billingAddress;
+
+
     @OneToMany(mappedBy = "user"        // 반대쪽 매핑의 필드 이름 값
             , fetch = FetchType.LAZY    // 지연 로딩 설정
             , cascade = CascadeType.ALL     // 자식 엔티티도 같이 저장 되도록
