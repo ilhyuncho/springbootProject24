@@ -29,16 +29,24 @@ public class UserRepositoryTest {
     @Test
     public void InsertUserData(){
 
+        City city = new City("000-111","buchoen", "korea" );
         Address address = Address.builder()
-                .city("buchoen")
+                .city(city)
                 .street("sudoro257")
                 .detailAddress("2dong404ho")
-                .zipcode("234-2323")
+                .build();
+
+        City city1 = new City("000-111","buchoen", "korea" );
+        Address address1 = Address.builder()
+                .city(city)
+                .street("sudoro257")
+                .detailAddress("2dong404ho")
                 .build();
 
         User user = User.builder()
                 .userName("user1")
                 .address(address)
+                .billingAddress(address1)
                 .build();
 
         Long userId = userRepository.save(user).getUserId();
@@ -86,11 +94,11 @@ public class UserRepositoryTest {
     @Transactional
     public void InsertUserData1(){
 
+        City city = new City("000-111","buchoen", "korea" );
         Address address = Address.builder()
-                .city("seoul")
+                .city(city)
                 .street("sudoro257")
                 .detailAddress("2dong404ho")
-                .zipcode("234-2323")
                 .build();
 
 //        User user = User.builder()

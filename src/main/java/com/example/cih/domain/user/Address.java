@@ -16,10 +16,7 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @NotEmpty
-    private String zipcode;
-
-    @NotEmpty
-    private String city;
+    private City city;
 
     @NotEmpty
     private String street;

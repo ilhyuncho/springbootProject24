@@ -30,8 +30,9 @@ public class User {
     private Address address;
 
     @Embedded
-    @AttributeOverride(name = "zipcode", column = @Column(name="billing_zipcode", nullable = false))  // 임베드된 클래스의 프로퍼티 매핑을 재정의
-    @AttributeOverride(name = "city", column = @Column(name="billing_city"))
+    @AttributeOverride(name = "city.zipcode", column = @Column(name="billing_zipcode", nullable = false))  // 임베드된 클래스의 프로퍼티 매핑을 재정의
+    @AttributeOverride(name = "city.country", column = @Column(name="billing_coutry"))
+    @AttributeOverride(name = "city.cityName", column = @Column(name="billing_cityName"))
     @AttributeOverride(name = "street", column = @Column(name="billing_street"))
     @AttributeOverride(name = "detailAddress", column = @Column(name="billing_detailAddress"))
     private Address billingAddress;
