@@ -1,7 +1,4 @@
-package com.example.cih.domain.test;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+package com.example.cih.domain.test.case1;
 
 import java.util.List;
 

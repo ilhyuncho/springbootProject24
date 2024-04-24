@@ -1,7 +1,6 @@
-package com.example.cih.domain.test;
+package com.example.cih.domain.test.case1;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.persistence.AttributeOverride;

@@ -1,4 +1,4 @@
-package com.example.cih.domain.test;
+package com.example.cih.domain.test.case1;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;

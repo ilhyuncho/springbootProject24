@@ -1,14 +1,14 @@
 package com.example.cih.domain.test;
 
 
+import com.example.cih.domain.test.case1.BankAccount;
+import com.example.cih.domain.test.case1.BankAccountRepository;
+import com.example.cih.domain.test.case1.CreditCard;
+import com.example.cih.domain.test.case1.CreditCardRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 

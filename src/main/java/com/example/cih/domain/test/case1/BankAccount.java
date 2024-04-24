@@ -1,10 +1,8 @@
-package com.example.cih.domain.test;
+package com.example.cih.domain.test.case1;
 
 
 import lombok.Getter;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
