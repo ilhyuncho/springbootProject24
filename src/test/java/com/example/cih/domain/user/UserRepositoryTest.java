@@ -92,27 +92,29 @@ public class UserRepositoryTest {
 //    }
     @Test
     @Transactional
+    @Commit
     public void InsertUserData1(){
 
-        City city = new City("000-111","buchoen", "korea" );
+        City city = new City("0001111","buchoen", "korea" );
         Address address = Address.builder()
                 .city(city)
                 .street("sudoro257")
                 .detailAddress("2dong404ho")
                 .build();
 
-//        User user = User.builder()
-//                .userName("user2")
-//                .address(address)
-//                .build();
-//
-//
-//        Long userId = userRepository.save(user).getUserId();
+        User user = User.builder()
+                .userName("user5")
+                .address(address)
+                .billingAddress(address)
+                .build();
 
-        Optional<User> user1 = userRepository.findByUserName("user2");
-        Optional<User> user2 = userRepository.findByUserName("user2");
 
-        Assertions.assertEquals(user1, user2);
+        Long userId = userRepository.save(user).getUserId();
+
+//        Optional<User> user1 = userRepository.findByUserName("user2");
+//        Optional<User> user2 = userRepository.findByUserName("user2");
+//
+//        Assertions.assertEquals(user1, user2);
     }
 
     @Test

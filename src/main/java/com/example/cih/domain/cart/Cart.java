@@ -58,6 +58,9 @@ public class Cart extends BaseEntity {
     )
     private LocalDateTime expiredDate;    // 장바구니에 넣고 자동 취소 되는 시간
 
+    @Version
+    private Integer verison;    // 버전 관리 기능 (낙관적 락 사용)
+
     public void changeItemCount(int itemCount) {
         this.itemCount = itemCount;
     }
