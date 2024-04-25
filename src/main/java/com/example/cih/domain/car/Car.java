@@ -8,6 +8,8 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -48,6 +50,16 @@ public class Car extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
+
+    @Builder.Default
+    @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
+    @CollectionTable(
+            name = "carImages", // 테이블 이름
+            joinColumns = @JoinColumn(name = "carId"))  // 고유하지 않은 인덱스, primarykey(x)
+    @Column(name = "carImage")  // carImages 테이블의 이미지 피일이름이 저장될 컬럼명
+    private Set<String> carImages = new HashSet<>();
+
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -84,23 +96,23 @@ public class Car extends BaseEntity {
     @PrePersist
     public void prePersist(){
         // persist() 메소드를 호출해서 엔티티를 영속성 컨텍스트에 관리하기 직전에 호출
-        log.error("Car-prePersist()" + carId);
+        log.error("Car-prePersist() carId: " + carId);
     }
 
     @PostPersist
     public void postPersist(){
         // flush나 commit 을 호출해서 엔티티를 DB에 저장한 직후
-        log.error("Car-PostPersist()" + carId);
+        log.error("Car-PostPersist() carId: " + carId);
     }
     @PostLoad
     public void postLoad(){
         // 엔티티가 영속성 컨텍스트에 조회된 직후 또는 refresh를 호출한 후 ( 2차 캐시에 저장되어 있어도 호출됨 )
-        log.error("Car-PostLoad()" + carId);
+        log.error("Car-PostLoad() carId: " + carId);
     }
     @PostRemove
     public void postRemove(){
         // flush나 commit을 호출해서 엔티티를 DB에 삭제한 직후에 호출
-        log.error("Car-PostRemove()" + carId);
+        log.error("Car-PostRemove() carId: " + carId);
     }
 
 

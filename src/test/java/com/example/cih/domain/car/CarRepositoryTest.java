@@ -1,15 +1,21 @@
 package com.example.cih.domain.car;
 
+import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.User;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Log4j2
 public class CarRepositoryTest extends ApplicationTests {
+
 
     @Test
     public void insertCar(){
@@ -29,6 +35,47 @@ public class CarRepositoryTest extends ApplicationTests {
 
             log.info("BNO: " + result.getCarId());
         });
+    }
+
+    @Test
+    public void insertCarWithImages(){
+
+        User user = userRepository.findByUserName("user1").orElseGet(
+                                            () -> User.builder()
+                                                    .userName("user1")
+                                                    .address(Address.builder().build())
+                                                    .billingAddress(Address.builder().build())
+                                                    .build()
+                                            );
+
+        Set<String> carImages = new HashSet<>();
+        carImages.add("image1.jpg");
+        carImages.add("image2.jpg");
+        carImages.add("image3.jpg");
+        carImages.add("image4.jpg");
+
+
+        Car car = Car.builder()
+                .carNumber("45마319")
+                .carGrade(CarSize.MIDDLE_LARGE)
+                .carModel("model" )
+                .carYears(2010)
+                .carColors("color")
+                .carKm(10000L)
+                .user(user)
+                .carImages(carImages)
+                //.userId(Long.valueOf(i))      // 임시 주석
+                .build();
+
+        Car result = carRepository.save(car);
+
+        Car carWithCarImages = carRepository.findCarWithCarImages(car.getCarId());
+
+        assertThat(carWithCarImages.getCarImages().size()).isEqualTo(4);
+
+        Set<String> carImagesNative = carRepository.findCarImagesNative(car.getCarId());
+        assertThat(carImagesNative.size()).isEqualTo(4);
+
     }
 
     @Test

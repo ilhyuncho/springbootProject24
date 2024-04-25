@@ -4,9 +4,11 @@ import com.example.cih.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CarRepository extends JpaRepository<Car, Long> {
 
@@ -18,5 +20,11 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Projection.CarSummary> findByUser(User user);
     List<Projection.CarSummary2> findAllByUser(User user);
+
+    @Query("select c from Car c inner join fetch c.carImages where c.carId = :carId")
+    Car findCarWithCarImages(@Param("carId") Long carid);
+    @Query(value = "SELECT carImage FROM carImages WHERE carId = ?1",
+    nativeQuery = true)
+    Set<String> findCarImagesNative(Long carId);
 
 }
