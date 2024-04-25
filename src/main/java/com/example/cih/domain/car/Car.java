@@ -6,8 +6,13 @@ import com.example.cih.domain.common.BaseEntity;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.ISBN;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,11 +58,17 @@ public class Car extends BaseEntity {
 
     @Builder.Default
     @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
+    @GenericGenerator(name="identity_gen", strategy = "sequence")
     @CollectionTable(
             name = "carImages", // 테이블 이름
             joinColumns = @JoinColumn(name = "carId"))  // 고유하지 않은 인덱스, primarykey(x)
+    @CollectionId(  // 대리키 생성
+            columns = @Column(name = "carImageId"),
+            type = @org.hibernate.annotations.Type(type="long"),
+            generator = "identity_gen"
+    )
     @Column(name = "carImage")  // carImages 테이블의 이미지 피일이름이 저장될 컬럼명
-    private Set<String> carImages = new HashSet<>();
+    private Collection<String> carImages = new ArrayList<>();
 
 
     public void setUser(User user) {

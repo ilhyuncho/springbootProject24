@@ -22,7 +22,7 @@ public class CarRepositoryTest extends ApplicationTests {
 
         IntStream.rangeClosed(1,100).forEach(i -> {
             Car car = Car.builder()
-                    .carNumber("45마319" + (i-1))
+                    .carNumber("45마3192" + (i-1))
                     .carGrade(CarSize.MIDDLE_LARGE)
                     .carModel("model" + (i % 10))
                     .carYears(2010 + (i % 10))
@@ -56,7 +56,7 @@ public class CarRepositoryTest extends ApplicationTests {
 
 
         Car car = Car.builder()
-                .carNumber("45마319")
+                .carNumber("45마3193")
                 .carGrade(CarSize.MIDDLE_LARGE)
                 .carModel("model" )
                 .carYears(2010)
