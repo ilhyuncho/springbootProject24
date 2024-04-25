@@ -29,6 +29,7 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @Builder.Default
+    @OrderColumn(name = "OrderSequence")    // orderItems테이블에 자동으로 각 주문마다 sequence 컬럼 생성
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

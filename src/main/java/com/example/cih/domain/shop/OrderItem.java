@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"shopItem","order"})
 @Table(name="OrderItems")
 public class OrderItem {
     @Id
