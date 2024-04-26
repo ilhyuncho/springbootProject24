@@ -56,19 +56,23 @@ public class Car extends BaseEntity {
     private User user;
 
 
+
+
+
+    ////////////////////////// 학습용
     @Builder.Default
     @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
     @GenericGenerator(name="identity_gen", strategy = "sequence")
     @CollectionTable(
-            name = "carImages", // 테이블 이름
+            name = "carTemps", // 테이블 이름
             joinColumns = @JoinColumn(name = "carId"))  // 고유하지 않은 인덱스, primarykey(x)
     @CollectionId(  // 대리키 생성
-            columns = @Column(name = "carImageId"),
+            columns = @Column(name = "carTempId"),
             type = @org.hibernate.annotations.Type(type="long"),
             generator = "identity_gen"
     )
-    @Column(name = "carImage")  // carImages 테이블의 이미지 피일이름이 저장될 컬럼명
-    private Collection<String> carImages = new ArrayList<>();
+    @Column(name = "carTemp")  // carTemps 테이블의 이미지 피일이름이 저장될 컬럼명
+    private Collection<String> carTemps = new ArrayList<>();
 
 
     public void setUser(User user) {

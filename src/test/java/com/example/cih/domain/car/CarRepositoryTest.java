@@ -38,7 +38,7 @@ public class CarRepositoryTest extends ApplicationTests {
     }
 
     @Test
-    public void insertCarWithImages(){
+    public void insertCarWithTemps(){
 
         User user = userRepository.findByUserName("user1").orElseGet(
                                             () -> User.builder()
@@ -48,11 +48,11 @@ public class CarRepositoryTest extends ApplicationTests {
                                                     .build()
                                             );
 
-        Set<String> carImages = new HashSet<>();
-        carImages.add("image1.jpg");
-        carImages.add("image2.jpg");
-        carImages.add("image3.jpg");
-        carImages.add("image4.jpg");
+        Set<String> carTemps = new HashSet<>();
+        carTemps.add("image1.jpg");
+        carTemps.add("image2.jpg");
+        carTemps.add("image3.jpg");
+        carTemps.add("image4.jpg");
 
 
         Car car = Car.builder()
@@ -63,18 +63,18 @@ public class CarRepositoryTest extends ApplicationTests {
                 .carColors("color")
                 .carKm(10000L)
                 .user(user)
-                .carImages(carImages)
+                .carTemps(carTemps)
                 //.userId(Long.valueOf(i))      // 임시 주석
                 .build();
 
         Car result = carRepository.save(car);
 
-        Car carWithCarImages = carRepository.findCarWithCarImages(car.getCarId());
+        Car carWithCarTemps = carRepository.findCarWithCarTemps(car.getCarId());
 
-        assertThat(carWithCarImages.getCarImages().size()).isEqualTo(4);
+        assertThat(carWithCarTemps.getCarTemps().size()).isEqualTo(4);
 
-        Set<String> carImagesNative = carRepository.findCarImagesNative(car.getCarId());
-        assertThat(carImagesNative.size()).isEqualTo(4);
+        Set<String> carTempsNative = carRepository.findCarTempsNative(car.getCarId());
+        assertThat(carTempsNative.size()).isEqualTo(4);
 
     }
 
