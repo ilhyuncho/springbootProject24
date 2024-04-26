@@ -6,6 +6,7 @@ import com.example.cih.domain.common.BaseEntity;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.ISBN;
@@ -62,6 +63,7 @@ public class Car extends BaseEntity {
             orphanRemoval = true        // 하위 엔티티가 참조가 더 이상 없는 상태면 삭제 처리 해준다
     )
     @Builder.Default
+    @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
     private Set<CarImage> imageSet = new HashSet<>();
 
     public void setUser(User user) {
