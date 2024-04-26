@@ -4,7 +4,9 @@ import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.User;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Commit;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -33,6 +35,8 @@ public class CarRepositoryTest extends ApplicationTests {
     }
 
     @Test
+    @Transactional
+    @Commit
     public void insertCarWithImages(){
 
         Car car = Car.builder()
@@ -50,7 +54,21 @@ public class CarRepositoryTest extends ApplicationTests {
         });
 
         Car result = carRepository.save(car);
+    }
 
+    @Test
+    @Transactional
+    @Commit
+    public void selectCarWithImages(){
+
+        // 상위 엔티티, 하위 엔티티 어떻게 로딩 하는지
+        log.error("======================carRepository.findById before================");
+        Optional<Car> byId = carRepository.findById(1L);
+        Car car1 = byId.orElseThrow();
+        log.error("======================log.error(car1); before================");
+        log.error(car1);
+        log.error("======================================");
+        log.error(car1.getImageSet());
     }
 
 
@@ -62,7 +80,6 @@ public class CarRepositoryTest extends ApplicationTests {
         carTemps.add("image2.jpg");
         carTemps.add("image3.jpg");
         carTemps.add("image4.jpg");
-
 
         Car car = Car.builder()
                 .carNumber("45마3193")
