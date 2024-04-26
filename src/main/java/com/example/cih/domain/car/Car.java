@@ -55,9 +55,48 @@ public class Car extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
+    // car 관점에서 첨부파일을 바라보는 @OneToMany ( pk를 가진 쪽에서 사용한다?? )
+    @OneToMany(mappedBy = "car", // CarImage의 car변수
+            cascade = {CascadeType.ALL}, // Car 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
+            fetch = FetchType.LAZY
+    )
+    @Builder.Default
+    private Set<CarImage> imageSet = new HashSet<>();
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
+    //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
+    public void addImage(String uuid, String fileName){
+        CarImage carImage = CarImage.builder()
+                .uuid(uuid)
+                .fileName(fileName)
+                .car(this)
+                .imageOrder(imageSet.size())
+                .build();
+        imageSet.add(carImage);
+    }
 
+    public void clearImages(){
+        imageSet.forEach(image -> image.changeCar(null));
+        this.imageSet.clear();
+    }
+    //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
+
+    @Builder(builderMethodName = "writeWithUserBuilder")
+    public Car(String carNumber, CarSize carGrade, String carModel, int carYears,
+                      String carColors, Long carKm, User user) {
+
+        this.carNumber = carNumber;
+        this.carGrade = carGrade;
+        this.carModel = carModel;
+        this.carYears = carYears;
+        this.carColors = carColors;
+        this.carKm = carKm;
+
+        this.user = user;   // 대입 방법 확인해 보자!!!
+    }
 
     ////////////////////////// 학습용
     @Builder.Default
@@ -73,29 +112,7 @@ public class Car extends BaseEntity {
     )
     @Column(name = "carTemp")  // carTemps 테이블의 이미지 피일이름이 저장될 컬럼명
     private Collection<String> carTemps = new ArrayList<>();
-
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    // 고객 정보를 id 에서 User 객체로 변경
-    // @Column(name="userId", nullable = false)
-    // private Long userId;
-    @Builder(builderMethodName = "writeWithUserBuilder")
-    public Car(String carNumber, CarSize carGrade, String carModel, int carYears,
-                      String carColors, Long carKm, User user) {
-
-        this.carNumber = carNumber;
-        this.carGrade = carGrade;
-        this.carModel = carModel;
-        this.carYears = carYears;
-        this.carColors = carColors;
-        this.carKm = carKm;
-
-        this.user = user;   // 대입 방법 확인해 보자!!!
-    }
-
+    ////////////////////////// 학습용
 
     // 엔티티 리스너 등록 방법 (3가지)
     // 1. 엔티티에 직접 적용
