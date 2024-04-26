@@ -76,6 +76,26 @@ public class CarRepositoryTest extends ApplicationTests {
         log.error(car1.getImageSet());
     }
 
+    @Test
+    @Transactional
+    @Commit
+    public void testModifyImages(){
+
+        Optional<Car> byId = carRepository.findyByWithImages(2L);
+
+        Car car = byId.orElseThrow();
+
+        // 기존 파일들 삭제
+        car.clearImages();
+
+        // 새롭게 추가
+        IntStream.rangeClosed(1, 4).forEach( i -> {
+            car.addImage(UUID.randomUUID().toString(),"updatefileName" + i +".jpg" );
+        });
+
+        carRepository.save(car);
+
+    }
 
     @Test
     public void insertCarWithTemps(){

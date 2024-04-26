@@ -58,7 +58,8 @@ public class Car extends BaseEntity {
     // car 관점에서 첨부파일을 바라보는 @OneToMany ( pk를 가진 쪽에서 사용한다?? )
     @OneToMany(mappedBy = "car", // CarImage의 car변수
             cascade = {CascadeType.ALL}, // Car 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
-            fetch = FetchType.LAZY
+            fetch = FetchType.LAZY,
+            orphanRemoval = true        // 하위 엔티티가 참조가 더 이상 없는 상태면 삭제 처리 해준다
     )
     @Builder.Default
     private Set<CarImage> imageSet = new HashSet<>();
