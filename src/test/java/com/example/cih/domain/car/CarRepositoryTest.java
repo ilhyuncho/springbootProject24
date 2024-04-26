@@ -4,6 +4,7 @@ import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.User;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
@@ -63,7 +64,11 @@ public class CarRepositoryTest extends ApplicationTests {
 
         // 상위 엔티티, 하위 엔티티 어떻게 로딩 하는지
         log.error("======================carRepository.findById before================");
-        Optional<Car> byId = carRepository.findById(1L);
+        //Optional<Car> byId = carRepository.findById(1L);
+
+        //@EntityGraph 로 한번에 image파일도 같이 로딩
+        Optional<Car> byId = carRepository.findyByWithImages(1L);
+
         Car car1 = byId.orElseThrow();
         log.error("======================log.error(car1); before================");
         log.error(car1);
