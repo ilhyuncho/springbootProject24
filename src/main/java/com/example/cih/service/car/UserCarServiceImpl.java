@@ -4,6 +4,7 @@ import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
+import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.user.User;
@@ -37,23 +38,22 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserService userService;
 
     @Override
-    public Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO) {
+    public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
 
-        log.error(carSpecDTO.toString());
+        log.error(carInfoDTO.toString());
 
         // 고객 정보 get
         User user = userService.findUser(userName);
 
-
-        // Car car = this.dtoToEntity(carSpecDTO);
-        Car car = Car.writeWithUserBuilder()
-                .carColors(carSpecDTO.getCarColors())
-                .carYears(carSpecDTO.getCarYears())
-                .carModel(carSpecDTO.getCarModel())
-                .carKm(carSpecDTO.getCarKm())
-                .carNumber(carSpecDTO.getCarNumber())
-                .carGrade(carSpecDTO.getCarGrade())
-                .user(user).build();
+         Car car = dtoToEntity(carInfoDTO, user);
+//        Car car = Car.writeWithUserBuilder()
+//                .carColors(carSpecDTO.getCarColors())
+//                .carYears(carSpecDTO.getCarYears())
+//                .carModel(carSpecDTO.getCarModel())
+//                .carKm(carSpecDTO.getCarKm())
+//                .carNumber(carSpecDTO.getCarNumber())
+//                .carGrade(carSpecDTO.getCarGrade())
+//                .user(user).build();
 
         Long carId = carRepository.save(car).getCarId();
 
@@ -91,7 +91,7 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 3차 작업
         List<CarInfoDTO> listResult = user.getOwnCars().stream()
-                .map(this::entityToDTO).collect(Collectors.toList());
+                .map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         return listResult;
     }
@@ -112,6 +112,48 @@ public class UserCarServiceImpl implements UserCarService {
 
         return carSummaryList;
 
+    }
+
+    // DTO를 엔티티로 변환하기
+    private static Car dtoToEntity(CarInfoDTO carSpecDTO, User user) {
+        Car car = Car.writeWithUserBuilder()
+                .carColors(carSpecDTO.getCarColors())
+                .carYears(carSpecDTO.getCarYears())
+                .carModel(carSpecDTO.getCarModel())
+                .carKm(carSpecDTO.getCarKm())
+                .carNumber(carSpecDTO.getCarNumber())
+                .carGrade(carSpecDTO.getCarGrade())
+                .user(user)
+                .build();
+
+        if(carSpecDTO.getFileNames() != null){
+            carSpecDTO.getFileNames().forEach(fileName ->{
+                String[] arr = fileName.split("_");
+                car.addImage(arr[0], arr[1]);
+            });
+        }
+        return car;
+    }
+
+    private static CarInfoDTO entityToDTO(Car car) {
+        CarInfoDTO carInfoDTO = CarInfoDTO.writeCarSpecDTOBuilder()
+                .carId(car.getCarId())
+                .carNumber(car.getCarNumber())
+                .carColors(car.getCarColors())
+                .carKm(car.getCarKm())
+                .carGrade(car.getCarGrade())
+                .carModel(car.getCarModel())
+                .carYears(car.getCarYears())
+
+                .modDate(car.getModDate())
+                .regDate(car.getRegDate())
+                .userId(car.getUser().getUserId())
+                .fileNames(car.getImageSet().
+                        stream().map(CarImage::getFileName).collect(Collectors.toList()))
+                // .userId(car.getUserId())
+                .build();
+
+        return carInfoDTO;
     }
 
 

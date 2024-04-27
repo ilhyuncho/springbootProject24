@@ -14,44 +14,8 @@ import java.util.stream.Collectors;
 
 public interface UserCarService {
 
-    Long register(String userName, CarSpecDTO carSpecDTO, UploadFileDTO uploadFileDTO);
+    Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO);
 
     List<CarInfoDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
     List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName);
-
-
-    // DTO를 엔티티로 변환하기
-    default Car dtoToEntity(CarSpecDTO carSpecDTO) {
-
-        Car car = Car.builder()
-                .carId(carSpecDTO.getCarId())
-                .carNumber(carSpecDTO.getCarNumber())
-                .carGrade(carSpecDTO.getCarGrade())
-                .carModel(carSpecDTO.getCarModel())
-                .carYears(carSpecDTO.getCarYears())
-                .carColors(carSpecDTO.getCarColors())
-                .carKm(carSpecDTO.getCarKm())
-               // .userId(40L)     // 임시
-                .build();
-        return car;
-    }
-
-    default CarInfoDTO entityToDTO(Car car) {
-        CarInfoDTO carInfoDTO = CarInfoDTO.writeCarSpecDTOBuilder()
-                .carId(car.getCarId())
-                .carNumber(car.getCarNumber())
-                .carColors(car.getCarColors())
-                .carKm(car.getCarKm())
-                .carGrade(car.getCarGrade())
-                .carModel(car.getCarModel())
-                .carYears(car.getCarYears())
-
-                .modDate(car.getModDate())
-                .regDate(car.getRegDate())
-                .userId(car.getUser().getUserId())
-               // .userId(car.getUserId())
-                .build();
-
-        return carInfoDTO;
-    }
 }

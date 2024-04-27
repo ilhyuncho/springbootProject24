@@ -84,30 +84,34 @@ public class MyPageController {
     }
 
     @GetMapping("/userCarRegister")
-    public String list(){
+    public String getRegister(){
         return "/myPage/userCarRegister";
     }
 
     @PostMapping(value="/userCarRegister")
-    public String register(@Valid CarSpecDTO carSpecDTO,
+    public String register(@Valid CarInfoDTO carInfoDTO,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
                            Principal principal    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
     ) {
 
-        log.error("carSpecDTO : " + carSpecDTO);
+        log.error("carInfoDTO : " + carInfoDTO);
         log.error("user : " + principal.getName());
 
         if(bindingResult.hasErrors()) {
            // throw new BindException(bindingResult);
             // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
+            bindingResult.getAllErrors().forEach(log::error);
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/myPage/userCarRegister";
         }
 
-        Long bno = userCarService.register(principal.getName(), carSpecDTO, null);
+        Long carId = userCarService.register(principal.getName(), carInfoDTO, null);
 
-        return "redirect:/myPage/userCarInfo?userName=" + principal.getName();
+        redirectAttributes.addFlashAttribute("result", carId);
+        redirectAttributes.addAttribute("userName", principal.getName());
+        return "redirect:/myPage/userCarInfo";
+        //return "redirect:/myPage/userCarInfo?userName=" + principal.getName();
     }
 }
