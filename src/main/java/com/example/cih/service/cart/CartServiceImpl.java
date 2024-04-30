@@ -20,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -89,6 +87,15 @@ public class CartServiceImpl implements CartService {
                 .build()).stream()
                 .collect(Collectors.toList());
 
+        // List.copyOf 활용 예 ( 불변 객체 리턴 )
+        List<CartResponseDTO> unModifyCartDTOList = List.copyOf(cartDTOList);
+        // 에러 발생!!!
+        //unModifyCartDTOList.add(CartResponseDTO.builder().build());
+
+        // 하지만 list안이 객체라면 수정 가능 하다..( 주의 해서 사용해야 함 )
+        //unModifyCartDTOList.get(0).setItemName("update Temp");
+
+
 //        List<Cart> cartList = result.getContent();
 //        List<CartDTO> cartDTOList = new ArrayList<>();
 //
@@ -108,7 +115,7 @@ public class CartServiceImpl implements CartService {
 
         return PageResponseDTO.<CartResponseDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(cartDTOList)
+                .dtoList(unModifyCartDTOList)
                 .total((int)result.getTotalElements())
                 .build();
     }
