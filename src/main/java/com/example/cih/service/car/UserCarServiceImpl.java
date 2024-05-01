@@ -17,6 +17,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -34,16 +36,32 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
-
         // 고객 정보 get
         User user = userService.findUser(userName);
 
         Car car = dtoToEntity(carInfoDTO, user);
-
         // 파일 저장
         // fileHandler.fileUpload(uploadFileDTO);
-
         return carRepository.save(car).getCarId();
+    }
+    @Override
+    public CarViewDTO readMyCarDetailInfo(PageRequestDTO pageRequestDTO, String userName, Long carId) {
+        // 고객 정보 get
+        User user = userService.findUser(userName);
+
+        // 전체 보유 Car list
+        List<Car> ownCarList = user.getOwnCars();
+
+        List<CarViewDTO> carViewDTOList = ownCarList.stream().
+                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        // 요청된 carId 정보만 필터
+        CarViewDTO carViewDTO = carViewDTOList.stream()
+                .filter(car -> Objects.equals(car.getCarId(), carId))
+                .findFirst()
+                .orElse(null);
+
+        return carViewDTO;
     }
 
     @Override
@@ -52,31 +70,21 @@ public class UserCarServiceImpl implements UserCarService {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
-        // 보유 차량 get
-        // 1차 작업
-        //        Page<Car> result = carRepository.findByUser(userInfo, pageRequestDTO.getPageable());
-        //
-        //        List<Car> content = result.getContent();
-        //        for (Car car : content) {
-        //
-        //            CarInfoDTO carInfoDTO = this.entityToDTO(car);
-        //            listResult.add(carInfoDTO);
-        //           // log.error("listResult1 : " + carInfoDTO.toString());
-        //        }
+        // 전체 보유 Car list
+        List<Car> ownCarList = user.getOwnCars();
 
-        // 2차 작업
-        //        List<CarInfoDTO> listResult = new ArrayList<>();
-        //        for (Car car : userInfo.getOwnCars()) {
-        //            CarInfoDTO carInfoDTO = this.entityToDTO(car);
-        //            listResult.add(carInfoDTO);
-        //            log.error("listResult1 : " + carInfoDTO.toString());
-        //        }
+        List<CarViewDTO> carViewDTOList = ownCarList.stream().
+                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
-        // 3차 작업
-        List<CarViewDTO> listResult = user.getOwnCars().stream()
-                .map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+        // 대표 이미지만 필터링 ( ImageOrder = 0 )
+        for (CarViewDTO car : carViewDTOList) {
+            car.getFileNames().stream()
+                    .filter(carImage -> carImage.getImageOrder() != 0)
+                    .collect(Collectors.toList())
+                    .forEach(x-> car.getFileNames().remove(x));
+        }
 
-        return listResult;
+        return carViewDTOList;
     }
 
     @Override
@@ -134,7 +142,7 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
-
+            log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
             carInfoDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
         });
 

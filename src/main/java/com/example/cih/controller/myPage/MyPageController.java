@@ -42,8 +42,8 @@ public class MyPageController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping("/userCarInfo")
-    public String userCarInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+    @GetMapping("/userCarList")
+    public String userCarList(PageRequestDTO pageRequestDTO, String userName, Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
         log.error("userDTO: " + userDTO);
@@ -52,8 +52,22 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
-        return "/myPage/userCarInfo";
+        return "/myPage/userCarList";
     }
+    @GetMapping("/userCarDetailInfo")
+    public String userCarDetailInfo(PageRequestDTO pageRequestDTO,
+                                    @RequestParam("carId") Long carId,
+                                    String userName, Model model){
+
+        UserDTO userDTO = userService.findUserDTO(userName);
+
+        CarViewDTO CarViewDTO = userCarService.readMyCarDetailInfo(pageRequestDTO, userDTO.getUserName(), carId);
+
+        model.addAttribute("responseDTO", CarViewDTO);
+
+        return "/myPage/userCarDetailInfo";
+    }
+
     @GetMapping("/userCarSummaryInfo")
     public String userCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
 
@@ -112,7 +126,7 @@ public class MyPageController {
 
         redirectAttributes.addFlashAttribute("result", carId);
         redirectAttributes.addAttribute("userName", principal.getName());
-        return "redirect:/myPage/userCarInfo";
-        //return "redirect:/myPage/userCarInfo?userName=" + principal.getName();
+        return "redirect:/myPage/userCarList";
+        //return "redirect:/myPage/userCarList?userName=" + principal.getName();
     }
 }

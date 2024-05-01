@@ -17,6 +17,8 @@ public interface UserCarService {
 
     Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO);
 
+    CarViewDTO readMyCarDetailInfo(PageRequestDTO pageRequestDTO, String userName, Long carId);
+
     List<CarViewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
     List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName);
 }
