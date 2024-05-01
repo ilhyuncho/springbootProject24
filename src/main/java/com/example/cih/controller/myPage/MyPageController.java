@@ -7,6 +7,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarSpecDTO;
+import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.dto.user.UserCreditDTO;
 import com.example.cih.service.user.UserCreditService;
@@ -47,7 +48,7 @@ public class MyPageController {
         UserDTO userDTO = userService.findUserDTO(userName);
         log.error("userDTO: " + userDTO);
 
-        List<CarInfoDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
+        List<CarViewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
         model.addAttribute("list", listCarDTO);
 

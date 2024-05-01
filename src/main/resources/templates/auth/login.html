@@ -27,12 +27,12 @@
 
                                         <form th:action="@{/auth/login}" method="post" id="f1" th:if="${param.logout == null}">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" name="username" id="inputID" placeholder="Input Your ID" />
+                                                <input class="form-control" name="username" id="inputID" placeholder="Input Your ID" value="user1" />
                                                 <label for="inputID">ID</label>
 <!--                                                <input type="text" name="username" class="form-control" placeholder="USER ID">-->
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Password" />
+                                                <input class="form-control" name="password" id="inputPassword" type="password" placeholder="Password" value="1111" />
                                                 <label for="inputPassword">Password</label>
 <!--                                                <input type="password" name="password" class="form-control" placeholder="PASSWORD">-->
                                             </div>
@@ -43,7 +43,7 @@
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="password.html">Forgot Password?</a>
                                                 <button type="submit" class="btn btn-primary uploadBtn">Login</button>
-                                                <!--                                                <a class="btn btn-primary" th:href="|@{/auth/login}|">Login</a>-->
+                                                <!-- <a class="btn btn-primary" th:href="|@{/auth/login}|">Login</a>-->
                                             </div>
                                         </form>
                                     </div>
