@@ -83,7 +83,7 @@
           <div class="card col-4">
             <div class="card-header d-flex justify-content-center">
               [[${fileName.fileName}]]
-              <button class="btn-sm btn-danger" th:onclick="removeFile(this)">X</button>
+              <button class="btn-sm btn-danger" th:onclick="removeFile([[${fileName.uuid}]], [[${fileName.fileName}]], this)">X</button>
             </div>
             <div class="card-body">
               <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
@@ -128,7 +128,7 @@
 
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
-  const removeFileList = []
+
 
   function appendFileData(){
     // form태그에 현재 첨부파일 정보를 추가
@@ -167,7 +167,7 @@
     const str = `<div class="card col-4">
                 <div class="card-header d-flex justify-content-center">
                     ${fileName}
-                 <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}', this)" >X</button>
+                 <button class="btn-sm btn-danger" onclick="javascript:removeFile([[${uuid}]], [[${fileName}]], this)" >X</button>
                  </div>
                  <div class="card-body">
                     <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
@@ -184,6 +184,22 @@
     })
   }
 
+  const removeFileList = []
+  function removeFile(uuid, fileName, obj){
+    if(!confirm("파일을 삭제!!")){
+      return
+    }
+
+    console.log(uuid)
+    console.log(fileName)
+    console.log(obj)
+    // 일단 임시로 삭제한 파일 저장
+    removeFileList.push({uuid, fileName})
+
+    const targetDiv = obj.closest(".card")
+    targetDiv.remove()
+
+  }
 
   // 이미지 업로드 모달
   document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
@@ -220,7 +236,7 @@
   }, false)
 
 
-  // 수정 요청
+  // Car 수정 요청
   const link = [[${pageRequestDTO.getLink()}]]
   document.querySelector(".modBtn").addEventListener("click", function (e) {
     e.preventDefault()
