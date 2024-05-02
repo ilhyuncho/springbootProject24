@@ -3,29 +3,28 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
-import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.dto.user.UserDTO;
-import com.example.cih.dto.user.UserCreditDTO;
-import com.example.cih.service.user.UserCreditService;
-import com.example.cih.service.car.CarService;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.util.List;
 
@@ -36,17 +35,19 @@ import java.util.List;
 @PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
+    @Value("${com.cih.upload.path}")
+    private String uploadPath;
+
     private final UserCarService userCarService;
     private final UserService userService;
-    private final CarService carService;
 
     private final ModelMapper modelMapper;
 
     @GetMapping("/userCarList")
-    public String userCarList(PageRequestDTO pageRequestDTO, String userName, Model model){
+    public String userCarList(PageRequestDTO pageRequestDTO, String userName,
+                              Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
-        log.error("userDTO: " + userDTO);
 
         List<CarViewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
@@ -54,10 +55,40 @@ public class MyPageController {
 
         return "/myPage/userCarList";
     }
+    @GetMapping("/userCarRegister")
+    public String getRegister(){
+        return "/myPage/userCarRegister";
+    }
+
+    @PostMapping(value="/userCarRegister")
+    public String register(@Valid CarInfoDTO carInfoDTO,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes,
+                           Principal principal ){    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
+
+        log.error("carInfoDTO : " + carInfoDTO);
+        log.error("user : " + principal.getName());
+
+        if(bindingResult.hasErrors()) {
+            // throw new BindException(bindingResult);
+            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
+            bindingResult.getAllErrors().forEach(log::error);
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/myPage/userCarRegister";
+        }
+
+        Long carId = userCarService.register(principal.getName(), carInfoDTO, null);
+
+        redirectAttributes.addFlashAttribute("result", carId);
+        redirectAttributes.addAttribute("userName", principal.getName());
+        return "redirect:/myPage/userCarList";
+        //return "redirect:/myPage/userCarList?userName=" + principal.getName();
+    }
     @GetMapping("/userCarDetailInfo")
-    public String userCarDetailInfo(PageRequestDTO pageRequestDTO,
+    public String userCarDetailInfo(PageRequestDTO pageRequestDTO, String userName,
                                     @RequestParam("carId") Long carId,
-                                    String userName, Model model){
+                                    Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
@@ -67,9 +98,49 @@ public class MyPageController {
 
         return "/myPage/userCarDetailInfo";
     }
+    @GetMapping("/userCarModify")
+    public String userCarModify(PageRequestDTO pageRequestDTO, String userName,
+                                @RequestParam("carId") Long carId,
+                                Model model){
 
+        UserDTO userDTO = userService.findUserDTO(userName);
+
+        CarViewDTO CarViewDTO = userCarService.readMyCarDetailInfo(pageRequestDTO, userDTO.getUserName(), carId);
+
+        model.addAttribute("responseDTO", CarViewDTO);
+
+        log.error("sggfdfgdfgdfgdfgdfgdfg");
+        return "/myPage/userCarModify";
+    }
+    @PostMapping("/userCarModify")
+    public String userCarModify(PageRequestDTO pageRequestDTO,
+                                @Valid CarInfoDTO carInfoDTO,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal ){
+        log.error("car modify post...." + carInfoDTO);
+
+        String link = pageRequestDTO.getLink();
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+            return "redirect:/myPage/userCarDetailInfo?" + link;
+        }
+
+        userCarService.modifyMyCar(carInfoDTO);
+
+        redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+        redirectAttributes.addAttribute("userName", principal.getName());
+
+        return "redirect:/myPage/userCarDetailInfo?" + link;
+    }
     @GetMapping("/userCarSummaryInfo")
-    public String userCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName, Model model){
+    public String userCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName,
+                                     Model model){
 
         log.error("userName: " + userName);
 
@@ -97,36 +168,50 @@ public class MyPageController {
 
         return "/myPage/userCarRead";
     }
+    @PostMapping("/userCarDelete")
+    public String userCarDelete(CarInfoDTO carInfoDTO,
+                                RedirectAttributes redirectAttributes){
+        log.error("remove......post: " + carInfoDTO);
 
-    @GetMapping("/userCarRegister")
-    public String getRegister(){
-        return "/myPage/userCarRegister";
-    }
+        userCarService.deleteMyCar(carInfoDTO.getCarId());
 
-    @PostMapping(value="/userCarRegister")
-    public String register(@Valid CarInfoDTO carInfoDTO,
-                           BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes,
-                           Principal principal    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
-    ) {
-
-        log.error("carInfoDTO : " + carInfoDTO);
-        log.error("user : " + principal.getName());
-
-        if(bindingResult.hasErrors()) {
-           // throw new BindException(bindingResult);
-            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
-            bindingResult.getAllErrors().forEach(log::error);
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/myPage/userCarRegister";
+        // 게시물이 db에서 삭제되었다면 첨부파일 삭제
+        List<String> fileNames = carInfoDTO.getFileNames();
+        if(fileNames != null && fileNames.size() > 0){
+            removeFiles(fileNames);
         }
 
-        Long carId = userCarService.register(principal.getName(), carInfoDTO, null);
+        redirectAttributes.addFlashAttribute("result", "removed");
+        redirectAttributes.addAttribute("userName","user1");
 
-        redirectAttributes.addFlashAttribute("result", carId);
-        redirectAttributes.addAttribute("userName", principal.getName());
         return "redirect:/myPage/userCarList";
-        //return "redirect:/myPage/userCarList?userName=" + principal.getName();
     }
+
+    public void removeFiles(List<String> files){
+
+        log.error("removeFiles");
+
+        files.forEach(log::error);
+
+        for (String fileName : files) {
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+            String resourceName = resource.getFilename();
+
+            try{
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+
+                resource.getFile().delete();
+
+                // 섬네일이 존재한다면
+                if(contentType.startsWith("image")){
+                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
+
+                    thumbnailFile.delete();
+                }
+            }catch(Exception e){
+                log.error(e.getMessage());
+            }
+        }
+    }
+
 }

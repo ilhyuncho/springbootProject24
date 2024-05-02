@@ -21,4 +21,7 @@ public interface UserCarService {
 
     List<CarViewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
     List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName);
+
+    void modifyMyCar(CarInfoDTO carInfoDTO);
+    void deleteMyCar(Long carId);
 }

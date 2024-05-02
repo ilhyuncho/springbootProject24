@@ -105,6 +105,32 @@ public class UserCarServiceImpl implements UserCarService {
 
     }
 
+    @Override
+    public void modifyMyCar(CarInfoDTO carInfoDTO) {
+
+        Optional<Car> byId = carRepository.findById(carInfoDTO.getCarId());
+        Car car = byId.orElseThrow();
+
+        car.change(carInfoDTO.getCarNumber(), carInfoDTO.getCarKm(), carInfoDTO.getCarGrade(),
+                     carInfoDTO.getCarModel(), carInfoDTO.getCarYears(), carInfoDTO.getCarColors());
+
+        // 첨부파일 처리
+        car.clearImages();
+
+        if(carInfoDTO.getFileNames() != null){
+            for (String fileName : carInfoDTO.getFileNames() ) {
+                String[] index = fileName.split("_");
+                car.addImage(index[0], index[1]);
+            }
+        }
+
+        carRepository.save(car);
+    }
+    @Override
+    public void deleteMyCar(Long carId) {
+        carRepository.deleteById(carId);
+    }
+
     // DTO를 엔티티로 변환하기
     private static Car dtoToEntity(CarInfoDTO carSpecDTO, User user) {
         Car car = Car.writeWithUserBuilder()
@@ -142,7 +168,7 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
-            log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
+          //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
             carInfoDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
         });
 

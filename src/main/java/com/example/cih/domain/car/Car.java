@@ -87,6 +87,16 @@ public class Car extends BaseEntity {
     }
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
 
+    public void change(String carNumber, Long carKm, CarSize carGrade,
+                       String carModel, int carYears, String carColors ){
+        this.carNumber = carNumber;
+        this.carKm = carKm;
+        this.carGrade = carGrade;
+        this.carModel = carModel;
+        this.carYears = carYears;
+        this.carColors = carColors;
+    }
+
     @Builder(builderMethodName = "writeWithUserBuilder")
     public Car(String carNumber, CarSize carGrade, String carModel, int carYears,
                       String carColors, Long carKm, User user) {
@@ -101,7 +111,7 @@ public class Car extends BaseEntity {
         this.user = user;   // 대입 방법 확인해 보자!!!
     }
 
-    ////////////////////////// 학습용
+    ////////////////////////// 학습용 /////////////////////////////////////////////////////
     @Builder.Default
     @ElementCollection  // Entity 생성을 어노테이션으로 지정 가능
     @GenericGenerator(name="identity_gen", strategy = "sequence")
