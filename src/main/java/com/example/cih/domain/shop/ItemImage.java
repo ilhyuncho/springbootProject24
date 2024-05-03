@@ -1,7 +1,7 @@
 package com.example.cih.domain.shop;
 
 
-import com.example.cih.common.exception.NotEnoughStockCountException;
+import com.example.cih.domain.car.Car;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,21 +14,29 @@ import javax.persistence.*;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="itemOptions")
-public class ItemOption {
+@Table(name="itemImages")
+public class ItemImage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="itemOptionId")
-    private Long itemOptionId;
+    @Column(name="itemImageId")
+    private Long itemImageId;
 
-    private String option1;
-    private String option2;
+    private String uuid;
+
+    private String fileName;
+
+    private int imageOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SHOP_ITEM_ID")
-    private ShopItem shopItem;
+    ShopItem shopItem;
 
     public void changeItem(ShopItem shopItem){
         this.shopItem = shopItem;
     }
+
+
+
+
 }
