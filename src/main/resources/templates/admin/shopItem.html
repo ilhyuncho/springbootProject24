@@ -85,6 +85,53 @@
     </div>
   </div>
 
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          상품 리스트
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">shopItemId</th>
+              <th scope="col">itemName</th>
+              <th scope="col">price</th>
+              <th scope="col">stockCount</th>
+              <th scope="col">itemOption1</th>
+              <th scope="col">itemOption2</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto:${itemList}">
+              <th scope="row">
+                <a th:href="|@{'/admin/shopItem/' + ${dto.shopItemId}}|"
+                   class="text-decoration-none"> [[${dto.shopItemId}]]</a>
+
+                <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                  <img style="width:100px" th:each="fileName: ${dto.fileNames}"
+                       th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
+                </div>
+              </th>
+
+              <td>[[${dto.itemName}]]</td>
+              <td>[[${dto.price}]]</td>
+              <td>[[${dto.stockCount}]]</td>
+              <td>[[${dto.itemOption1}]]</td>
+              <td>[[${dto.itemOption2}]]</td>
+
+            </tr>
+            </tbody>
+          </table>
+
+        </div><!-- <div class="card-body">-->
+
+      </div>
+    </div>
+  </div>
+
   <!--    첨부파일 추가를 위한 모달창-->
   <div class="modal uploadModal" tabindex="-1">
     <div class="modal-dialog">
@@ -221,7 +268,7 @@
     console.log("str" + str)
     target.innerHTML = str;
 
-    // 실제 등록 처리
+    // 실제 등록 처리d
     document.querySelector("#myForm").submit();
     //document.querySelector("form").submit();
 

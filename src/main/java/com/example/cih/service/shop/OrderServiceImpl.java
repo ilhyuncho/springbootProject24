@@ -42,18 +42,18 @@ public class OrderServiceImpl implements OrderService {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
-        ShopItem shopItem = shopItemService.findOne(itemId);
+//        ShopItem shopItem = shopItemService.findOne(itemId);
+//
+//        Delivery delivery = new Delivery(user.getAddress());
+//        // 주문 상품 생성
+//        OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
+//
+//        Order order = Order.createOrder(user, delivery, orderItem);
+//
+//        orderRepository.save(order);
 
-        Delivery delivery = new Delivery(user.getAddress());
-        // 주문 상품 생성
-        OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
-
-
-        Order order = Order.createOrder(user, delivery, orderItem);
-
-        orderRepository.save(order);
-
-        return order.getOrderId();
+        //return order.getOrderId();
+        return 0L;
     }
 
     @Override

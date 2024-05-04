@@ -8,7 +8,7 @@ import java.util.List;
 public interface ShopItemService {
 
     //UserDTO findByUserName(String userName);
-    ShopItem findOne(Long itemId);
+    ShopItemDTO findOne(Long itemId);
 
     List<ShopItemDTO> getAllItems();
 

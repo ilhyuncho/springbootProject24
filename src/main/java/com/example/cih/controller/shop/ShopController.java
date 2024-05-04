@@ -35,12 +35,12 @@ public class ShopController {
     @GetMapping("/items")
     public String items(Model model){
 
-        List<ShopItemDTO> allItems = shopItemService.getAllItems();
+        List<ShopItemDTO> itemList = shopItemService.getAllItems();
 
-        allItems.forEach(log::error);
+        itemList.forEach(log::error);
 
 
-        model.addAttribute("items", allItems);
+        model.addAttribute("itemList", itemList);
 
         return "/shop/main";
     }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Item Detail Info</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Item Detail Info
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">ShopItemId</span>
+            <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemName</span>
+            <input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">Price</span>
+            <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.price}]]</textarea>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">StockCount</span>
+            <input type="text" class="form-control" th:value="${responseDTO.stockCount}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemOption1</span>
+            <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="carYears">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemOption2</span>
+            <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="carColors">
+          </div>
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">List</button>
+              </a>
+              <a th:href="|@{/admin/shopItemModify(shopItemId=${responseDTO.shopItemId})}|" class="text-decoration-none">
+                <button type="button" class="btn btn-secondary">Modify</button>
+              </a>
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <th:block th:each="fileName:${responseDTO.fileNames}">
+                <div class="card col-4">
+                  <div class="card-header d-flex justify-content-center">
+                    [[${fileName.fileName}]]
+                  </div>
+                  <div class="card-body">
+                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                  </div>
+                </div>
+              </th:block>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>

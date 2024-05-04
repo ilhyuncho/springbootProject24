@@ -1,10 +1,8 @@
 package com.example.cih.service.shop;
 
-import com.example.cih.domain.car.Car;
+import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
-import com.example.cih.domain.user.User;
-import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.shop.ShopItemDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,10 +25,15 @@ public class ShopItemServiceImpl implements ShopItemService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ShopItem findOne(Long itemId) {
+    public ShopItemDTO findOne(Long shopItemId) {
 
-        Optional<ShopItem> byId = shopItemRepository.findById(itemId);
-        return byId.orElse(null);
+        ShopItem shopItem = shopItemRepository.findById(shopItemId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
+
+        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
+
+        return shopItemDTO;
+
     }
 
     @Override
@@ -75,6 +78,24 @@ public class ShopItemServiceImpl implements ShopItemService {
         }
 
         return shopItem;
+    }
+
+    private static ShopItemDTO entityToDTO(ShopItem shopItem) {
+        ShopItemDTO shopItemDTO = ShopItemDTO.builder()
+                .shopItemId(shopItem.getShopItemId())
+                .itemName(shopItem.getItemName())
+                .price(shopItem.getPrice())
+                .stockCount(shopItem.getStockCount())
+                .build();
+
+        // 임시로... cih
+        shopItem.getItemOptionSet().forEach(itemOption -> {
+            //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
+            shopItemDTO.setItemOption1(itemOption.getOption1());
+            shopItemDTO.setItemOption2(itemOption.getOption2());
+        });
+
+        return shopItemDTO;
     }
 
 }
