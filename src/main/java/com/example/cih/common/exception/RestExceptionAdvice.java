@@ -37,6 +37,23 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 request
         );
     }
+
+    @ExceptionHandler(value = {ItemNotFoundException.class})
+    public ResponseEntity<?> handleBoardNotFound(ItemNotFoundException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - ItemNotFoundException!!! ");
+        return super.handleExceptionInternal(
+                e,
+                e.getMessage(),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                request
+        );
+    }
+
+
+
+
     // ResponseEntityExceptionHandler 클래스에서 기본 제공하는 메서드를 재 지정 함
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,

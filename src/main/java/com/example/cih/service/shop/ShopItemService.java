@@ -2,15 +2,16 @@ package com.example.cih.service.shop;
 
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemViewDTO;
 
 import java.util.List;
 
 public interface ShopItemService {
 
     //UserDTO findByUserName(String userName);
-    ShopItemDTO findOne(Long itemId);
+    ShopItemViewDTO findOne(Long itemId);
 
-    List<ShopItemDTO> getAllItems();
+    List<ShopItemViewDTO> getAllItems();
 
     Long registerItem(ShopItemDTO shopItemDTO);
 }

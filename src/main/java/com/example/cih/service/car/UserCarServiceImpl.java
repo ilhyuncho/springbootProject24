@@ -153,7 +153,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     private static CarViewDTO entityToDTO(Car car) {
-        CarViewDTO carInfoDTO = CarViewDTO.writeCarSpecDTOBuilder()
+        CarViewDTO carViewDTO = CarViewDTO.writeCarSpecDTOBuilder()
                 .carId(car.getCarId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
@@ -169,10 +169,10 @@ public class UserCarServiceImpl implements UserCarService {
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
           //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
-            carInfoDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
+            carViewDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
         });
 
-        return carInfoDTO;
+        return carViewDTO;
     }
 
 

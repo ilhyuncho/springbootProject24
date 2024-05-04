@@ -4,6 +4,7 @@ import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemViewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -25,31 +26,35 @@ public class ShopItemServiceImpl implements ShopItemService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ShopItemDTO findOne(Long shopItemId) {
+    public ShopItemViewDTO findOne(Long shopItemId) {
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
-        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
+        ShopItemViewDTO shopItemViewDTO = entityToDTO(shopItem);
 
-        return shopItemDTO;
+        return shopItemViewDTO;
 
     }
 
     @Override
-    public List<ShopItemDTO> getAllItems() {
+    public List<ShopItemViewDTO> getAllItems() {
 
         List<ShopItem> shopItemList = shopItemRepository.findAll();
 
-        List<ShopItemDTO> shopItemDTOList = shopItemList.stream().
-                map(shopItem -> modelMapper.map(shopItem, ShopItemDTO.class)).
-                collect(Collectors.toList());
+        List<ShopItemViewDTO> shopItemDTOList = shopItemList.stream().
+                map(ShopItemServiceImpl::entityToDTO).collect(Collectors.toList());
 
         return shopItemDTOList;
     }
 
     @Override
     public Long registerItem(ShopItemDTO shopItemDTO) {
+
+       shopItemRepository.findByItemName(shopItemDTO.getItemName())
+               .ifPresent(m -> {
+                   throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");
+               });
 
         ShopItem shopItem = dtoToEntity(shopItemDTO);
 
@@ -80,8 +85,10 @@ public class ShopItemServiceImpl implements ShopItemService {
         return shopItem;
     }
 
-    private static ShopItemDTO entityToDTO(ShopItem shopItem) {
-        ShopItemDTO shopItemDTO = ShopItemDTO.builder()
+
+
+    private static ShopItemViewDTO entityToDTO(ShopItem shopItem) {
+        ShopItemViewDTO shopItemViewDTO = ShopItemViewDTO.writeShopItemViewDTOBuilder()
                 .shopItemId(shopItem.getShopItemId())
                 .itemName(shopItem.getItemName())
                 .price(shopItem.getPrice())
@@ -91,11 +98,15 @@ public class ShopItemServiceImpl implements ShopItemService {
         // 임시로... cih
         shopItem.getItemOptionSet().forEach(itemOption -> {
             //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
-            shopItemDTO.setItemOption1(itemOption.getOption1());
-            shopItemDTO.setItemOption2(itemOption.getOption2());
+            shopItemViewDTO.setItemOption1(itemOption.getOption1());
+            shopItemViewDTO.setItemOption2(itemOption.getOption2());
         });
 
-        return shopItemDTO;
+        shopItem.getItemImageSet().forEach(shopItemImage -> {
+            shopItemViewDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
+        });
+
+        return shopItemViewDTO;
     }
 
 }

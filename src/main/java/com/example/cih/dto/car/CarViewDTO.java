@@ -24,7 +24,7 @@ public class CarViewDTO extends CarSpecDTO {
     @Builder(builderMethodName = "writeCarSpecDTOBuilder")
     public CarViewDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,
                       String carColors, Long carKm, Long userId ,
-                      LocalDateTime regDate, LocalDateTime modDate, List<String> fileNames) {
+                      LocalDateTime regDate, LocalDateTime modDate) {
 
         super(carId, carNumber, carGrade, carModel, carYears, carColors, carKm);
 

@@ -6,6 +6,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.shop.ShopItemService;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,7 @@ public class AdminShopController {
     @GetMapping("/shopItem")
     public String getShopItem(Model model){
 
-        List<ShopItemDTO> allItems = shopItemService.getAllItems();
+        List<ShopItemViewDTO> allItems = shopItemService.getAllItems();
 
         allItems.forEach(log::error);
 
@@ -52,7 +53,7 @@ public class AdminShopController {
             return "redirect:/admin/shopItem";
         }
 
-        Long order = shopItemService.registerItem(shopItemDTO);
+        Long ItemId = shopItemService.registerItem(shopItemDTO);
 
         return "redirect:/admin/shopItem";
     }
@@ -62,7 +63,7 @@ public class AdminShopController {
                                     @PathVariable("shopItemId") Long shopItemId,
                                     Model model){
 
-        ShopItemDTO shopItem = shopItemService.findOne(shopItemId);
+        ShopItemViewDTO shopItem = shopItemService.findOne(shopItemId);
 
         model.addAttribute("responseDTO", shopItem);
 

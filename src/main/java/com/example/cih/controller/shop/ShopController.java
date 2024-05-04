@@ -4,6 +4,7 @@ package com.example.cih.controller.shop;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.shop.ShopItemService;
 import com.example.cih.service.shop.ShopItemServiceImpl;
@@ -35,7 +36,7 @@ public class ShopController {
     @GetMapping("/items")
     public String items(Model model){
 
-        List<ShopItemDTO> itemList = shopItemService.getAllItems();
+        List<ShopItemViewDTO> itemList = shopItemService.getAllItems();
 
         itemList.forEach(log::error);
 
