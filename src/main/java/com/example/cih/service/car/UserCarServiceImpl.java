@@ -40,8 +40,7 @@ public class UserCarServiceImpl implements UserCarService {
         User user = userService.findUser(userName);
 
         Car car = dtoToEntity(carInfoDTO, user);
-        // 파일 저장
-        // fileHandler.fileUpload(uploadFileDTO);
+
         return carRepository.save(car).getCarId();
     }
     @Override

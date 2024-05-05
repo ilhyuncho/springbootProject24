@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
@@ -85,23 +86,13 @@ public class MyPageController {
         return "redirect:/myPage/userCarList";
         //return "redirect:/myPage/userCarList?userName=" + principal.getName();
     }
-    @GetMapping("/userCarDetailInfo")
-    public String userCarDetailInfo(PageRequestDTO pageRequestDTO, String userName,
+    @GetMapping({"/userCarDetailInfo", "/userCarModify"})
+    public String userCarDetailInfo(HttpServletRequest request,
+                                    PageRequestDTO pageRequestDTO, String userName,
                                     @RequestParam("carId") Long carId,
                                     Model model){
 
-        UserDTO userDTO = userService.findUserDTO(userName);
-
-        CarViewDTO CarViewDTO = userCarService.readMyCarDetailInfo(pageRequestDTO, userDTO.getUserName(), carId);
-
-        model.addAttribute("responseDTO", CarViewDTO);
-
-        return "/myPage/userCarDetailInfo";
-    }
-    @GetMapping("/userCarModify")
-    public String userCarModify(PageRequestDTO pageRequestDTO, String userName,
-                                @RequestParam("carId") Long carId,
-                                Model model){
+        String requestURI = request.getRequestURI();
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
@@ -109,9 +100,9 @@ public class MyPageController {
 
         model.addAttribute("responseDTO", CarViewDTO);
 
-        log.error("sggfdfgdfgdfgdfgdfgdfg");
-        return "/myPage/userCarModify";
+        return requestURI;
     }
+
     @PostMapping("/userCarModify")
     public String userCarModify(PageRequestDTO pageRequestDTO,
                                 @Valid CarInfoDTO carInfoDTO,
@@ -175,7 +166,7 @@ public class MyPageController {
 
         userCarService.deleteMyCar(carInfoDTO.getCarId());
 
-        // 게시물이 db에서 삭제되었다면 첨부파일 삭제
+        // car정보가 db에서 삭제되었다면 첨부파일 삭제
         List<String> fileNames = carInfoDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
             removeFiles(fileNames);

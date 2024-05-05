@@ -63,6 +63,33 @@ public class ShopItemServiceImpl implements ShopItemService {
         return saveItem.getShopItemId();
     }
 
+    @Override
+    public void modifyItem(ShopItemDTO shopItemDTO) {
+
+        Optional<ShopItem> byId = shopItemRepository.findById(shopItemDTO.getShopItemId());
+        ShopItem shopItem = byId.orElseThrow();
+
+        shopItem.change(shopItemDTO.getItemName(), shopItemDTO.getPrice(), shopItemDTO.getStockCount());
+
+        // 첨부파일 처리
+        shopItem.clearImages();
+
+        if(shopItemDTO.getFileNames() != null){
+            for (String fileName : shopItemDTO.getFileNames() ) {
+                String[] index = fileName.split("_");
+                shopItem.addImage(index[0], index[1]);
+            }
+        }
+
+        shopItemRepository.save(shopItem);
+    }
+
+    @Override
+    public void deleteItem(Long itemId) {
+        shopItemRepository.deleteById(itemId);
+    }
+
+
     private static ShopItem dtoToEntity(ShopItemDTO shopItemDTO) {
         ShopItem shopItem = ShopItem.builder()
                 .itemName(shopItemDTO.getItemName())
@@ -81,11 +108,8 @@ public class ShopItemServiceImpl implements ShopItemService {
                 || !shopItemDTO.getItemOption2().isBlank() ){
             shopItem.addItemOption(shopItemDTO.getItemOption1(),shopItemDTO.getItemOption2());
         }
-
         return shopItem;
     }
-
-
 
     private static ShopItemViewDTO entityToDTO(ShopItem shopItem) {
         ShopItemViewDTO shopItemViewDTO = ShopItemViewDTO.writeShopItemViewDTOBuilder()
@@ -105,7 +129,6 @@ public class ShopItemServiceImpl implements ShopItemService {
         shopItem.getItemImageSet().forEach(shopItemImage -> {
             shopItemViewDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
         });
-
         return shopItemViewDTO;
     }
 

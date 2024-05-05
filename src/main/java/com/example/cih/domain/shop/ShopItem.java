@@ -3,6 +3,7 @@ package com.example.cih.domain.shop;
 
 import com.example.cih.common.exception.NotEnoughStockCountException;
 import com.example.cih.domain.car.CarImage;
+import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -52,6 +53,12 @@ public class ShopItem {
 //    @ManyToMany(mappedBy = "")
 //    @JoinColumn(name = "uId")
 //    private List<Category> categoryList = new ArrayList<>();
+
+    public void change(String itemName, int price, int stockCount){
+        this.itemName = itemName;
+        this.price = price;
+        this.stockCount = stockCount;
+    }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
     public void addImage(String uuid, String fileName){

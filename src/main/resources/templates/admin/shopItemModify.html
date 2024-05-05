@@ -4,7 +4,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>Car Modify</title>
+  <title>Item Detail Modify</title>
 </head>
 
 <div layout:fragment="content">
@@ -12,44 +12,39 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          Car Modify
+          Item Detail Modify
         </div>
         <div class="card-body">
 
           <form th:action="@{/myPage/userCarModify}" method="post" id="f1">
             <div class="input-group mb-3">
-              <span class="input-group-text">CarID</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carId}" name="carId" readonly>
+              <span class="input-group-text">ShopItemId</span>
+              <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarNumber</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carNumber}" name="carNumber">
+              <span class="input-group-text">ItemName</span>
+              <input type="text" class="form-control" th:value="${responseDTO.itemName}" name="itemName">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarGrade</span>
-              <textarea class="form-control col-sm-5" rows="5" name="carGrade">[[${responseDTO.carGrade}]]</textarea>
+              <span class="input-group-text">Price</span>
+              <textarea class="form-control col-sm-5" rows="5" name="price">[[${responseDTO.price}]]</textarea>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarModel</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carModel}" name="carModel">
+              <span class="input-group-text">StockCount</span>
+              <input type="text" class="form-control" th:value="${responseDTO.stockCount}" name="stockCount">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarYears</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carYears}" name="carYears">
+              <span class="input-group-text">ItemOption1</span>
+              <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="itemOption1">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">CarColors</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors">
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">CarKm</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carKm}" name="carKm" >
+              <span class="input-group-text">ItemOption2</span>
+              <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="itemOption2">
             </div>
 
             <!-- 첨부 파일 새로 등록-->
@@ -62,36 +57,37 @@
 
             <div class="my-4">
               <div class="float-end">
-                <a th:href="|@{/myPage/userCarList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
+                <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
                 <button type="button" class="btn btn-secondary modBtn">Modify</button>
                 <button type="button" class="btn btn-danger removeBtn">Remove</button>
               </div>
             </div>
-          </form>
 
+          </form>
         </div><!-- <div class="card-body">-->
 
-      </div>
-    </div>
-  </div>
-
-  <!--  첨부파일 섬네일을 보여줄 부분-->
-  <div class="row mt-3">
-    <div class="col">
-      <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-        <th:block th:each="fileName:${responseDTO.fileNames}">
-          <div class="card col-4">
-            <div class="card-header d-flex justify-content-center">
-              [[${fileName.fileName}]]
-              <button class="btn-sm btn-danger" th:onclick="removeFile([[${fileName.uuid}]], [[${fileName.fileName}]], this)">X</button>
-            </div>
-            <div class="card-body">
-              <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+        <!--  첨부파일 섬네일을 보여줄 부분-->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <th:block th:each="fileName:${responseDTO.fileNames}">
+                <div class="card col-4">
+                  <div class="card-header d-flex justify-content-center">
+                    [[${fileName.fileName}]]
+                    <button class="btn-sm btn-danger" th:onclick="removeFile([[${fileName.uuid}]], [[${fileName.fileName}]], this)">X</button>
+                  </div>
+                  <div class="card-body">
+                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+                  </div>
+                </div>
+              </th:block>
             </div>
           </div>
-        </th:block>
+        </div>
+
+
       </div>
     </div>
   </div>
@@ -129,7 +125,6 @@
   const uploadResult = document.querySelector(".uploadResult")
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
-
   function appendFileData(){
     // form태그에 현재 첨부파일 정보를 추가
     const target= document.querySelector(".uploadHidden")
@@ -147,19 +142,19 @@
   }
 
   function appendNotShownData(){
-      if(removeFileList.length === 0) {
-        return
-      }
+    if(removeFileList.length === 0) {
+      return
+    }
 
-      const target = document.querySelector(".uploadHidden")
-      let str= ''
+    const target = document.querySelector(".uploadHidden")
+    let str= ''
 
-      for(let i = 0; i < removeFileList.length; i++){
-        const {uuid, fileName} = removeFileList[i];
+    for(let i = 0; i < removeFileList.length; i++){
+      const {uuid, fileName} = removeFileList[i];
 
-        str += `<input type='hidden' name='fileNames' value="${uuid}_${fileName}">`
-      }
-      target.innerHTML += str;
+      str += `<input type='hidden' name='fileNames' value="${uuid}_${fileName}">`
+    }
+    target.innerHTML += str;
   }
 
   // 첨부파일 업로드 후 화면에 표시
@@ -184,6 +179,7 @@
     })
   }
 
+  //첨부 파일 삭제
   const removeFileList = []
   function removeFile(uuid, fileName, obj){
     if(!confirm("파일을 삭제!!")){
@@ -234,14 +230,13 @@
     })
   }, false)
 
-
-  // Car 수정 요청
+  // Item 수정 요청
   const link = [[${pageRequestDTO.getLink()}]]
   document.querySelector(".modBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/myPage/userCarModify?${link}`
+    formObj.action = `/admin/shopItemModify?${link}`
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()
@@ -254,7 +249,7 @@
 
   }, false)
 
-  // 등록 Car 삭제 요청
+  // 등록 Item 삭제 요청
   document.querySelector(".removeBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -265,12 +260,11 @@
     // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
     appendNotShownData()
 
-    formObj.action = `/myPage/userCarDelete`
+    formObj.action = `/admin/shopItemDelete`
     formObj.method = 'post'
     formObj.submit()
 
   }, false)
-
 
 
 </script>

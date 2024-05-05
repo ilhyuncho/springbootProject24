@@ -50,7 +50,7 @@
               <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
-              <a th:href="|@{/admin/shopItemModify(shopItemId=${responseDTO.shopItemId})}|" class="text-decoration-none">
+              <a th:href="|@{'/admin/shopItemModify/' + ${responseDTO.shopItemId}}|" class="text-decoration-none">
                 <button type="button" class="btn btn-secondary">Modify</button>
               </a>
             </div>
