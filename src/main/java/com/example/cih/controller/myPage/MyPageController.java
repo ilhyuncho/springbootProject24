@@ -1,6 +1,7 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
 import com.example.cih.dto.PageRequestDTO;
@@ -43,6 +44,8 @@ public class MyPageController {
     private final UserService userService;
 
     private final ModelMapper modelMapper;
+
+    private final FileHandler fileHandler;
 
     @GetMapping("/userCarList")
     public String userCarList(PageRequestDTO pageRequestDTO, String userName,
@@ -169,40 +172,14 @@ public class MyPageController {
         // car정보가 db에서 삭제되었다면 첨부파일 삭제
         List<String> fileNames = carInfoDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
-            removeFiles(fileNames);
+            fileHandler.removeFiles(fileNames);
+
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
         redirectAttributes.addAttribute("userName","user1");
 
         return "redirect:/myPage/userCarList";
-    }
-
-    public void removeFiles(List<String> files){
-
-        log.error("removeFiles");
-
-        files.forEach(log::error);
-
-        for (String fileName : files) {
-            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
-            String resourceName = resource.getFilename();
-
-            try{
-                String contentType = Files.probeContentType(resource.getFile().toPath());
-
-                resource.getFile().delete();
-
-                // 섬네일이 존재한다면
-                if(contentType.startsWith("image")){
-                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
-
-                    thumbnailFile.delete();
-                }
-            }catch(Exception e){
-                log.error(e.getMessage());
-            }
-        }
     }
 
 }

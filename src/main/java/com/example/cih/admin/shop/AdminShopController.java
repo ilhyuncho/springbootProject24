@@ -1,6 +1,7 @@
 package com.example.cih.admin.shop;
 
 
+import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
@@ -38,6 +39,7 @@ public class AdminShopController {
     private String uploadPath;
 
     private final ShopItemService shopItemService;
+    private final FileHandler fileHandler;
 
     @GetMapping("/shopItem")
     public String getShopItem(Model model){
@@ -131,40 +133,13 @@ public class AdminShopController {
         // Item이 db에서 삭제되었다면 첨부파일 삭제
         List<String> fileNames = shopItemDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
-            removeFiles(fileNames);
+            fileHandler.removeFiles(fileNames);
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
         redirectAttributes.addAttribute("userName","user1");
 
         return "redirect:/admin/shopItem";
-    }
-
-    public void removeFiles(List<String> files){
-
-        log.error("removeFiles");
-
-        files.forEach(log::error);
-
-        for (String fileName : files) {
-            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
-            String resourceName = resource.getFilename();
-
-            try{
-                String contentType = Files.probeContentType(resource.getFile().toPath());
-
-                resource.getFile().delete();
-
-                // 섬네일이 존재한다면
-                if(contentType.startsWith("image")){
-                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
-
-                    thumbnailFile.delete();
-                }
-            }catch(Exception e){
-                log.error(e.getMessage());
-            }
-        }
     }
 
 }

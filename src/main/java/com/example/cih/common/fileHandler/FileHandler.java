@@ -5,6 +5,8 @@ import com.example.cih.controller.fileUpload.UploadResultDTO;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -41,7 +43,6 @@ public class FileHandler {
                 try {
                     multipartFile.transferTo(savePath); // 파일 저장
 
-
                     // 이미지 파일 이라면 ( 썸네일 생성 )
                     if (Files.probeContentType(savePath).startsWith("image")) {
                         log.error(Files.probeContentType(savePath).toString());
@@ -57,15 +58,39 @@ public class FileHandler {
                     listResult.add(UploadResultDTO.builder().uuid(uuid).fileName(originalFileName)
                             .img(bImage).build());
 
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             });
         }
         return listResult;
+    }
+
+    public void removeFiles(List<String> files){
+
+        log.error("removeFiles");
+
+        files.forEach(log::error);
+
+        for (String fileName : files) {
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
+            String resourceName = resource.getFilename();
+
+            try{
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+
+                resource.getFile().delete();
+
+                // 섬네일이 존재한다면
+                if(contentType.startsWith("image")){
+                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
+
+                    thumbnailFile.delete();
+                }
+            }catch(Exception e){
+                log.error(e.getMessage());
+            }
+        }
     }
 
 }
