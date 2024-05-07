@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 @Log4j2
@@ -51,8 +52,19 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 request
         );
     }
+    @ExceptionHandler(value = {NoSuchElementException.class})
+    public ResponseEntity<?> handleBoardNotFound(NoSuchElementException e, WebRequest request){
 
-
+        log.error("RestExceptionAdvice - NoSuchElementException!!! ");
+        log.error(e.getMessage());
+        return super.handleExceptionInternal(
+                e,
+                e.getMessage(),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                request
+        );
+    }
 
 
     // ResponseEntityExceptionHandler 클래스에서 기본 제공하는 메서드를 재 지정 함

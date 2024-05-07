@@ -8,12 +8,14 @@ import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.auction.AuctionRegDTO;
+import com.example.cih.dto.auction.AuctionViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 
 @Service
 @Log4j2
@@ -33,5 +35,19 @@ public class AuctionServiceImpl implements AuctionService {
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
 
         car.registerAuction(auctionRegDTO.getRequiredPrice());
+    }
+
+    @Override
+    public AuctionViewDTO getAuction(Long auctionId) {
+
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new NoSuchElementException("해당 경매 정보가 존재하지않습니다"));
+
+        AuctionViewDTO auctionViewDTO = AuctionViewDTO.builder()
+                .carId(auction.getCar().getCarId())
+                .requiredPrice(auction.getRequiredPrice())
+                .build();
+
+        return auctionViewDTO;
     }
 }

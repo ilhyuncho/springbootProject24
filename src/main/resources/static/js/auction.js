@@ -8,3 +8,10 @@ async function registerAuction(formObj) {
     console.log(response)
     return response.data
 }
+
+async function getAuction({auctionId}){
+    const result = await axios.get(`/auction/get`, {params: {auctionId}})
+
+    console.log(result.data)
+    return result.data
+}

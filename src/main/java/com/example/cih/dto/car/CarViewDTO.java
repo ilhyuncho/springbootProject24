@@ -22,6 +22,7 @@ public class CarViewDTO extends CarSpecDTO {
     private LocalDateTime modDate;
     private List<CarImageDTO> fileNames = new ArrayList<>();
 
+    private Long auctionId;
     private AuctionStatus auctionStatus;
 
     @Builder(builderMethodName = "writeCarSpecDTOBuilder")
