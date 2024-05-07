@@ -3,6 +3,7 @@ package com.example.cih.domain.car;
 
 import com.example.cih.common.CarSizeConverter;
 import com.example.cih.domain.auction.Auction;
+import com.example.cih.domain.auction.AuctionStatus;
 import com.example.cih.domain.common.BaseEntity;
 import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.domain.user.User;
@@ -81,6 +82,7 @@ public class Car extends BaseEntity {
     public void registerAuction(int RequiredPrice){
         Auction auction = Auction.builder()
                 .car(this)
+                .auctionStatus(AuctionStatus.PROCESSING)
                 .RequiredPrice(RequiredPrice)
                 .user(this.user)
                 .build();
@@ -125,7 +127,6 @@ public class Car extends BaseEntity {
         this.carYears = carYears;
         this.carColors = carColors;
         this.carKm = carKm;
-
         this.user = user;   // 대입 방법 확인해 보자!!!
     }
 

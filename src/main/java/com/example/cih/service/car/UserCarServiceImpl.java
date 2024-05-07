@@ -65,7 +65,6 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public List<CarViewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
-
         // 고객 정보 get
         User user = userService.findUser(userName);
 
@@ -74,6 +73,8 @@ public class UserCarServiceImpl implements UserCarService {
 
         List<CarViewDTO> carViewDTOList = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+
+
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )
         for (CarViewDTO car : carViewDTOList) {
@@ -164,6 +165,11 @@ public class UserCarServiceImpl implements UserCarService {
                 .regDate(car.getRegDate())
                 .userId(car.getUser().getUserId())
                 .build();
+
+        // 경매 정보 매핑
+        if(!Objects.isNull(car.getAuction())){
+            carViewDTO.setAuctionStatus(car.getAuction().getAuctionStatus());
+        }
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {

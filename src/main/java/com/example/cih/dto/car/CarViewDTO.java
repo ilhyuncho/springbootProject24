@@ -1,5 +1,6 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.auction.AuctionStatus;
 import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarSize;
 import lombok.*;
@@ -21,9 +22,11 @@ public class CarViewDTO extends CarSpecDTO {
     private LocalDateTime modDate;
     private List<CarImageDTO> fileNames = new ArrayList<>();
 
+    private AuctionStatus auctionStatus;
+
     @Builder(builderMethodName = "writeCarSpecDTOBuilder")
     public CarViewDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,
-                      String carColors, Long carKm, Long userId ,
+                      String carColors, Long carKm, Long userId,
                       LocalDateTime regDate, LocalDateTime modDate) {
 
         super(carId, carNumber, carGrade, carModel, carYears, carColors, carKm);
@@ -31,7 +34,6 @@ public class CarViewDTO extends CarSpecDTO {
         this.userId = userId;
         this.regDate = regDate;
         this.modDate = modDate;
-
        // this.fileNames = fileNames; // 확인 필요
     }
 

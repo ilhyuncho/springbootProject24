@@ -30,6 +30,8 @@ public class Auction {
     @Column(name="AUCTION_ID")
     private Long auctionid;
 
+    private AuctionStatus auctionStatus;
+
     private int RequiredPrice;
 
     @OneToOne(mappedBy = "auction")
