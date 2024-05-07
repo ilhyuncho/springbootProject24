@@ -35,9 +35,6 @@ import java.util.List;
 @Log4j2
 public class AdminShopController {
 
-    @Value("${com.cih.upload.path}")
-    private String uploadPath;
-
     private final ShopItemService shopItemService;
     private final FileHandler fileHandler;
 

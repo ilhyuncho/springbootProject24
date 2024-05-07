@@ -42,6 +42,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleBoardNotFound(ItemNotFoundException e, WebRequest request){
 
         log.error("RestExceptionAdvice - ItemNotFoundException!!! ");
+        log.error(e.getMessage());
         return super.handleExceptionInternal(
                 e,
                 e.getMessage(),
@@ -89,7 +90,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 e,
                 errorMap,
                 new HttpHeaders(),
-                HttpStatus.NOT_FOUND,
+                HttpStatus.BAD_REQUEST,
                 request
         );
     }

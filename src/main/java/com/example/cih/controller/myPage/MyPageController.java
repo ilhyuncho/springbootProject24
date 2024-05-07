@@ -102,6 +102,7 @@ public class MyPageController {
         CarViewDTO CarViewDTO = userCarService.readMyCarDetailInfo(pageRequestDTO, userDTO.getUserName(), carId);
 
         model.addAttribute("responseDTO", CarViewDTO);
+        model.addAttribute("userName", userName);
 
         return requestURI;
     }

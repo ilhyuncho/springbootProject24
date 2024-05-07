@@ -54,6 +54,9 @@
 
           <div class="my-4" th:with="user=${#authentication.principal}">
             <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
+
+              <button type="button" class="btn btn-primary autionRegBtn">경매 등록</button>
+
               <a th:href="|@{/myPage/userCarList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
@@ -87,8 +90,87 @@
     </div>
   </div>
 
+  <!--    첨부파일 추가를 위한 모달창-->
+  <div class="modal registerModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Register Reply</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">최소 가격</span>
+            <input type="text" class="form-control requiredPrice" th:value="1000000">
+          </div>
+          <div class="input-group mb-3" th:with="user=${#authentication.principal}">
+            <span class="input-group-text">소유자</span>
+            <input type="text" class="form-control owner" th:value="${user.username}" readonly>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary registerBtn">Register</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    uploadModal-->
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/auction.js"></script>
+
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  const userName = [[${userName}]]
+  const carId = [[${responseDTO.carId}]]
+
+  // 이미지 업로드 모달
+  const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+  const requiredPrice = document.querySelector(".requiredPrice")
+  const owner = document.querySelector(".owner")
+
+
+  // 경매 등록 버튼 클릭
+  document.querySelector(".autionRegBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    registerModal.show()
+  }, false)
+
+  // 모달창의 파일 업로드 처리
+  document.querySelector(".registerBtn").addEventListener("click", function(e){
+    const formObj = {
+      carId:carId,
+      requiredPrice:requiredPrice.value
+    }
+
+    registerAuction(formObj).then(result => {
+
+      alert(result.auctionId)
+
+      requiredPrice.value= ''
+      owner.value=''
+
+      registerModal.hide()
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      registerModal.hide()
+    })
+  }, false)
+
+
 
 </script>
