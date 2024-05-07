@@ -3,6 +3,7 @@ package com.example.cih.controller.auction;
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.dto.auction.AuctionRegDTO;
 import com.example.cih.service.auction.AuctionService;
+import com.example.cih.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.BindException;
@@ -27,9 +28,8 @@ public class AuctionRestController {
 
     private final AuctionService auctionService;
 
-
     @PostMapping("/register")
-    public Map<String,Long> auctionRegister(@Valid @RequestBody AuctionRegDTO auctionRegDTO,
+    public Map<String,String> auctionRegister(@Valid @RequestBody AuctionRegDTO auctionRegDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ) throws BindException {
@@ -40,10 +40,10 @@ public class AuctionRestController {
             throw new BindException(bindingResult);
         }
 
-        Long auctionId = auctionService.registerAuction(principal.getName(), auctionRegDTO);
+        auctionService.registerAuction(principal.getName(), auctionRegDTO);
 
-        Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("auctionId", auctionId);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
 
         return resultMap;
     }

@@ -2,7 +2,9 @@ package com.example.cih.domain.car;
 
 
 import com.example.cih.common.CarSizeConverter;
+import com.example.cih.domain.auction.Auction;
 import com.example.cih.domain.common.BaseEntity;
+import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
@@ -66,8 +68,24 @@ public class Car extends BaseEntity {
     @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
     private Set<CarImage> imageSet = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "AUCTION_ID")   // 주 테이블(Car)에 외래 키 양방향
+    private Auction auction;          // 경매 정보
+
+
+
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void registerAuction(int RequiredPrice){
+        Auction auction = Auction.builder()
+                .car(this)
+                .RequiredPrice(RequiredPrice)
+                .user(this.user)
+                .build();
+
+        this.auction = auction;
     }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------

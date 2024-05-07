@@ -33,7 +33,7 @@ public class Order {
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DELIVERY_ID")
+    @JoinColumn(name = "DELIVERY_ID")   // 주 테이블(Order)에 외래 키 양방향
     private Delivery delivery;          // 배송 정보
 
     @Column(name = "orderDate")

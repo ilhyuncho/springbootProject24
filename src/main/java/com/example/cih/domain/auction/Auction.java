@@ -2,8 +2,10 @@ package com.example.cih.domain.auction;
 
 
 import com.example.cih.common.exception.NotEnoughStockCountException;
+import com.example.cih.domain.car.Car;
 import com.example.cih.domain.shop.ItemImage;
 import com.example.cih.domain.shop.ItemOption;
+import com.example.cih.domain.shop.Order;
 import com.example.cih.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +30,10 @@ public class Auction {
     @Column(name="AUCTION_ID")
     private Long auctionid;
 
-    private Long carId;
     private int RequiredPrice;
+
+    @OneToOne(mappedBy = "auction")
+    private Car car;
 
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="uId")

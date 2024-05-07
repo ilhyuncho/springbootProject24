@@ -12,5 +12,4 @@ public interface CarService {
     PageResponseDTO<CarInfoDTO> list(PageRequestDTO pageRequestDTO);
     PageResponseDTO<CarInfoDTO> searchCarByKeyword(PageRequestDTO pageRequestDTO);
     CarInfoDTO readOne(Long carId);
-
 }
