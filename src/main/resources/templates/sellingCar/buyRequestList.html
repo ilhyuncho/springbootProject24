@@ -51,6 +51,14 @@
           <ul class="list-group buyRequestList">
             <!-- 리스트 영역-->
           </ul>
+
+          <div class="my-4">
+            <div class="float-end">
+              <button type="button" class="btn btn-primary buyRequestBtn">Buy</button>
+              <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+            </div>
+          </div><!-- <div class="my-4">-->
+
         </div><!-- <div class="card-body">-->
       </div>
     </div>
@@ -117,7 +125,7 @@
         str += `<li class="list-group-item d-flex replyItem">
                     <span class="col-2">${dto.proposalPrice}</span>
                     <span class="col-6" data-rno="${dto.proposalPrice}">${dto.registerDate}</span>
-                    </li>`
+               </li>`
       }
     }
     buyRequestList.innerHTML = str

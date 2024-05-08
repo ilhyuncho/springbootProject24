@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -39,9 +40,10 @@ public class BuyRequestServiceImpl implements BuyRequestService {
 
         List<BuyRequest> ListBuyRequest = buyRequestRepository.findBySellingCar(sellingCar);
 
-        List<BuyRequestViewDTO> ListBuyRequestViewDTO = ListBuyRequest.stream().
-                map(BuyRequestServiceImpl::entityToDTO).collect(Collectors.toList());
-
+        List<BuyRequestViewDTO> ListBuyRequestViewDTO = ListBuyRequest.stream()
+                .map(BuyRequestServiceImpl::entityToDTO)
+                .sorted(Comparator.comparing(BuyRequestViewDTO::getProposalPrice).reversed())   // 제안 가격 내림차순으로 정렬
+                .collect(Collectors.toList());
 
         return ListBuyRequestViewDTO;
     }

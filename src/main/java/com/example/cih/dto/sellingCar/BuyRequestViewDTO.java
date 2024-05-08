@@ -1,4 +1,5 @@
 package com.example.cih.dto.sellingCar;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,5 +12,7 @@ import java.time.LocalDateTime;
 public class BuyRequestViewDTO {
 
     private int proposalPrice;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registerDate;
 }
