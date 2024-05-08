@@ -1,8 +1,8 @@
 package com.example.cih.dto.car;
 
-import com.example.cih.domain.auction.AuctionStatus;
 import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarSize;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,8 +22,8 @@ public class CarViewDTO extends CarSpecDTO {
     private LocalDateTime modDate;
     private List<CarImageDTO> fileNames = new ArrayList<>();
 
-    private Long auctionId;
-    private AuctionStatus auctionStatus;
+    private Long sellingCarId;
+    private SellingCarStatus sellingCarStatus;
 
     @Builder(builderMethodName = "writeCarSpecDTOBuilder")
     public CarViewDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,

@@ -2,17 +2,15 @@ package com.example.cih.domain.car;
 
 
 import com.example.cih.common.CarSizeConverter;
-import com.example.cih.domain.auction.Auction;
-import com.example.cih.domain.auction.AuctionStatus;
 import com.example.cih.domain.common.BaseEntity;
-import com.example.cih.domain.delivery.Delivery;
+import com.example.cih.domain.sellingCar.SellingCar;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.ISBN;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -70,8 +68,8 @@ public class Car extends BaseEntity {
     private Set<CarImage> imageSet = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "AUCTION_ID")   // 주 테이블(Car)에 외래 키 양방향
-    private Auction auction;          // 경매 정보
+    @JoinColumn(name = "SELLINGCAR_ID")   // 주 테이블(Car)에 외래 키 양방향
+    private SellingCar sellingCar;          // 경매 정보
 
 
 
@@ -79,15 +77,15 @@ public class Car extends BaseEntity {
         this.user = user;
     }
 
-    public void registerAuction(int RequiredPrice){
-        Auction auction = Auction.builder()
+    public void registerSellingCar(int RequiredPrice){
+        SellingCar sellingCar = SellingCar.builder()
                 .car(this)
-                .auctionStatus(AuctionStatus.PROCESSING)
+                .sellingCarStatus(SellingCarStatus.PROCESSING)
                 .RequiredPrice(RequiredPrice)
                 .user(this.user)
                 .build();
 
-        this.auction = auction;
+        this.sellingCar = sellingCar;
     }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------

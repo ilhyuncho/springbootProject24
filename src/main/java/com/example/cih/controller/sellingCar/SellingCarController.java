@@ -1,12 +1,10 @@
-package com.example.cih.controller.auction;
+package com.example.cih.controller.sellingCar;
 
 
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.auction.AuctionViewDTO;
-import com.example.cih.dto.car.CarViewDTO;
-import com.example.cih.dto.user.UserDTO;
-import com.example.cih.service.auction.AuctionService;
+import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.service.sellingCar.SellingCarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,23 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/auction")
+@RequestMapping("/sellingCar")
 @RequiredArgsConstructor
 @Log4j2
 @PreAuthorize("hasRole('USER')")
-public class AuctionController {
+public class SellingCarController {
 
-    private final AuctionService auctionService;
+    private final SellingCarService sellingCarService;
 
     @GetMapping("/list")
     public String userCarList(PageRequestDTO pageRequestDTO, String userName,
                               Model model){
 
-        List<AuctionViewDTO> listAuction = auctionService.getListAuction();
+        List<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar();
 
-        model.addAttribute("list", listAuction);
+        model.addAttribute("list", listSellingCar);
 
-        return "/auction/auctionList";
+        return "/sellingCar/sellingCarList";
     }
 
 

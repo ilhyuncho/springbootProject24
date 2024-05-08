@@ -1,15 +1,13 @@
-package com.example.cih.dto.auction;
+package com.example.cih.dto.sellingCar;
 
 import lombok.*;
-
-import javax.validation.constraints.Min;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AuctionRegDTO {
+public class SellingCarRegDTO {
 
     private Long carId;
     private int requiredPrice;

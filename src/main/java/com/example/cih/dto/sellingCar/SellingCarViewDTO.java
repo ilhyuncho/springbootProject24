@@ -1,6 +1,5 @@
-package com.example.cih.dto.auction;
-
-import com.example.cih.domain.auction.AuctionStatus;
+package com.example.cih.dto.sellingCar;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,9 +9,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AuctionViewDTO {
+public class SellingCarViewDTO {
     private Long carId;
-    private AuctionStatus auctionStatus;
+    private SellingCarStatus sellingCarStatus;
     private int requiredPrice;
     private LocalDateTime expiredDate;
 }

@@ -51,21 +51,21 @@
             <input type="text" class="form-control" th:value="${responseDTO.carKm}" name="carKm" >
           </div>
 
-          <input type="hidden" name="auctionId" th:value="${responseDTO.auctionId}">
+          <input type="hidden" name="sellingCarId" th:value="${responseDTO.sellingCarId}">
 
           <div class="my-4" th:with="user=${#authentication.principal}">
             <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
 
-              <button type="button" class="btn btn-primary auctionRegBtn text-decoration-none"
-                      th:classappend="${#strings.equals(responseDTO.auctionStatus, 'PROCESSING') ? 'invisible':''}" >
-                    <span th:id="auctionReg">
+              <button type="button" class="btn btn-primary sellingCarRegBtn text-decoration-none"
+                      th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') ? 'invisible':''}" >
+                    <span th:id="sellingCarReg">
                       경매 등록
                     </span>
               </button>
 
-              <button type="button" class="btn btn-primary auctionShowBtn text-decoration-none"
-                      th:classappend="${#strings.equals(responseDTO.auctionStatus, 'PROCESSING') == false ? 'invisible':''}" >
-                    <span th:id="auctionShow">
+              <button type="button" class="btn btn-primary sellingCarShowBtn text-decoration-none"
+                      th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') == false ? 'invisible':''}" >
+                    <span th:id="sellingCarShow">
                       경매 현황
                     </span>
               </button>
@@ -132,7 +132,7 @@
   </div>  <!--    uploadModal-->
 
   <!--   경매 현황 모달창-->
-  <div class="modal auctionShowModal" tabindex="-1">
+  <div class="modal sellingCarShowModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -164,11 +164,11 @@
         </div>
       </div>
     </div>
-  </div>  <!--    auctionShowModal-->
+  </div>  <!--    sellingCarShowModal-->
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/auction.js"></script>
+  <script src="/js/sellingCar.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -176,31 +176,31 @@
 
   const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
-  const auctionId = [[${responseDTO.auctionId}]]
+  const sellingCarId = [[${responseDTO.sellingCarId}]]
 
   // Modal
   const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
-  const auctionShowModal = new bootstrap.Modal(document.querySelector(".auctionShowModal"))
+  const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
   const requiredPrice = document.querySelector(".requiredPrice")
   const owner = document.querySelector(".owner")
 
   // 경매 현황 버튼 클릭
-  document.querySelector(".auctionShowBtn").addEventListener("click", function (e){
+  document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
     const formObj = {
-      auctionId:auctionId
+      sellingCarId:sellingCarId
     }
 
-    getAuction(formObj).then(result => {
+    getsellingCar(formObj).then(result => {
 
       alert(result.requiredPrice)
 
       document.getElementById("modalRequiredPrice").value = result.requiredPrice;
       document.getElementById("modalExpiredDate").value = result.expiredDate
 
-      auctionShowModal.show()
+      sellingCarShowModal.show()
     }).catch(e => {
       console.log(e.response.data);
       alert(e.response.data)
@@ -209,7 +209,7 @@
   }, false)
 
   // 경매 등록 버튼 클릭
-  document.querySelector(".auctionRegBtn").addEventListener("click", function (e){
+  document.querySelector(".sellingCarRegBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
@@ -223,7 +223,7 @@
       requiredPrice:requiredPrice.value
     }
 
-    registerAuction(formObj).then(result => {
+    registerSellingCar(formObj).then(result => {
 
       alert(result.result)
 

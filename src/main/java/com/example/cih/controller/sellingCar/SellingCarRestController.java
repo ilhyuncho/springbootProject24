@@ -1,11 +1,10 @@
-package com.example.cih.controller.auction;
+package com.example.cih.controller.sellingCar;
 
-import com.example.cih.dto.auction.AuctionRegDTO;
-import com.example.cih.dto.auction.AuctionViewDTO;
-import com.example.cih.service.auction.AuctionService;
+import com.example.cih.dto.sellingCar.SellingCarRegDTO;
+import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.service.sellingCar.SellingCarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,26 +17,26 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/auction")
+@RequestMapping("/sellingCar")
 @RequiredArgsConstructor
 @Log4j2
-public class AuctionRestController {
+public class SellingCarRestController {
 
-    private final AuctionService auctionService;
+    private final SellingCarService sellingCarService;
 
     @PostMapping("/register")
-    public Map<String,String> registerAuction(@Valid @RequestBody AuctionRegDTO auctionRegDTO,
+    public Map<String,String> registerSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ) throws BindException {
-        log.error("auctionRegister post...." + auctionRegDTO);
+        log.error("registerSellingCar post...." + sellingCarRegDTO);
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
         }
 
-        auctionService.registerAuction(principal.getName(), auctionRegDTO);
+        sellingCarService.registerSellingCar(principal.getName(), sellingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
@@ -46,10 +45,10 @@ public class AuctionRestController {
     }
 
     @GetMapping("/get")
-    public AuctionViewDTO getAuction(Long auctionId, Principal principal){
+    public SellingCarViewDTO getSellingCar(Long sellingCarId, Principal principal){
 
-        AuctionViewDTO auctionRegDTO = auctionService.getAuction(auctionId);
+        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCar(sellingCarId);
 
-        return auctionRegDTO;
+        return sellingCarViewDTO;
     }
 }

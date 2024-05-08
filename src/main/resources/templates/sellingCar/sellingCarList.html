@@ -4,7 +4,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>Auction Info</title>
+  <title>SellingCar Info</title>
 </head>
 
 <div layout:fragment="content">
@@ -22,7 +22,7 @@
             <thead>
               <tr>
                 <th scope="col">carId</th>
-                <th scope="col">auctionStatus</th>
+                <th scope="col">sellingCarStatus</th>
                 <th scope="col">requiredPrice</th>
                 <th scope="col">expiredDate</th>
               </tr>
@@ -40,7 +40,7 @@
 <!--                  </div>-->
 
                 </th>
-                <td>[[${dto.auctionStatus}]]</td>
+                <td>[[${dto.sellingCarStatus}]]</td>
                 <td>[[${dto.requiredPrice}]]</td>
                 <td>[[${ #temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
               </tr>

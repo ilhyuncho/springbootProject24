@@ -167,9 +167,9 @@ public class UserCarServiceImpl implements UserCarService {
                 .build();
 
         // 경매 정보 매핑
-        if(!Objects.isNull(car.getAuction())){
-            carViewDTO.setAuctionId(car.getAuction().getAuctionid());
-            carViewDTO.setAuctionStatus(car.getAuction().getAuctionStatus());
+        if(!Objects.isNull(car.getSellingCar())){
+            carViewDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
+            carViewDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
         }
 
         // 차 이미지 파일 정보 매핑
