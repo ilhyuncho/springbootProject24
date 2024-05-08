@@ -1,15 +1,15 @@
-package com.example.cih.service.sellingCar;
+package com.example.cih.service.buyingCar;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
+import com.example.cih.domain.buyingCar.BuyingCar;
+import com.example.cih.domain.buyingCar.BuyingCarRepository;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
-import com.example.cih.domain.sellingCar.BuyRequest;
-import com.example.cih.domain.sellingCar.BuyRequestRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.sellingCar.BuyRequestRegDTO;
-import com.example.cih.dto.sellingCar.BuyRequestViewDTO;
+import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
+import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,55 +25,55 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
-public class BuyRequestServiceImpl implements BuyRequestService {
+public class BuyingCarServiceImpl implements BuyingCarService {
     private final SellingCarRepository sellingCarRepository;
-    private final BuyRequestRepository buyRequestRepository;
+    private final BuyingCarRepository buyingCarRepository;
 
     private final UserService userService;
     private final CarRepository carRepository;
 
     @Override
-    public List<BuyRequestViewDTO> getListBuyRequest(Long sellingCarId) {
+    public List<BuyingCarViewDTO> getListBuyingCar(Long sellingCarId) {
 
         SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
                 .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
 
-        List<BuyRequest> ListBuyRequest = buyRequestRepository.findBySellingCar(sellingCar);
+        List<BuyingCar> ListBuyingCar = buyingCarRepository.findBySellingCar(sellingCar);
 
-        List<BuyRequestViewDTO> ListBuyRequestViewDTO = ListBuyRequest.stream()
-                .map(BuyRequestServiceImpl::entityToDTO)
-                .sorted(Comparator.comparing(BuyRequestViewDTO::getProposalPrice).reversed())   // 제안 가격 내림차순으로 정렬
+        List<BuyingCarViewDTO> ListBuyingCarViewDTO = ListBuyingCar.stream()
+                .map(BuyingCarServiceImpl::entityToDTO)
+                .sorted(Comparator.comparing(BuyingCarViewDTO::getProposalPrice).reversed())   // 제안 가격 내림차순으로 정렬
                 .collect(Collectors.toList());
 
-        return ListBuyRequestViewDTO;
+        return ListBuyingCarViewDTO;
     }
 
     @Override
-    public void registerBuyRequest(String userName, BuyRequestRegDTO buyRequestRegDTO) {
+    public void registerBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO) {
         User user = userService.findUser(userName);
 
-        Car car = carRepository.findById(buyRequestRegDTO.getCarId())
+        Car car = carRepository.findById(buyingCarRegDTO.getCarId())
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
 
         SellingCar sellingCar = sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 판매 정보가 존재하지않습니다"));
 
-        BuyRequest buyRequest = BuyRequest.builder()
-                .proposalPrice(buyRequestRegDTO.getRequestPrice())
+        BuyingCar buyingCar = BuyingCar.builder()
+                .proposalPrice(buyingCarRegDTO.getRequestPrice())
                 .user(user)
                 .sellingCar(sellingCar)
                 .build();
 
-        buyRequestRepository.save(buyRequest);
+        buyingCarRepository.save(buyingCar);
     }
 
-    private static BuyRequestViewDTO entityToDTO(BuyRequest buyRequest) {
-        BuyRequestViewDTO buyRequestViewDTO = BuyRequestViewDTO.builder()
-                .proposalPrice(buyRequest.getProposalPrice())
-                .registerDate(buyRequest.getRegisterDate())
+    private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
+        BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder()
+                .proposalPrice(buyingCar.getProposalPrice())
+                .registerDate(buyingCar.getRegisterDate())
                 .build();
 
-        return buyRequestViewDTO;
+        return buyingCarViewDTO;
     }
 
 }

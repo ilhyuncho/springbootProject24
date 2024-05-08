@@ -1,11 +1,10 @@
-package com.example.cih.controller.buyRequest;
+package com.example.cih.controller.buyingCar;
 
 
 
-import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.service.car.CarService;
-import com.example.cih.service.sellingCar.BuyRequestService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,27 +13,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
-@RequestMapping("/buyRequest")
+@RequestMapping("/buyingCar")
 @RequiredArgsConstructor
 @Log4j2
 @PreAuthorize("hasRole('USER')")
-public class BuyRequestController {
+public class BuyingCarController {
 
     private final CarService carService;
 
+    @ApiOperation(value = "판매 차량 세부 희망 리스트 조회", notes = "판매 차량 정보만 전달")
     @GetMapping("/get")
-    public String buyRequest(PageRequestDTO pageRequestDTO,
-                             Long carId,
-                             Model model){
+    public String get(Long carId, Model model){
 
         CarInfoDTO carInfoDTO = carService.readOne(carId);
 
         model.addAttribute("carInfoDTO", carInfoDTO);
 
-        return "/sellingCar/buyRequestList";
+        return "/sellingCar/buyingCarList";
     }
 
 }

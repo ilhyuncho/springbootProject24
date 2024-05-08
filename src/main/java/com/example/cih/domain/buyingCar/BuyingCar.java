@@ -1,5 +1,6 @@
-package com.example.cih.domain.sellingCar;
+package com.example.cih.domain.buyingCar;
 
+import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="buyRequests")
-public class BuyRequest {
+@Table(name="buyingCars")
+public class BuyingCar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="BUY_REQUEST_ID")
-    private Long buyRequestId;
+    @Column(name="BUYING_CAR_ID")
+    private Long buyingCarId;
 
     private int proposalPrice;
 

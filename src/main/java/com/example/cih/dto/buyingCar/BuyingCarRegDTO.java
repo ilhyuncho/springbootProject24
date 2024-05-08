@@ -1,4 +1,4 @@
-package com.example.cih.dto.sellingCar;
+package com.example.cih.dto.buyingCar;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BuyRequestRegDTO {
+public class BuyingCarRegDTO {
     private Long carId;
     private int requestPrice;
 }

@@ -3,7 +3,6 @@ package com.example.cih.service.sellingCar;
 import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
-import com.example.cih.domain.sellingCar.BuyRequestRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;

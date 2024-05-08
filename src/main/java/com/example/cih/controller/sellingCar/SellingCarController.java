@@ -5,6 +5,7 @@ package com.example.cih.controller.sellingCar;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +25,9 @@ public class SellingCarController {
 
     private final SellingCarService sellingCarService;
 
+    @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
-    public String userCarList(PageRequestDTO pageRequestDTO, String userName,
+    public String userCarList(PageRequestDTO pageRequestDTO,
                               Model model){
 
         List<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar();

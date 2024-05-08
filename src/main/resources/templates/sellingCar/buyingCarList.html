@@ -48,13 +48,13 @@
         </div>
 
         <div class="card-body">
-          <ul class="list-group buyRequestList">
+          <ul class="list-group buyingCarList">
             <!-- 리스트 영역-->
           </ul>
 
           <div class="my-4">
             <div class="float-end">
-              <button type="button" class="btn btn-primary buyRequestBtn">Buy</button>
+              <button type="button" class="btn btn-primary purchaseOfferBtn">Buy</button>
               <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
             </div>
           </div><!-- <div class="my-4">-->
@@ -65,7 +65,7 @@
   </div>  <!--  <div class="row mt-3">-->
 
   <!--    구매 요청을 위한 모달창-->
-  <div class="modal buyRequestModal" tabindex="-1">
+  <div class="modal purchaseOfferModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -89,7 +89,7 @@
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/sellingCar.js"></script>
+  <script src="/js/buyingCar.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -98,15 +98,15 @@
   const carId = [[${carInfoDTO.carId}]]
   const sellingCarId = [[${carInfoDTO.sellingCarId}]]
 
-  const buyRequestModal = new bootstrap.Modal(document.querySelector(".buyRequestModal"))
+  const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
 
   const requestPrice = document.querySelector(".requestPrice")
-  const buyRequestList = document.querySelector('.buyRequestList')  // 구매 희망 목록 DOM
+  const buyingCarList = document.querySelector('.buyingCarList')  // 구매 희망 목록 DOM
 
 
-  printBuyRequestList(1,10)
+  printBuyingCarList(1,10)
 
-  function printBuyRequestList(page,size){
+  function printBuyingCarList(page,size){
     getList({carId,sellingCarId, page, size}).then(data=> {
 
       printList(data) // 목록 처리
@@ -128,18 +128,18 @@
                </li>`
       }
     }
-    buyRequestList.innerHTML = str
+    buyingCarList.innerHTML = str
   }
 
-  // 구매 요청 버튼 클릭
-  document.querySelector(".buyRequestBtn").addEventListener("click", function (e){
+  // 구매 제안 버튼 클릭
+  document.querySelector(".purchaseOfferBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
-    buyRequestModal.show()
+    purchaseOfferModal.show()
   }, false)
 
-  // 모달창의 구매 요청 처리
+  // 모달창의 구매 제안 처리
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
     const formObj = {
       carId:carId,
@@ -147,15 +147,15 @@
       requestPrice:requestPrice.value
     }
 
-    registerBuyRequest(formObj).then(result => {
+    purchaseOffer(formObj).then(result => {
 
       alert(result)
 
       requestPrice.value= ''
 
-      buyRequestModal.hide()
+      purchaseOfferModal.hide()
 
-      printBuyRequestList(1,10)
+      printBuyingCarList(1,10)
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -166,7 +166,7 @@
         console.log(e.response.data);
         alert(e.response.data)
       }
-      buyRequestModal.hide()
+      purchaseOfferModal.hide()
     })
 
   }, false)

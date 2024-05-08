@@ -1,4 +1,4 @@
-package com.example.cih.dto.sellingCar;
+package com.example.cih.dto.buyingCar;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BuyRequestViewDTO {
+public class BuyingCarViewDTO {
 
     private int proposalPrice;
 

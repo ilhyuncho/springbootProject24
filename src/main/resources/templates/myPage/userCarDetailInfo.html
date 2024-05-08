@@ -66,7 +66,7 @@
               <button type="button" class="btn btn-primary sellingCarShowBtn text-decoration-none"
                       th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') == false ? 'invisible':''}" >
                     <span th:id="sellingCarShow">
-                      경매 현황
+                      판매 현황
                     </span>
               </button>
 
@@ -131,23 +131,23 @@
     </div>
   </div>  <!--    uploadModal-->
 
-  <!--   경매 현황 모달창-->
+  <!--   판매 현황 모달창-->
   <div class="modal sellingCarShowModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">경매 현황</h5>
+          <h5 class="modal-title">판매 현황</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body modal-body-show">
           <div class="input-group mb-3">
-            <span class="input-group-text">경매 최소가격</span>
+            <span class="input-group-text">판매 최소가격</span>
             <input type="text" class="form-control requiredPrice" id="modalRequiredPrice">
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">경매 마감 시간</span>
+            <span class="input-group-text">판매 마감 시간</span>
             <input type="text" class="form-control requiredPrice" id="modalExpiredDate">
           </div>
 
@@ -184,7 +184,7 @@
   const requiredPrice = document.querySelector(".requiredPrice")
   const owner = document.querySelector(".owner")
 
-  // 경매 현황 버튼 클릭
+  // 판매 현황 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()

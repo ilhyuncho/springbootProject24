@@ -3,6 +3,7 @@ package com.example.cih.controller.sellingCar;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.BindException;
@@ -24,10 +25,10 @@ public class SellingCarRestController {
 
     private final SellingCarService sellingCarService;
 
+    @ApiOperation(value = "판매 차량 등록", notes = "차 소유주가 차량 등록")
     @PostMapping("/register")
     public Map<String,String> registerSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                 BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes,
                                 Principal principal ) throws BindException {
         log.error("registerSellingCar post...." + sellingCarRegDTO);
 
@@ -44,6 +45,7 @@ public class SellingCarRestController {
         return resultMap;
     }
 
+    @ApiOperation(value = "판매 현황", notes = "차 소유주가 [판매 현황] 버튼 클릭")
     @GetMapping("/get")
     public SellingCarViewDTO getSellingCar(Long sellingCarId, Principal principal){
 
