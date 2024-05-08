@@ -146,6 +146,11 @@
             <input type="text" class="form-control requiredPrice" id="modalRequiredPrice">
           </div>
 
+          <div class="input-group mb-3">
+            <span class="input-group-text">경매 마감 시간</span>
+            <input type="text" class="form-control requiredPrice" id="modalExpiredDate">
+          </div>
+
           <div class="input-group mb-3" th:with="user=${#authentication.principal}">
             <span class="input-group-text">소유자</span>
             <input type="text" class="form-control owner" th:value="${user.username}" readonly>
@@ -193,6 +198,7 @@
       alert(result.requiredPrice)
 
       document.getElementById("modalRequiredPrice").value = result.requiredPrice;
+      document.getElementById("modalExpiredDate").value = result.expiredDate
 
       auctionShowModal.show()
     }).catch(e => {

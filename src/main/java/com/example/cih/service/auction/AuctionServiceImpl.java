@@ -9,13 +9,17 @@ import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.auction.AuctionRegDTO;
 import com.example.cih.dto.auction.AuctionViewDTO;
+import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.service.car.UserCarServiceImpl;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -46,8 +50,33 @@ public class AuctionServiceImpl implements AuctionService {
         AuctionViewDTO auctionViewDTO = AuctionViewDTO.builder()
                 .carId(auction.getCar().getCarId())
                 .requiredPrice(auction.getRequiredPrice())
+                .expiredDate(auction.getExpiredDate())
                 .build();
 
         return auctionViewDTO;
     }
+
+    @Override
+    public List<AuctionViewDTO> getListAuction() {
+        List<Auction> listAuction = auctionRepository.findAll();
+
+        List<AuctionViewDTO> ListAuctionViewDTO = listAuction.stream().
+                map(AuctionServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        return ListAuctionViewDTO;
+    }
+
+    private static AuctionViewDTO entityToDTO(Auction auction) {
+        AuctionViewDTO auctionViewDTO = AuctionViewDTO.builder()
+                .carId(auction.getCar().getCarId())
+                .requiredPrice(auction.getRequiredPrice())
+                .auctionStatus(auction.getAuctionStatus())
+                .expiredDate(auction.getExpiredDate())
+                .build();
+
+        return auctionViewDTO;
+    }
+
+
+
 }
