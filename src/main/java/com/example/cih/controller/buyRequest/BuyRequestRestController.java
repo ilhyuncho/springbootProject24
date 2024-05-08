@@ -1,6 +1,8 @@
 package com.example.cih.controller.buyRequest;
 
+import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.sellingCar.BuyRequestRegDTO;
+import com.example.cih.dto.sellingCar.BuyRequestViewDTO;
 import com.example.cih.service.sellingCar.BuyRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,11 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 @RestController
-@RequestMapping("/BuyRequest")
+@RequestMapping("/buyRequest")
 @RequiredArgsConstructor
 @Log4j2
 public class BuyRequestRestController {
@@ -41,5 +44,16 @@ public class BuyRequestRestController {
         resultMap.put("result", "success");
 
         return resultMap;
+    }
+
+    @GetMapping("/list")
+    public List<BuyRequestViewDTO> buyRequest(PageRequestDTO pageRequestDTO,
+                             Long sellingCarId){
+
+        log.error("sellingCarId:"+sellingCarId);
+
+        List<BuyRequestViewDTO> listBuyRequest = buyRequestService.getListBuyRequest(sellingCarId);
+
+        return listBuyRequest;
     }
 }

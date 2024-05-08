@@ -48,29 +48,9 @@
         </div>
 
         <div class="card-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">proposalPrice</th>
-                <th scope="col">registerDate</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr th:each="dto:${list}">
-                <td>[[${dto.proposalPrice}]]</td>
-                <td>[[${ #temporals.format(dto.registerDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-              </tr>
-              </tbody>
-          </table>
-
-          <div class="my-4">
-            <div class="float-end">
-              <button type="button" class="btn btn-primary buyRequestBtn">Buy</button>
-              <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
-            </div>
-          </div>
-
+          <ul class="list-group buyRequestList">
+            <!-- 리스트 영역-->
+          </ul>
         </div><!-- <div class="card-body">-->
       </div>
     </div>
@@ -113,6 +93,35 @@
   const buyRequestModal = new bootstrap.Modal(document.querySelector(".buyRequestModal"))
 
   const requestPrice = document.querySelector(".requestPrice")
+  const buyRequestList = document.querySelector('.buyRequestList')  // 구매 희망 목록 DOM
+
+
+  printBuyRequestList(1,10)
+
+  function printBuyRequestList(page,size){
+    getList({carId,sellingCarId, page, size}).then(data=> {
+
+      printList(data) // 목록 처리
+     // printPages(data)        // 페이지 처리
+      // console.log(data)
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function printList(dtoList){    // 목록 출력
+    let str = '';
+
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+        str += `<li class="list-group-item d-flex replyItem">
+                    <span class="col-2">${dto.proposalPrice}</span>
+                    <span class="col-6" data-rno="${dto.proposalPrice}">${dto.registerDate}</span>
+                    </li>`
+      }
+    }
+    buyRequestList.innerHTML = str
+  }
 
   // 구매 요청 버튼 클릭
   document.querySelector(".buyRequestBtn").addEventListener("click", function (e){
@@ -138,6 +147,7 @@
 
       buyRequestModal.hide()
 
+      printBuyRequestList(1,10)
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -152,4 +162,6 @@
     })
 
   }, false)
+
+
 </script>

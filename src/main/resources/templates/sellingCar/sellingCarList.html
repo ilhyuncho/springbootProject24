@@ -31,7 +31,7 @@
             <tbody>
               <tr th:each="dto:${list}">
                 <th scope="row">
-                  <a th:href="|@{/buyRequest/get(carId=${dto.carId}, sellingCarId=${dto.sellingCarId}, userName=${#authentication.principal.username} )}|"
+                  <a th:href="|@{/buyRequest/get(carId=${dto.carId}, userName=${#authentication.principal.username} )}|"
                      class="text-decoration-none"> [[${dto.carNumber}]]</a>
 
 <!--                  <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">-->

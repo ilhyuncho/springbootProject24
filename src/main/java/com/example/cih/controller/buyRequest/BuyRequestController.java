@@ -4,7 +4,6 @@ package com.example.cih.controller.buyRequest;
 
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.sellingCar.BuyRequestViewDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.sellingCar.BuyRequestService;
 import lombok.RequiredArgsConstructor;
@@ -25,28 +24,17 @@ import java.util.List;
 public class BuyRequestController {
 
     private final CarService carService;
-    private final BuyRequestService buyRequestService;
-
 
     @GetMapping("/get")
     public String buyRequest(PageRequestDTO pageRequestDTO,
                              Long carId,
-                             Long sellingCarId,
                              Model model){
-
-        log.error("carId:" + carId + "sellingCarId:"+sellingCarId);
 
         CarInfoDTO carInfoDTO = carService.readOne(carId);
 
-        List<BuyRequestViewDTO> listBuyRequest = buyRequestService.getListBuyRequest(sellingCarId);
-
         model.addAttribute("carInfoDTO", carInfoDTO);
-        model.addAttribute("list", listBuyRequest);
 
         return "/sellingCar/buyRequestList";
     }
-
-
-
 
 }
