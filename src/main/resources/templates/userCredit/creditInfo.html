@@ -28,7 +28,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">BankName</span>
-            <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.bankName}]]</textarea>
+            <input type="text" class="form-control" th:value="${responseDTO.bankName}" readonly>
           </div>
 
           <div class="input-group mb-3">

@@ -1,6 +1,5 @@
 package com.example.cih.service.car;
 
-import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
@@ -153,7 +152,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     private static CarViewDTO entityToDTO(Car car) {
-        CarViewDTO carViewDTO = CarViewDTO.writeCarSpecDTOBuilder()
+        CarViewDTO carViewDTO = CarViewDTO.writeCarViewDTOBuilder()
                 .carId(car.getCarId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())

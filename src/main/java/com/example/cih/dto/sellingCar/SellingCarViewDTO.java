@@ -11,7 +11,11 @@ import java.time.LocalDateTime;
 @ToString
 public class SellingCarViewDTO {
     private Long carId;
+    private String carNumber;
     private SellingCarStatus sellingCarStatus;
     private int requiredPrice;
+    private Long sellingCarId;
     private LocalDateTime expiredDate;
+
+
 }

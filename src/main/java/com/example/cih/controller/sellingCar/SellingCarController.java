@@ -35,5 +35,4 @@ public class SellingCarController {
         return "/sellingCar/sellingCarList";
     }
 
-
 }

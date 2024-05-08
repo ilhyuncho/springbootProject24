@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>구매 희망 list</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Car Info
+        </div>
+        <div class="card-body">
+          <input type="hidden" name="sellingCarId" th:value="${carInfoDTO.sellingCarId}">
+
+          <!--            dto 값 출력 부분-->
+          <div class="input-group mb-3">
+            <span class="input-group-text">CarID</span>
+            <input type="text" class="form-control" th:value="${carInfoDTO.carId}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">CarNumber</span>
+            <input type="text" class="form-control" th:value="${carInfoDTO.carNumber}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">carGrade</span>
+            <input type="text" class="form-control" th:value="${carInfoDTO.carGrade}" readonly>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>  <!--  <div class="row mt-3">-->
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          구매 희망 list
+        </div>
+
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">proposalPrice</th>
+                <th scope="col">registerDate</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr th:each="dto:${list}">
+                <td>[[${dto.proposalPrice}]]</td>
+                <td>[[${ #temporals.format(dto.registerDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+              </tr>
+              </tbody>
+          </table>
+
+          <div class="my-4">
+            <div class="float-end">
+              <button type="button" class="btn btn-primary buyRequestBtn">Buy</button>
+              <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+            </div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>  <!--  <div class="row mt-3">-->
+
+  <!--    구매 요청을 위한 모달창-->
+  <div class="modal buyRequestModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">구매 요청</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">희망 가격</span>
+            <input type="text" class="form-control requestPrice" th:value="1000000">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    uploadModal-->
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/sellingCar.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const carId = [[${carInfoDTO.carId}]]
+  const sellingCarId = [[${carInfoDTO.sellingCarId}]]
+
+  const buyRequestModal = new bootstrap.Modal(document.querySelector(".buyRequestModal"))
+
+  const requestPrice = document.querySelector(".requestPrice")
+
+  // 구매 요청 버튼 클릭
+  document.querySelector(".buyRequestBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    buyRequestModal.show()
+  }, false)
+
+  // 모달창의 구매 요청 처리
+  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+    const formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+      requestPrice:requestPrice.value
+    }
+
+    registerBuyRequest(formObj).then(result => {
+
+      alert(result)
+
+      requestPrice.value= ''
+
+      buyRequestModal.hide()
+
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      buyRequestModal.hide()
+    })
+
+  }, false)
+</script>

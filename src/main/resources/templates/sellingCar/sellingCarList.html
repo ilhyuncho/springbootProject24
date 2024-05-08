@@ -14,14 +14,14 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          경매 진행 현황
+          차량 구매 신청 현황
         </div>
 
         <div class="card-body">
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">carId</th>
+                <th scope="col">carNumber</th>
                 <th scope="col">sellingCarStatus</th>
                 <th scope="col">requiredPrice</th>
                 <th scope="col">expiredDate</th>
@@ -31,8 +31,8 @@
             <tbody>
               <tr th:each="dto:${list}">
                 <th scope="row">
-                  <a th:href="|@{/myPage/userCarDetailInfo(carId=${dto.carId}, userName=${#authentication.principal.username} )}|"
-                     class="text-decoration-none"> [[${dto.carId}]]</a>
+                  <a th:href="|@{/buyRequest/get(carId=${dto.carId}, sellingCarId=${dto.sellingCarId}, userName=${#authentication.principal.username} )}|"
+                     class="text-decoration-none"> [[${dto.carNumber}]]</a>
 
 <!--                  <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">-->
 <!--                    <img style="width:100px" th:each="fileName: ${dto.fileNames}"-->

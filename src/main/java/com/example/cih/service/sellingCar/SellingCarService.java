@@ -8,6 +8,5 @@ import java.util.List;
 public interface SellingCarService {
     void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO);
     SellingCarViewDTO getSellingCar(Long sellingCarId);
-
     List<SellingCarViewDTO> getListSellingCar();
 }

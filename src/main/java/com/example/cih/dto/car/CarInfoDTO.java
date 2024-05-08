@@ -24,6 +24,8 @@ public class CarInfoDTO extends CarSpecDTO {
     private LocalDateTime modDate;
     private List<String> fileNames= new ArrayList<>();
 
+    private Long sellingCarId;
+
     // 상속시 @Builder를 자식 클래스에 따로 지정 시
     @Builder(builderMethodName = "writeCarSpecDTOBuilder")
     public CarInfoDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,

@@ -15,3 +15,14 @@ async function getSellingCar({sellingCarId}){
     console.log(result.data)
     return result.data
 }
+
+async function registerBuyRequest(formObj) {
+
+    console.log("register BuyRequest....................")
+    console.log(formObj)
+
+    const response = await axios.post(`/buyRequest/register`, formObj)
+
+    console.log(response)
+    return response.data
+}

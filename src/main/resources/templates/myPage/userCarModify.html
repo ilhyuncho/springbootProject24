@@ -29,7 +29,7 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarGrade</span>
-              <textarea class="form-control col-sm-5" rows="5" name="carGrade">[[${responseDTO.carGrade}]]</textarea>
+              <input type="text" class="form-control" th:value="${responseDTO.carGrade}" name="carGrade">
             </div>
 
             <div class="input-group mb-3">

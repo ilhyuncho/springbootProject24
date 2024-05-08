@@ -3,6 +3,7 @@ package com.example.cih.service.sellingCar;
 import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
+import com.example.cih.domain.sellingCar.BuyRequestRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class SellingCarServiceImpl implements SellingCarService {
     private final SellingCarRepository sellingCarRepository;
+
     private final UserService userService;
     private final CarRepository carRepository;
 
@@ -69,11 +71,11 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .requiredPrice(sellingCar.getRequiredPrice())
                 .sellingCarStatus(sellingCar.getSellingCarStatus())
                 .expiredDate(sellingCar.getExpiredDate())
+                .carNumber(sellingCar.getCar().getCarNumber())
+                .sellingCarId(sellingCar.getSellingCarId())
                 .build();
 
         return sellingCarViewDTO;
     }
-
-
 
 }
