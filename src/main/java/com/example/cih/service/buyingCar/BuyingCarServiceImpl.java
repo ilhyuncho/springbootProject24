@@ -66,6 +66,24 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         buyingCarRepository.save(buyingCar);
     }
 
+    @Override
+    public void modifyBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO) {
+        User user = userService.findUser(userName);
+
+        Car car = carRepository.findById(buyingCarRegDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+
+        SellingCar sellingCar = sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 판매 정보가 존재하지않습니다"));
+
+
+        BuyingCar buyingCar = buyingCarRepository.findBySellingCarAndUser(sellingCar, user)
+                .orElseThrow(() -> new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다"));
+
+        buyingCar.changePrice(buyingCarRegDTO.getRequestPrice());
+    }
+
+
     private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
         BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder()
                 .proposalPrice(buyingCar.getProposalPrice())

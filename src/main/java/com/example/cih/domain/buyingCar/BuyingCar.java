@@ -35,4 +35,8 @@ public class BuyingCar {
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="uId")
     private User user;
+
+    public void changePrice(int proposalPrice){
+        this.proposalPrice = proposalPrice;
+    }
 }

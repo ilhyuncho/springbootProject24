@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface BuyingCarService {
     void registerBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO);
+    void modifyBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO);
 
     List<BuyingCarViewDTO> getListBuyingCar(Long sellingCarId);
 }

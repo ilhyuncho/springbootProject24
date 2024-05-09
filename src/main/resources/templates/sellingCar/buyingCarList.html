@@ -63,7 +63,7 @@
 
           <div class="my-4">
             <div class="float-end">
-              <button type="button" class="btn btn-primary purchaseOfferBtn">Buy</button>
+              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new"></button>
               <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
             </div>
           </div><!-- <div class="my-4">-->
@@ -94,7 +94,34 @@
         </div>
       </div>
     </div>
-  </div>  <!--    uploadModal-->
+  </div>  <!--    purchaseOfferModal-->
+
+  <!--    가격 수정 요청을 위한 모달창-->
+  <div class="modal modifyOfferModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">가격 수정 요청</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">기존 가격</span>
+            <input type="text" class="form-control userCurrentPrice">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">희망 가격</span>
+            <input type="text" class="form-control modifyPrice" th:value="1000000">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    modifyOfferModal-->
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -110,11 +137,14 @@
   const currentUser = [[${#authentication.principal.username}]]
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
+  const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))
 
   const requestPrice = document.querySelector(".requestPrice")
-  const buyingCarList = document.querySelector('.buyingCarList')  // 구매 희망 목록 DOM
+  const modifyPrice = document.querySelector(".modifyPrice")
+  const buyingCarList = document.querySelector('.buyingCarList')          // 구매 희망 목록 DOM
   const userProposalPrice = document.querySelector('.userProposalPrice')  // 접속한 고객이 제안한 가격 DOM
-
+  const userCurrentPrice = document.querySelector('.userCurrentPrice')    // 접속한 고객이 현재 제안한 가격 DOM
+  const purchaseOfferBtn = document.querySelector('.purchaseOfferBtn')
 
   printBuyingCarList(1,10)
 
@@ -128,14 +158,18 @@
     })
   }
 
-  function printList(dtoList){    // 목록 출력
+  // 목록 출력
+  function printList(dtoList){
     let str = '';
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
 
+        // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
             userProposalPrice.value = dto.proposalPrice
+            purchaseOfferBtn.innerHTML = 'modify'
+            purchaseOfferBtn.setAttribute("btn-type", "modify")
         }
 
         str += `<li class="list-group-item d-flex replyItem">
@@ -153,7 +187,17 @@
     e.stopPropagation()
     e.preventDefault()
 
-    purchaseOfferModal.show()
+    const target = e.target
+    const btnType = target.getAttribute("btn-type")
+
+    if(btnType === "new"){
+      purchaseOfferModal.show()
+    }
+    else{
+      userCurrentPrice.value = userProposalPrice.value
+      modifyOfferModal.show()
+    }
+
   }, false)
 
   // 모달창의 구매 제안 처리
@@ -184,5 +228,32 @@
 
   }, false)
 
+  // 모달창의 구매 제안 처리
+  document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
+    const formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+      requestPrice:modifyPrice.value
+    }
+
+    modifyOffer(formObj).then(result => {
+      modifyPrice.value= ''
+      purchaseOfferModal.hide()
+
+      printBuyingCarList(1,10)
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      purchaseOfferModal.hide()
+    })
+
+  }, false)
 
 </script>

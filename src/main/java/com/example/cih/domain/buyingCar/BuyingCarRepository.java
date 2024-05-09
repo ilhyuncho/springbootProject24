@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BuyingCarRepository extends JpaRepository<BuyingCar, Long> {
     List<BuyingCar> findBySellingCar(SellingCar sellingCar);
-    BuyingCar findBySellingCarAndUser(SellingCar sellingCar, User user);
+    Optional<BuyingCar> findBySellingCarAndUser(SellingCar sellingCar, User user);
 
 //    @Query(value="select u.userName, b.proposalPrice, b.registerDate from BuyingCar b, User u " +
 //            "where b.user.userId = u.userId and b.sellingCar.sellingCarId=?1",
