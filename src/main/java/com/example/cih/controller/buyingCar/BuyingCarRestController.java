@@ -45,27 +45,12 @@ public class BuyingCarRestController {
             throw new BindException(bindingResult);
         }
 
-        buyingCarService.registerBuyingCar(principal.getName(), buyingCarRegDTO);
-
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
-    }
-
-    @ApiOperation(value = "차량 구매 가격 수정", notes = "희망 가격 전달")
-    @PostMapping("/modifyOffer")
-    public Map<String,String> modifyOffer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
-                                    BindingResult bindingResult,
-                                    Principal principal ) throws BindException {
-        log.error("buyingCar offer post...." + buyingCarRegDTO);
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
+        if(buyingCarRegDTO.getOfferType().equals("new")){
+            buyingCarService.registerBuyingCar(principal.getName(), buyingCarRegDTO);
         }
-
-        buyingCarService.modifyBuyingCar(principal.getName(), buyingCarRegDTO);
+        else{
+            buyingCarService.modifyBuyingCar(principal.getName(), buyingCarRegDTO);
+        }
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

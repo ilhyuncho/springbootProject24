@@ -10,4 +10,5 @@ import lombok.*;
 public class BuyingCarRegDTO {
     private Long carId;
     private int requestPrice;
+    private String offerType;
 }

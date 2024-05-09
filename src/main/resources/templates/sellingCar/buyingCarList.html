@@ -63,7 +63,7 @@
 
           <div class="my-4">
             <div class="float-end">
-              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new"></button>
+              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">New</button>
               <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
             </div>
           </div><!-- <div class="my-4">-->
@@ -168,7 +168,7 @@
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
             userProposalPrice.value = dto.proposalPrice
-            purchaseOfferBtn.innerHTML = 'modify'
+            purchaseOfferBtn.innerHTML = 'Modify'
             purchaseOfferBtn.setAttribute("btn-type", "modify")
         }
 
@@ -188,9 +188,9 @@
     e.preventDefault()
 
     const target = e.target
-    const btnType = target.getAttribute("btn-type")
+    const offerType = target.getAttribute("btn-type")
 
-    if(btnType === "new"){
+    if(offerType === "new"){
       purchaseOfferModal.show()
     }
     else{
@@ -200,60 +200,62 @@
 
   }, false)
 
+  function sendPurchaseOffer(formObj) {
+
+    purchaseOffer(formObj).then(result => {
+
+      printBuyingCarList(1,10)
+
+      initModalDisplay(formObj)
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+
+      initModalDisplay(formObj)
+    })
+  }
+
+  function initModalDisplay(formObj) {
+
+    if(formObj.offerType === 'new'){
+      requestPrice.value= ''
+      purchaseOfferModal.hide()
+    }
+    else{
+      modifyPrice.value= ''
+      modifyOfferModal.hide()
+    }
+  }
+
   // 모달창의 구매 제안 처리
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+
     const formObj = {
+      offerType:'new',
       carId:carId,
       sellingCarId:sellingCarId,
       requestPrice:requestPrice.value
     }
-
-    purchaseOffer(formObj).then(result => {
-      requestPrice.value= ''
-      purchaseOfferModal.hide()
-
-      printBuyingCarList(1,10)
-
-    }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-      purchaseOfferModal.hide()
-    })
-
+    sendPurchaseOffer(formObj)
   }, false)
 
   // 모달창의 구매 제안 처리
   document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
+
     const formObj = {
+      offerType:'modify',
       carId:carId,
       sellingCarId:sellingCarId,
       requestPrice:modifyPrice.value
     }
-
-    modifyOffer(formObj).then(result => {
-      modifyPrice.value= ''
-      purchaseOfferModal.hide()
-
-      printBuyingCarList(1,10)
-
-    }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-      purchaseOfferModal.hide()
-    })
-
+    sendPurchaseOffer(formObj)
   }, false)
 
 </script>
