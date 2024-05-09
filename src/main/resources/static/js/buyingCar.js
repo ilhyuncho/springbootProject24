@@ -9,6 +9,18 @@ async function purchaseOffer(formObj) {
     return response.data
 }
 
+async function cancelOffer(formObj) {
+
+    console.log("cancelOffer....................")
+    console.log(formObj)
+
+    const response = await axios.post(`/buyingCar/cancel`, formObj)
+
+    console.log(response)
+    return response.data
+}
+
+
 async function getList({currentUser, sellingCarId, page, size}){
 
     console.log({currentUser, sellingCarId, page, size})

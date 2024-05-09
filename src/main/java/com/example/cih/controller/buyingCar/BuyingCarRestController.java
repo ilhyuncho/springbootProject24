@@ -4,11 +4,13 @@ import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.buyingCar.BuyingCarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.buyingCar.PageBuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +33,7 @@ import java.util.*;
 public class BuyingCarRestController {
 
     private final BuyingCarService buyingCarService;
+    private final UserService userService;
     private final BuyingCarRepository buyingCarRepository;
 
     @ApiOperation(value = "차량 구매 제안", notes = "희망 가격 전달")
@@ -45,12 +48,37 @@ public class BuyingCarRestController {
             throw new BindException(bindingResult);
         }
 
+        User user = userService.findUser(principal.getName());
+
         if(buyingCarRegDTO.getOfferType().equals("new")){
-            buyingCarService.registerBuyingCar(principal.getName(), buyingCarRegDTO);
+            buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
         }
         else{
-            buyingCarService.modifyBuyingCar(principal.getName(), buyingCarRegDTO);
+            buyingCarService.modifyBuyingCar(user, buyingCarRegDTO);
         }
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
+
+    @ApiOperation(value = "차량 구매 취소", notes = "데이터 삭제 요청")
+    @PostMapping("/cancel")
+    public Map<String,String> cancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
+                                    BindingResult bindingResult,
+                                    Principal principal ) throws BindException {
+
+        log.error("buyingCar cancel Delete...." + buyingCarRegDTO);
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        User user = userService.findUser(principal.getName());
+
+        buyingCarService.deleteBuyingCar(user, buyingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

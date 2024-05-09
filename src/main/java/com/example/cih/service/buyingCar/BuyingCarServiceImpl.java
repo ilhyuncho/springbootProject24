@@ -48,14 +48,9 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         return ListBuyingCarViewDTO;
     }
     @Override
-    public void registerBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO) {
-        User user = userService.findUser(userName);
+    public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
-        Car car = carRepository.findById(buyingCarRegDTO.getCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
-
-        SellingCar sellingCar = sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 판매 정보가 존재하지않습니다"));
+        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
         BuyingCar buyingCar = BuyingCar.builder()
                 .proposalPrice(buyingCarRegDTO.getRequestPrice())
@@ -65,24 +60,40 @@ public class BuyingCarServiceImpl implements BuyingCarService {
 
         buyingCarRepository.save(buyingCar);
     }
-
     @Override
-    public void modifyBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO) {
-        User user = userService.findUser(userName);
+    public void modifyBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
-        Car car = carRepository.findById(buyingCarRegDTO.getCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
-        SellingCar sellingCar = sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 판매 정보가 존재하지않습니다"));
-
-
-        BuyingCar buyingCar = buyingCarRepository.findBySellingCarAndUser(sellingCar, user)
-                .orElseThrow(() -> new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다"));
+        BuyingCar buyingCar = getBuyingCarInfo(sellingCar, user);
 
         buyingCar.changePrice(buyingCarRegDTO.getRequestPrice());
     }
 
+    @Override
+    public void deleteBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
+
+        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
+
+        BuyingCar buyingCar = getBuyingCarInfo(sellingCar, user);
+
+        buyingCarRepository.delete(buyingCar);
+    }
+
+    public SellingCar getSellingCarInfo(BuyingCarRegDTO buyingCarRegDTO){
+
+        Car car = carRepository.findById(buyingCarRegDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        return sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 판매 정보가 존재하지않습니다"));
+    }
+
+    public BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user){
+
+        return buyingCarRepository.findBySellingCarAndUser(sellingCar, user)
+                .orElseThrow(() -> new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다"));
+    }
 
     private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
         BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder()
