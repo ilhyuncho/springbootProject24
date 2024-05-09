@@ -4,7 +4,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>구매 희망 list</title>
+  <title>차량 구매</title>
 </head>
 
 <div layout:fragment="content">
@@ -44,10 +44,19 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          구매 희망 list
+          구매 희망 가격
         </div>
 
         <div class="card-body">
+
+          <ul class="list-group userBuyingCarInfo">
+            <div class="input-group mb-3">
+              <span class="input-group-text">고객 제안 가격</span>
+              <input type="text" class="form-control userProposalPrice" readonly>
+            </div>
+          </ul>
+
+
           <ul class="list-group buyingCarList">
             <!-- 리스트 영역-->
           </ul>
@@ -93,25 +102,27 @@
 
 </div> <!--<div layout:fragment="content">-->
 
+
 <script layout:fragment="script" th:inline="javascript">
 
   const carId = [[${carInfoDTO.carId}]]
   const sellingCarId = [[${carInfoDTO.sellingCarId}]]
+  const currentUser = [[${#authentication.principal.username}]]
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
 
   const requestPrice = document.querySelector(".requestPrice")
   const buyingCarList = document.querySelector('.buyingCarList')  // 구매 희망 목록 DOM
+  const userProposalPrice = document.querySelector('.userProposalPrice')  // 접속한 고객이 제안한 가격 DOM
 
 
   printBuyingCarList(1,10)
 
   function printBuyingCarList(page,size){
-    getList({carId,sellingCarId, page, size}).then(data=> {
+    getList({currentUser, sellingCarId, page, size}).then(data=> {
 
-      printList(data) // 목록 처리
+      printList(data.listBuyingCarDTO) // 목록 처리
      // printPages(data)        // 페이지 처리
-      // console.log(data)
     }).catch(e=>{
       console.error(e)
     })
@@ -122,9 +133,15 @@
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
+
+        if(Object.is(dto.userName, currentUser)){
+            userProposalPrice.value = dto.proposalPrice
+        }
+
         str += `<li class="list-group-item d-flex replyItem">
+                    <span class="col-2">${dto.userName}</span>
                     <span class="col-2">${dto.proposalPrice}</span>
-                    <span class="col-6" data-rno="${dto.proposalPrice}">${dto.registerDate}</span>
+                    <span class="col-6" data-rno="${dto.userName}">${dto.registerDate}</span>
                </li>`
       }
     }
@@ -148,11 +165,7 @@
     }
 
     purchaseOffer(formObj).then(result => {
-
-      alert(result)
-
       requestPrice.value= ''
-
       purchaseOfferModal.hide()
 
       printBuyingCarList(1,10)

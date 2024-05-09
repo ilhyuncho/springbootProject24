@@ -47,7 +47,6 @@ public class BuyingCarServiceImpl implements BuyingCarService {
 
         return ListBuyingCarViewDTO;
     }
-
     @Override
     public void registerBuyingCar(String userName, BuyingCarRegDTO buyingCarRegDTO) {
         User user = userService.findUser(userName);
@@ -71,6 +70,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder()
                 .proposalPrice(buyingCar.getProposalPrice())
                 .registerDate(buyingCar.getRegisterDate())
+                .userName(buyingCar.getUser().getUserName())
                 .build();
 
         return buyingCarViewDTO;

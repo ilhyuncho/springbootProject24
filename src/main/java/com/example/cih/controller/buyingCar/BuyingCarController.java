@@ -22,7 +22,7 @@ public class BuyingCarController {
 
     private final CarService carService;
 
-    @ApiOperation(value = "판매 차량 세부 희망 리스트 조회", notes = "판매 차량 정보만 전달")
+    @ApiOperation(value = "[구매 희망 리스트] 조회", notes = "판매 차량 정보만 전달")
     @GetMapping("/get")
     public String get(Long carId, Model model){
 

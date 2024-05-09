@@ -9,12 +9,12 @@ async function purchaseOffer(formObj) {
     return response.data
 }
 
-async function getList({carId, sellingCarId, page, size}){
+async function getList({currentUser, sellingCarId, page, size}){
     // goLast : 마지막 페이지 호출 여부
 
-    console.log({carId, sellingCarId, page, size})
+    console.log({currentUser, sellingCarId, page, size})
 
-    const result = await axios.get(`/buyingCar/list`, {params: {sellingCarId, page, size}})
+    const result = await axios.get(`/buyingCar/list`, {params: {userName:currentUser, sellingCarId, page, size}})
 
     console.log(result.data)
 

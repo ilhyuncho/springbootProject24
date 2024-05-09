@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @ToString
 public class BuyingCarViewDTO {
 
+    private String userName;
     private int proposalPrice;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registerDate;
+
 }

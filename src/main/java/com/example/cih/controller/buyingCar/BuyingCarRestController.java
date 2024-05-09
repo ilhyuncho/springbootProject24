@@ -1,21 +1,27 @@
 package com.example.cih.controller.buyingCar;
 
+import com.example.cih.domain.buyingCar.BuyingCar;
+import com.example.cih.domain.buyingCar.BuyingCarRepository;
+import com.example.cih.domain.sellingCar.SellingCar;
+import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
+import com.example.cih.dto.buyingCar.PageBuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -25,6 +31,7 @@ import java.util.Map;
 public class BuyingCarRestController {
 
     private final BuyingCarService buyingCarService;
+    private final BuyingCarRepository buyingCarRepository;
 
     @ApiOperation(value = "판매 차량 구매 제안", notes = "희망 가격 전달")
     @PostMapping("/offer")
@@ -48,13 +55,19 @@ public class BuyingCarRestController {
 
     @ApiOperation(value = "구매 제안 리스트 전달", notes = "")
     @GetMapping("/list")
-    public List<BuyingCarViewDTO> listBuyingCar(PageRequestDTO pageRequestDTO,
+    public PageBuyingCarViewDTO listBuyingCar(PageRequestDTO pageRequestDTO,
+                                                 String userName,
                                                  Long sellingCarId){
 
-        log.error("sellingCarId:"+sellingCarId);
+        PageBuyingCarViewDTO pageBuyingCarViewDTO = new PageBuyingCarViewDTO();
 
-        List<BuyingCarViewDTO> listBuyingCar = buyingCarService.getListBuyingCar(sellingCarId);
+        Pageable pageable = PageRequest.of(0,10);   // 임시
 
-        return listBuyingCar;
+        Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
+
+        pageBuyingCarViewDTO.setListBuyingCarDTO(listBuyingCarViewDTO);
+
+        return pageBuyingCarViewDTO;
     }
 }
