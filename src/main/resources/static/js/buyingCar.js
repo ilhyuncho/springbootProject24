@@ -5,7 +5,7 @@ async function purchaseOffer(formObj) {
 
     const response = await axios.post(`/buyingCar/offer`, formObj)
 
-    console.log(response)
+   // console.log(response)
     return response.data
 }
 
@@ -16,7 +16,7 @@ async function cancelOffer(formObj) {
 
     const response = await axios.post(`/buyingCar/cancel`, formObj)
 
-    console.log(response)
+    //console.log(response)
     return response.data
 }
 

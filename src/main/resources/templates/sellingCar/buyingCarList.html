@@ -85,7 +85,9 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">희망 가격</span>
-            <input type="text" class="form-control requestPrice" th:value="1000000">
+            <input type="text" class="form-control requestPrice" th:value="${#numbers.formatInteger(100000,3,'COMMA')}"
+                   th:oninput="|transComma(this);|"
+            >
           </div>
         </div>
         <div class="modal-footer">
@@ -108,11 +110,12 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">기존 가격</span>
-            <input type="text" class="form-control userCurrentPrice">
+            <input type="text" class="form-control userCurrentPrice" readonly>
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">희망 가격</span>
-            <input type="text" class="form-control modifyPrice" th:value="1000000">
+            <input type="text" class="form-control modifyPrice" step='100000' th:value="1000000"
+                   th:oninput="|transComma(this);|">
           </div>
         </div>
         <div class="modal-footer">
@@ -166,21 +169,34 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
 
+        let dtoProposalPrice = dto.proposalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
-            userProposalPrice.value = dto.proposalPrice
+            userProposalPrice.value = dtoProposalPrice
             purchaseOfferBtn.innerHTML = 'Modify'
             purchaseOfferBtn.setAttribute("btn-type", "modify")
         }
 
         str += `<li class="list-group-item d-flex replyItem">
                     <span class="col-2">${dto.userName}</span>
-                    <span class="col-2">${dto.proposalPrice}</span>
+                    <span class="col-2">${dtoProposalPrice}</span>
                     <span class="col-6" data-rno="${dto.userName}">${dto.registerDate}</span>
                </li>`
       }
     }
     buyingCarList.innerHTML = str
+  }
+
+  function transComma(e){
+
+    let value = e.value;
+    value = Number(value.replaceAll(',', ''));
+    if(isNaN(value)) {
+      e.value = 0;
+    }else {
+      const formatValue = value.toLocaleString('ko-KR');
+      e.value = formatValue;
+    }
   }
 
   // 구매 제안 버튼 클릭
@@ -195,7 +211,9 @@
       purchaseOfferModal.show()
     }
     else{
-      userCurrentPrice.value = userProposalPrice.value
+      userCurrentPrice.value = userProposalPrice.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      modifyPrice.value = userCurrentPrice.value
+
       modifyOfferModal.show()
     }
 
@@ -255,7 +273,7 @@
       modifyOfferModal.hide()
     }
     else{
-      modifyPrice.value= ''
+      userCurrentPrice.value= ''
       userProposalPrice.value=''
 
       purchaseOfferBtn.innerHTML = 'New'
@@ -270,18 +288,25 @@
     const formObj = {
       offerType:'new',
       carId:carId,
-      requestPrice:requestPrice.value
+      requestPrice: requestPrice.value.replaceAll(",","")
     }
     sendPurchaseOffer(formObj)
   }, false)
 
-  // 모달창의 구매 제안 처리
+  // 모달창의 가격 수정 제안 처리
   document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
+
+    console.log(parseInt(modifyPrice.value.replace(",","")))
+
+    if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
+      alert('기존 가격과 같습니다')
+      return
+    }
 
     const formObj = {
       offerType:'modify',
       carId:carId,
-      requestPrice:modifyPrice.value
+      requestPrice: modifyPrice.value.replaceAll(",","")
     }
     sendPurchaseOffer(formObj)
   }, false)
