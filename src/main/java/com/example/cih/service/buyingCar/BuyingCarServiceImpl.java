@@ -8,11 +8,15 @@ import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -47,6 +51,28 @@ public class BuyingCarServiceImpl implements BuyingCarService {
 
         return ListBuyingCarViewDTO;
     }
+
+    @Override
+    public PageResponseDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("proposalPrice");
+
+        Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
+
+        for (BuyingCarViewDTO buyingCarViewDTO : listBuyingCarViewDTO) {
+            log.error(buyingCarViewDTO.getUserName());
+        }
+
+        return PageResponseDTO.<BuyingCarViewDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(listBuyingCarViewDTO)
+                .total((int)resultDTO.getTotalElements())
+                .build();
+    }
+
     @Override
     public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 

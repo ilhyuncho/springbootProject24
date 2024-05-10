@@ -6,17 +6,14 @@ import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
-import com.example.cih.dto.buyingCar.PageBuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -86,20 +83,14 @@ public class BuyingCarRestController {
         return resultMap;
     }
 
-    @ApiOperation(value = "구매 제안 리스트 전달", notes = "")
+    @ApiOperation(value = "구매 제안 리스트 전달", notes = "list 전달")
     @GetMapping("/list")
-    public PageBuyingCarViewDTO listBuyingCar(PageRequestDTO pageRequestDTO,
-                                                 String userName,
-                                                 Long sellingCarId){
+    public PageResponseDTO<BuyingCarViewDTO> listBuyingCar(PageRequestDTO pageRequestDTO,
+                                                          String userName,
+                                                          Long sellingCarId){
 
-        PageBuyingCarViewDTO pageBuyingCarViewDTO = new PageBuyingCarViewDTO();
-
-        Pageable pageable = PageRequest.of(0,10);   // 임시
-
-        Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
-        List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
-
-        pageBuyingCarViewDTO.setListBuyingCarDTO(listBuyingCarViewDTO);
+        PageResponseDTO<BuyingCarViewDTO> pageBuyingCarViewDTO =
+                buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
 
         return pageBuyingCarViewDTO;
     }

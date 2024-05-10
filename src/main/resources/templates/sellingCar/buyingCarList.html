@@ -61,6 +61,14 @@
             <!-- 리스트 영역-->
           </ul>
 
+          <div class="row mt-3">
+            <div class="col">
+              <ul class="pagination buyingCarListPaging">
+                <!--                 페이징 처리-->
+              </ul>
+            </div>
+          </div>
+
           <div class="my-4">
             <div class="float-end">
               <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">New</button>
@@ -146,17 +154,23 @@
   const requestPrice = document.querySelector(".requestPrice")
   const modifyPrice = document.querySelector(".modifyPrice")
   const buyingCarList = document.querySelector('.buyingCarList')          // 구매 희망 목록 DOM
+  const buyingCarListPaging = document.querySelector('.buyingCarListPaging')  // 페이지 목록 DOM
+
   const userProposalPrice = document.querySelector('.userProposalPrice')  // 접속한 고객이 제안한 가격 DOM
   const userCurrentPrice = document.querySelector('.userCurrentPrice')    // 접속한 고객이 현재 제안한 가격 DOM
   const purchaseOfferBtn = document.querySelector('.purchaseOfferBtn')
 
-  printBuyingCarList(1,10)
+  // 페이지 번호 클릭
+  let page = 1
+  let size = 5
+
+  printBuyingCarList(page,size)
 
   function printBuyingCarList(page,size){
     getList({currentUser, sellingCarId, page, size}).then(data=> {
 
-      printList(data.listBuyingCarDTO) // 목록 처리
-     // printPages(data)        // 페이지 처리
+      printList(data.dtoList) // 목록 처리
+      printPages(data)        // 페이지 처리
     }).catch(e=>{
       console.error(e)
     })
@@ -185,6 +199,22 @@
       }
     }
     buyingCarList.innerHTML = str
+  }
+
+  // 목록 페이지 출력
+  function printPages(data){
+    let pageStr = '';
+
+    if(data.prev){
+      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+    }
+    for(let i = data.start; i <= data.end; i++){
+      pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+    }
+    if(data.next){
+      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
+    }
+    buyingCarListPaging.innerHTML = pageStr
   }
 
   function transComma(e){
@@ -322,5 +352,18 @@
     sendCancelOffer(formObj)
   }, false)
 
+  buyingCarListPaging.addEventListener("click", function(e){
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    const target = e.target
+    if(!target || target.tagName !== 'A'){
+      return
+    }
+    page = target.getAttribute("data-page")
+    printBuyingCarList(page,size)
+
+  },false)
 
 </script>
