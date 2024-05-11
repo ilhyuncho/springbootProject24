@@ -258,6 +258,11 @@
       owner.value=''
 
       registerModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/myPage/userCarDetailInfo?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
     }).catch(e => {
       if (e.response && e.response.status === 400) {
 
@@ -294,6 +299,11 @@
       alert(result.result)
 
       sellingCancelModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/myPage/userCarDetailInfo?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
     }).catch(e => {
       if (e.response && e.response.status === 400) {
 
