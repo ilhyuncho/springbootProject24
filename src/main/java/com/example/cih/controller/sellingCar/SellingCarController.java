@@ -3,6 +3,7 @@ package com.example.cih.controller.sellingCar;
 
 
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -27,12 +29,12 @@ public class SellingCarController {
 
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
-    public String userCarList(PageRequestDTO pageRequestDTO,
+    public String userCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                               Model model){
 
-        List<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar();
+        PageResponseDTO<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
 
-        model.addAttribute("list", listSellingCar);
+        model.addAttribute("responseDTO", listSellingCar);
 
         return "/sellingCar/sellingCarList";
     }

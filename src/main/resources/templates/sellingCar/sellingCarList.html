@@ -18,41 +18,54 @@
         </div>
 
         <div class="card-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">carNumber</th>
-                <th scope="col">sellingCarStatus</th>
-                <th scope="col">requiredPrice</th>
-                <th scope="col">expiredDate</th>
-              </tr>
-            </thead>
+            <form action="/buyingCar/get" method="get">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">carNumber</th>
+                  <th scope="col">sellingCarStatus</th>
+                  <th scope="col">requiredPrice</th>
+                  <th scope="col">expiredDate</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              <tr th:each="dto:${list}">
-                <th scope="row">
-                  <a th:href="|@{/buyingCar/get(carId=${dto.carId})}|"
-                     class="text-decoration-none"> [[${dto.carNumber}]]</a>
+              <tbody>
+                <tr th:each="dto:${responseDTO.dtoList}">
+                  <th scope="row">
+                    <a th:href="|@{/buyingCar/get(carId=${dto.carId})}|"
+                       class="text-decoration-none"> [[${dto.carNumber}]]</a>
 
-                  <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
-                    <img style="width:100px" th:each="fileName: ${dto.fileNames}"
-                         th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
-                  </div>
+                    <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                      <img style="width:100px" th:each="fileName: ${dto.fileNames}"
+                           th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
+                    </div>
 
-                </th>
-                <td>[[${dto.sellingCarStatus}]]</td>
-                <td>[[${dto.requiredPrice}]]</td>
-                <td>[[${ #temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-              </tr>
-              </tbody>
-          </table>
+                  </th>
+                  <td>[[${dto.sellingCarStatus}]]</td>
+                  <td>[[${dto.requiredPrice}]]</td>
+                  <td>[[${ #temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          <div class="float-end">
+            <ul class="pagination flex-wrap">
 
-          <div class="my-4">
-            <div class="float-end">
-              <a th:href="|@{/myPage/userCarRegister}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">New</button>
-              </a>
-            </div>
+              <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+              </li>
+
+              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+              </th:block>
+
+              <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+              </li>
+
+            </ul>
           </div>
 
         </div><!-- <div class="card-body">-->
@@ -63,5 +76,26 @@
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  const sellingCarListPaging = document.querySelector('.sellingCarListPaging')  // 페이지 목록 DOM
+
+  document.querySelector(".pagination").addEventListener("click", function(e){
+
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+
+    if(target.tagName !== 'A'){
+      return
+    }
+
+    const num = target.getAttribute("data-num")
+    const formObj = document.querySelector("form")
+
+    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formObj.submit();
+
+  }, false)
 
 </script>

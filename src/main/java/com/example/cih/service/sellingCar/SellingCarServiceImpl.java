@@ -6,12 +6,17 @@ import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,7 +37,6 @@ public class SellingCarServiceImpl implements SellingCarService {
 
     @Override
     public void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
-
         User user = userService.findUser(userName);
 
         Car car = carRepository.findById(sellingCarRegDTO.getCarId())
@@ -57,13 +61,48 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public List<SellingCarViewDTO> getListSellingCar() {
-        List<SellingCar> listSellingCar = sellingCarRepository.findAll();
+    public PageResponseDTO<SellingCarViewDTO> getListSellingCar(PageRequestDTO pageRequestDTO) {
 
-        List<SellingCarViewDTO> sellingCarViewDTO = listSellingCar.stream().
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
+
+//        List<SellingCar> listSellingCar = sellingCarRepository.findAll();
+        Page<SellingCar> listSellingCar =
+                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);
+
+        List<SellingCar> content = listSellingCar.getContent();
+
+
+        for (SellingCar sellingCar : content) {
+            log.error(sellingCar.getSellingCarId() + "," + sellingCar.getRegDate());
+        }
+
+        List<SellingCarViewDTO> sellingCarViewDTO = content.stream().
                 map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
-        return sellingCarViewDTO;
+        return PageResponseDTO.<SellingCarViewDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(sellingCarViewDTO)
+                .total((int)listSellingCar.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public void cancelSellingCar(String userName, Long carId) {
+        User user = userService.findUser(userName);
+
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+
+        SellingCar sellingCar = car.getSellingCar();
+        if(SellingCarStatus.PROCESSING == sellingCar.getSellingCarStatus())
+        {
+            car.cancelCellingCar();
+        }
+        else{
+             throw new OwnerCarNotFoundException("소유 차가 판매 중이 아닙니다");
+        }
     }
 
     private static SellingCarViewDTO entityToDTO(SellingCar sellingCar) {

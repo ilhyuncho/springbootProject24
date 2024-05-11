@@ -98,12 +98,16 @@ public class Car extends BaseEntity {
                 .build();
         imageSet.add(carImage);
     }
-
     public void clearImages(){
         imageSet.forEach(image -> image.changeCar(null));
         this.imageSet.clear();
     }
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
+
+    public void cancelCellingCar(){
+        sellingCar.changeStatus(SellingCarStatus.CANCEL);
+        this.sellingCar = null;
+    }
 
     public void change(String carNumber, Long carKm, CarSize carGrade,
                        String carModel, int carYears, String carColors ){

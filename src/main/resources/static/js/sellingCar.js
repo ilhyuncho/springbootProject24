@@ -1,6 +1,4 @@
 async function registerSellingCar(formObj) {
-
-    console.log("register SellingCar....................")
     console.log(formObj)
 
     const response = await axios.post(`/sellingCar/register`, formObj)
@@ -15,3 +13,12 @@ async function getSellingCar({sellingCarId}){
     console.log(result.data)
     return result.data
 }
+
+async function cancelSellingCar(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/sellingCar/cancel`, formObj)
+
+    return response.data
+}
+

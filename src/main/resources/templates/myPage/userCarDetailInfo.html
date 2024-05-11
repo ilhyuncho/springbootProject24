@@ -59,7 +59,7 @@
               <button type="button" class="btn btn-primary sellingCarRegBtn text-decoration-none"
                       th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') ? 'invisible':''}" >
                     <span th:id="sellingCarReg">
-                      경매 등록
+                      차량 판매
                     </span>
               </button>
 
@@ -156,11 +156,37 @@
             <input type="text" class="form-control owner" th:value="${user.username}" readonly>
           </div>
 
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>
+            <button type="button" class="btn btn-danger sellingCancelBtn">판매 취소</button>
+            <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+
+        </div>
+      </div>
+    </div>
+  </div>  <!--    sellingCarShowModal-->
+
+  <!--   판매 취소 모달창-->
+  <div class="modal sellingCancelModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">판매 취소</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-show">
+          <div class="input-group mb-3">
+            <span class="input-group-text">판매 최소가격</span>
+            <input type="text" class="form-control cancelCarName">
+          </div>
 
         </div>
         <div class="modal-footer">
-<!--          <button type="button" class="btn btn-primary registerBtn">Register</button>-->
-<!--          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>-->
+          <button type="button" class="btn btn-danger sendCancelBtn">취소</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
         </div>
       </div>
     </div>
@@ -177,14 +203,17 @@
   const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
+  const carNumber = [[${responseDTO.carNumber}]]
 
   // Modal
   const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+  const sellingCancelModal = new bootstrap.Modal(document.querySelector(".sellingCancelModal"))
   const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
   const requiredPrice = document.querySelector(".requiredPrice")
+  const cancelCarName = document.querySelector(".cancelCarName")
   const owner = document.querySelector(".owner")
 
-  // 판매 현황 버튼 클릭
+  // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
@@ -194,8 +223,6 @@
     }
 
     getSellingCar(formObj).then(result => {
-
-      alert(result.requiredPrice)
 
       document.getElementById("modalRequiredPrice").value = result.requiredPrice;
       document.getElementById("modalExpiredDate").value = result.expiredDate
@@ -208,7 +235,7 @@
 
   }, false)
 
-  // 경매 등록 버튼 클릭
+  // [차량 판매] 등록 버튼 클릭
   document.querySelector(".sellingCarRegBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
@@ -216,7 +243,7 @@
     registerModal.show()
   }, false)
 
-  // 모달창의 차량 판매 처리
+  // 모달창의 [차량 판매] 처리
   document.querySelector(".registerBtn").addEventListener("click", function(e){
     const formObj = {
       carId:carId,
@@ -242,9 +269,44 @@
       }
       registerModal.hide()
     })
-
   }, false)
 
+
+  // [판매 취소] 등록 버튼 클릭
+  document.querySelector(".sellingCancelBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    cancelCarName.value = carNumber + ' 판매! 정말 취소 할거야?'
+
+    sellingCarShowModal.hide()
+    sellingCancelModal.show()
+  }, false)
+
+  // [판매 취소] 전송 버튼 클릭
+  document.querySelector(".sendCancelBtn").addEventListener("click", function (e){
+    const formObj = {
+      carId:carId,
+    }
+
+    cancelSellingCar(formObj).then(result => {
+
+      alert(result.result)
+
+      sellingCancelModal.hide()
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      sellingCancelModal.hide()
+    })
+
+  }, false)
 
 
 </script>

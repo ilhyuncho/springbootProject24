@@ -4,7 +4,6 @@ package com.example.cih.domain.sellingCar;
 import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.common.BaseEntity;
-import com.example.cih.domain.shop.ItemOption;
 import com.example.cih.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,6 +56,9 @@ public class SellingCar extends BaseEntity {
     @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
     private Set<BuyingCar> buyingCarSet = new HashSet<>();
 
+    public void changeStatus(SellingCarStatus sellingCarStatus){
+        this.sellingCarStatus = sellingCarStatus;
+    }
 
 
 }
