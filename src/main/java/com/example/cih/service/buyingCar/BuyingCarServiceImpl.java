@@ -62,10 +62,6 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
         List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
 
-        for (BuyingCarViewDTO buyingCarViewDTO : listBuyingCarViewDTO) {
-            log.error(buyingCarViewDTO.getUserName());
-        }
-
         return PageResponseDTO.<BuyingCarViewDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(listBuyingCarViewDTO)

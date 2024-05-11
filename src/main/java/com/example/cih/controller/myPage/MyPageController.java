@@ -99,9 +99,9 @@ public class MyPageController {
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        CarViewDTO CarViewDTO = userCarService.readMyCarDetailInfo(pageRequestDTO, userDTO.getUserName(), carId);
+        CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
 
-        model.addAttribute("responseDTO", CarViewDTO);
+        model.addAttribute("responseDTO", carViewDTO);
         model.addAttribute("userName", userName);
 
         return requestURI;

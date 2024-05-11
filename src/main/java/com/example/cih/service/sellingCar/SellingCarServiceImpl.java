@@ -2,6 +2,7 @@ package com.example.cih.service.sellingCar;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.car.Car;
+import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,6 +75,13 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carNumber(sellingCar.getCar().getCarNumber())
                 .sellingCarId(sellingCar.getSellingCarId())
                 .build();
+
+        // 차 대표 이미지 매핑
+        Optional<CarImage> carImage = sellingCar.getCar().getImageSet().stream()
+                .filter(image -> image.getImageOrder() == 0)
+                .findFirst();
+
+        carImage.ifPresent(image -> sellingCarViewDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder()));
 
         return sellingCarViewDTO;
     }

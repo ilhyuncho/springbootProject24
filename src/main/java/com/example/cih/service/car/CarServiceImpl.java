@@ -2,11 +2,10 @@ package com.example.cih.service.car;
 
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
-import com.example.cih.domain.car.CarSize;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-
 import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarViewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -29,15 +28,14 @@ public class CarServiceImpl implements CarService {
     private final ModelMapper modelMapper;
 
     @Override
-    public CarInfoDTO readOne(Long carId){
+    public CarViewDTO readOne(Long carId){
 
         Optional<Car> result = carRepository.findById(carId);
 
         Car car = result.orElseThrow();
 
-        return modelMapper.map(car, CarInfoDTO.class);
+        return modelMapper.map(car, CarViewDTO.class);
     }
-
     @Override
     public PageResponseDTO<CarInfoDTO> list(PageRequestDTO pageRequestDTO) {
 
@@ -49,11 +47,6 @@ public class CarServiceImpl implements CarService {
 
         List<CarInfoDTO> dtoList = result.getContent().stream()
                 .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
-
-//        dtoList.forEach(log::error);
-//        log.error(result.getTotalPages());
-//        log.error(result.getTotalElements());
-//        log.error(result.getTotalPages());
 
         return PageResponseDTO.<CarInfoDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)

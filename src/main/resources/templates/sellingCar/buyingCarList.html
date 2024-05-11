@@ -16,22 +16,39 @@
           Car Info
         </div>
         <div class="card-body">
-          <input type="hidden" name="sellingCarId" th:value="${carInfoDTO.sellingCarId}">
+          <input type="hidden" name="sellingCarId" th:value="${carViewDTO.sellingCarId}">
 
           <!--            dto 값 출력 부분-->
           <div class="input-group mb-3">
             <span class="input-group-text">CarID</span>
-            <input type="text" class="form-control" th:value="${carInfoDTO.carId}" readonly>
+            <input type="text" class="form-control" th:value="${carViewDTO.carId}" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarNumber</span>
-            <input type="text" class="form-control" th:value="${carInfoDTO.carNumber}" readonly>
+            <input type="text" class="form-control" th:value="${carViewDTO.carNumber}" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">carGrade</span>
-            <input type="text" class="form-control" th:value="${carInfoDTO.carGrade}" readonly>
+            <input type="text" class="form-control" th:value="${carViewDTO.carGrade}" readonly>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+                <th:block th:each="fileName:${carViewDTO.fileNames}">
+                  <div class="card col-4">
+                    <div class="card-header d-flex justify-content-center">
+                      [[${fileName.fileName}]]
+                    </div>
+                    <div class="card-body">
+                      <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                    </div>
+                  </div>
+                </th:block>
+              </div>
+            </div>
           </div>
 
         </div><!-- <div class="card-body">-->
@@ -144,8 +161,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const carId = [[${carInfoDTO.carId}]]
-  const sellingCarId = [[${carInfoDTO.sellingCarId}]]
+  const carId = [[${carViewDTO.carId}]]
+  const sellingCarId = [[${carViewDTO.sellingCarId}]]
   const currentUser = [[${#authentication.principal.username}]]
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))

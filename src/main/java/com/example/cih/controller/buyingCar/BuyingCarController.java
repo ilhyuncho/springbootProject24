@@ -1,9 +1,8 @@
 package com.example.cih.controller.buyingCar;
 
-
-
-import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.service.car.CarService;
+import com.example.cih.service.car.UserCarService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/buyingCar")
 @RequiredArgsConstructor
@@ -20,15 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasRole('USER')")
 public class BuyingCarController {
 
-    private final CarService carService;
+    private final UserCarService userCarService;
 
     @ApiOperation(value = "[구매 희망 리스트] 조회", notes = "판매 차량 정보만 전달")
     @GetMapping("/get")
-    public String get(Long carId, Model model){
+    public String get(Long carId, Model model, Principal principal){
 
-        CarInfoDTO carInfoDTO = carService.readOne(carId);
+        CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
 
-        model.addAttribute("carInfoDTO", carInfoDTO);
+        model.addAttribute("carViewDTO", carViewDTO);
 
         return "/sellingCar/buyingCarList";
     }

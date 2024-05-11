@@ -4,6 +4,7 @@ package com.example.cih.controller.car;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,11 +27,11 @@ public class CarController {
 
         log.error("carInfo=============== : " + carId);
 
-        CarInfoDTO carInfoDTO = carService.readOne(carId);
+        CarViewDTO carViewDTO = carService.readOne(carId);
 
-        log.info("get-read:" + carInfoDTO);
+        log.info("get-read:" + carViewDTO);
 
-        model.addAttribute("responseDTO", carInfoDTO);
+        model.addAttribute("responseDTO", carViewDTO);
 
         return "/dashBoard/carInfo";
     }

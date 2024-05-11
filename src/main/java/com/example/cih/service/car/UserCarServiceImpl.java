@@ -43,7 +43,7 @@ public class UserCarServiceImpl implements UserCarService {
         return carRepository.save(car).getCarId();
     }
     @Override
-    public CarViewDTO readMyCarDetailInfo(PageRequestDTO pageRequestDTO, String userName, Long carId) {
+    public CarViewDTO readMyCarDetailInfo(String userName, Long carId) {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
