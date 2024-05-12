@@ -221,6 +221,16 @@
     })
   }
 
+  const maskingName = (value) => {
+    if (value.length === 2) {
+      return value.replace(/(?<=.{1})./gi, '*');
+    } else if (value.length > 2) {
+      return value.replace(/(?<=.{1})./gi, '*');
+    } else {
+      return value;
+    }
+  };
+
   // 목록 출력
   function printList(dtoList){
     let str = '';
@@ -229,6 +239,7 @@
       for(const dto of dtoList){
 
         let dtoProposalPrice = dto.proposalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
+
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
             userProposalPrice.value = dtoProposalPrice
@@ -241,6 +252,7 @@
 
         str += `<li class="list-group-item d-flex replyItem">
                     <span class="col-2">${dto.userName}</span>
+                    <span class="col-2">${maskingName(dto.userName)}</span>
                     <span class="col-2">${dtoProposalPrice}</span>
                     <span class="col-6" data-rno="${dto.userName}">${dto.registerDate}</span>
                </li>`
