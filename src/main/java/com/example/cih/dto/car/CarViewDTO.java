@@ -17,7 +17,7 @@ import java.util.List;
 public class CarViewDTO extends CarSpecDTO {
 
     private Long userId;
-
+    private String userName;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
     private List<CarImageDTO> fileNames = new ArrayList<>();
@@ -27,12 +27,13 @@ public class CarViewDTO extends CarSpecDTO {
 
     @Builder(builderMethodName = "writeCarViewDTOBuilder")
     public CarViewDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,
-                      String carColors, Long carKm, Long userId,
+                      String carColors, Long carKm, Long userId, String userName,
                       LocalDateTime regDate, LocalDateTime modDate) {
 
         super(carId, carNumber, carGrade, carModel, carYears, carColors, carKm);
 
         this.userId = userId;
+        this.userName = userName;
         this.regDate = regDate;
         this.modDate = modDate;
        // this.fileNames = fileNames; // 확인 필요

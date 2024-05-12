@@ -22,12 +22,15 @@ import java.security.Principal;
 public class BuyingCarController {
 
     private final UserCarService userCarService;
+    private final CarService carService;
 
-    @ApiOperation(value = "[구매 희망 리스트] 조회", notes = "판매 차량 정보만 전달")
+    @ApiOperation(value = "[판매 차량 리스트]-번호 클릭", notes = "판매 차량 정보만 전달")
     @GetMapping("/get")
     public String get(Long carId, Model model, Principal principal){
 
-        CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
+
+        //CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
+        CarViewDTO carViewDTO = carService.readOne(carId);
 
         model.addAttribute("carViewDTO", carViewDTO);
 

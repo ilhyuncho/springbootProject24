@@ -68,23 +68,16 @@ public class SellingCarServiceImpl implements SellingCarService {
         Pageable pageable = pageRequestDTO.getPageable("regDate");
 
 //        List<SellingCar> listSellingCar = sellingCarRepository.findAll();
-        Page<SellingCar> listSellingCar =
-                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);
+        Page<SellingCar> sellingCars =
+                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
-        List<SellingCar> content = listSellingCar.getContent();
-
-
-        for (SellingCar sellingCar : content) {
-            log.error(sellingCar.getSellingCarId() + "," + sellingCar.getRegDate());
-        }
-
-        List<SellingCarViewDTO> sellingCarViewDTO = content.stream().
+        List<SellingCarViewDTO> listSellingCarViewDTO = sellingCars.getContent().stream().
                 map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         return PageResponseDTO.<SellingCarViewDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(sellingCarViewDTO)
-                .total((int)listSellingCar.getTotalElements())
+                .dtoList(listSellingCarViewDTO)
+                .total((int)sellingCars.getTotalElements())
                 .build();
     }
 

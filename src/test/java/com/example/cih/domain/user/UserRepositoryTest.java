@@ -29,7 +29,7 @@ public class UserRepositoryTest {
     @Test
     public void InsertUserData(){
 
-        IntStream.rangeClosed(1, 2).forEach(i -> {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
             City city = new City("000-111", "buchoen", "korea");
             Address address = Address.builder()
                     .city(city)

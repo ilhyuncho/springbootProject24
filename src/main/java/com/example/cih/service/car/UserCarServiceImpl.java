@@ -163,6 +163,7 @@ public class UserCarServiceImpl implements UserCarService {
                 .modDate(car.getModDate())
                 .regDate(car.getRegDate())
                 .userId(car.getUser().getUserId())
+                .userName(car.getUser().getUserName())
                 .build();
 
         // 경매 정보 매핑

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,9 @@ public class CarServiceImpl implements CarService {
 
         Car car = result.orElseThrow();
 
-        return modelMapper.map(car, CarViewDTO.class);
+        CarViewDTO carViewDTO = entityToDTO(car);
+
+        return carViewDTO;
     }
     @Override
     public PageResponseDTO<CarInfoDTO> list(PageRequestDTO pageRequestDTO) {
@@ -75,5 +78,34 @@ public class CarServiceImpl implements CarService {
                 .build();
     }
 
+    private static CarViewDTO entityToDTO(Car car) {
+        CarViewDTO carViewDTO = CarViewDTO.writeCarViewDTOBuilder()
+                .carId(car.getCarId())
+                .carNumber(car.getCarNumber())
+                .carColors(car.getCarColors())
+                .carKm(car.getCarKm())
+                .carGrade(car.getCarGrade())
+                .carModel(car.getCarModel())
+                .carYears(car.getCarYears())
+                .modDate(car.getModDate())
+                .regDate(car.getRegDate())
+                .userId(car.getUser().getUserId())
+                .userName(car.getUser().getUserName())
+                .build();
+
+        // 경매 정보 매핑
+        if(!Objects.isNull(car.getSellingCar())){
+            carViewDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
+            carViewDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
+        }
+
+        // 차 이미지 파일 정보 매핑
+        car.getImageSet().forEach(carImage -> {
+            //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
+            carViewDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
+        });
+
+        return carViewDTO;
+    }
 
 }

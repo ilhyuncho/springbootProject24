@@ -34,6 +34,11 @@
             <input type="text" class="form-control" th:value="${carViewDTO.carGrade}" readonly>
           </div>
 
+          <div class="input-group mb-3">
+            <span class="input-group-text">userName(확인용)</span>
+            <input type="text" class="form-control" th:value="${carViewDTO.userName}" readonly>
+          </div>
+
           <div class="row mt-3">
             <div class="col">
               <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
@@ -66,17 +71,26 @@
 
         <div class="card-body">
 
-          <ul class="list-group userBuyingCarInfo">
-            <div class="input-group mb-3">
-              <span class="input-group-text">고객 제안 가격</span>
-              <input type="text" class="form-control userProposalPrice" readonly>
+          <div class="input-group mb-3">
+            <span class="input-group-text">고객 제안 가격</span>
+            <input type="text" class="form-control userProposalPrice" readonly>
+          </div>
+
+          <div class="row mt-3">
+            <div class="float-end">
+              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">New</button>
             </div>
-          </ul>
+          </div>
 
+          <div class="row mt-5">
+            <h5 class="card-title">가격 제안 List</h5>
+          </div>
 
-          <ul class="list-group buyingCarList">
-            <!-- 리스트 영역-->
-          </ul>
+          <div class="row mt-3">
+            <ul class="list-group buyingCarList">
+              <!-- 리스트 영역-->
+            </ul>
+          </div>
 
           <div class="row mt-3">
             <div class="col">
@@ -85,13 +99,6 @@
               </ul>
             </div>
           </div>
-
-          <div class="my-4">
-            <div class="float-end">
-              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">New</button>
-              <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
-            </div>
-          </div><!-- <div class="my-4">-->
 
         </div><!-- <div class="card-body">-->
       </div>
