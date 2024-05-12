@@ -173,7 +173,7 @@ public class Car extends BaseEntity {
     @PostLoad
     public void postLoad(){
         // 엔티티가 영속성 컨텍스트에 조회된 직후 또는 refresh를 호출한 후 ( 2차 캐시에 저장되어 있어도 호출됨 )
-        log.error("Car-PostLoad() carId: " + carId);
+       // log.error("Car-PostLoad() carId: " + carId);
     }
     @PostRemove
     public void postRemove(){

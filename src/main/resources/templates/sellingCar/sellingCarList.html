@@ -18,7 +18,42 @@
         </div>
 
         <div class="card-body">
-            <form action="/buyingCar/get" method="get">
+
+
+
+            <form action="/sellingCar/list" method="get" id="f2">
+
+              <!-- 검색 화면 추가 start-->
+              <div  class="row mt-3">
+
+                  <div class="col">
+                    <input type="hidden" name="size" th:value="${pageRequestDto.size}">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <select class="form-select" name="type">
+                          <option value="">-----</option>
+                          <option value="t" th:selected="${pageRequestDto.type == 't'}">제목</option>
+                          <option value="c" th:selected="${pageRequestDto.type == 'c'}">내용</option>
+                          <option value="w" th:selected="${pageRequestDto.type == 'w'}">작성자</option>
+                          <option value="tc" th:selected="${pageRequestDto.type == 'w'}">제목,내용</option>
+                          <option value="tcw" th:selected="${pageRequestDto.type == 'w'}">제목,내용,작성자</option>
+                        </select>
+                      </div>
+
+                      <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                      </div>
+
+                    </div>
+                  </div>
+
+              </div>
+              <!-- 검색 화면 추가 end-->
+
+
             <table class="table">
               <thead>
                 <tr>
@@ -77,7 +112,9 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const sellingCarListPaging = document.querySelector('.sellingCarListPaging')  // 페이지 목록 DOM
+
+
+
 
   document.querySelector(".pagination").addEventListener("click", function(e){
 
@@ -91,7 +128,7 @@
     }
 
     const num = target.getAttribute("data-num")
-    const formObj = document.querySelector("form")
+    const formObj = document.querySelector("#f2")
 
     formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
     formObj.submit();
