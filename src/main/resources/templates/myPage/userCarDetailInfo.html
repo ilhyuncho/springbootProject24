@@ -159,10 +159,10 @@
         </div>
         <div class="modal-footer">
 
-            <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>
+<!--            <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>-->
             <button type="button" class="btn btn-primary currentSituationBtn">구매 희망 리스트</button>
             <button type="button" class="btn btn-danger sellingCancelBtn">판매 취소</button>
-            <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+            <button type="button" class="btn btn-outline-dark closeShowModalBtn">Close</button>
 
         </div>
       </div>
@@ -191,7 +191,7 @@
         </div>
       </div>
     </div>
-  </div>  <!--    sellingCarShowModal-->
+  </div>  <!--    sellingCancelModal-->
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -214,6 +214,11 @@
   const cancelCarName = document.querySelector(".cancelCarName")
   const owner = document.querySelector(".owner")
 
+  const sellingCancelBtn = document.querySelector(".sellingCancelBtn")
+
+  document.querySelector(".closeShowModalBtn").addEventListener("click", function (e){
+    sellingCarShowModal.hide()
+  }, false)
 
   // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
