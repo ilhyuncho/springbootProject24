@@ -1,5 +1,6 @@
 package com.example.cih.domain.buyingCar;
 
+import com.example.cih.domain.buyingCar.search.BuyingCarSearch;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
@@ -12,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BuyingCarRepository extends JpaRepository<BuyingCar, Long> {
+public interface BuyingCarRepository extends JpaRepository<BuyingCar, Long>, BuyingCarSearch {
     List<BuyingCar> findBySellingCar(SellingCar sellingCar);
     Optional<BuyingCar> findBySellingCarAndUser(SellingCar sellingCar, User user);
 
