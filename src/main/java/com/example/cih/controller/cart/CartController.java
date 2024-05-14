@@ -26,9 +26,18 @@ import java.security.Principal;
 public class CartController {
     private final CartService cartService;
 
+    @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
+    @GetMapping("/list")
+    public String getCart(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+                       Model model,
+                       Principal principal){
+
+        return "/cart/cartList";
+    }
+
     @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")
     @PostMapping("/add")
-    public String add(@Valid CartDTO cartDTO,
+    public String postAdd(@Valid CartDTO cartDTO,
                       BindingResult bindingResult,
                       RedirectAttributes redirectAttributes,
                       Principal principal){
@@ -45,27 +54,17 @@ public class CartController {
         return "/shop/main"; // 어디로 이동할지 정해야 함
     }
 
-    @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
-    @GetMapping("/list")
-    public String list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
-                       Model model,
-                       Principal principal){
 
-        PageResponseDTO<CartResponseDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
 
-        model.addAttribute("responseDTO", cartAll);
-        return "/cart/cartList";
-    }
-
-    @ApiOperation(value = "선택상품 삭제", notes = "")
-    @PostMapping("/cancel")
-    public String cancel(Long cartId, Model model){
-
-        log.error("Cart Cancel()~~~ ");
-        
-        cartService.deleteInCart(cartId);
-
-        return "redirect:/cart/list";
-    }
+//    @ApiOperation(value = "선택상품 삭제", notes = "")
+//    @PostMapping("/cancel")
+//    public String cancel(Long cartId, Model model){
+//
+//        log.error("Cart Cancel()~~~ ");
+//
+//        cartService.deleteInCart(cartId);
+//
+//        return "redirect:/cart/list";
+//    }
 
 }

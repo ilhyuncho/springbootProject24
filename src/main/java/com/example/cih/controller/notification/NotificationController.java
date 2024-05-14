@@ -21,7 +21,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping("/news")
-    public String readNews(PageRequestDTO pageRequestDTO, Model model){
+    public String getNews(PageRequestDTO pageRequestDTO, Model model){
 
         List<NotificationDTO> listNotificationDTO = notificationService.readNotification(pageRequestDTO);
 

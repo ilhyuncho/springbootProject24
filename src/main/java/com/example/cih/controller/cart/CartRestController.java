@@ -28,11 +28,9 @@ public class CartRestController {
 
     @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
     @GetMapping("/list")
-    public PageResponseDTO<CartResponseDTO> list(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+    public PageResponseDTO<CartResponseDTO> getCartList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                        Model model,
                        Principal principal){
-
-        log.error("cart/cartList, userName: " + principal.getName());
 
         PageResponseDTO<CartResponseDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
 
@@ -41,9 +39,7 @@ public class CartRestController {
 
     @ApiOperation(value = "장바구니 상품 취소", notes = "DELETE 방식으로 특정 상품 삭제")
     @DeleteMapping("/{cartId}")
-    public Map<String,Long> remove(@PathVariable("cartId") Long cartId ){
-
-        log.error("cart/remove, cartId: " + cartId );
+    public Map<String,Long> postRemove(@PathVariable("cartId") Long cartId ){
 
         Cart cart = cartService.deleteInCart(cartId);
 
@@ -54,7 +50,7 @@ public class CartRestController {
     }
     @ApiOperation(value="장바구니 아이템 수량 변경", notes = "PUT 방식으로")
     @PutMapping(value="/{cartId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> modify( @PathVariable("cartId") Long cartId, @RequestBody CartDTO cartDTO){
+    public Map<String, Long> postModify( @PathVariable("cartId") Long cartId, @RequestBody CartDTO cartDTO){
 
         cartDTO.setCartId(cartId);
         cartService.modify(cartDTO);

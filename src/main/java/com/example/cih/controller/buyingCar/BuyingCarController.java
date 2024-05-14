@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -25,9 +26,9 @@ public class BuyingCarController {
     private final CarService carService;
 
     @ApiOperation(value = "[판매 차량 리스트]-번호 클릭", notes = "판매 차량 정보만 전달")
-    @GetMapping("/get")
-    public String get(Long carId, Model model, Principal principal){
-
+    @GetMapping("/{carId}")
+    public String get(@PathVariable(name="carId") Long carId
+            ,Model model, Principal principal){
 
         //CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
         CarViewDTO carViewDTO = carService.readOne(carId);

@@ -33,9 +33,9 @@ public class BuyingCarRestController {
     private final UserService userService;
     private final BuyingCarRepository buyingCarRepository;
 
-    @ApiOperation(value = "차량 구매 제안", notes = "희망 가격 전달")
+    @ApiOperation(value = "차량 구매 제안(&가격 수정)", notes = "희망 가격 전달")
     @PostMapping("/offer")
-    public Map<String,String> offer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
+    public Map<String,String> postOffer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                                  BindingResult bindingResult,
                                                  Principal principal ) throws BindException {
         log.error("buyingCar offer post...." + buyingCarRegDTO);
@@ -62,7 +62,7 @@ public class BuyingCarRestController {
 
     @ApiOperation(value = "차량 구매 취소", notes = "데이터 삭제 요청")
     @PostMapping("/cancel")
-    public Map<String,String> cancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
+    public Map<String,String> postCancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                     BindingResult bindingResult,
                                     Principal principal ) throws BindException {
 
@@ -85,7 +85,7 @@ public class BuyingCarRestController {
 
     @ApiOperation(value = "구매 제안 리스트 전달", notes = "list 전달")
     @GetMapping("/list")
-    public PageResponseDTO<BuyingCarViewDTO> listBuyingCar(PageRequestDTO pageRequestDTO,
+    public PageResponseDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO,
                                                           String userName,
                                                           Long sellingCarId){
 

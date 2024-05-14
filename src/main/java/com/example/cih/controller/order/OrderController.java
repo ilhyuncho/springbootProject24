@@ -66,7 +66,7 @@ public class OrderController {
         orderService.cancelOrder(orderId);
 
         // 임시로
-        return "redirect:/myPage/userCarRegister";
+        return "redirect:/myPage/carRegister";
     }
 
 }

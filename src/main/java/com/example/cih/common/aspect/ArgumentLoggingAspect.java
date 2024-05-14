@@ -43,9 +43,9 @@ public class ArgumentLoggingAspect {
 //                .forEach(obj ->  log.error("2-2.Argument info: value: {}, type: {}", obj.toString(), obj.getClass()));
 //    }
 
-    @Before("execution(* com.example.cih.controller..register*(..))")
+    @Before("execution(* com.example.cih.controller..post*(..))")
     public void printRegisterArgument(JoinPoint joinPoint) {
-        // register 명령의 모든 Argument 값 출력
+        // Post 명령의 모든 Argument 값 출력
         log.error("2-3.Aspect - " + joinPoint.getSignature().toShortString());
         Arrays.stream(joinPoint.getArgs())
                 .forEach(obj ->  log.error("2-3.Argument info: value: {}, type: {}", obj.toString(), obj.getClass()));

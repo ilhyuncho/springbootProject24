@@ -10,12 +10,10 @@ import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
-import java.nio.file.Files;
 import java.security.Principal;
 import java.util.List;
 
@@ -37,18 +33,15 @@ import java.util.List;
 @PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
-    @Value("${com.cih.upload.path}")
-    private String uploadPath;
-
     private final UserCarService userCarService;
     private final UserService userService;
 
     private final ModelMapper modelMapper;
-
     private final FileHandler fileHandler;
 
-    @GetMapping("/userCarList")
-    public String userCarList(PageRequestDTO pageRequestDTO, String userName,
+    @ApiOperation(value = "보유 차 리스트 조회", notes = "")
+    @GetMapping("/carList")
+    public String getCarList(PageRequestDTO pageRequestDTO, String userName,
                               Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
@@ -57,21 +50,20 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
-        return "/myPage/userCarList";
+        return "/myPage/carList";
     }
-    @GetMapping("/userCarRegister")
-    public String getRegister(){
-        return "/myPage/userCarRegister";
+    @ApiOperation(value = "차 등록 페이지로 이동", notes = "")
+    @GetMapping("/carRegister")
+    public String getCarRegister(){
+        return "/myPage/carRegister";
     }
 
-    @PostMapping(value="/userCarRegister")
-    public String register(@Valid CarInfoDTO carInfoDTO,
+    @ApiOperation(value = "차 등록 (post)", notes = "")
+    @PostMapping(value="/carRegister")
+    public String postCarRegister(@Valid CarInfoDTO carInfoDTO,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
                            Principal principal ){    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
-
-        log.error("carInfoDTO : " + carInfoDTO);
-        log.error("user : " + principal.getName());
 
         if(bindingResult.hasErrors()) {
             // throw new BindException(bindingResult);
@@ -79,18 +71,19 @@ public class MyPageController {
             bindingResult.getAllErrors().forEach(log::error);
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/myPage/userCarRegister";
+            return "redirect:/myPage/carRegister";
         }
 
         Long carId = userCarService.register(principal.getName(), carInfoDTO, null);
 
         redirectAttributes.addFlashAttribute("result", carId);
         redirectAttributes.addAttribute("userName", principal.getName());
-        return "redirect:/myPage/userCarList";
-        //return "redirect:/myPage/userCarList?userName=" + principal.getName();
+        return "redirect:/myPage/carList";
+        //return "redirect:/myPage/carList?userName=" + principal.getName();
     }
-    @GetMapping({"/userCarDetailInfo", "/userCarModify"})
-    public String userCarDetailInfo(HttpServletRequest request,
+    @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
+    @GetMapping({"/carDetail", "/carModify"})
+    public String getCarDetailOrModify(HttpServletRequest request,
                                     PageRequestDTO pageRequestDTO, String userName,
                                     @RequestParam("carId") Long carId,
                                     Model model){
@@ -107,8 +100,9 @@ public class MyPageController {
         return requestURI;
     }
 
-    @PostMapping("/userCarModify")
-    public String userCarModify(PageRequestDTO pageRequestDTO,
+    @ApiOperation(value = "차 세부 변경 (post)", notes = "")
+    @PostMapping("/carModify")
+    public String postCarModify(PageRequestDTO pageRequestDTO,
                                 @Valid CarInfoDTO carInfoDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
@@ -122,7 +116,7 @@ public class MyPageController {
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
-            return "redirect:/myPage/userCarDetailInfo?" + link;
+            return "redirect:/myPage/carDetail?" + link;
         }
 
         userCarService.modifyMyCar(carInfoDTO);
@@ -131,10 +125,11 @@ public class MyPageController {
         redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
         redirectAttributes.addAttribute("userName", principal.getName());
 
-        return "redirect:/myPage/userCarDetailInfo?" + link;
+        return "redirect:/myPage/carDetail?" + link;
     }
-    @GetMapping("/userCarSummaryInfo")
-    public String userCarSummaryInfo(PageRequestDTO pageRequestDTO, String userName,
+    @ApiOperation(value = "차 세부 정보 요약 페이지로 이동", notes = "")
+    @GetMapping("/carSummary")
+    public String getCarSummary(PageRequestDTO pageRequestDTO, String userName,
                                      Model model){
 
         log.error("userName: " + userName);
@@ -147,24 +142,11 @@ public class MyPageController {
 
         model.addAttribute("list", carSummaries);
 
-        return "/myPage/userCarSummaryInfo";
+        return "carSummary";
     }
-    @GetMapping("/userCarRead")
-    public String userCarRead(PageRequestDTO pageRequestDTO
-                             ,@RequestParam("carId") Car car        // 도메인 클래스 컨버터 기능
-                             ,Model model){
-        
-        // 이미 Param에서 Car 엔티티 정보 로딩 됨.. 단 조회 용으로 만
-        // 그리고 이기능은 많이 쓰이지 않는다
-        //CarInfoDTO carInfoDTO = carService.readOne(car.getCarId());
-
-        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
-        model.addAttribute("responseDTO", carInfoDTO);
-
-        return "/myPage/userCarRead";
-    }
-    @PostMapping("/userCarDelete")
-    public String userCarDelete(CarInfoDTO carInfoDTO,
+    @ApiOperation(value = "차 정보 삭제", notes = "")
+    @PostMapping("/deleteCar")
+    public String postDeleteCar(CarInfoDTO carInfoDTO,
                                 RedirectAttributes redirectAttributes){
         log.error("remove......post: " + carInfoDTO);
 
@@ -180,7 +162,23 @@ public class MyPageController {
         redirectAttributes.addFlashAttribute("result", "removed");
         redirectAttributes.addAttribute("userName","user1");
 
-        return "redirect:/myPage/userCarList";
+        return "redirect:/myPage/carList";
+    }
+
+    @ApiOperation(value = "차 정보 읽기", notes = "도메인 클래스 컨버터 기능 확인용")
+    @GetMapping("/readCar")
+    public String getCar(PageRequestDTO pageRequestDTO
+            ,@RequestParam("carId") Car car        // 도메인 클래스 컨버터 기능
+            ,Model model){
+
+        // 이미 Param에서 Car 엔티티 정보 로딩 됨.. 단 조회 용으로 만
+        // 그리고 이기능은 많이 쓰이지 않는다
+        //CarInfoDTO carInfoDTO = carService.readOne(car.getCarId());
+
+        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
+        model.addAttribute("responseDTO", carInfoDTO);
+
+        return "carRead";
     }
 
 }

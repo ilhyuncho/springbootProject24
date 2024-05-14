@@ -70,10 +70,10 @@
                     </span>
               </button>
 
-              <a th:href="|@{/myPage/userCarList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
-              <a th:href="|@{/myPage/userCarModify(carId=${responseDTO.carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carModify(carId=${responseDTO.carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
                 <button type="button" class="btn btn-secondary">Modify</button>
               </a>
             </div>
@@ -267,7 +267,7 @@
       registerModal.hide()
 
       // 화면 재 갱신
-      self.location = '/myPage/userCarDetailInfo?carId=' + carId
+      self.location = '/myPage/carDetail?carId=' + carId
               + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
@@ -308,7 +308,7 @@
       sellingCancelModal.hide()
 
       // 화면 재 갱신
-      self.location = '/myPage/userCarDetailInfo?carId=' + carId
+      self.location = '/myPage/carDetail?carId=' + carId
               + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
@@ -328,7 +328,7 @@
   // [구매 희망 리스트] 클릭
   document.querySelector(".currentSituationBtn").addEventListener("click", function (e) {
 
-    self.location = '/buyingCar/get?carId=' + carId
+    self.location = '/buyingCar/' + carId
 
   }, false)
 

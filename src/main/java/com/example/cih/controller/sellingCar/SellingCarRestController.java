@@ -27,10 +27,9 @@ public class SellingCarRestController {
 
     @ApiOperation(value = "판매 차량 등록", notes = "차 소유주가 차량 등록")
     @PostMapping("/register")
-    public Map<String,String> registerSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
+    public Map<String,String> postRegisterSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                 BindingResult bindingResult,
                                 Principal principal ) throws BindException {
-        log.error("registerSellingCar post...." + sellingCarRegDTO);
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
@@ -56,7 +55,7 @@ public class SellingCarRestController {
 
     @ApiOperation(value = "판매 취소", notes = "판매 중이던 차량 판매 취소")
     @PostMapping("/cancel")
-    public Map<String,String> cancelSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
+    public Map<String,String> postCancelSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                  BindingResult bindingResult,
                                                  Principal principal ) throws BindException {
         log.error("cancelSellingCar post...." + sellingCarRegDTO.getCarId());

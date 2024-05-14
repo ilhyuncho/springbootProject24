@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
 
-          <form th:action="@{/myPage/userCarModify}" method="post" id="f1">
+          <form th:action="@{/myPage/carModify}" method="post" id="f1">
             <div class="input-group mb-3">
               <span class="input-group-text">CarID</span>
               <input type="text" class="form-control" th:value="${responseDTO.carId}" name="carId" readonly>
@@ -62,7 +62,7 @@
 
             <div class="my-4">
               <div class="float-end">
-                <a th:href="|@{/myPage/userCarList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
+                <a th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
                 <button type="button" class="btn btn-secondary modBtn">Modify</button>
@@ -241,7 +241,7 @@
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/myPage/userCarModify?${link}`
+    formObj.action = `/myPage/carModify?${link}`
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()
@@ -265,7 +265,7 @@
     // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
     appendNotShownData()
 
-    formObj.action = `/myPage/userCarDelete`
+    formObj.action = `/myPage/deleteCar`
     formObj.method = 'post'
     formObj.submit()
 

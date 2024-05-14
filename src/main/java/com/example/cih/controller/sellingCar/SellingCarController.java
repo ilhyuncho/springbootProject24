@@ -29,7 +29,7 @@ public class SellingCarController {
 
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
-    public String userCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+    public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                               Model model){
 
         PageResponseDTO<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);

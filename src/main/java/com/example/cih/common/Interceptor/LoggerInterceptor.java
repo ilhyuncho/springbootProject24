@@ -15,7 +15,8 @@ public class LoggerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // Object handler -> 컨트롤러 클래스의 핸들러 메서드를 참조하는 HandlerMethod 객체이다.
         log.error("==================== BEGIN ====================");
-        log.error("Request URI ===> " + request.getRequestURI());
+        log.error("Request URI ==> ({}), {}", request.getMethod(), request.getRequestURI());
+
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 

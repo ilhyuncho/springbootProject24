@@ -33,25 +33,25 @@ public class ShopController {
     public void shopMain(){
 
     }
-    @GetMapping("/items")
-    public String items(Model model){
-
-        List<ShopItemViewDTO> itemList = shopItemService.getAllItems();
-
-        itemList.forEach(log::error);
-
-
-        model.addAttribute("itemList", itemList);
-
-        return "/shop/main";
-    }
-    @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
-    @PostMapping("/order")
-    public String Sample(OrderDTO orderDTO, String userName){
-
-        Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
-
-        return "/shop/main";
-    }
+//    @GetMapping("/items")
+//    public String items(Model model){
+//
+//        List<ShopItemViewDTO> itemList = shopItemService.getAllItems();
+//
+//        itemList.forEach(log::error);
+//
+//
+//        model.addAttribute("itemList", itemList);
+//
+//        return "/shop/main";
+//    }
+//    @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
+//    @PostMapping("/order")
+//    public String Sample(OrderDTO orderDTO, String userName){
+//
+//        Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
+//
+//        return "/shop/main";
+//    }
 
 }

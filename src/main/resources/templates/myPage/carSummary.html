@@ -29,7 +29,7 @@
             <tbody>
               <tr th:each="dto:${list}">
                 <th scope="row">
-                  <a th:href="|@{/myPage/userCarRead(carcarNumber=${dto.carNumber})}|" class="text-decoration-none"> [[${dto.carNumber}]]</a>
+                  <a th:href="|@{/myPage/readCar(carcarNumber=${dto.carNumber})}|" class="text-decoration-none"> [[${dto.carNumber}]]</a>
                 </th>
 
                 <td>[[${dto.CarInfo}]]</td>
@@ -40,7 +40,7 @@
 
           <div class="my-4">
             <div class="float-end">
-              <a th:href="|@{/myPage/userCarRegister}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carRegister}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">New</button>
               </a>
             </div>

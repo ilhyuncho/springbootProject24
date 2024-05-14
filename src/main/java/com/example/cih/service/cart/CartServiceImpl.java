@@ -119,8 +119,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart deleteInCart(Long cartId) {
-
-        log.error("deleteInCart:  cartId = " +cartId);
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> {
                     log.info("User expected to delete cart but was empty. cartId = '{}',"
@@ -128,7 +126,6 @@ public class CartServiceImpl implements CartService {
                     return new ItemNotFoundException("선택 상품이 없습니다");
                 });
 
-        log.error("deleteInCart" + cart.getCartId());
         cartRepository.delete(cart);
         return cart;
     }
