@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.6.8'
@@ -74,6 +80,18 @@ dependencies {
     // Thumbnailator (24.03.29)
     implementation 'net.coobird:thumbnailator:0.4.16'
 
+    // JPA-querydql start
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+
+    annotationProcessor(
+
+            "javax.persistence:javax.persistence-api",
+
+            "javax.annotation:javax.annotation-api",
+
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+    // JPA-querydql end
+
 
 //    // JSTL ( 24.03.22 )
 //    implementation group: 'jstl', name: 'jstl', version:'1.2'
@@ -81,4 +99,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
 }
