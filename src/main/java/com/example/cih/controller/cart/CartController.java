@@ -3,7 +3,6 @@ package com.example.cih.controller.cart;
 
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarSpecDTO;
 import com.example.cih.dto.cart.CartDTO;
 import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.service.cart.CartService;
@@ -27,7 +26,7 @@ import java.security.Principal;
 public class CartController {
     private final CartService cartService;
 
-    @ApiOperation(value = "장바구니 넣기", notes = "장바구니에 있는 모든 상품을 조회")
+    @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")
     @PostMapping("/add")
     public String add(@Valid CartDTO cartDTO,
                       BindingResult bindingResult,
@@ -35,9 +34,9 @@ public class CartController {
                       Principal principal){
 
         if(bindingResult.hasErrors()){
-            log.info("has errors........");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
+            log.error("has errors........");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/shop/main";
         }
 
@@ -53,8 +52,8 @@ public class CartController {
                        Principal principal){
 
         PageResponseDTO<CartResponseDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
-        model.addAttribute("responseDTO", cartAll);
 
+        model.addAttribute("responseDTO", cartAll);
         return "/cart/cartList";
     }
 
@@ -66,7 +65,6 @@ public class CartController {
         
         cartService.deleteInCart(cartId);
 
-        // 임시로
         return "redirect:/cart/list";
     }
 

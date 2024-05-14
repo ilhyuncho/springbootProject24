@@ -55,11 +55,8 @@ public class CartServiceImpl implements CartService {
             ItemOption itemOption = itemOptionRepository.findById(cartDTO.getItemOption())
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품 옵션 정보가 존재하지않습니다"));
 
-            log.error(itemOption.getItemOptionId() + itemOption.getOption1());
+           // log.error(itemOption.getItemOptionId() + itemOption.getOption1());
         }
-
-
-
 
         cartRepository.save(cart);
 

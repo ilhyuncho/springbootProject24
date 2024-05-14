@@ -27,7 +27,7 @@
                     </div>
                     <!-- 인증 정보에서 사용자 정보 가져오기-->
 
-                    <form action="/myPage/userCarRegister" method="post" id="myForm">
+                    <form action="/myPage/userCarRegister" method="post" id="myRegisterForm">
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">CarNumber</span>
@@ -227,7 +227,7 @@
         target.innerHTML = str;
 
         // 실제 등록 처리
-        document.querySelector("#myForm").submit();
+        document.querySelector("#myRegisterForm").submit();
         //document.querySelector("form").submit();
 
     }, false)
