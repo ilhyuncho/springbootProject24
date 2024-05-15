@@ -19,8 +19,6 @@
 
         <div class="card-body">
 
-
-
             <form action="/sellingCar/list" method="get" id="f2">
 
               <!-- 검색 화면 추가 start-->
@@ -56,8 +54,10 @@
               <thead>
                 <tr>
                   <th scope="col">carNumber</th>
+                  <th scope="col">carModel</th>
+                  <th scope="col">carYears</th>
                   <th scope="col">sellingCarStatus</th>
-                  <th scope="col">requiredPrice</th>
+                  <th scope="col">희망 가격</th>
                   <th scope="col">expiredDate</th>
                 </tr>
               </thead>
@@ -74,6 +74,8 @@
                     </div>
 
                   </th>
+                  <td>[[${dto.carModel}]]</td>
+                  <td>[[${dto.carYears}]]</td>
                   <td>[[${dto.sellingCarStatus}]]</td>
                   <td>[[${dto.requiredPrice}]]</td>
                   <td>[[${ #temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>

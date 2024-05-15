@@ -35,7 +35,6 @@ public class PageResponseDTO<E> {
         this.total = total;
         this.dtoList = dtoList;
 
-
         this.end = (int)(Math.ceil(this.page / 5.0)) * 5;     // 화면에서의 마지막 번호
         this.start = this.end - 4;  // 화면에서의 시작 번호
 

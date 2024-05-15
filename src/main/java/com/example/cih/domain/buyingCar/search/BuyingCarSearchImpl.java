@@ -53,4 +53,18 @@ public class BuyingCarSearchImpl extends QuerydslRepositorySupport implements Bu
         return null;
     }
 
+    @Override
+    public BuyingCar findHighProposalPriceInfo(Long sellingCarId) {
+
+        QBuyingCar buyingCar = QBuyingCar.buyingCar;
+
+        JPQLQuery<BuyingCar> query = from(buyingCar);
+        query.where(buyingCar.sellingCar.sellingCarId.eq(sellingCarId));
+        query.orderBy(buyingCar.proposalPrice.desc());
+
+        BuyingCar resultBuyingCar = query.fetchFirst();
+
+        return resultBuyingCar;
+    }
+
 }

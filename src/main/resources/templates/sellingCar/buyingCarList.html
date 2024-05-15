@@ -75,6 +75,10 @@
             <span class="input-group-text">고객 제안 가격</span>
             <input type="text" class="form-control userProposalPrice" readonly>
           </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">최고 제안 가격</span>
+            <input type="text" class="form-control highProposalPrice" readonly>
+          </div>
 
           <div class="row mt-3">
             <div class="float-end">
@@ -182,6 +186,7 @@
   const buyingCarListPaging = document.querySelector('.buyingCarListPaging')  // 페이지 목록 DOM
 
   const userProposalPrice = document.querySelector('.userProposalPrice')  // 접속한 고객이 제안한 가격 DOM
+  const highProposalPrice = document.querySelector('.highProposalPrice')  // 가격 제안 중 최고 가격
   const userCurrentPrice = document.querySelector('.userCurrentPrice')    // 접속한 고객이 현재 제안한 가격 DOM
   const purchaseOfferBtn = document.querySelector('.purchaseOfferBtn')
 
@@ -190,20 +195,21 @@
   let size = 5
 
   printBuyingCarList(page,size)
+  printHighProposalPrice()
 
   function initOfferBtn(data) {
-    console.log(data)
-
     if(carOwner === currentUser){ // 해당 차 소유자 일 경우
       console.log('해당 차 소유자')
       purchaseOfferBtn.setAttribute("hidden", true)
     }
     else{
       if(data === 'new'){
+        console.log('btn-> new')
         purchaseOfferBtn.innerHTML = 'new'
         purchaseOfferBtn.setAttribute("btn-type", "new")
       }
       else{
+        console.log('btn-> modify')
         purchaseOfferBtn.innerHTML = 'modify'
         purchaseOfferBtn.setAttribute("btn-type", "modify")
       }
@@ -211,11 +217,25 @@
   }
 
   function printBuyingCarList(page,size){
+
+    console.log('printBuyingCarList call~~~')
+
     getList({currentUser, sellingCarId, page, size}).then(data=> {
+        printList(data.dtoList) // 목록 처리
+        printPages(data)        // 페이지 처리
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
 
-      printList(data.dtoList) // 목록 처리
-      printPages(data)        // 페이지 처리
+  // 금액 + '원'
+  function makePriceCurrency(data){
+    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
+  }
 
+  function printHighProposalPrice(){
+    getHighProposalPrice(sellingCarId).then(data=> {
+      highProposalPrice.value = makePriceCurrency(data.proposalPrice)
     }).catch(e=>{
       console.error(e)
     })
@@ -238,16 +258,13 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
 
-        let dtoProposalPrice = dto.proposalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
+        let dtoProposalPrice = makePriceCurrency(dto.proposalPrice)
 
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
             userProposalPrice.value = dtoProposalPrice
 
-           // initOfferBtn('modify')
-        }
-        else{
-         // initOfferBtn('new')
+            initOfferBtn('modify')
         }
 
         str += `<li class="list-group-item d-flex replyItem">
@@ -315,6 +332,7 @@
     purchaseOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
+      printHighProposalPrice()
 
       initModalDisplay(formObj)
 
@@ -336,6 +354,7 @@
     cancelOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
+      printHighProposalPrice()
 
       initModalDisplay(formObj)
 
@@ -363,11 +382,11 @@
       modifyPrice.value= ''
       modifyOfferModal.hide()
     }
-    else{
+    else{   // cancel
       userCurrentPrice.value= ''
       userProposalPrice.value=''
 
-     // initOfferBtn('new')
+      initOfferBtn('new')
 
       modifyOfferModal.hide()
     }
@@ -424,6 +443,7 @@
     }
     page = target.getAttribute("data-page")
     printBuyingCarList(page,size)
+    printHighProposalPrice()
 
   },false)
 

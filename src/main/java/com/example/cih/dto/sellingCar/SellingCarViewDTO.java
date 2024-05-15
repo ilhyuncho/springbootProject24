@@ -16,6 +16,8 @@ import java.util.List;
 public class SellingCarViewDTO {
     private Long carId;
     private String carNumber;
+    private String carModel;
+    private int carYears;
     private SellingCarStatus sellingCarStatus;
     private int requiredPrice;
     private Long sellingCarId;

@@ -94,4 +94,14 @@ public class BuyingCarRestController {
 
         return pageBuyingCarViewDTO;
     }
+    @ApiOperation(value = "구매 희망 최고 가격", notes = "")
+    @GetMapping("/highProposalPrice")
+    public BuyingCarViewDTO getHighProposalPrice(Long sellingCarId){
+
+        BuyingCarViewDTO highProposalBuyingCar = buyingCarService.getHighProposalBuyingCar(sellingCarId);
+
+        return highProposalBuyingCar;
+    }
+
+
 }

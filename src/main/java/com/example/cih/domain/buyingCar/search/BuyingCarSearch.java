@@ -6,4 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface BuyingCarSearch {
     Page<BuyingCar> searchTest(Pageable pageable);
+    BuyingCar findHighProposalPriceInfo(Long sellingCarId);
+
 }

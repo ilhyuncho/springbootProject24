@@ -70,6 +70,19 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     }
 
     @Override
+    public BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId) {
+
+        SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
+                .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
+
+        BuyingCar highProposalPriceInfo = buyingCarRepository.findHighProposalPriceInfo(sellingCarId);
+
+        BuyingCarViewDTO buyingCarViewDTO = entityToDTO(highProposalPriceInfo);
+
+        return buyingCarViewDTO;
+    }
+
+    @Override
     public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
