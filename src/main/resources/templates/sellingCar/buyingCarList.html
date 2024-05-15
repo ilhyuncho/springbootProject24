@@ -198,21 +198,19 @@
   printHighProposalPrice()
 
   function initOfferBtn(data) {
-    if(carOwner === currentUser){ // 해당 차 소유자 일 경우
-      console.log('해당 차 소유자')
+
+    if(data === 'hidden'){
       purchaseOfferBtn.setAttribute("hidden", true)
     }
+    else if(data === 'new'){
+      console.log('btn-> new')
+      purchaseOfferBtn.innerHTML = 'new'
+      purchaseOfferBtn.setAttribute("btn-type", "new")
+    }
     else{
-      if(data === 'new'){
-        console.log('btn-> new')
-        purchaseOfferBtn.innerHTML = 'new'
-        purchaseOfferBtn.setAttribute("btn-type", "new")
-      }
-      else{
-        console.log('btn-> modify')
-        purchaseOfferBtn.innerHTML = 'modify'
-        purchaseOfferBtn.setAttribute("btn-type", "modify")
-      }
+      console.log('btn-> modify')
+      purchaseOfferBtn.innerHTML = 'modify'
+      purchaseOfferBtn.setAttribute("btn-type", "modify")
     }
   }
 
@@ -235,7 +233,10 @@
 
   function printHighProposalPrice(){
     getHighProposalPrice(sellingCarId).then(data=> {
-      highProposalPrice.value = makePriceCurrency(data.proposalPrice)
+      if(data.proposalPrice){
+        highProposalPrice.value = makePriceCurrency(data.proposalPrice)
+      }
+
     }).catch(e=>{
       console.error(e)
     })
@@ -254,17 +255,23 @@
   // 목록 출력
   function printList(dtoList){
     let str = '';
+    let btnType = 'new'
+
+    if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+      btnType = 'hidden'
+    }
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
 
+        console.log('proposalPrice~~~')
         let dtoProposalPrice = makePriceCurrency(dto.proposalPrice)
 
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
             userProposalPrice.value = dtoProposalPrice
 
-            initOfferBtn('modify')
+            btnType = 'modify'
         }
 
         str += `<li class="list-group-item d-flex replyItem">
@@ -275,6 +282,9 @@
                </li>`
       }
     }
+
+    initOfferBtn(btnType)
+
     buyingCarList.innerHTML = str
   }
 

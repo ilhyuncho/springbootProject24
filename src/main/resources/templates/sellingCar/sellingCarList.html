@@ -113,9 +113,6 @@
 <script layout:fragment="script" th:inline="javascript">
 
 
-
-
-
   document.querySelector(".pagination").addEventListener("click", function(e){
 
     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
@@ -134,5 +131,15 @@
     formObj.submit();
 
   }, false)
+
+  document.querySelector(".clearBtn").addEventListener("click", function(e){
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    self.location = '/sellingCar/list' // 자바스크립트로 다른 url 호출
+
+  },false)
+
 
 </script>

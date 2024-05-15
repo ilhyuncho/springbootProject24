@@ -3,6 +3,8 @@ package com.example.cih.domain.user;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.CarSize;
+import com.example.cih.domain.shop.ShopItem;
+import com.example.cih.domain.shop.ShopItemRepository;
 import lombok.extern.log4j.Log4j2;
 
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +27,9 @@ public class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ShopItemRepository shopItemRepository;
 
     @Test
     public void InsertUserData(){
@@ -53,8 +58,23 @@ public class UserRepositoryTest {
             Long userId = userRepository.save(user).getUserId();
         });
 
-//        Optional<User> user1 = userRepository.findByUserName("user1");
-//        Assertions.assertEquals(user1.get().getUserName(), user.getUserName());
+
+        IntStream.rangeClosed(1,2).forEach(i -> {
+
+            ShopItem shopItem = ShopItem.builder()
+                    .itemName("item" + i)
+                    .price(1000 * i)
+                    .stockCount(10000)
+                    .build();
+
+            shopItem.addImage("1a1a1a", "ionic5.png");
+            shopItem.addImage("2a2a2a", "ionic51.png");
+
+            shopItem.addItemOption("option1", "option2");
+
+            shopItemRepository.save(shopItem);
+        });
+
     }
 
     @Test
