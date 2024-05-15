@@ -66,10 +66,13 @@ public class SellingCarServiceImpl implements SellingCarService {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
+        
+        
+//        Page<SellingCar> sellingCars =
+//                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
-//        List<SellingCar> listSellingCar = sellingCarRepository.findAll();
-        Page<SellingCar> sellingCars =
-                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
+        // 검색 기능 추가 버전 ( querydsl
+        Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, pageable);
 
         List<SellingCarViewDTO> listSellingCarViewDTO = sellingCars.getContent().stream().
                 map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());

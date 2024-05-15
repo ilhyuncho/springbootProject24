@@ -32,11 +32,9 @@
                       <div class="input-group-prepend">
                         <select class="form-select" name="type">
                           <option value="">-----</option>
-                          <option value="t" th:selected="${pageRequestDto.type == 't'}">제목</option>
-                          <option value="c" th:selected="${pageRequestDto.type == 'c'}">내용</option>
-                          <option value="w" th:selected="${pageRequestDto.type == 'w'}">작성자</option>
-                          <option value="tc" th:selected="${pageRequestDto.type == 'w'}">제목,내용</option>
-                          <option value="tcw" th:selected="${pageRequestDto.type == 'w'}">제목,내용,작성자</option>
+                          <option value="m" th:selected="${pageRequestDto.type == 'm'}">모델명</option>
+                          <option value="y" th:selected="${pageRequestDto.type == 'y'}">연식</option>
+                          <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>
                         </select>
                       </div>
 
