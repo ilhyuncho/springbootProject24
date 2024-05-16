@@ -1,6 +1,7 @@
 package com.example.cih.service.buyingCar;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
+import com.example.cih.domain.buyingCar.BuyResult;
 import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.buyingCar.BuyingCarRepository;
 import com.example.cih.domain.car.Car;
@@ -77,9 +78,23 @@ public class BuyingCarServiceImpl implements BuyingCarService {
 
         BuyingCar highProposalPriceInfo = buyingCarRepository.findHighProposalPriceInfo(sellingCarId);
 
-        BuyingCarViewDTO buyingCarViewDTO = entityToDTO(highProposalPriceInfo);
 
-        return buyingCarViewDTO;
+        if(highProposalPriceInfo != null)
+        {
+            BuyingCarViewDTO buyingCarViewDTO = entityToDTO(highProposalPriceInfo);
+            return buyingCarViewDTO;
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<BuyingCarViewDTO> getBuyingCarInfo(User user) {
+
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarRepository.findByUser(user).stream()
+                .map(BuyingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        return listBuyingCarViewDTO;
     }
 
     @Override
@@ -91,8 +106,8 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .proposalPrice(buyingCarRegDTO.getRequestPrice())
                 .user(user)
                 .sellingCar(sellingCar)
+                .buyResult(BuyResult.PROPOSE)
                 .build();
-
         buyingCarRepository.save(buyingCar);
     }
     @Override
@@ -131,10 +146,13 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     }
 
     private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
-        BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder()
+        BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder( )
                 .proposalPrice(buyingCar.getProposalPrice())
                 .registerDate(buyingCar.getRegisterDate())
                 .userName(buyingCar.getUser().getUserName())
+                .buyResult(buyingCar.getBuyResult())
+                .carNumber(buyingCar.getSellingCar().getCar().getCarNumber())   // 너무 긴가???
+                .carModel(buyingCar.getSellingCar().getCar().getCarModel())
                 .build();
 
         return buyingCarViewDTO;

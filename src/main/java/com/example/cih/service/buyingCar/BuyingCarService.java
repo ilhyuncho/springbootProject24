@@ -16,4 +16,7 @@ public interface BuyingCarService {
 
     PageResponseDTO<BuyingCarViewDTO>  getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId);
     BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId);
+
+    List<BuyingCarViewDTO> getBuyingCarInfo(User user);
+
 }

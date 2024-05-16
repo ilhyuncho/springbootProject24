@@ -1,10 +1,14 @@
 package com.example.cih.controller.order;
 
+import com.example.cih.domain.user.User;
+import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.dto.order.OrderDetailDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.shop.OrderService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
@@ -24,6 +29,8 @@ import java.security.Principal;
 //@PreAuthorize("hasRole('USER')")
 public class OrderController {
     private final OrderService orderService;
+    private final BuyingCarService buyingCarService;
+    private final UserService userService;
 
     @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
     @PostMapping("/add")
@@ -39,9 +46,15 @@ public class OrderController {
                        Model model,
                        Principal principal ){
 
+        User user = userService.findUser(principal.getName());
+
         PageResponseDTO<OrderDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
 
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getBuyingCarInfo(user);
+
         model.addAttribute("responseDTO", cartAll);
+        model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
+
         return "/order/orderList";
     }
 
