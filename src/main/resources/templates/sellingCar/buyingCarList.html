@@ -166,6 +166,7 @@
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/buyingCar.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -226,11 +227,6 @@
     })
   }
 
-  // 금액 + '원'
-  function makePriceCurrency(data){
-    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원'
-  }
-
   function printHighProposalPrice(){
     getHighProposalPrice(sellingCarId).then(data=> {
       if(data.proposalPrice){
@@ -241,16 +237,6 @@
       console.error(e)
     })
   }
-
-  const maskingName = (value) => {
-    if (value.length === 2) {
-      return value.replace(/(?<=.{1})./gi, '*');
-    } else if (value.length > 2) {
-      return value.replace(/(?<=.{1})./gi, '*');
-    } else {
-      return value;
-    }
-  };
 
   // 목록 출력
   function printList(dtoList){
@@ -264,12 +250,12 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
 
-        console.log('proposalPrice~~~')
-        let dtoProposalPrice = makePriceCurrency(dto.proposalPrice)
+        let proposalPrice = makePriceCurrency(dto.proposalPrice)
+        let registerDate = stringToDateFormat(dto.registerDate)
 
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
-            userProposalPrice.value = dtoProposalPrice
+            userProposalPrice.value = proposalPrice
 
             btnType = 'modify'
         }
@@ -277,16 +263,16 @@
         str += `<li class="list-group-item d-flex replyItem">
                     <span class="col-1">${dto.userName}</span>
                     <span class="col-1">${maskingName(dto.userName)}</span>
-                    <span class="col-1">${dtoProposalPrice}</span>
-                    <span class="col-1">${dto.carNumber}</span>
+                    <span class="col-2">${proposalPrice}</span>
+                    <span class="col-2">${dto.carNumber}</span>
                     <span class="col-1">${dto.carModel}</span>
-                    <span class="col-1">${dto.buyResult}</span>
-                    <span class="col-1" data-rno="${dto.userName}">${dto.registerDate}</span>
+                    <span class="col-2">${dto.buyResult}</span>
+                    <span class="col-4" data-rno="${dto.userName}">${registerDate}</span>
                </li>`
       }
     }
 
-   // initOfferBtn(btnType)
+//    initOfferBtn(btnType)
 
     buyingCarList.innerHTML = str
   }
@@ -399,7 +385,7 @@
       userCurrentPrice.value= ''
       userProposalPrice.value=''
 
-     // initOfferBtn('new')
+    //  initOfferBtn('new')
 
       modifyOfferModal.hide()
     }

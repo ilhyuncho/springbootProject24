@@ -153,6 +153,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .buyResult(buyingCar.getBuyResult())
                 .carNumber(buyingCar.getSellingCar().getCar().getCarNumber())   // 너무 긴가???
                 .carModel(buyingCar.getSellingCar().getCar().getCarModel())
+                .carId(buyingCar.getSellingCar().getCar().getCarId())
                 .build();
 
         return buyingCarViewDTO;
