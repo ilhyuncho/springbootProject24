@@ -19,11 +19,11 @@ public class CarConsumable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="CONSUMABLE_ID")
     private Long consumableId;
-
-    private String type;
     private String name;
-    private int replaceCycle;
-    private LocalDateTime replaceDate;
+    private String repairType;      // 점검 or 교체
+    private int replaceCycleKm;
+    private int replaceCycleMonth;
+    private LocalDateTime replaceDate;  // 마지막 점검 날짜
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")

@@ -19,15 +19,17 @@
             <tr>
               <th scope="col">Consumable Id</th>
               <th scope="col">type</th>
-              <th scope="col">type</th>
+              <th scope="col">replaceCycleKm</th>
+              <th scope="col">replaceCycleKm</th>
 
             </tr>
             </thead>
             <tbody>
             <tr th:each="dto:${listDTO}">
               <th scope="row">[[${dto.consumableId}]]</th>
-              <td>[[${dto.type}]]</td>
-              <td>[[${dto.type}]]</td>
+              <td>[[${dto.repairType}]]</td>
+              <td>[[${dto.replaceCycleKm}]]</td>
+              <td>[[${dto.replaceCycleMonth}]]</td>
 
             </tr>
             </tbody>

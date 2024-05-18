@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CarConsumableDTO {
     private Long consumableId;
-    private String type;
     private String name;
-    private int replaceCycle;
+    private String repairType;
+    private int replaceCycleKm;
+    private int replaceCycleMonth;
     private LocalDateTime replaceDate;
 }

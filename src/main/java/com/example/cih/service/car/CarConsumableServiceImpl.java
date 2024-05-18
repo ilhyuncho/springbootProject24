@@ -42,8 +42,9 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         CarConsumableDTO carConsumableDTO = CarConsumableDTO.builder()
                 .consumableId(carConsumable.getConsumableId())
                 .name(carConsumable.getName())
-                .type(carConsumable.getType())
-                .replaceCycle(carConsumable.getReplaceCycle())
+                .repairType(carConsumable.getRepairType())
+                .replaceCycleKm(carConsumable.getReplaceCycleKm())
+                .replaceCycleMonth(carConsumable.getReplaceCycleMonth())
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
 
