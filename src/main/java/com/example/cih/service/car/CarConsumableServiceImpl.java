@@ -7,7 +7,10 @@ import com.example.cih.domain.car.CarConsumableRepository;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.reference.RefCarConsumableRepository;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
+import com.example.cih.dto.consumable.ConsumableRegDTO;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class CarConsumableServiceImpl implements CarConsumableService {
 
+    private final UserService userService;
     private final CarRepository carRepository;
     private final CarConsumableRepository carConsumableRepository;
     private final RefCarConsumableRepository refCarConsumableRepository;
@@ -43,6 +47,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         for (RefCarConsumable refCarConsumable : refListCarConsumable) {
 
             CarConsumableDTO dto = CarConsumableDTO.builder()
+                    .consumableId(refCarConsumable.getRefConsumableId())
                     .name(refCarConsumable.getName())
                     .repairType(refCarConsumable.getRepairType())
                     .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
@@ -61,4 +66,33 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         return listCarConsumableDTO;
     }
 
+    @Override
+    public void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO){
+        User user = userService.findUser(userName);
+
+        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(consumableRegDTO.getConsumableId())
+                .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
+
+        Car car = carRepository.findById(consumableRegDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+
+        // insert or update 처리를 동시에
+        CarConsumable carConsumable1 = carConsumableRepository.
+                findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
+                .orElseGet(()-> createConsumable(consumableRegDTO, car));
+
+        carConsumable1.changeReplaceDate(consumableRegDTO.getReplaceDate());
+    }
+
+    private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
+        log.error("createConsumable~~~~~~~~~~~~~~~``");
+        CarConsumable carConsumable = CarConsumable.builder()
+                .refConsumableId(consumableRegDTO.getConsumableId())
+                .replaceDate(consumableRegDTO.getReplaceDate())
+                .car(car)
+                .build();
+        carConsumableRepository.save(carConsumable);
+
+        return carConsumable;
+    }
 }

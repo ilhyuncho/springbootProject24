@@ -27,4 +27,8 @@ public class CarConsumable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")
     private Car car;
+
+    public void changeReplaceDate(LocalDateTime replaceDate){
+        this.replaceDate = replaceDate;
+    }
 }

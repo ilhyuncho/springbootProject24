@@ -10,8 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,7 +26,8 @@ public class ConsumableController {
 
     @ApiOperation(value = "내차 소모품 화면", notes = "")
     @GetMapping("/info")
-    public String get(String userName, Long carId, Model model){
+    public String get(@ModelAttribute("carId") Long carId,
+                      String userName, Model model){
 
         User user = userService.findUser(userName);
 
@@ -40,6 +40,5 @@ public class ConsumableController {
 //        }
         return "/consumable/info";
     }
-
 
 }

@@ -34,6 +34,7 @@
               <td>[[${dto.replaceCycleMonth}]]</td>
               <td>[[${dto.viewOrder}]]</td>
               <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
+              <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.consumableId}');|" >수정</button></td>
 
             </tr>
             </tbody>
@@ -44,11 +45,100 @@
     </div>
   </div>
 
+
+  <!--    소모품 점검 일자 등록을 위한 모달창-->
+  <div class="modal modifyConsumableModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">날짜 등록</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">소모품 ID</span>
+            <input type="text" id="modalConsumableId" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">점검 날짜</span>
+            <input type="date" id="modalReplaceDate" >
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!--    소모품 점검 일자 등록을 위한 모달창-->
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/consumable.js"></script>
+
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
-  console.log("carList.html()~~~~")
+  console.log("info.html()~~~~")
+
+  const carId = [[${carId}]]
+
+  const modifyConsumableModal = new bootstrap.Modal(document.querySelector(".modifyConsumableModal"))
+  const modalReplaceDate = document.querySelector('#modalReplaceDate');
+  const modalConsumableId = document.querySelector("#modalConsumableId")
+
+  function modifyBtnClick(consumableId){
+
+    console.log("consumableId : " + consumableId)
+    console.log("modifyBtnClick()~~~~")
+
+    modalConsumableId.value = consumableId;
+    modalConsumableId.value = consumableId;
+
+    modifyConsumableModal.show()
+  }
+
+  // 모달창의 [차량 판매] 처리
+  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+    const formObj = {
+      carId:carId,
+      consumableId:modalConsumableId.value,
+      replaceDate: new Date(modalReplaceDate.value)
+    }
+
+    console.log(modalConsumableId.value)
+    console.log(modalReplaceDate.value)
+
+    registerConsumable(formObj).then(result => {
+
+      alert(result.result)
+
+      modalConsumableId.value= ''
+      modalReplaceDate.value= ''
+
+      modifyConsumableModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/consumable/info?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      modifyConsumableModal.hide()
+    })
+  }, false)
+
 
 
 
