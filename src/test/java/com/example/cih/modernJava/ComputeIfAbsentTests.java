@@ -9,12 +9,12 @@ public class ComputeIfAbsentTests {
     private Map<String, List<Post>> arrange(List<Post> postList) {
         Map<String, List<Post>> result = new HashMap<>();
 
-        postList.forEach(post -> {
-            if (result.get(post.getBoardName()) == null) {
-                result.put(post.getBoardName(), new ArrayList<>());
-            }
-            result.get(post.getBoardName()).add(post);
-        });
+//        postList.forEach(post -> {
+//            if (result.get(post.getBoardName()) == null) {
+//                result.put(post.getBoardName(), new ArrayList<>());
+//            }
+//            result.get(post.getBoardName()).add(post);
+//        });
 
         // computeIfAbsent 를 활용
         postList.forEach(post -> result.computeIfAbsent(post.getBoardName(), k -> new ArrayList<>())

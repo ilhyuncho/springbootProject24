@@ -17,24 +17,27 @@
           <table class="table">
             <thead>
             <tr>
-              <th scope="col">Consumable Id</th>
+              <th scope="col">name</th>
               <th scope="col">type</th>
               <th scope="col">replaceCycleKm</th>
               <th scope="col">replaceCycleKm</th>
+              <th scope="col">viewOrder</th>
+              <th scope="col">마지막 교체 날짜</th>
 
             </tr>
             </thead>
             <tbody>
             <tr th:each="dto:${listDTO}">
-              <th scope="row">[[${dto.consumableId}]]</th>
+              <th scope="row">[[${dto.name}]]</th>
               <td>[[${dto.repairType}]]</td>
               <td>[[${dto.replaceCycleKm}]]</td>
               <td>[[${dto.replaceCycleMonth}]]</td>
+              <td>[[${dto.viewOrder}]]</td>
+              <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
 
             </tr>
             </tbody>
           </table>
-
 
         </div>
       </div>

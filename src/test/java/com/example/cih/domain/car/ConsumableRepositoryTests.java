@@ -34,10 +34,7 @@ public class ConsumableRepositoryTests {
 
         IntStream.rangeClosed(1,2).forEach(i -> {
             CarConsumable carConsumable = CarConsumable.builder()
-                    .name("소모품" + i)
-                    .repairType("타입1")
-                    .replaceCycleKm(10000 + (1000 * i))
-                    .replaceCycleMonth(12 + i)
+                    .refConsumableId(Long.valueOf(i))
                     .replaceDate(replaceDatetime)
                     .car(car)
                     .build();

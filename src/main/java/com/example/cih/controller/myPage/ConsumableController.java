@@ -28,7 +28,6 @@ public class ConsumableController {
     @ApiOperation(value = "내차 소모품 화면", notes = "")
     @GetMapping("/info")
     public String get(String userName, Long carId, Model model){
-        log.error(carId);
 
         User user = userService.findUser(userName);
 
@@ -36,9 +35,9 @@ public class ConsumableController {
 
         model.addAttribute("listDTO", listCarConsumableDTO);
 
-        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
-            log.error(carConsumableDTO.toString());
-        }
+//        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
+//            log.error(carConsumableDTO.toString());
+//        }
         return "/consumable/info";
     }
 

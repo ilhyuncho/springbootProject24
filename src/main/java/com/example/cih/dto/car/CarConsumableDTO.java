@@ -1,9 +1,6 @@
 package com.example.cih.dto.car;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class CarConsumableDTO {
     private Long consumableId;
     private String name;
@@ -18,4 +16,5 @@ public class CarConsumableDTO {
     private int replaceCycleKm;
     private int replaceCycleMonth;
     private LocalDateTime replaceDate;
+    private int viewOrder;
 }
