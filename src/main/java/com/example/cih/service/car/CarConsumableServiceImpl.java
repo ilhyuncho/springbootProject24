@@ -40,8 +40,14 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
-        Map<Long, CarConsumable> mapCarConsumable = carConsumableRepository.findByCar(car).stream()
-                .collect(Collectors.toMap(CarConsumable::getRefConsumableId, a -> a));
+        // 1. RefConsumableId 별로 그룹핑
+        // 2. 그룹별 ReplaceDate 가 가장 최신인 값 추출
+        Map<Long, Optional<CarConsumable>> mapCarConsumable = carConsumableRepository.findByCar(car).stream()
+                .collect(Collectors.groupingBy(CarConsumable::getRefConsumableId,
+                        Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
+
+//        Map<Long, CarConsumable> mapCarConsumable = carConsumableRepository.findByCar(car).stream()
+//                .collect(Collectors.toMap(CarConsumable::getRefConsumableId, a -> a));
 
         List<CarConsumableDTO> listCarConsumableDTO = new ArrayList<>();
         for (RefCarConsumable refCarConsumable : refListCarConsumable) {
@@ -53,15 +59,12 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                     .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
                     .replaceCycleMonth(refCarConsumable.getReplaceCycleMonth())
                     .viewOrder(refCarConsumable.getViewOrder())
-
-                   // .replaceDate(mapUserReplaceDate.getOrDefault(refCarConsumable.getRefConsumableId(), null ))
-                   // .replaceDate(mapUserReplaceDate.computeIfAbsent(refCarConsumable.getRefConsumableId(), k -> null ))
                     .build();
 
             // 유저가 이미 등록한 데이터가 있다면..
             if( mapCarConsumable.containsKey(refCarConsumable.getRefConsumableId())){
 
-                CarConsumable carConsumable = mapCarConsumable.get(refCarConsumable.getRefConsumableId());
+                CarConsumable carConsumable = mapCarConsumable.get(refCarConsumable.getRefConsumableId()).get();
 
                 dto.changeReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
                         carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
