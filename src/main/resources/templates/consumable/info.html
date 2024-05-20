@@ -143,7 +143,9 @@
 
     registerConsumable(formObj).then(result => {
 
-      alert(result.result)
+      if(result.result === 'fail'){
+        alert(result.message)
+      }
 
       modalConsumableId.value= ''
       modalReplaceDate.value= ''

@@ -1,5 +1,6 @@
 package com.example.cih.controller.myPage;
 
+import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
 import com.example.cih.service.car.CarConsumableService;
 import com.example.cih.service.user.UserService;
@@ -36,11 +37,17 @@ public class ConsumableRestController {
             log.error("has errors.....");
             throw new BindException(bindingResult);
         }
-
-        carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
-
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
+
+        try{
+            carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
+            resultMap.put("result", "success");
+        }catch(Exception e){
+            if (e.getClass() == OwnerCarNotFoundException.class) {
+                resultMap.put("result", "fail");
+                resultMap.put("message",e.getMessage());
+            }
+        }
 
         return resultMap;
     }

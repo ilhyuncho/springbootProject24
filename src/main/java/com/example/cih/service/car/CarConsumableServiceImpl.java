@@ -86,12 +86,34 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
 
         // insert or update 처리를 동시에
-        CarConsumable carConsumable1 = carConsumableRepository.
-                findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
-                .orElseGet(()-> createConsumable(consumableRegDTO, car));
+//        CarConsumable carConsumable1 = carConsumableRepository.
+//                findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
+//                .orElseGet(()-> createConsumable(consumableRegDTO, car));
+//
+//        carConsumable1.changeReplaceInfo(consumableRegDTO.getReplacePrice(), consumableRegDTO.getAccumKm(),
+//                consumableRegDTO.getReplaceShop(), consumableRegDTO.getReplaceDate());
 
-        carConsumable1.changeReplaceInfo(consumableRegDTO.getReplacePrice(), consumableRegDTO.getAccumKm(),
-                consumableRegDTO.getReplaceShop(), consumableRegDTO.getReplaceDate());
+        // 같은 날짜로 등록된 내역이 있는지 체크
+        boolean present = carConsumableRepository.findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
+                .stream().anyMatch(carConsumable -> carConsumable.getReplaceDate().toLocalDate()
+                        .equals(consumableRegDTO.getReplaceDate().toLocalDate()));
+
+        if(present){
+            log.error("같은 날짜로 이미 등록 됨");
+            throw new OwnerCarNotFoundException("같은 날짜로 이미 등록 됨.");
+        }
+
+        // 기존 내역 갱신이 아니라 새로 추가로 변경
+        CarConsumable carConsumable = CarConsumable.builder()
+                .refConsumableId(consumableRegDTO.getConsumableId())
+                .replaceDate(consumableRegDTO.getReplaceDate())
+                .replacePrice(consumableRegDTO.getReplacePrice())
+                .accumKm(consumableRegDTO.getAccumKm())
+                .replaceShop(consumableRegDTO.getReplaceShop())
+                .car(car)
+                .build();
+        carConsumableRepository.save(carConsumable);
+
     }
 
     private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
