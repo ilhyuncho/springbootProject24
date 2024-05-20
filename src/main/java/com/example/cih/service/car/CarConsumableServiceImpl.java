@@ -9,6 +9,7 @@ import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
+import com.example.cih.dto.car.CarConsumableInfoDTO;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -127,4 +128,33 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         return carConsumable;
     }
+
+    @Override
+    public List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId){
+
+        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(consumableId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
+
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        List<CarConsumable> listCarConsumable = carConsumableRepository.findByCarAndRefConsumableId(car, consumableId);
+
+        List<CarConsumableInfoDTO> listCarConsumableDTO = new ArrayList<>();
+        for (CarConsumable carConsumable : listCarConsumable) {
+
+            CarConsumableInfoDTO dto = CarConsumableInfoDTO.builder()
+                    .repairType(refCarConsumable.getRepairType())
+                    .replaceDate(carConsumable.getReplaceDate())
+                    .accumKm(carConsumable.getAccumKm())
+                    .replacePrice(carConsumable.getReplacePrice())
+                    .replaceShop(carConsumable.getReplaceShop())
+                    .build();
+
+            listCarConsumableDTO.add(dto);
+        }
+
+        return listCarConsumableDTO;
+    }
+
 }

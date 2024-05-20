@@ -30,7 +30,12 @@
             </thead>
             <tbody>
             <tr th:each="dto:${listDTO}">
-              <th scope="row">[[${dto.name}]]</th>
+
+              <th scope="row">
+                <a th:href="|@{/consumable/history(carId=${carId},consumableId=${dto.consumableId}, userName=${#authentication.principal.username} )}|"
+                   class="text-decoration-none"> [[${dto.name}]]</a>
+              </th>
+
               <td>[[${dto.repairType}]]</td>
               <td>[[${dto.replaceCycleKm}]]</td>
               <td>[[${dto.replaceCycleMonth}]]</td>
@@ -56,7 +61,7 @@
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">날짜 등록</h5>
+          <h5 class="modal-title">소모품 이력 등록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
