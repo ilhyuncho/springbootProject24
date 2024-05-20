@@ -99,10 +99,13 @@
     modalConsumableId.value = consumableId;
     modalConsumableId.value = consumableId;
 
+    // 현재 날짜로 셋팅
+    modalReplaceDate.value = new Date().toISOString().substring(0, 10);
+
     modifyConsumableModal.show()
   }
 
-  // 모달창의 [차량 판매] 처리
+  // 모달창의 [소모품 점검 날짜 register] 처리
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
     const formObj = {
       carId:carId,
