@@ -20,8 +20,10 @@
               <th scope="col">name</th>
               <th scope="col">type</th>
               <th scope="col">replaceCycleKm</th>
-              <th scope="col">replaceCycleKm</th>
-              <th scope="col">viewOrder</th>
+              <th scope="col">replaceCycleMonth</th>
+              <th scope="col">replacePrice</th>
+              <th scope="col">replaceShop</th>
+              <th scope="col">accumKm</th>
               <th scope="col">마지막 교체 날짜</th>
 
             </tr>
@@ -32,7 +34,9 @@
               <td>[[${dto.repairType}]]</td>
               <td>[[${dto.replaceCycleKm}]]</td>
               <td>[[${dto.replaceCycleMonth}]]</td>
-              <td>[[${dto.viewOrder}]]</td>
+              <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice )}"></td>
+              <td>[[${dto.replaceShop}]]</td>
+              <td>[[${dto.accumKm == 0 ? '' : dto.accumKm} + ' km']]</td>
               <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
               <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.consumableId}');|" >수정</button></td>
 
@@ -63,6 +67,21 @@
           </div>
 
           <div class="input-group mb-3">
+            <span class="input-group-text">교체 비용</span>
+            <input type="text" id="modalReplacePrice" th:value="10000">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">누적 거리</span>
+            <input type="text" id="modalAccumKm" th:value="50000">
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">교체 장소</span>
+            <input type="text" id="modalReplaceShop" th:value="삼성정비소">
+          </div>
+
+          <div class="input-group mb-3">
             <span class="input-group-text">점검 날짜</span>
             <input type="date" id="modalReplaceDate" >
           </div>
@@ -90,6 +109,9 @@
   const modifyConsumableModal = new bootstrap.Modal(document.querySelector(".modifyConsumableModal"))
   const modalReplaceDate = document.querySelector('#modalReplaceDate');
   const modalConsumableId = document.querySelector("#modalConsumableId")
+  const modalReplacePrice = document.querySelector("#modalReplacePrice")
+  const modalAccumKm = document.querySelector("#modalAccumKm")
+  const modalReplaceShop = document.querySelector("#modalReplaceShop")
 
   function modifyBtnClick(consumableId){
 
@@ -110,6 +132,9 @@
     const formObj = {
       carId:carId,
       consumableId:modalConsumableId.value,
+      replacePrice:modalReplacePrice.value,
+      accumKm:modalAccumKm.value,
+      replaceShop:modalReplaceShop.value,
       replaceDate: new Date(modalReplaceDate.value)
     }
 

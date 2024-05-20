@@ -40,8 +40,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
-        Map<Long, LocalDateTime> mapUserReplaceDate = carConsumableRepository.findByCar(car).stream()
-                .collect(Collectors.toMap(CarConsumable::getRefConsumableId, CarConsumable::getReplaceDate));
+        Map<Long, CarConsumable> mapCarConsumable = carConsumableRepository.findByCar(car).stream()
+                .collect(Collectors.toMap(CarConsumable::getRefConsumableId, a -> a));
 
         List<CarConsumableDTO> listCarConsumableDTO = new ArrayList<>();
         for (RefCarConsumable refCarConsumable : refListCarConsumable) {
@@ -53,16 +53,22 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                     .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
                     .replaceCycleMonth(refCarConsumable.getReplaceCycleMonth())
                     .viewOrder(refCarConsumable.getViewOrder())
+
                    // .replaceDate(mapUserReplaceDate.getOrDefault(refCarConsumable.getRefConsumableId(), null ))
-                    .replaceDate(mapUserReplaceDate.computeIfAbsent(refCarConsumable.getRefConsumableId(), k -> null ))
+                   // .replaceDate(mapUserReplaceDate.computeIfAbsent(refCarConsumable.getRefConsumableId(), k -> null ))
                     .build();
+
+            // 유저가 이미 등록한 데이터가 있다면..
+            if( mapCarConsumable.containsKey(refCarConsumable.getRefConsumableId())){
+
+                CarConsumable carConsumable = mapCarConsumable.get(refCarConsumable.getRefConsumableId());
+
+                dto.changeReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
+                        carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
+            }
+
             listCarConsumableDTO.add(dto);
         }
-
-//        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
-//            log.error(carConsumableDTO.toString());
-//        }
-
         return listCarConsumableDTO;
     }
 
@@ -81,7 +87,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
                 .orElseGet(()-> createConsumable(consumableRegDTO, car));
 
-        carConsumable1.changeReplaceDate(consumableRegDTO.getReplaceDate());
+        carConsumable1.changeReplaceInfo(consumableRegDTO.getReplacePrice(), consumableRegDTO.getAccumKm(),
+                consumableRegDTO.getReplaceShop(), consumableRegDTO.getReplaceDate());
     }
 
     private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
