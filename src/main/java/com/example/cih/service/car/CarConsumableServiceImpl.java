@@ -1,10 +1,7 @@
 package com.example.cih.service.car;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
-import com.example.cih.domain.car.Car;
-import com.example.cih.domain.car.CarConsumable;
-import com.example.cih.domain.car.CarConsumableRepository;
-import com.example.cih.domain.car.CarRepository;
+import com.example.cih.domain.car.*;
 import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.user.User;
@@ -17,7 +14,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,6 +66,9 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
                 CarConsumable carConsumable = mapCarConsumable.get(refCarConsumable.getRefConsumableId()).get();
 
+                // 다가오는 점검일 체크
+                dto.setReplaceAlarm(checkNextReplaceDay(refCarConsumable, carConsumable));
+
                 dto.changeReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
                         carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
             }
@@ -74,6 +76,37 @@ public class CarConsumableServiceImpl implements CarConsumableService {
             listCarConsumableDTO.add(dto);
         }
         return listCarConsumableDTO;
+    }
+
+    private ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
+
+        int cycleKm = refCarConsumable.getReplaceCycleKm();
+        int cycleMonth = refCarConsumable.getReplaceCycleMonth();
+
+        // 1. 개월 마다 체크
+        if( cycleMonth > 0){
+            LocalDateTime lastReplaceDate = carConsumable.getReplaceDate();
+            LocalDateTime nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
+
+            Period between = Period.between(nextReplaceDay.toLocalDate(), LocalDate.now());
+            int diffDays = between.getDays();
+
+            if( (diffDays < 0 && (10 + diffDays) > 0) || (diffDays > 0) ){
+                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay.toLocalDate() + ", Diff: " + diffDays);
+                return ReplaceAlarm.READY_CYCLE;
+            }
+            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay.toLocalDate() + ", Diff: " + diffDays);
+        }
+        else if( cycleKm > 0){   // 2. 주행 km 마다 체크
+            int accumKm = carConsumable.getAccumKm();
+            int nextReplaceKm = cycleKm + accumKm;
+
+            // 주행 km를 비교하여 체크
+
+        }
+
+
+        return ReplaceAlarm.NOT_CYCLE;
     }
 
     @Override
@@ -116,19 +149,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         carConsumableRepository.save(carConsumable);
 
     }
-
-    private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
-        log.error("createConsumable~~~~~~~~~~~~~~~``");
-        CarConsumable carConsumable = CarConsumable.builder()
-                .refConsumableId(consumableRegDTO.getConsumableId())
-                .replaceDate(consumableRegDTO.getReplaceDate())
-                .car(car)
-                .build();
-        carConsumableRepository.save(carConsumable);
-
-        return carConsumable;
-    }
-
     @Override
     public List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId){
 
@@ -155,6 +175,20 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         }
 
         return listCarConsumableDTO;
+    }
+
+
+
+    private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
+        log.error("createConsumable~~~~~~~~~~~~~~~``");
+        CarConsumable carConsumable = CarConsumable.builder()
+                .refConsumableId(consumableRegDTO.getConsumableId())
+                .replaceDate(consumableRegDTO.getReplaceDate())
+                .car(car)
+                .build();
+        carConsumableRepository.save(carConsumable);
+
+        return carConsumable;
     }
 
 }

@@ -1,7 +1,10 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.car.ReplaceAlarm;
 import lombok.*;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,11 +24,18 @@ public class CarConsumableDTO {
     private LocalDateTime replaceDate;
     private int viewOrder;
 
+    @Enumerated(EnumType.STRING)
+    private ReplaceAlarm replaceAlarm;
+
     public void changeReplaceInfo(int replacePrice, int accumKm, String replaceShop, LocalDateTime replaceDate){
         this.replacePrice = replacePrice;
         this.replaceShop = replaceShop;
         this.accumKm = accumKm;
         this.replaceDate = replaceDate;
+    }
+
+    public void setReplaceAlarm(ReplaceAlarm replaceAlarm){
+        this.replaceAlarm = replaceAlarm;
     }
 
 }

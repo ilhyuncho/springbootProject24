@@ -36,9 +36,9 @@ public class ConsumableController {
 
         model.addAttribute("listDTO", listCarConsumableDTO);
 
-//        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
-//            log.error(carConsumableDTO.toString());
-//        }
+        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
+            log.error(carConsumableDTO.toString());
+        }
         return "/consumable/info";
     }
 

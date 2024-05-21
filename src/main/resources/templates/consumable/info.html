@@ -19,12 +19,13 @@
             <tr>
               <th scope="col">name</th>
               <th scope="col">type</th>
-              <th scope="col">replaceCycleKm</th>
-              <th scope="col">replaceCycleMonth</th>
+              <th scope="col">교체주기(km)</th>
+              <th scope="col">교체주기(달)</th>
+              <th scope="col">교체 알림</th>
               <th scope="col">replacePrice</th>
               <th scope="col">replaceShop</th>
               <th scope="col">accumKm</th>
-              <th scope="col">마지막 교체 날짜</th>
+              <th scope="col">최근 점검날짜</th>
 
             </tr>
             </thead>
@@ -39,11 +40,14 @@
               <td>[[${dto.repairType}]]</td>
               <td>[[${dto.replaceCycleKm}]]</td>
               <td>[[${dto.replaceCycleMonth}]]</td>
+
+              <td th:text="${#strings.equals(dto.replaceAlarm, 'READY_CYCLE') ? '점검 필요':''}" style="color: red"></td>
+
               <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice )}"></td>
               <td>[[${dto.replaceShop}]]</td>
               <td>[[${dto.accumKm == 0 ? '' : dto.accumKm + ' km' }]]</td>
               <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
-              <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.consumableId}');|" >수정</button></td>
+              <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.consumableId}');|" >기록</button></td>
 
             </tr>
             </tbody>
