@@ -182,14 +182,4 @@ public class MyPageController {
         return "carRead";
     }
 
-    @ApiOperation(value = "내차 기록 화면", notes = "")
-    @GetMapping("/history")
-    public String get(@ModelAttribute("carId") Long carId,
-                      String userName, Model model){
-
-        User user = userService.findUser(userName);
-
-        return "/myPage/carHistory";
-    }
-
 }

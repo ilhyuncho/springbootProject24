@@ -58,7 +58,7 @@
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/cart.js"></script>
+  <script src="/js/history.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -66,11 +66,11 @@
   let page = 1
   let size = 5
 
-
   const allList = document.querySelector('.allList')        // 목록 DOM
   const currentUser = [[${#authentication.principal.username}]]
+  const carId = [[${carId}]]
 
-  getAllList({page, size, currentUser})
+  getAllList()
 
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
@@ -84,7 +84,7 @@
       const targetId = target.getAttribute("data-bs-target")
 
       if( targetId === "#home" ){
-        getList1()
+        getAllList()
       }
 
       tabTrigger.show()
@@ -92,9 +92,11 @@
   })
 
   function getAllList(){
-    getList({page,size,currentUser}).then(data => {
+    console.log('getAllList : '  + carId)
 
-      printList(data.dtoList) // 목록 처리
+    getList({page,size,carId}).then(data => {
+
+      printList(data) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
@@ -106,13 +108,10 @@
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
-        str += `<li class="list-group-item d-flex cartItem">
-                    <span class="col-2">${dto.cartId}</span>
-                    <span class="col-2">${dto.shopItemId}</span>
-                    <span class="col-2">${dto.itemName}</span>
-                    <span class="col-2">${dto.itemCount}</span>
-                    <span class="col-2">${dto.option1}</span>
-                    <span class="col-2" data-cartId="${dto.cartId}" data-itemCount="${dto.itemCount}">수정</span>
+        str += `<li class="list-group-item d-flex dtoList">
+                    <span class="col-2">${dto.name}</span>
+                    <span class="col-2">${dto.repairType}</span>
+
                     </li>`
       }
     }
