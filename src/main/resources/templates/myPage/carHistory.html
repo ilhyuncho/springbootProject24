@@ -45,7 +45,20 @@
               </div>
 
             </div>
-            <div class="tab-pane fade" id="gas" role="tabpanel" aria-labelledby="gas-tab">...</div>
+            <div class="tab-pane fade" id="gas" role="tabpanel" aria-labelledby="gas-tab">
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <ul class="list-group gasList">
+                    <!-- 주유 기록 리스트 영역-->
+                  </ul>
+                </div>
+              </div>
+
+              <div class="input-group mb-3">
+                <button type="button" class="btn btn-primary addGasHistoryBtn">주유 기록</button>
+              </div>
+
+            </div>
             <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">...</div>
             <div class="tab-pane fade" id="drive" role="tabpanel" aria-labelledby="drive-tab">...</div>
           </div>
@@ -55,6 +68,46 @@
     </div><!--    <div class="col">-->
 
   </div>
+
+  <!--   주유 기록 추가 모달창-->
+  <div class="modal addGasHistoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">주유 기록</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-show">
+          <div class="input-group mb-3">
+            <span class="input-group-text">주유 금액</span>
+            <input type="text" class="form-control gasPrice" th:value="100000">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">주유 장소</span>
+            <input type="text" class="form-control gasShop" th:value="부천주유소">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">주유량</span>
+            <input type="text" class="form-control gasLitter" th:value="30">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">누적 주행거리</span>
+            <input type="text" class="form-control accumKm" th:value="120000">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">점검 날짜</span>
+            <input type="date" class="form-control eventDate">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendGasHistoryBtn">추가</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    updateKmModal-->
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -66,11 +119,66 @@
   let page = 1
   let size = 5
 
-  const allList = document.querySelector('.allList')        // 목록 DOM
   const currentUser = [[${#authentication.principal.username}]]
   const carId = [[${carId}]]
 
+  const addGasHistoryModal = new bootstrap.Modal(document.querySelector(".addGasHistoryModal"))
+  const allList = document.querySelector('.allList')        // 목록 DOM
+  const gasList  = document.querySelector('.gasList ')        // 목록 DOM
+
+  const gasPrice = document.querySelector(".gasPrice")
+  const gasShop = document.querySelector(".gasShop")
+  const gasLitter = document.querySelector(".gasLitter")
+  const eventDate = document.querySelector('.eventDate');
+  const accumKm = document.querySelector('.accumKm');
+
   getAllList()
+
+  // [주유 기록] 등록 버튼 클릭
+  document.querySelector(".addGasHistoryBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    addGasHistoryModal.show()
+  }, false)
+
+  // [쥬유 기록] modal 전송 버튼 클릭
+  document.querySelector(".sendGasHistoryBtn").addEventListener("click", function (e){
+    const formObj = {
+      carId:carId,
+      replacePrice:gasPrice.value,
+      replaceShop:gasShop.value,
+      gasLitter:gasLitter.value,
+      accumKm:accumKm.value,
+      replaceDate:new Date(eventDate.value),
+      consumableId:1
+    }
+
+    console.log(formObj)
+
+    addGasHistory(formObj).then(result => {
+
+      alert(result.result)
+
+      addGasHistoryModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/history?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      addGasHistoryModal.hide()
+    })
+
+  }, false)
 
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
@@ -86,6 +194,9 @@
       if( targetId === "#home" ){
         getAllList()
       }
+      else if(targetId === "#gas" ){
+        getGasList()
+      }
 
       tabTrigger.show()
     })
@@ -94,9 +205,21 @@
   function getAllList(){
     console.log('getAllList : '  + carId)
 
-    getList({page,size,carId}).then(data => {
+    getAllHistory({page,size,carId}).then(data => {
 
       printList(data) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function getGasList(){
+    console.log('getGasList : '  + carId)
+
+    getGasHistory({page,size,carId}).then(data => {
+
+      printGasList(data) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
@@ -118,6 +241,20 @@
     allList.innerHTML = str
   }
 
+  function printGasList(dtoList){    // 목록 출력
+    let str = '';
+
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+        str += `<li class="list-group-item d-flex dtoList">
+                    <span class="col-2">${dto.name}</span>
+                    <span class="col-2">${dto.repairType}</span>
+
+                    </li>`
+      }
+    }
+    gasList.innerHTML = str
+  }
 
 
 

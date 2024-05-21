@@ -2,7 +2,7 @@ package com.example.cih.dto.car;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,5 +15,5 @@ public class CarConsumableInfoDTO {
     private int replacePrice;
     private int accumKm;
     private String replaceShop;
-    private LocalDateTime replaceDate;
+    private LocalDate replaceDate;
 }

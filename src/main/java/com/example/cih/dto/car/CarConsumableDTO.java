@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -21,13 +21,13 @@ public class CarConsumableDTO {
     private int replacePrice;
     private int accumKm;
     private String replaceShop;
-    private LocalDateTime replaceDate;
+    private LocalDate replaceDate;
     private int viewOrder;
 
     @Enumerated(EnumType.STRING)
     private ReplaceAlarm replaceAlarm;
 
-    public void changeReplaceInfo(int replacePrice, int accumKm, String replaceShop, LocalDateTime replaceDate){
+    public void setReplaceInfo(int replacePrice, int accumKm, String replaceShop, LocalDate replaceDate){
         this.replacePrice = replacePrice;
         this.replaceShop = replaceShop;
         this.accumKm = accumKm;

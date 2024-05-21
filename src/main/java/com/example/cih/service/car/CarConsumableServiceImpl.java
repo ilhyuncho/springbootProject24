@@ -69,12 +69,47 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 // 다가오는 점검일 체크
                 dto.setReplaceAlarm(checkNextReplaceDay(refCarConsumable, carConsumable));
 
-                dto.changeReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
+                dto.setReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
                         carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
             }
 
             listCarConsumableDTO.add(dto);
         }
+        return listCarConsumableDTO;
+    }
+
+    @Override
+    public List<CarConsumableDTO> getGasHistoryList(Long carId) {
+        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(1L)  // 임시
+                .orElseThrow(() -> new OwnerCarNotFoundException("해당 ref 소모품 정보가 존재하지않습니다"));
+
+
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        List<CarConsumable> collect = new ArrayList<>(carConsumableRepository.findByCarAndRefConsumableId(car, 1L));    // 임시
+
+        List<CarConsumableDTO> listCarConsumableDTO = new ArrayList<>();
+
+        for (CarConsumable carConsumable : collect) {
+            CarConsumableDTO dto = CarConsumableDTO.builder()
+                    .consumableId(refCarConsumable.getRefConsumableId())
+                    .name(refCarConsumable.getName())
+                    .repairType(refCarConsumable.getRepairType())
+                    .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
+                    .replaceCycleMonth(refCarConsumable.getReplaceCycleMonth())
+                    .viewOrder(refCarConsumable.getViewOrder())
+                    .build();
+
+            dto.setReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
+                    carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
+
+            listCarConsumableDTO.add(dto);
+
+            log.error(carConsumable.toString());
+
+        }        
+
         return listCarConsumableDTO;
     }
 
@@ -85,17 +120,17 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         // 1. 개월 마다 체크
         if( cycleMonth > 0){
-            LocalDateTime lastReplaceDate = carConsumable.getReplaceDate();
-            LocalDateTime nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
+            LocalDate lastReplaceDate = carConsumable.getReplaceDate();
+            LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
 
-            Period between = Period.between(nextReplaceDay.toLocalDate(), LocalDate.now());
+            Period between = Period.between(nextReplaceDay, LocalDate.now());
             int diffDays = between.getDays();
 
             if( (diffDays < 0 && (10 + diffDays) > 0) || (diffDays > 0) ){
-                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay.toLocalDate() + ", Diff: " + diffDays);
+                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
                 return ReplaceAlarm.READY_CYCLE;
             }
-            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay.toLocalDate() + ", Diff: " + diffDays);
+            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
         }
         else if( cycleKm > 0){   // 2. 주행 km 마다 체크
             int accumKm = carConsumable.getAccumKm();
@@ -129,8 +164,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         // 같은 날짜로 등록된 내역이 있는지 체크
         boolean present = carConsumableRepository.findByCarAndRefConsumableId(car, consumableRegDTO.getConsumableId())
-                .stream().anyMatch(carConsumable -> carConsumable.getReplaceDate().toLocalDate()
-                        .equals(consumableRegDTO.getReplaceDate().toLocalDate()));
+                .stream().anyMatch(carConsumable -> carConsumable.getReplaceDate()
+                        .equals(consumableRegDTO.getReplaceDate()));
 
         if(present){
             log.error("같은 날짜로 이미 등록 됨");
