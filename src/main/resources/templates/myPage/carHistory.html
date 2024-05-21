@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>MyCar history</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Car Info
+        </div>
+
+        <div class="card-body">
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">전체</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="gas-tab" data-bs-toggle="tab" data-bs-target="#gas" type="button" role="tab" aria-controls="gas" aria-selected="false">주유</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="repair-tab" data-bs-toggle="tab" data-bs-target="#repair" type="button" role="tab" aria-controls="repair" aria-selected="false">정비/기타</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="drive-tab" data-bs-toggle="tab" data-bs-target="#drive" type="button" role="tab" aria-controls="drive" aria-selected="false">주행</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <ul class="list-group allList">
+                    <!-- 리스트 영역-->
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="gas" role="tabpanel" aria-labelledby="gas-tab">...</div>
+            <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">...</div>
+            <div class="tab-pane fade" id="drive" role="tabpanel" aria-labelledby="drive-tab">...</div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div><!--    <div class="col">-->
+
+  </div>
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/cart.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  let page = 1
+  let size = 5
+
+
+  const allList = document.querySelector('.allList')        // 목록 DOM
+  const currentUser = [[${#authentication.principal.username}]]
+
+  getAllList({page, size, currentUser})
+
+
+  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+  triggerTabList.forEach(function (triggerEl) {
+    var tabTrigger = new bootstrap.Tab(triggerEl)
+
+    triggerEl.addEventListener('click', function (event) {
+      event.preventDefault()
+
+      const target = event.target
+      const targetId = target.getAttribute("data-bs-target")
+
+      if( targetId === "#home" ){
+        getList1()
+      }
+
+      tabTrigger.show()
+    })
+  })
+
+  function getAllList(){
+    getList({page,size,currentUser}).then(data => {
+
+      printList(data.dtoList) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function printList(dtoList){    // 목록 출력
+    let str = '';
+
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+        str += `<li class="list-group-item d-flex cartItem">
+                    <span class="col-2">${dto.cartId}</span>
+                    <span class="col-2">${dto.shopItemId}</span>
+                    <span class="col-2">${dto.itemName}</span>
+                    <span class="col-2">${dto.itemCount}</span>
+                    <span class="col-2">${dto.option1}</span>
+                    <span class="col-2" data-cartId="${dto.cartId}" data-itemCount="${dto.itemCount}">수정</span>
+                    </li>`
+      }
+    }
+    allList.innerHTML = str
+  }
+
+
+
+
+</script>

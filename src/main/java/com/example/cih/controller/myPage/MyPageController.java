@@ -4,6 +4,7 @@ package com.example.cih.controller.myPage;
 import com.example.cih.common.fileHandler.FileHandler;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarViewDTO;
@@ -179,6 +180,16 @@ public class MyPageController {
         model.addAttribute("responseDTO", carInfoDTO);
 
         return "carRead";
+    }
+
+    @ApiOperation(value = "내차 기록 화면", notes = "")
+    @GetMapping("/history")
+    public String get(@ModelAttribute("carId") Long carId,
+                      String userName, Model model){
+
+        User user = userService.findUser(userName);
+
+        return "/myPage/carHistory";
     }
 
 }
