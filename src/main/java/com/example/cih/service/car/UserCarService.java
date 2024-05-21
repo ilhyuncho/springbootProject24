@@ -5,12 +5,10 @@ import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.car.CarSpecDTO;
+import com.example.cih.dto.car.CarKmUpdateDTO;
 import com.example.cih.dto.car.CarViewDTO;
-import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public interface UserCarService {
@@ -23,5 +21,6 @@ public interface UserCarService {
     List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName);
 
     void modifyMyCar(CarInfoDTO carInfoDTO);
+    void modifyMyCarKm(CarKmUpdateDTO carKmUpdateDTO);
     void deleteMyCar(Long carId);
 }

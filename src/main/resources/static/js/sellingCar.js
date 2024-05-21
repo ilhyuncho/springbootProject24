@@ -22,3 +22,11 @@ async function cancelSellingCar(formObj) {
     return response.data
 }
 
+async function updateCarKm(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/myPage/updateCarKm`, formObj)
+
+    console.log(response)
+    return response.data
+}

@@ -9,6 +9,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarKmUpdateDTO;
 import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -73,8 +74,6 @@ public class UserCarServiceImpl implements UserCarService {
         List<CarViewDTO> carViewDTOList = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
-
-
         // 대표 이미지만 필터링 ( ImageOrder = 0 )
         for (CarViewDTO car : carViewDTOList) {
             car.getFileNames().stream()
@@ -125,6 +124,15 @@ public class UserCarServiceImpl implements UserCarService {
 
         carRepository.save(car);
     }
+
+    @Override
+    public void modifyMyCarKm(CarKmUpdateDTO carKmUpdateDTO) {
+        Optional<Car> byId = carRepository.findById(carKmUpdateDTO.getCarId());
+        Car car = byId.orElseThrow();
+
+        car.changeKm(carKmUpdateDTO.getUpdateKmValue());
+    }
+
     @Override
     public void deleteMyCar(Long carId) {
         carRepository.deleteById(carId);

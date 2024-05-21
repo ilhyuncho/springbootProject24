@@ -119,6 +119,10 @@ public class Car extends BaseEntity {
         this.carColors = carColors;
     }
 
+    public void changeKm(Long carKm){
+        this.carKm = carKm;
+    }
+
     @Builder(builderMethodName = "writeWithUserBuilder")
     public Car(String carNumber, CarSize carGrade, String carModel, int carYears,
                       String carColors, Long carKm, User user) {

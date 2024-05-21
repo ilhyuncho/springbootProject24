@@ -48,8 +48,15 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarKm</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carKm}" name="carKm" >
+            <input type="text" class="form-control" th:value="${responseDTO.carKm +' km'} " name="carKm" >
           </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">누적 주행거리</span>
+            <button type="button" class="btn btn-primary updateKmBtn">갱신</button>
+          </div>
+
+
 
           <input type="hidden" name="sellingCarId" th:value="${responseDTO.sellingCarId}">
 
@@ -197,6 +204,30 @@
     </div>
   </div>  <!--    sellingCancelModal-->
 
+  <!--   누적 주행거리 갱신 모달창-->
+  <div class="modal updateKmModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">누적 주행거리 갱신</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-show">
+          <div class="input-group mb-3">
+            <span class="input-group-text">현재 km</span>
+            <input type="text" class="form-control updateKmValue" th:value="120000">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendUpdateKmBtn">갱신</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!--    updateKmModal-->
+
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/sellingCar.js"></script>
@@ -214,9 +245,11 @@
   const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
   const sellingCancelModal = new bootstrap.Modal(document.querySelector(".sellingCancelModal"))
   const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
+  const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
   const requiredPrice = document.querySelector(".requiredPrice")
   const cancelCarName = document.querySelector(".cancelCarName")
   const owner = document.querySelector(".owner")
+  const updateKmValue = document.querySelector(".updateKmValue")
 
   const sellingCancelBtn = document.querySelector(".sellingCancelBtn")
 
@@ -333,6 +366,48 @@
   document.querySelector(".currentSituationBtn").addEventListener("click", function (e) {
 
     self.location = '/buyingCar/' + carId
+
+  }, false)
+
+  // [누적 주행거리 갱신 버튼] 클릭
+  document.querySelector(".updateKmBtn").addEventListener("click", function (e) {
+    e.stopPropagation()
+    e.preventDefault()
+
+    updateKmModal.show()
+
+  }, false)
+
+  // [누적 주행거리 갱신 버튼] 전송 버튼 클릭
+  document.querySelector(".sendUpdateKmBtn").addEventListener("click", function (e){
+    const formObj = {
+      carId:carId,
+      updateKmValue:updateKmValue.value,
+    }
+
+    console.log(formObj)
+
+    updateCarKm(formObj).then(result => {
+
+      alert(result.result)
+
+      updateKmModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/myPage/carDetail?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      updateKmModal.hide()
+    })
 
   }, false)
 
