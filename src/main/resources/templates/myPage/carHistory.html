@@ -53,13 +53,23 @@
                   </ul>
                 </div>
               </div>
-
               <div class="input-group mb-3">
                 <button type="button" class="btn btn-primary addGasHistoryBtn">주유 기록</button>
               </div>
 
             </div>
-            <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">...</div>
+            <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <ul class="list-group repairList">
+                    <!-- 정비 기록 리스트 영역-->
+                  </ul>
+                </div>
+              </div>
+              <div class="input-group mb-3">
+                <button type="button" class="btn btn-primary addRepairHistoryBtn">정비 기록</button>
+              </div>
+            </div>
             <div class="tab-pane fade" id="drive" role="tabpanel" aria-labelledby="drive-tab">...</div>
           </div>
 
@@ -107,7 +117,61 @@
         </div>
       </div>
     </div>
-  </div>  <!--    updateKmModal-->
+  </div>  <!-- 주유 기록 추가 모달창-->
+
+  <!--   정비 기록 추가 모달창-->
+  <div class="modal addRepairHistoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">정비 기록</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-show">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">주유량</span>
+            <label>
+              <select name="repairSelect" id="repairType">
+                <option value="ENGINE_OIL">엔진오일 및 오일피터</option>
+                <option value="AIR_FILTER">에어컨 필터</option>
+                <option value="WIPER">와이퍼</option>
+                <option value="MISSION_OIL">미션오일</option>
+                <option value="BATTERY">배터리</option>
+                <option value="ACCIDENT_REPAIR">사고수리</option>
+                <option value="ANTI_FREEZE">부동액</option>
+                <option value="EXTERIOR_REPAIR">외장수리복원</option>
+              </select>
+            </label>
+          </div>
+
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">정비 금액</span>
+            <input type="text" class="form-control repairPrice" th:value="100000">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">정비 장소</span>
+            <input type="text" class="form-control repairShop" th:value="하나로정비소">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">누적 주행거리</span>
+            <input type="text" class="form-control repairAccumKm" th:value="120000">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">점검 날짜</span>
+            <input type="date" class="form-control repairEventDate">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendRepairHistoryBtn">추가</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!-- 정비 기록 추가 모달창-->
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -123,14 +187,26 @@
   const carId = [[${carId}]]
 
   const addGasHistoryModal = new bootstrap.Modal(document.querySelector(".addGasHistoryModal"))
-  const allList = document.querySelector('.allList')        // 목록 DOM
-  const gasList  = document.querySelector('.gasList ')        // 목록 DOM
+  const addRepairHistoryModal = new bootstrap.Modal(document.querySelector(".addRepairHistoryModal"))
+  const allList = document.querySelector('.allList')             // 목록 DOM
+  const gasList  = document.querySelector('.gasList')            // 목록 DOM
+  const repairList  = document.querySelector('.repairList')      // 목록 DOM
 
   const gasPrice = document.querySelector(".gasPrice")
   const gasShop = document.querySelector(".gasShop")
   const gasLitter = document.querySelector(".gasLitter")
   const eventDate = document.querySelector('.eventDate');
   const accumKm = document.querySelector('.accumKm');
+
+  const repairPrice = document.querySelector(".repairPrice")
+  const repairShop = document.querySelector(".repairShop")
+  const repairEventDate = document.querySelector('.repairEventDate');
+  const repairAccumKm = document.querySelector('.repairAccumKm');
+
+
+  const repairType = document.querySelector('#repairType');
+
+
 
   getAllList()
 
@@ -142,7 +218,7 @@
     addGasHistoryModal.show()
   }, false)
 
-  // [쥬유 기록] modal 전송 버튼 클릭
+  // [주유 기록] modal 전송 버튼 클릭
   document.querySelector(".sendGasHistoryBtn").addEventListener("click", function (e){
     const formObj = {
       carId:carId,
@@ -181,6 +257,57 @@
   }, false)
 
 
+  // [정비 기록] 등록 버튼 클릭
+  document.querySelector(".addRepairHistoryBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    addRepairHistoryModal.show()
+  }, false)
+
+  // [정비 기록] modal 전송 버튼 클릭
+  document.querySelector(".sendRepairHistoryBtn").addEventListener("click", function (e){
+
+    console.log('repairType : ' + repairType.value)
+
+    const formObj = {
+      carId:carId,
+      replacePrice:repairPrice.value,
+      replaceShop:repairShop.value,
+      accumKm:repairAccumKm.value,
+      replaceDate:new Date(repairEventDate.value),
+      repairType:repairType.value,
+      consumableId:2
+    }
+
+    console.log(formObj)
+
+    addRepairHistory(formObj).then(result => {
+
+      alert(result.result)
+
+      addRepairHistoryModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/history?carId=' + carId
+              + '&userName=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      addRepairHistoryModal.hide()
+    })
+
+  }, false)
+
+
+
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
   triggerTabList.forEach(function (triggerEl) {
     var tabTrigger = new bootstrap.Tab(triggerEl)
@@ -196,6 +323,9 @@
       }
       else if(targetId === "#gas" ){
         getGasList()
+      }
+      else if(targetId === "#repair"){
+        getRepairList()
       }
 
       tabTrigger.show()
@@ -226,6 +356,17 @@
     })
   }
 
+  function getRepairList(){
+    console.log('getRepairList : '  + carId)
+
+    getRepairHistory({page,size,carId}).then(data => {
+
+      printRepairList(data) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
   function printList(dtoList){    // 목록 출력
     let str = '';
 
@@ -258,7 +399,23 @@
     }
     gasList.innerHTML = str
   }
+  function printRepairList(dtoList){    // 목록 출력
+    let str = '';
 
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+        str += `<li class="list-group-item d-flex dtoList">
+                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
+                    <span class="col-2">${dto.accumKm + ' km'}</span>
+                    <span class="col-2">${dto.repairType}</span>
+                    <span class="col-2">${dto.replaceShop}</span>
+                    <span class="col-2">${dto.replaceDate}</span>
+
+                    </li>`
+      }
+    }
+    repairList.innerHTML = str
+  }
 
 
 </script>

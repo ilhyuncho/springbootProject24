@@ -93,6 +93,20 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
+    public List<HistoryGasDTO> getRepairHistoryList(Long carId) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
+                .findByCarAndRefConsumableId(car, ConsumableType.REPAIR.getType()));
+
+        List<HistoryGasDTO> listCarConsumableDTO = listCarConsumable.stream()
+                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        return listCarConsumableDTO;
+    }
+
+    @Override
     public void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO){
         User user = userService.findUser(userName);
 
@@ -128,6 +142,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .accumKm(consumableRegDTO.getAccumKm())
                 .gasLitter(consumableRegDTO.getGasLitter())
                 .replaceShop(consumableRegDTO.getReplaceShop())
+                .repairType(consumableRegDTO.getRepairType())
                 .car(car)
                 .build();
         carConsumableRepository.save(carConsumable);
@@ -180,6 +195,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .gasLitter(carConsumable.getGasLitter())
                 .accumKm(carConsumable.getAccumKm())
                 .replaceShop(carConsumable.getReplaceShop())
+
+                .repairType(carConsumable.getRepairType() == null ? "" : carConsumable.getRepairType().getName())
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
 

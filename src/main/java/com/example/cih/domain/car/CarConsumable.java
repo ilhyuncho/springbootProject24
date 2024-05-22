@@ -22,10 +22,13 @@ public class CarConsumable {
 
     private Long refConsumableId;
     private LocalDate replaceDate;      // 점검 날짜
-    private String replaceShop;         // 점검 장소
-    private int accumKm;                // 누적 거리
     private int replacePrice;
+    private int accumKm;                // 누적 거리
+    private String replaceShop;         // 점검 장소
     private int gasLitter;
+
+    @Enumerated(EnumType.STRING)
+    private RepairType repairType;          // 정비 종류
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")

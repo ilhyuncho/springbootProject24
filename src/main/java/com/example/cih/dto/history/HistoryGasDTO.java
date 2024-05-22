@@ -14,5 +14,6 @@ public class HistoryGasDTO {
     private int accumKm;
     private int gasLitter;
     private String replaceShop;
+    private String repairType;
     private LocalDate replaceDate;
 }

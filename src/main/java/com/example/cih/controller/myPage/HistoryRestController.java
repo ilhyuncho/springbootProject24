@@ -45,7 +45,6 @@ public class HistoryRestController {
 
         return listCarConsumableDTO;
     }
-
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
     public List<HistoryGasDTO> getGasList(@PathVariable(name="carId") Long carId,
@@ -75,5 +74,32 @@ public class HistoryRestController {
         return resultMap;
     }
 
+    @ApiOperation(value = "내차 정비 기록 화면", notes = "")
+    @GetMapping("/repairList/{carId}")
+    public List<HistoryGasDTO> getRepairList(@PathVariable(name="carId") Long carId,
+                                          Principal principal){
+        User user = userService.findUser(principal.getName());
 
+        List<HistoryGasDTO> listHistoryGasDTO = carConsumableService.getRepairHistoryList(carId);
+
+        return listHistoryGasDTO;
+    }
+
+    @ApiOperation(value = "내차 정비 기록 추가", notes = "차 소유주가 등록")
+    @PostMapping("/addRepairHistory")
+    public Map<String,String> postAddRepairHistory(@Valid @RequestBody ConsumableRegDTO consumableRegDTO,
+                                                BindingResult bindingResult,
+                                                Principal principal ) throws BindException {
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
 }

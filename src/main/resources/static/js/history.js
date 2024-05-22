@@ -7,15 +7,13 @@ async function getAllHistory({page,size,carId}){
     console.log(response)
     return response.data
 }
-
+// 주유 기록------------------begin-------------------------------------
 async function getGasHistory({page,size,carId}){
     const response = await axios.get(`/history/gasList/${carId}`)
 
     console.log(response)
     return response.data
 }
-
-
 async function addGasHistory(formObj) {
     console.log(formObj)
 
@@ -24,3 +22,23 @@ async function addGasHistory(formObj) {
     console.log(response)
     return response.data
 }
+// 주유 기록------------------end-------------------------------------
+
+// 정비 기록------------------begin-------------------------------------
+async function getRepairHistory({page,size,carId}){
+    const response = await axios.get(`/history/repairList/${carId}`)
+
+    console.log(response)
+    return response.data
+}
+
+async function addRepairHistory(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/history/addRepairHistory`, formObj)
+
+    console.log(response)
+    return response.data
+}
+
+// 정비 기록------------------end-------------------------------------

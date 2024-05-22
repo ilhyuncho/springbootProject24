@@ -1,8 +1,10 @@
 package com.example.cih.dto.consumable;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.example.cih.domain.car.RepairType;
 import lombok.*;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -19,6 +21,9 @@ public class ConsumableRegDTO {
     private int accumKm;
     private int gasLitter;
     private String replaceShop;
+
+    @Enumerated(EnumType.STRING)
+    private RepairType repairType;
 
     @NotNull
     private LocalDate replaceDate;
