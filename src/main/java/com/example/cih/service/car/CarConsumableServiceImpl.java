@@ -8,7 +8,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.car.CarConsumableInfoDTO;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
-import com.example.cih.dto.history.HistoryGasDTO;
+import com.example.cih.dto.history.HistoryCarDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -79,31 +79,43 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public List<HistoryGasDTO> getGasHistoryList(Long carId) {
+    public List<HistoryCarDTO> getAllHistoryList(Long carId) {
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        List<CarConsumable> listCarConsumable = carConsumableRepository.findByCar(car);
+
+        List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
+                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        return listHistoryCarDTO;
+    }
+    @Override
+    public List<HistoryCarDTO> getGasHistoryList(Long carId) {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndRefConsumableId(car, ConsumableType.GAS.getType()));
 
-        List<HistoryGasDTO> listCarConsumableDTO = listCarConsumable.stream()
+        List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
 
-        return listCarConsumableDTO;
+        return listHistoryCarDTO;
     }
 
     @Override
-    public List<HistoryGasDTO> getRepairHistoryList(Long carId) {
+    public List<HistoryCarDTO> getRepairHistoryList(Long carId) {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndRefConsumableId(car, ConsumableType.REPAIR.getType()));
 
-        List<HistoryGasDTO> listCarConsumableDTO = listCarConsumable.stream()
+        List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
 
-        return listCarConsumableDTO;
+        return listHistoryCarDTO;
     }
 
     @Override
@@ -176,8 +188,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         return listCarConsumableDTO;
     }
 
-
-
     private CarConsumable createConsumable(ConsumableRegDTO consumableRegDTO, Car car){
         log.error("createConsumable~~~~~~~~~~~~~~~``");
         CarConsumable carConsumable = CarConsumable.builder()
@@ -189,8 +199,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         return carConsumable;
     }
-    private static HistoryGasDTO entityToDTO(CarConsumable carConsumable) {
-        HistoryGasDTO historyGasDTO = HistoryGasDTO.builder()
+    private static HistoryCarDTO entityToDTO(CarConsumable carConsumable) {
+        HistoryCarDTO historyCarDTO = HistoryCarDTO.builder()
                 .replacePrice(carConsumable.getReplacePrice())
                 .gasLitter(carConsumable.getGasLitter())
                 .accumKm(carConsumable.getAccumKm())
@@ -200,7 +210,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
 
-        return historyGasDTO;
+        return historyCarDTO;
     }
     private ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
 

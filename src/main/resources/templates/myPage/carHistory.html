@@ -77,6 +77,10 @@
       </div>
     </div><!--    <div class="col">-->
 
+    <a th:href="|@{/myPage/carDetail(carId=${carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
+      <button type="button" class="btn btn-primary">back</button>
+    </a>
+
   </div>
 
   <!--   주유 기록 추가 모달창-->
@@ -203,12 +207,11 @@
   const repairEventDate = document.querySelector('.repairEventDate');
   const repairAccumKm = document.querySelector('.repairAccumKm');
 
-
   const repairType = document.querySelector('#repairType');
 
 
-
   getAllList()
+
 
   // [주유 기록] 등록 버튼 클릭
   document.querySelector(".addGasHistoryBtn").addEventListener("click", function (e){
@@ -373,8 +376,14 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
         str += `<li class="list-group-item d-flex dtoList">
-                    <span class="col-2">${dto.name}</span>
-                    <span class="col-2">${dto.repairType}</span>
+                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
+                    <span class="col-2">${dto.accumKm + ' km'}</span>
+
+                    <span class="col-2">${dto.gasLitter > 0 ? dto.gasLitter + ' 리터' : ''}</span>
+                    <span class="col-2">${dto.repairType === null ? '' : dto.repairType}</span>
+
+                    <span class="col-2">${dto.replaceShop}</span>
+                    <span class="col-2">${dto.replaceDate}</span>
 
                     </li>`
       }

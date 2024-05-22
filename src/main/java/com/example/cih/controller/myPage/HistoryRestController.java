@@ -2,9 +2,8 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
-import com.example.cih.dto.history.HistoryGasDTO;
+import com.example.cih.dto.history.HistoryCarDTO;
 import com.example.cih.service.car.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -35,25 +34,25 @@ public class HistoryRestController {
 
     @ApiOperation(value = "내차 전체 기록 화면", notes = "")
     @GetMapping("/{carId}")
-    public List<CarConsumableDTO> get(@PathVariable(name="carId") Long carId,
-                      Principal principal){
+    public List<HistoryCarDTO> get(@PathVariable(name="carId") Long carId,
+                                   Principal principal){
 
         log.error("history-get : " + carId);
         User user = userService.findUser(principal.getName());
 
-        List<CarConsumableDTO> listCarConsumableDTO = carConsumableService.readOne(carId);
+        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getAllHistoryList(carId);
 
-        return listCarConsumableDTO;
+        return listHistoryCarDTO;
     }
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
-    public List<HistoryGasDTO> getGasList(@PathVariable(name="carId") Long carId,
+    public List<HistoryCarDTO> getGasList(@PathVariable(name="carId") Long carId,
                                           Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryGasDTO> listHistoryGasDTO = carConsumableService.getGasHistoryList(carId);
+        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getGasHistoryList(carId);
 
-        return listHistoryGasDTO;
+        return listHistoryCarDTO;
     }
 
     @ApiOperation(value = "내차 주유 기록 추가", notes = "차 소유주가 등록")
@@ -76,13 +75,13 @@ public class HistoryRestController {
 
     @ApiOperation(value = "내차 정비 기록 화면", notes = "")
     @GetMapping("/repairList/{carId}")
-    public List<HistoryGasDTO> getRepairList(@PathVariable(name="carId") Long carId,
-                                          Principal principal){
+    public List<HistoryCarDTO> getRepairList(@PathVariable(name="carId") Long carId,
+                                             Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryGasDTO> listHistoryGasDTO = carConsumableService.getRepairHistoryList(carId);
+        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getRepairHistoryList(carId);
 
-        return listHistoryGasDTO;
+        return listHistoryCarDTO;
     }
 
     @ApiOperation(value = "내차 정비 기록 추가", notes = "차 소유주가 등록")

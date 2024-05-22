@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class HistoryGasDTO {
+public class HistoryCarDTO {
     private int replacePrice;
     private int accumKm;
     private int gasLitter;
