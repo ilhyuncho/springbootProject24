@@ -247,8 +247,11 @@
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
         str += `<li class="list-group-item d-flex dtoList">
-                    <span class="col-2">${dto.name}</span>
-                    <span class="col-2">${dto.repairType}</span>
+                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
+                    <span class="col-2">${dto.accumKm + ' km'}</span>
+                    <span class="col-2">${dto.gasLitter + ' 리터'}</span>
+                    <span class="col-2">${dto.replaceShop}</span>
+                    <span class="col-2">${dto.replaceDate}</span>
 
                     </li>`
       }

@@ -26,8 +26,7 @@ public class ConsumableRepositoryTests {
     @Test
     public void insertConsumable(){
 
-        LocalDateTime replaceDatetime = LocalDateTime.of(LocalDate.now().minusDays(0),
-                LocalTime.of(0, 0, 0));
+        LocalDate replaceDate = LocalDate.now();
 
         Optional<Car> byId = carRepository.findById(1L);
         Car car = byId.orElseThrow();
@@ -35,7 +34,7 @@ public class ConsumableRepositoryTests {
         IntStream.rangeClosed(1,2).forEach(i -> {
             CarConsumable carConsumable = CarConsumable.builder()
                     .refConsumableId(Long.valueOf(i))
-                    .replaceDate(replaceDatetime)
+                    .replaceDate(replaceDate)
                     .car(car)
                     .build();
 

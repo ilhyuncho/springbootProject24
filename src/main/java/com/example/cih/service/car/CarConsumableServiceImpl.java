@@ -8,6 +8,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.car.CarConsumableInfoDTO;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
+import com.example.cih.dto.history.HistoryGasDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,69 +79,17 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public List<CarConsumableDTO> getGasHistoryList(Long carId) {
-        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(1L)  // 임시
-                .orElseThrow(() -> new OwnerCarNotFoundException("해당 ref 소모품 정보가 존재하지않습니다"));
-
-
+    public List<HistoryGasDTO> getGasHistoryList(Long carId) {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
-        List<CarConsumable> collect = new ArrayList<>(carConsumableRepository.findByCarAndRefConsumableId(car, 1L));    // 임시
+        List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
+                .findByCarAndRefConsumableId(car, ConsumableType.GAS.getType()));
 
-        List<CarConsumableDTO> listCarConsumableDTO = new ArrayList<>();
-
-        for (CarConsumable carConsumable : collect) {
-            CarConsumableDTO dto = CarConsumableDTO.builder()
-                    .consumableId(refCarConsumable.getRefConsumableId())
-                    .name(refCarConsumable.getName())
-                    .repairType(refCarConsumable.getRepairType())
-                    .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
-                    .replaceCycleMonth(refCarConsumable.getReplaceCycleMonth())
-                    .viewOrder(refCarConsumable.getViewOrder())
-                    .build();
-
-            dto.setReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
-                    carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
-
-            listCarConsumableDTO.add(dto);
-
-            log.error(carConsumable.toString());
-
-        }        
+        List<HistoryGasDTO> listCarConsumableDTO = listCarConsumable.stream()
+                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
 
         return listCarConsumableDTO;
-    }
-
-    private ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
-
-        int cycleKm = refCarConsumable.getReplaceCycleKm();
-        int cycleMonth = refCarConsumable.getReplaceCycleMonth();
-
-        // 1. 개월 마다 체크
-        if( cycleMonth > 0){
-            LocalDate lastReplaceDate = carConsumable.getReplaceDate();
-            LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
-
-            Period between = Period.between(nextReplaceDay, LocalDate.now());
-            int diffDays = between.getDays();
-
-            if( (diffDays < 0 && (10 + diffDays) > 0) || (diffDays > 0) ){
-                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
-                return ReplaceAlarm.READY_CYCLE;
-            }
-            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
-        }
-        else if( cycleKm > 0){   // 2. 주행 km 마다 체크
-            int accumKm = carConsumable.getAccumKm();
-            int nextReplaceKm = cycleKm + accumKm;
-
-            // 주행 km를 비교하여 체크
-
-        }
-
-
-        return ReplaceAlarm.NOT_CYCLE;
     }
 
     @Override
@@ -178,6 +126,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .replaceDate(consumableRegDTO.getReplaceDate())
                 .replacePrice(consumableRegDTO.getReplacePrice())
                 .accumKm(consumableRegDTO.getAccumKm())
+                .gasLitter(consumableRegDTO.getGasLitter())
                 .replaceShop(consumableRegDTO.getReplaceShop())
                 .car(car)
                 .build();
@@ -224,6 +173,45 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         carConsumableRepository.save(carConsumable);
 
         return carConsumable;
+    }
+    private static HistoryGasDTO entityToDTO(CarConsumable carConsumable) {
+        HistoryGasDTO historyGasDTO = HistoryGasDTO.builder()
+                .replacePrice(carConsumable.getReplacePrice())
+                .gasLitter(carConsumable.getGasLitter())
+                .accumKm(carConsumable.getAccumKm())
+                .replaceShop(carConsumable.getReplaceShop())
+                .replaceDate(carConsumable.getReplaceDate())
+                .build();
+
+        return historyGasDTO;
+    }
+    private ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
+
+        int cycleKm = refCarConsumable.getReplaceCycleKm();
+        int cycleMonth = refCarConsumable.getReplaceCycleMonth();
+
+        // 1. 개월 마다 체크
+        if( cycleMonth > 0){
+            LocalDate lastReplaceDate = carConsumable.getReplaceDate();
+            LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
+
+            Period between = Period.between(nextReplaceDay, LocalDate.now());
+            int diffDays = between.getDays();
+
+            if( (diffDays < 0 && (10 + diffDays) > 0) || (diffDays > 0) ){
+                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
+                return ReplaceAlarm.READY_CYCLE;
+            }
+            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
+        }
+        else if( cycleKm > 0){   // 2. 주행 km 마다 체크
+            int accumKm = carConsumable.getAccumKm();
+            int nextReplaceKm = cycleKm + accumKm;
+
+            // 주행 km를 비교하여 체크
+        }
+
+        return ReplaceAlarm.NOT_CYCLE;
     }
 
 }

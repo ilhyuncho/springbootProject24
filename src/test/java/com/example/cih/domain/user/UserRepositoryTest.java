@@ -1,16 +1,15 @@
 package com.example.cih.domain.user;
 
 import com.example.cih.domain.car.Car;
-import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.CarSize;
+import com.example.cih.domain.reference.RefCarConsumable;
+import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import lombok.extern.log4j.Log4j2;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.internal.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
@@ -30,6 +29,9 @@ public class UserRepositoryTest {
 
     @Autowired
     ShopItemRepository shopItemRepository;
+
+    @Autowired
+    RefCarConsumableRepository refCarConsumableRepository;
 
     @Test
     public void InsertUserData(){
@@ -73,6 +75,30 @@ public class UserRepositoryTest {
             shopItem.addItemOption("option1", "option2");
 
             shopItemRepository.save(shopItem);
+        });
+
+        IntStream.rangeClosed(1,2).forEach(i -> {
+            RefCarConsumable refCarConsumable = RefCarConsumable.builder()
+                    .name("소모품1_" + i)
+                    .repairType("점검")
+                    .replaceCycleKm(10000 + (1000 * i))
+                    .replaceCycleMonth(12 + i)
+                    .viewOrder(i)
+                    .build();
+
+            refCarConsumableRepository.save(refCarConsumable);
+        });
+
+        IntStream.rangeClosed(3,4).forEach(i -> {
+            RefCarConsumable refCarConsumable = RefCarConsumable.builder()
+                    .name("소모품2_" + i)
+                    .repairType("교체")
+                    .replaceCycleKm(20000 + (1000 * i))
+                    .replaceCycleMonth(12 + i)
+                    .viewOrder(i)
+                    .build();
+
+            refCarConsumableRepository.save(refCarConsumable);
         });
 
     }

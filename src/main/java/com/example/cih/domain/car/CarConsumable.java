@@ -25,15 +25,9 @@ public class CarConsumable {
     private String replaceShop;         // 점검 장소
     private int accumKm;                // 누적 거리
     private int replacePrice;
+    private int gasLitter;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")
     private Car car;
-
-//    public void changeReplaceInfo(int replacePrice, int accumKm, String replaceShop, LocalDate replaceDate){
-//        this.replacePrice = replacePrice;
-//        this.replaceShop = replaceShop;
-//        this.accumKm = accumKm;
-//        this.replaceDate = replaceDate;
-//    }
 }

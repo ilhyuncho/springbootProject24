@@ -4,6 +4,7 @@ package com.example.cih.controller.myPage;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
+import com.example.cih.dto.history.HistoryGasDTO;
 import com.example.cih.service.car.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,7 @@ public class HistoryRestController {
 
 
 
-    @ApiOperation(value = "내차 기록 화면", notes = "")
+    @ApiOperation(value = "내차 전체 기록 화면", notes = "")
     @GetMapping("/{carId}")
     public List<CarConsumableDTO> get(@PathVariable(name="carId") Long carId,
                       Principal principal){
@@ -47,15 +48,13 @@ public class HistoryRestController {
 
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
-    public List<CarConsumableDTO> getGasList(@PathVariable(name="carId") Long carId,
-                                      Principal principal){
-
-        log.error("history-Gas get : " + carId);
+    public List<HistoryGasDTO> getGasList(@PathVariable(name="carId") Long carId,
+                                          Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<CarConsumableDTO> listCarConsumableDTO = carConsumableService.getGasHistoryList(carId);
+        List<HistoryGasDTO> listHistoryGasDTO = carConsumableService.getGasHistoryList(carId);
 
-        return listCarConsumableDTO;
+        return listHistoryGasDTO;
     }
 
     @ApiOperation(value = "내차 주유 기록 추가", notes = "차 소유주가 등록")
