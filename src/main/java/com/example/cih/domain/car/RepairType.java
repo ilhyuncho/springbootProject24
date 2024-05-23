@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RepairType {
+    NO_VALUE("noValue", "x"),
     ENGINE_OIL("engineOil", "엔진오일 및 오일피터"),
     AIR_FILTER("airFilter","에어컨 필터"),
     WIPER("wiper","와이퍼"),

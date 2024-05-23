@@ -31,20 +31,27 @@
                         </div>
                     </div>
 
-
                     <div class="row mt-3">
                         <table id="my-table">
-                            <tr>
-                                <td>Row 1</td>
-                            </tr>
-                            <tr>
-                                <td>Row 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 3</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th scope="col">cartId</th>
+                                    <th scope="col">shopItemId</th>
+                                    <th scope="col">itemName</th>
+                                    <th scope="col">itemCount</th>
+                                    <th scope="col">option1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
                         </table>
                     </div>
+
+                    <body>
+                    <div id="showme"></div>
+                    </body>
 
 
                 </div><!-- <div class="card-body">-->
@@ -102,25 +109,131 @@
     const removeBtn = document.querySelector(".removeBtn")
     const closeModifyBtn = document.querySelector(".closeModifyBtn")
 
+    function MyDataa(mkey,mtitle,mvalue){
+        this.key = mkey
+        this.title = mtitle
+        this.value = mvalue
+    }
 
+    var mmList = [
+        new MyDataa('key1','제목1','values1'),
+        new MyDataa('key2','제목2','valueqs'),
+        new MyDataa('key3','제목w 3','valuest'),
+        new MyDataa('key4','제목4','valu123 es'),
+        new MyDataa('key5','제목5','valuaa es'),
+        new MyDataa('key6','제목6','valu des'),
+        new MyDataa('key7','제목7','valu de11s'),
+        new MyDataa('key8','제목8','valuasdes')
+    ]
 
-    function addRow(tableID) {
+    // makeTable('#showme',mmList);
+
+    function makeTable(stringSelector ,listData){
+        var d = document.querySelector(stringSelector)
+        while (d.firstChild) {
+            d.removeChild(d.firstChild);
+        }
+
+        var colnum = 4;
+        var tbl = document.createElement('table');
+        tbl.setAttribute('text-align', 'center')
+        tbl.style.width = '100%'
+        tbl.border = 1
+        var colgroup = document.createElement('colgroup')
+        var tbody = document.createElement('tbody')
+        for (var i = 0; i<colnum; i++){
+            var col = document.createElement('col')
+            col.attributes.width = '25%'
+            colgroup.appendChild(col)
+        }
+        var tr = document.createElement('tr')
+        listData.forEach(function(e,i){
+            var tTD = document.createElement('td')
+            tTD.appendChild(document.createTextNode(e.title))
+            var vTD = document.createElement('td')
+            if (Array.isArray(e.value)){
+                var ultag = document.createElement('ul')
+                e.value.forEach((arrayValue)=>{
+                    var litag = document.createElement('li')
+                    litag.appendChild(document.createTextNode(arrayValue))
+                    ultag.appendChild(litag)
+                })
+                vTD.appendChild(ultag)
+            } else {
+                vTD.appendChild(document.createTextNode(e.value))
+            }
+
+            tr.appendChild(tTD)
+            tr.appendChild(vTD)
+            if (e.key === 'key7'||e.key === 'key8'){
+                vTD.setAttribute('colSpan', '3')
+                tbody.appendChild(tr)
+                tr = document.createElement('tr')
+            } else {
+                if(i%2 != 0){
+                    tbody.appendChild(tr)
+                    tr = document.createElement('tr')
+                }
+            }
+        })
+        tbl.appendChild(colgroup)
+        tbl.appendChild(tbody)
+        d.appendChild(tbl)
+    }
+
+    function addRow(tableID, dtoList) {
         // Get a reference to the table
         let tableRef = document.getElementById(tableID);
 
-        // Insert a row at the end of the table
-        let newRow = tableRef.insertRow(-1);
+        if(dtoList && dtoList.length > 0) {
+            dtoList.forEach(function (e, i) {
+                console.log('e : ' + e)
+                console.log('key : ' + e.key)
 
-        // Insert a cell in the row at index 0
-        let newCell = newRow.insertCell(0);
+                const arr = [e.cartId, e.shopItemId, e.itemName, e.itemCount, e.option1]
 
-        // Append a text node to the cell
-        let newText = document.createTextNode("New bottom row");
-        newCell.appendChild(newText);
+                let newRow = tableRef.insertRow(-1);
+
+                for (var i = 0; i<arr.length; i++){
+                    let newCell = newRow.insertCell(i);
+                    let newText = document.createTextNode(arr[i]);
+                    newCell.appendChild(newText);
+                }
+            })
+        }
+
+        // if(dtoList && dtoList.length > 0){
+        //
+        //     for(const dto of dtoList){
+        //         let newRow = tableRef.insertRow(-1);
+        //
+        //         let newCell1 = newRow.insertCell(0);
+        //         let newText1 = document.createTextNode(dto.cartId);
+        //         newCell1.appendChild(newText1);
+        //
+        //         let newCell2 = newRow.insertCell(1);
+        //         let newText2 = document.createTextNode(dto.shopItemId);
+        //         newCell2.appendChild(newText2);
+        //
+        //         let newCell3 = newRow.insertCell(2);
+        //         let newText3 = document.createTextNode(dto.itemName);
+        //         newCell3.appendChild(newText3);
+        //
+        //         let newCell4 = newRow.insertCell(3);
+        //         let newText4 = document.createTextNode(dto.itemCount);
+        //         newCell4.appendChild(newText4);
+        //
+        //         let newCell5 = newRow.insertCell(4);
+        //         let newText5 = document.createTextNode(dto.option1);
+        //         newCell5.appendChild(newText5);
+        //
+        //     }
+        // }
+
     }
 
     // Call addRow() with the table's ID
-    addRow("my-table");
+   // addRow("my-table");
 
 
     function printCartList(page,size,goLast){
@@ -153,6 +266,8 @@
             }
         }
         cartList.innerHTML = str
+
+        addRow("my-table", dtoList)
     }
 
     function printPages(data){

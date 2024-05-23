@@ -206,7 +206,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .accumKm(carConsumable.getAccumKm())
                 .replaceShop(carConsumable.getReplaceShop())
 
-                .repairType(carConsumable.getRepairType() == null ? "" : carConsumable.getRepairType().getName())
+                .repairType(carConsumable.getRepairType() == null ? RepairType.NO_VALUE.getName() : carConsumable.getRepairType().getName())
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
 

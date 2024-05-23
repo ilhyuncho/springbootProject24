@@ -37,21 +37,38 @@
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
               <div class="row mt-3">
-                <div class="col-md-12">
-                  <ul class="list-group allList">
-                    <!-- 리스트 영역-->
-                  </ul>
-                </div>
+                <table id="tableAll">
+                  <thead>
+                  <tr>
+                    <th scope="col">결제 금액</th>
+                    <th scope="col">누적 km</th>
+                    <th scope="col">주유 량(L)</th>
+                    <th scope="col">항목</th>
+                    <th scope="col">장소</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
               </div>
 
             </div>
             <div class="tab-pane fade" id="gas" role="tabpanel" aria-labelledby="gas-tab">
               <div class="row mt-3">
-                <div class="col-md-12">
-                  <ul class="list-group gasList">
-                    <!-- 주유 기록 리스트 영역-->
-                  </ul>
-                </div>
+                <table id="tableGas">
+                  <thead>
+                  <tr>
+                    <th scope="col">결제 금액</th>
+                    <th scope="col">누적 km</th>
+                    <th scope="col">주유 량(L)</th>
+                    <th scope="col">장소</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
               </div>
               <div class="input-group mb-3">
                 <button type="button" class="btn btn-primary addGasHistoryBtn">주유 기록</button>
@@ -60,11 +77,19 @@
             </div>
             <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">
               <div class="row mt-3">
-                <div class="col-md-12">
-                  <ul class="list-group repairList">
-                    <!-- 정비 기록 리스트 영역-->
-                  </ul>
-                </div>
+                <table id="tableRepair">
+                  <thead>
+                  <tr>
+                    <th scope="col">결제 금액</th>
+                    <th scope="col">누적 km</th>
+                    <th scope="col">항목</th>
+                    <th scope="col">장소</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
               </div>
               <div class="input-group mb-3">
                 <button type="button" class="btn btn-primary addRepairHistoryBtn">정비 기록</button>
@@ -192,9 +217,10 @@
 
   const addGasHistoryModal = new bootstrap.Modal(document.querySelector(".addGasHistoryModal"))
   const addRepairHistoryModal = new bootstrap.Modal(document.querySelector(".addRepairHistoryModal"))
-  const allList = document.querySelector('.allList')             // 목록 DOM
-  const gasList  = document.querySelector('.gasList')            // 목록 DOM
-  const repairList  = document.querySelector('.repairList')      // 목록 DOM
+
+  const tableAll = document.getElementById("tableAll");
+  const tableGas = document.getElementById("tableGas");
+  const tableRepair = document.getElementById("tableRepair");
 
   const gasPrice = document.querySelector(".gasPrice")
   const gasShop = document.querySelector(".gasShop")
@@ -310,7 +336,6 @@
   }, false)
 
 
-
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
   triggerTabList.forEach(function (triggerEl) {
     var tabTrigger = new bootstrap.Tab(triggerEl)
@@ -336,95 +361,103 @@
   })
 
   function getAllList(){
-    console.log('getAllList : '  + carId)
-
     getAllHistory({page,size,carId}).then(data => {
 
-      printList(data) // 목록 처리
+      printAllList(data, tableAll) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
     })
   }
-
   function getGasList(){
-    console.log('getGasList : '  + carId)
-
     getGasHistory({page,size,carId}).then(data => {
 
-      printGasList(data) // 목록 처리
+      printGasList(data, tableGas) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
     })
   }
-
   function getRepairList(){
-    console.log('getRepairList : '  + carId)
-
     getRepairHistory({page,size,carId}).then(data => {
 
-      printRepairList(data) // 목록 처리
+      printRepairList(data, tableRepair) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
     })
   }
-  function printList(dtoList){    // 목록 출력
-    let str = '';
 
-    if(dtoList && dtoList.length > 0){
-      for(const dto of dtoList){
-        str += `<li class="list-group-item d-flex dtoList">
-                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
-                    <span class="col-2">${dto.accumKm + ' km'}</span>
-
-                    <span class="col-2">${dto.gasLitter > 0 ? dto.gasLitter + ' 리터' : ''}</span>
-                    <span class="col-2">${dto.repairType === null ? '' : dto.repairType}</span>
-
-                    <span class="col-2">${dto.replaceShop}</span>
-                    <span class="col-2">${dto.replaceDate}</span>
-
-                    </li>`
-      }
-    }
-    allList.innerHTML = str
+  function makeHistoryData(arr, dtoData){
+    arr[0] = dtoData.replacePrice + '원'
+    arr[1] = dtoData.accumKm + ' km'
+    arr[2] = dtoData.gasLitter > 0 ? dtoData.gasLitter + ' 리터' : ''
+    arr[3] = dtoData.repairType === 'x' ? '' : dtoData.repairType
+    arr[4] = dtoData.replaceShop
+    arr[5] = dtoData.replaceDate
   }
 
-  function printGasList(dtoList){    // 목록 출력
-    let str = '';
+  function printAllList(dtoList, tableRef ) {    // 목록 출력
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makeHistoryData(arr, e)
 
-    if(dtoList && dtoList.length > 0){
-      for(const dto of dtoList){
-        str += `<li class="list-group-item d-flex dtoList">
-                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
-                    <span class="col-2">${dto.accumKm + ' km'}</span>
-                    <span class="col-2">${dto.gasLitter + ' 리터'}</span>
-                    <span class="col-2">${dto.replaceShop}</span>
-                    <span class="col-2">${dto.replaceDate}</span>
+        let newRow = tableRef.insertRow(-1);
 
-                    </li>`
-      }
+        for (let j = 0, k = 0; j < arr.length; j++){
+          // if(arr[j] !== ""){
+            let newCell = newRow.insertCell(j);
+            let newText = document.createTextNode(arr[j]);
+            newCell.appendChild(newText);
+         //   k++;
+         // }
+        }
+
+      })
     }
-    gasList.innerHTML = str
-  }
-  function printRepairList(dtoList){    // 목록 출력
-    let str = '';
-
-    if(dtoList && dtoList.length > 0){
-      for(const dto of dtoList){
-        str += `<li class="list-group-item d-flex dtoList">
-                    <span class="col-2">${dto.replacePrice+ ' 원'}</span>
-                    <span class="col-2">${dto.accumKm + ' km'}</span>
-                    <span class="col-2">${dto.repairType}</span>
-                    <span class="col-2">${dto.replaceShop}</span>
-                    <span class="col-2">${dto.replaceDate}</span>
-
-                    </li>`
-      }
-    }
-    repairList.innerHTML = str
   }
 
+  function printGasList(dtoList, tableRef) {    // 목록 출력
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makeHistoryData(arr, e)
+
+        let newRow = tableRef.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          if(arr[j] !== ''){
+            let newCell = newRow.insertCell(k);
+            let newText = document.createTextNode(arr[j]);
+            newCell.appendChild(newText);
+            k++;
+          }
+        }
+
+      })
+    }
+  }
+
+  function printRepairList(dtoList, tableRef) {    // 목록 출력
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makeHistoryData(arr, e)
+
+        let newRow = tableRef.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          if(arr[j] !== ''){
+            let newCell = newRow.insertCell(k);
+            let newText = document.createTextNode(arr[j]);
+            newCell.appendChild(newText);
+            k++;
+          }
+        }
+
+      })
+    }
+  }
 
 </script>
