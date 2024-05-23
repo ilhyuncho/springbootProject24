@@ -1,6 +1,6 @@
 package com.example.cih.dto.consumable;
 
-import com.example.cih.domain.car.RepairType;
+import com.example.cih.domain.carConsumable.RepairType;
 import lombok.*;
 
 import javax.persistence.EnumType;

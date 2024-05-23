@@ -2,7 +2,7 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
-import com.example.cih.service.car.CarConsumableService;
+import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

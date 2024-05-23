@@ -1,10 +1,10 @@
-package com.example.cih.controller.myPage;
+package com.example.cih.controller.history;
 
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.consumable.ConsumableRegDTO;
 import com.example.cih.dto.history.HistoryCarDTO;
-import com.example.cih.service.car.CarConsumableService;
+import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,6 @@ public class HistoryRestController {
 
     private final UserService userService;
     private final CarConsumableService carConsumableService;
-
-
 
     @ApiOperation(value = "내차 전체 기록 화면", notes = "")
     @GetMapping("/{carId}")

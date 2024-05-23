@@ -1,14 +1,14 @@
 package com.example.cih.domain.car;
 
 
+import com.example.cih.domain.carConsumable.CarConsumable;
+import com.example.cih.domain.carConsumable.CarConsumableRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;

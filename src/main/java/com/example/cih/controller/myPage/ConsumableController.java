@@ -3,7 +3,7 @@ package com.example.cih.controller.myPage;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.car.CarConsumableInfoDTO;
-import com.example.cih.service.car.CarConsumableService;
+import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

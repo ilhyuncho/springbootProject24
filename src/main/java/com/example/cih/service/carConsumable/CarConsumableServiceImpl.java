@@ -1,7 +1,8 @@
-package com.example.cih.service.car;
+package com.example.cih.service.carConsumable;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.car.*;
+import com.example.cih.domain.carConsumable.*;
 import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.user.User;
@@ -160,6 +161,15 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         carConsumableRepository.save(carConsumable);
 
     }
+
+    @Override
+    public void getStatisticsConsume(Long carid) {
+
+    }
+
+
+
+
     @Override
     public List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId){
 

@@ -1,4 +1,4 @@
-package com.example.cih.domain.car;
+package com.example.cih.domain.carConsumable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

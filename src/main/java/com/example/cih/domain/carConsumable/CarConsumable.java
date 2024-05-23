@@ -1,6 +1,7 @@
-package com.example.cih.domain.car;
+package com.example.cih.domain.carConsumable;
 
 
+import com.example.cih.domain.car.Car;
 import lombok.*;
 
 import javax.persistence.*;

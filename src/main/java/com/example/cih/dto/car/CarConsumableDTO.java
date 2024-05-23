@@ -1,6 +1,6 @@
 package com.example.cih.dto.car;
 
-import com.example.cih.domain.car.ReplaceAlarm;
+import com.example.cih.domain.carConsumable.ReplaceAlarm;
 import lombok.*;
 
 import javax.persistence.EnumType;

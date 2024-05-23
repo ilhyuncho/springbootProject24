@@ -1,4 +1,4 @@
-package com.example.cih.controller.myPage;
+package com.example.cih.controller.history;
 
 
 import com.example.cih.domain.user.User;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasRole('USER')")
 public class HistoryController {
 
-    private final UserCarService userCarService;
     private final UserService userService;
 
     @ApiOperation(value = "내차 기록 화면", notes = "")
@@ -33,18 +32,4 @@ public class HistoryController {
 
         return "/myPage/carHistory";
     }
-
-    @ApiOperation(value = "내차 관리 통계 화면", notes = "")
-    @GetMapping("/statistics")
-    public String statistics(@ModelAttribute("carId") Long carId,
-                      String userName, Model model){
-
-        User user = userService.findUser(userName);
-
-        log.error("statistics-get : " + carId);
-
-        return "/myPage/carStatistics";
-    }
-
-
 }

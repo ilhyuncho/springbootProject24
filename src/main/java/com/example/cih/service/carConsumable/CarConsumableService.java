@@ -1,4 +1,4 @@
-package com.example.cih.service.car;
+package com.example.cih.service.carConsumable;
 
 import com.example.cih.dto.car.CarConsumableDTO;
 import com.example.cih.dto.car.CarConsumableInfoDTO;
@@ -14,5 +14,7 @@ public interface CarConsumableService {
     List<HistoryCarDTO> getRepairHistoryList(Long carId);
     List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId);
     void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO);
+
+    void getStatisticsConsume(Long carid);
 
 }
