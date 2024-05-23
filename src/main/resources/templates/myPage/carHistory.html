@@ -238,7 +238,6 @@
 
   getAllList()
 
-
   // [주유 기록] 등록 버튼 클릭
   document.querySelector(".addGasHistoryBtn").addEventListener("click", function (e){
     e.stopPropagation()
@@ -263,13 +262,13 @@
 
     addGasHistory(formObj).then(result => {
 
-      alert(result.result)
-
       addGasHistoryModal.hide()
 
+      getGasList() // 목록 갱신
+
       // 화면 재 갱신
-      self.location = '/history?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
+      // self.location = '/history?carId=' + carId
+      //         + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -313,13 +312,9 @@
 
     addRepairHistory(formObj).then(result => {
 
-      alert(result.result)
-
       addRepairHistoryModal.hide()
 
-      // 화면 재 갱신
-      self.location = '/history?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
+      getRepairList() // 목록 갱신
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -398,6 +393,10 @@
   }
 
   function printAllList(dtoList, tableRef ) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableRef.firstChild) {
+      tableRef.removeChild(tableRef.firstChild);
+    }
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
         const arr = []
@@ -419,6 +418,11 @@
   }
 
   function printGasList(dtoList, tableRef) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableRef.firstChild) {
+      tableRef.removeChild(tableRef.firstChild);
+    }
+
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
         const arr = []
@@ -440,6 +444,12 @@
   }
 
   function printRepairList(dtoList, tableRef) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableRef.firstChild) {
+      tableRef.removeChild(tableRef.firstChild);
+    }
+
+
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
         const arr = []
