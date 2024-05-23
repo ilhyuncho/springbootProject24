@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>MyCar 통계</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          Car 통계
+        </div>
+
+        <div class="card-body">
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="consume-tab" data-bs-toggle="tab" data-bs-target="#consume" type="button" role="tab" aria-controls="consume" aria-selected="true">월별 지출</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="fuelEff-tab" data-bs-toggle="tab" data-bs-target="#fuelEff" type="button" role="tab" aria-controls="fuelEff" aria-selected="false">월별 평균 연비</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="fuelAmount-tab" data-bs-toggle="tab" data-bs-target="#fuelAmount" type="button" role="tab" aria-controls="fuelAmount" aria-selected="false">월별 주유량</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consume" role="tabpanel" aria-labelledby="consume-tab">
+
+              <div class="row mt-3">
+                <table id="tableconsume">
+                  <thead>
+                  <tr>
+                    <th scope="col">결제 금액</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="fuelEff" role="tabpanel" aria-labelledby="fuelEff-tab">
+              <div class="row mt-3">
+
+              </div>
+            </div>
+            <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">
+              <div class="row mt-3">
+
+              </div>
+            </div>
+            <div class="tab-pane fade" id="fuelAmount" role="tabpanel" aria-labelledby="fuelAmount-tab">...</div>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div><!--    <div class="col">-->
+
+    <a th:href="|@{/myPage/carDetail(carId=${carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
+      <button type="button" class="btn btn-primary">back</button>
+    </a>
+
+  </div>
+
+
+  <!--    axios 라이브러리 추가-->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/history.js"></script>
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  let page = 1
+  let size = 5
+
+  const currentUser = [[${#authentication.principal.username}]]
+  const carId = [[${carId}]]
+
+
+
+
+</script>

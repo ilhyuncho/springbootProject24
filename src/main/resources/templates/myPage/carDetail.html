@@ -67,6 +67,10 @@
                 <button type="button" class="btn btn-primary">차량 기록</button>
               </a>
 
+              <a th:href="|@{/history/statistics(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">통계</button>
+              </a>
+
               <a th:href="|@{/consumable/info(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">소모품 관리</button>
               </a>
