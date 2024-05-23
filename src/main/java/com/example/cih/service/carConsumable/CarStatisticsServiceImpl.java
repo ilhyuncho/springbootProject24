@@ -6,6 +6,7 @@ import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,7 +26,10 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     @Override
     public void getStatisticsConsume(Long carid) {
 
-       // carConsumableRepository.
+        String[] types = {"m"};
+        String keyword = "";
+
+        carConsumableRepository.statisticsConsume(types, keyword);
     }
 
 }

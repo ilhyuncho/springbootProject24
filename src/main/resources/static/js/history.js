@@ -44,8 +44,10 @@ async function addRepairHistory(formObj) {
 // 정비 기록------------------end-------------------------------------
 
 
-async function getConsumeHistory(formObj){
-    const response = await axios.get(`/statistics/consume`, formObj)
+async function getConsumeHistory({carId}){
+
+     console.log(carId)
+    const response = await axios.get(`/statistics/consume`, {params: {carId}})
 
     //  console.log(response)
     return response.data

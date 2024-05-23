@@ -29,11 +29,11 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 월별 지출 내역 조회", notes = "")
     @GetMapping("/consume")
-    public List<HistoryCarDTO> get(@Valid @RequestBody StatisticsReqDTO satisticsReqDTO,
+    public List<HistoryCarDTO> getConsume(@Valid StatisticsReqDTO satisticsReqDTO,
                                    BindingResult bindingResult,
                                    Principal principal){
 
-        log.error("statistics-get : " + satisticsReqDTO.getCarId());
+        log.error("statistics-consume : " + satisticsReqDTO.getCarId());
 
         User user = userService.findUser(principal.getName());
 

@@ -105,11 +105,7 @@
 
   function getConsumeList(){
 
-    const formObj = {
-      carId:carId,
-    }
-
-    getConsumeHistory(formObj).then(data => {
+    getConsumeHistory({carId}).then(data => {
 
       printConsumeList(data) // 목록 처리
 
@@ -124,9 +120,9 @@
     /////////////////////////// 차트 테스트
     const ctx = document.getElementById('consumeChart');
 
-    console.log('gdfgdfgdfgdfg')
+    // dtoList -> arr 로 변경
 
-    const arr =[12, 19, 3, 5, 2, 3]
+    const arr = [12, 19, 3, 5, 2, 3]
 
     let chartStatus = Chart.getChart(ctx);
     if (chartStatus !== undefined) {

@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CarConsumableSearch {
-    Page<CarConsumable> searchAll(String[] types, String keyword, Pageable pageable);
+    Page<CarConsumable> statisticsConsume(String[] types, String keyword);
 }
