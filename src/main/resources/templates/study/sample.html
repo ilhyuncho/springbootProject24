@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+
+
+<script layout:fragment="script" th:inline="javascript">
+
+  dtoList.forEach(function(e,i){
+    if (Array.isArray(e.value)){
+
+      e.value.forEach((arrayValue)=>{
+        console.log('arrayValue' + arrayValue)
+      })
+    }
+    console.log('e : ' + e.value)
+    console.log('i : ' + i)
+  })
+
+
+
+
+
+
+</script>

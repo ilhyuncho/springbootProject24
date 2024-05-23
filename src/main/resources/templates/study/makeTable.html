@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+
+<script layout:fragment="script" th:inline="javascript">
+
+  function MyDataa(mkey,mtitle,mvalue){
+    this.key = mkey
+    this.title = mtitle
+    this.value = mvalue
+  }
+
+  var mmList = [
+    new MyDataa('key1','제목1','values1'),
+    new MyDataa('key2','제목2','valueqs'),
+    new MyDataa('key3','제목w 3','valuest'),
+    new MyDataa('key4','제목4','valu123 es'),
+    new MyDataa('key5','제목5','valuaa es'),
+    new MyDataa('key6','제목6','valu des'),
+    new MyDataa('key7','제목7','valu de11s'),
+    new MyDataa('key8','제목8','valuasdes')
+  ]
+
+  // makeTable('#showme',mmList);
+
+  function makeTable(stringSelector ,listData){
+    var d = document.querySelector(stringSelector)
+    while (d.firstChild) {
+      d.removeChild(d.firstChild);
+    }
+
+    var colnum = 4;
+    var tbl = document.createElement('table');
+    tbl.setAttribute('text-align', 'center')
+    tbl.style.width = '100%'
+    tbl.border = 1
+    var colgroup = document.createElement('colgroup')
+    var tbody = document.createElement('tbody')
+    for (var i = 0; i<colnum; i++){
+      var col = document.createElement('col')
+      col.attributes.width = '25%'
+      colgroup.appendChild(col)
+    }
+    var tr = document.createElement('tr')
+    listData.forEach(function(e,i){
+      var tTD = document.createElement('td')
+      tTD.appendChild(document.createTextNode(e.title))
+      var vTD = document.createElement('td')
+      if (Array.isArray(e.value)){
+        var ultag = document.createElement('ul')
+        e.value.forEach((arrayValue)=>{
+          var litag = document.createElement('li')
+          litag.appendChild(document.createTextNode(arrayValue))
+          ultag.appendChild(litag)
+        })
+        vTD.appendChild(ultag)
+      } else {
+        vTD.appendChild(document.createTextNode(e.value))
+      }
+
+      tr.appendChild(tTD)
+      tr.appendChild(vTD)
+      if (e.key === 'key7'||e.key === 'key8'){
+        vTD.setAttribute('colSpan', '3')
+        tbody.appendChild(tr)
+        tr = document.createElement('tr')
+      } else {
+        if(i%2 != 0){
+          tbody.appendChild(tr)
+          tr = document.createElement('tr')
+        }
+      }
+    })
+    tbl.appendChild(colgroup)
+    tbl.appendChild(tbody)
+    d.appendChild(tbl)
+  }
+
+
+
+</script>
