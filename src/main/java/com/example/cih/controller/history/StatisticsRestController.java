@@ -2,8 +2,8 @@ package com.example.cih.controller.history;
 
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.history.HistoryCarDTO;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
+import com.example.cih.dto.statistics.StatisticsResDTO;
 import com.example.cih.service.carConsumable.CarStatisticsService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -29,16 +29,16 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 월별 지출 내역 조회", notes = "")
     @GetMapping("/consume")
-    public List<HistoryCarDTO> getConsume(@Valid StatisticsReqDTO satisticsReqDTO,
-                                   BindingResult bindingResult,
-                                   Principal principal){
+    public List<StatisticsResDTO> getConsume(@Valid StatisticsReqDTO satisticsReqDTO,
+                                             BindingResult bindingResult,
+                                             Principal principal){
 
         log.error("statistics-consume : " + satisticsReqDTO.getCarId());
 
         User user = userService.findUser(principal.getName());
 
-        carStatisticsService.getStatisticsConsume(satisticsReqDTO.getCarId());
+        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO.getCarId());
 
-        return null;
+        return listDto;
     }
 }

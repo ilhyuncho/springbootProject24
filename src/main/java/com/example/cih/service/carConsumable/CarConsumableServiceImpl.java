@@ -163,14 +163,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public void getStatisticsConsume(Long carid) {
-
-    }
-
-
-
-
-    @Override
     public List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId){
 
         RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(consumableId)

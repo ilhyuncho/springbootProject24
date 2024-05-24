@@ -2,16 +2,13 @@ package com.example.cih.domain.carConsumable.search;
 
 import com.example.cih.domain.carConsumable.CarConsumable;
 import com.example.cih.domain.carConsumable.QCarConsumable;
-import com.example.cih.domain.sellingCar.QSellingCar;
-import com.example.cih.domain.sellingCar.SellingCar;
-import com.example.cih.domain.sellingCar.SellingCarStatus;
-import com.example.cih.domain.sellingCar.search.SellingCarSearch;
-import com.querydsl.core.BooleanBuilder;
+import com.example.cih.dto.statistics.StatisticsResDTO;
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.time.LocalDate;
@@ -25,35 +22,47 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
 
     @Override
-    public Page<CarConsumable> statisticsConsume(String[] types, String keyword) {
+    public List<StatisticsResDTO> statisticsConsume(String[] types, String keyword) {
+
+        LocalDate startDate = LocalDate.of(2024, 1, 1); // 임시
+
 
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
+
+        //        DateTemplate<LocalDate> formattedDate = Expressions.dateTemplate(
+//                LocalDate.class
+//                ,"DATE_FORMAT({0}, {1})"
+//                , carConsumable.replaceDate
+//                , "%Y-%m-%d");
+
+        StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%Y-%m"));
+
+        StringTemplate formattedDateOnlyMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%m"));
+
         JPQLQuery<CarConsumable> query = from(carConsumable);
+        query.groupBy(formattedDateYearMonth);
 
-        if ((types != null && types.length > 0) && keyword != null) {
-            BooleanBuilder booleanBuilder = new BooleanBuilder();
-            for (String type : types) {
-                switch (type) {
-                    case "m":
-                        booleanBuilder.or(carConsumable.refConsumableId.eq(1L));
-                        break;
-                }
-            }
-            query.where(booleanBuilder);
-        }
-        query.where(carConsumable.replaceDate.between(LocalDate.of(2024,4,1)
-                                                     ,LocalDate.of(2024,6,1)));
+        query.where(carConsumable.refConsumableId.eq(1L));
+        query.where(carConsumable.replaceDate.year().eq(startDate.getYear()));
 
+        JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
+                ,formattedDateOnlyMonth.as("replaceDate")
+                ,carConsumable.replacePrice.sum().as("replacePrice")
+        ));
 
-        //this.getQuerydsl().applyPagination(pageable, query);
-
-        List<CarConsumable> list = query.fetch();
+        List<StatisticsResDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
-        for (CarConsumable car : list) {
-            log.error(car.getConsumableId() + ", " + car.getAccumKm() + ", " + car.getReplacePrice());
+        for (StatisticsResDTO dto : list) {
+            log.error(dto.getReplaceDate() + ", " + dto.getReplacePrice());
         }
 
-        return null;
+        return list;
     }
 }

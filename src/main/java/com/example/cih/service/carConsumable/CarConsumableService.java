@@ -15,6 +15,4 @@ public interface CarConsumableService {
     List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId);
     void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO);
 
-    void getStatisticsConsume(Long carid);
-
 }

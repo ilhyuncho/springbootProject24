@@ -107,6 +107,8 @@
 
     getConsumeHistory({carId}).then(data => {
 
+      console.log(data)
+
       printConsumeList(data) // 목록 처리
 
     }).catch(e=>{
@@ -117,12 +119,19 @@
 
   function printConsumeList(dtoList) {
 
-    /////////////////////////// 차트 테스트
+    const arrMonth = Array.from({length: 12}, (item, index) =>
+            String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
+
+    const arrCost = Array.from({length: 12}, () => 0);   // 월별 비용 저장
+
+    dtoList.forEach(function (e, i) {
+      arrCost[parseInt(e.replaceDate)-1] = e.replacePrice
+    })
+
+    console.log(arrCost)
+
+    ///////// 차트 /////////
     const ctx = document.getElementById('consumeChart');
-
-    // dtoList -> arr 로 변경
-
-    const arr = [12, 19, 3, 5, 2, 3]
 
     let chartStatus = Chart.getChart(ctx);
     if (chartStatus !== undefined) {
@@ -132,10 +141,10 @@
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: arrMonth,
         datasets: [{
           label: '# of Votes',
-          data: arr,
+          data: arrCost,
           borderWidth: 1
         }]
       },
