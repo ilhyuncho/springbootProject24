@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,11 +34,18 @@ public class StatisticsRestController {
                                              BindingResult bindingResult,
                                              Principal principal){
 
-        log.error("statistics-consume : " + satisticsReqDTO.getSelectYear());
-
+        log.error("statistics-consume : " + satisticsReqDTO.getTargetId());
         User user = userService.findUser(principal.getName());
 
-        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
+        List<StatisticsResDTO> listDto = new ArrayList<>();
+
+        if( "#consume".equals(satisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
+        }
+        else if( "#fuelEff".equals(satisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsFuelEff(satisticsReqDTO);
+        }
+        
 
         return listDto;
     }

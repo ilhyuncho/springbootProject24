@@ -64,4 +64,46 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         return list;
     }
+
+    @Override
+    public List<StatisticsResDTO> statisticsFuelEff(StatisticsReqDTO statisticsReqDTO) {
+        LocalDate selectDate = LocalDate.of(statisticsReqDTO.getSelectYear(), 1, 1);
+
+        QCarConsumable carConsumable = QCarConsumable.carConsumable;
+
+        //        DateTemplate<LocalDate> formattedDate = Expressions.dateTemplate(
+//                LocalDate.class
+//                ,"DATE_FORMAT({0}, {1})"
+//                , carConsumable.replaceDate
+//                , "%Y-%m-%d");
+
+        StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%Y-%m"));
+
+        StringTemplate formattedDateOnlyMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%m"));
+
+        JPQLQuery<CarConsumable> query = from(carConsumable);
+        query.groupBy(formattedDateYearMonth);
+
+        query.where(carConsumable.replaceDate.year().eq(2025));
+
+        JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
+                ,formattedDateOnlyMonth.as("replaceDate")
+                ,carConsumable.replacePrice.sum().as("replacePrice")
+        ));
+
+        List<StatisticsResDTO> list = dtoQuery.fetch();
+        long count = query.fetchCount();
+
+        for (StatisticsResDTO dto : list) {
+            log.error(dto.getReplaceDate() + ", " + dto.getReplacePrice());
+        }
+
+        return list;
+    }
 }

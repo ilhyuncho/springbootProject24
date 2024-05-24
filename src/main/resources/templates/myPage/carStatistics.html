@@ -35,7 +35,7 @@
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectYear">
+                  <select name="selectYearName" id="selectConsumeYear">
                     <option value="2024" selected>2024</option>
                     <option value="2025">2025</option>
                     <option value="2026">2026</option>
@@ -43,7 +43,7 @@
                     <option value="2028">2028</option>
                   </select>
 
-                  <button type="button" class="btn btn-info refreshBtn">조회</button>
+                  <button type="button" class="btn btn-info refreshConsumeBtn" data-bs-target="#consume">조회</button>
                 </div>
               </div>
 
@@ -52,12 +52,30 @@
                   <canvas id="consumeChart"></canvas>
                 </div>
               </div>
+
             </div>
             <div class="tab-pane fade" id="fuelEff" role="tabpanel" aria-labelledby="fuelEff-tab">
+
               <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <select name="selectYearName" id="selectFuelEffYear">
+                    <option value="2024" selected>2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                  </select>
 
-
+                  <button type="button" class="btn btn-info refreshFuelEffBtn">조회1</button>
+                </div>
               </div>
+
+              <div class="row mt-3">
+                <div>
+                  <canvas id="fuelEffChart"></canvas>
+                </div>
+              </div>
+
             </div>
             <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">
               <div class="row mt-3">
@@ -92,16 +110,21 @@
   const currentUser = [[${#authentication.principal.username}]]
   const carId = [[${carId}]]
 
-  const selectYear = document.querySelector('#selectYear');
-  const refreshBtn = document.querySelector(".refreshBtn")
+  const selectConsumeYear = document.querySelector('#selectConsumeYear');
+  const selectFuelEffYear = document.querySelector('#selectFuelEffYear');
+  const refreshConsumeBtn = document.querySelector(".refreshConsumeBtn")
+  const refreshFuelEffBtn = document.querySelector(".refreshFuelEffBtn")
 
 
-  getConsumeList()
+  getConsumeList('#consume')
 
 
+  refreshConsumeBtn.addEventListener("click", function(e) {
 
-  refreshBtn.addEventListener("click", function(e) {
-    getConsumeList()
+    const target = e.target
+    const targetId = target.getAttribute("data-bs-target")
+
+    getConsumeList(targetId)
   },false)
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
@@ -114,9 +137,9 @@
       const target = event.target
       const targetId = target.getAttribute("data-bs-target")
 
-      if( targetId === "#consume" ){
-        getConsumeList()
-      }
+      //if( targetId === "#consume" ){
+        getConsumeList(targetId)
+      //}
       // else if(targetId === "#fuelEff" ){
       //   getFuelEffList()
       // }
@@ -128,13 +151,20 @@
     })
   })
 
-  function getConsumeList(){
+  function getConsumeList(targetId){
 
-    getConsumeHistory({carId, selectYear:selectYear.value}).then(data => {
+    const formObj = {
+      carId:carId,
+      selectYear:selectConsumeYear.value,
+      targetId:targetId
+    }
 
+    getConsumeHistory(formObj).then(data => {
+
+      console.log('-----------------------')
       console.log(data)
 
-      printConsumeList(data) // 목록 처리
+      printConsumeList(data, targetId) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
@@ -142,7 +172,7 @@
   }
 
 
-  function printConsumeList(dtoList) {
+  function printConsumeList(dtoList, targetId) {
 
     const arrMonth = Array.from({length: 12}, (item, index) =>
             String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
@@ -154,6 +184,18 @@
     })
 
     console.log(arrCost)
+
+    if( targetId === '#consume'){
+      printChart(arrMonth, arrCost)
+    }
+    else if( targetId === '#fuelEff'){
+      printFuelEffChart(arrMonth, arrCost)
+    }
+
+
+  }
+
+  function printChart(arrMonth, arrCost) {
 
     ///////// 차트 /////////
     const ctx = document.getElementById('consumeChart');
@@ -181,6 +223,37 @@
         }
       }
     });
+  }
+
+  function printFuelEffChart(arrMonth, arrCost) {
+
+    ///////// 차트 /////////
+    const ctx = document.getElementById('fuelEffChart');
+
+    let chartStatus = Chart.getChart(ctx);
+    if (chartStatus !== undefined) {
+      chartStatus.destroy();
+    }
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: arrMonth,
+        datasets: [{
+          label: '# of Votes',
+          data: arrCost,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
   }
 
 </script>

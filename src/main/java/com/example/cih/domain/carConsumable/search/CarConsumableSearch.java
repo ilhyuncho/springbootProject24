@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CarConsumableSearch {
     List<StatisticsResDTO> statisticsConsume(StatisticsReqDTO statisticsReqDTO);
+    List<StatisticsResDTO> statisticsFuelEff(StatisticsReqDTO statisticsReqDTO);
 }

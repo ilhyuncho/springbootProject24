@@ -10,4 +10,5 @@ import lombok.*;
 public class StatisticsReqDTO {
     private Long carId;
     private int selectYear;
+    private String targetId;
 }

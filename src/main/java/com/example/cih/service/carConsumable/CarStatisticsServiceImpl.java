@@ -27,6 +27,14 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     public List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO) {
 
         List<StatisticsResDTO> listDto = carConsumableRepository.statisticsConsume(statisticsReqDTO);
+
+        return listDto;
+    }
+
+    @Override
+    public List<StatisticsResDTO> getStatisticsFuelEff(StatisticsReqDTO statisticsReqDTO) {
+        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsFuelEff(statisticsReqDTO);
+
         return listDto;
     }
 
