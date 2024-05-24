@@ -2,6 +2,7 @@ package com.example.cih.domain.carConsumable.search;
 
 import com.example.cih.domain.carConsumable.CarConsumable;
 import com.example.cih.domain.carConsumable.QCarConsumable;
+import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
@@ -22,10 +23,9 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
 
     @Override
-    public List<StatisticsResDTO> statisticsConsume(String[] types, String keyword) {
+    public List<StatisticsResDTO> statisticsConsume(StatisticsReqDTO statisticsReqDTO) {
 
-        LocalDate startDate = LocalDate.of(2024, 1, 1); // 임시
-
+        LocalDate selectDate = LocalDate.of(statisticsReqDTO.getSelectYear(), 1, 1);
 
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
 
@@ -48,8 +48,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<CarConsumable> query = from(carConsumable);
         query.groupBy(formattedDateYearMonth);
 
-        query.where(carConsumable.refConsumableId.eq(1L));
-        query.where(carConsumable.replaceDate.year().eq(startDate.getYear()));
+        query.where(carConsumable.replaceDate.year().eq(selectDate.getYear()));
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("replaceDate")

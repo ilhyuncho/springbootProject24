@@ -9,5 +9,5 @@ import lombok.*;
 @ToString
 public class StatisticsReqDTO {
     private Long carId;
-
+    private int selectYear;
 }

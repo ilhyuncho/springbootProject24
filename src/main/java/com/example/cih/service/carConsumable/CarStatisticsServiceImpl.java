@@ -2,6 +2,7 @@ package com.example.cih.service.carConsumable;
 
 import com.example.cih.domain.car.*;
 import com.example.cih.domain.carConsumable.CarConsumableRepository;
+import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,10 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
 
     @Override
-    public List<StatisticsResDTO> getStatisticsConsume(Long carid) {
+    public List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO) {
 
-        String[] types = {"m"};
-        String keyword = "";
-
-        List<StatisticsResDTO> statisticsResDTOS = carConsumableRepository.statisticsConsume(types, keyword);
-        return statisticsResDTOS;
+        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsConsume(statisticsReqDTO);
+        return listDto;
     }
 
 }

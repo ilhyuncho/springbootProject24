@@ -32,6 +32,21 @@
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="consume" role="tabpanel" aria-labelledby="consume-tab">
+
+              <div class="row mt-3">
+                <div class="input-group-prepend">
+                  <select name="selectYearName" id="selectYear">
+                    <option value="2024" selected>2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                  </select>
+
+                  <button type="button" class="btn btn-info refreshBtn">조회</button>
+                </div>
+              </div>
+
               <div class="row mt-3">
                 <div>
                   <canvas id="consumeChart"></canvas>
@@ -77,7 +92,17 @@
   const currentUser = [[${#authentication.principal.username}]]
   const carId = [[${carId}]]
 
+  const selectYear = document.querySelector('#selectYear');
+  const refreshBtn = document.querySelector(".refreshBtn")
+
+
   getConsumeList()
+
+
+
+  refreshBtn.addEventListener("click", function(e) {
+    getConsumeList()
+  },false)
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
   triggerTabList.forEach(function (triggerEl) {
@@ -105,7 +130,7 @@
 
   function getConsumeList(){
 
-    getConsumeHistory({carId}).then(data => {
+    getConsumeHistory({carId, selectYear:selectYear.value}).then(data => {
 
       console.log(data)
 

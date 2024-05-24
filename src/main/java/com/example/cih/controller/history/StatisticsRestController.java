@@ -33,11 +33,11 @@ public class StatisticsRestController {
                                              BindingResult bindingResult,
                                              Principal principal){
 
-        log.error("statistics-consume : " + satisticsReqDTO.getCarId());
+        log.error("statistics-consume : " + satisticsReqDTO.getSelectYear());
 
         User user = userService.findUser(principal.getName());
 
-        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO.getCarId());
+        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
 
         return listDto;
     }
