@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class StatisticsResDTO {
 
-    private String replaceDate;
-    private int replacePrice;
+    private String eventDate;
+    private int eventValue;
 
 }

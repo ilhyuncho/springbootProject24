@@ -51,15 +51,15 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         query.where(carConsumable.replaceDate.year().eq(selectDate.getYear()));
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
-                ,formattedDateOnlyMonth.as("replaceDate")
-                ,carConsumable.replacePrice.sum().as("replacePrice")
+                ,formattedDateOnlyMonth.as("eventDate")
+                ,carConsumable.replacePrice.sum().as("eventValue")
         ));
 
         List<StatisticsResDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
         for (StatisticsResDTO dto : list) {
-            log.error(dto.getReplaceDate() + ", " + dto.getReplacePrice());
+            log.error(dto.getEventDate() + ", " + dto.getEventValue());
         }
 
         return list;
@@ -90,18 +90,19 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<CarConsumable> query = from(carConsumable);
         query.groupBy(formattedDateYearMonth);
 
-        query.where(carConsumable.replaceDate.year().eq(2025));
+        query.where(carConsumable.replaceDate.year().eq(selectDate.getYear()));
+
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
-                ,formattedDateOnlyMonth.as("replaceDate")
-                ,carConsumable.replacePrice.sum().as("replacePrice")
+                ,formattedDateOnlyMonth.as("eventDate")
+                ,carConsumable.gasLitter.sum().as("eventValue")
         ));
 
         List<StatisticsResDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
         for (StatisticsResDTO dto : list) {
-            log.error(dto.getReplaceDate() + ", " + dto.getReplacePrice());
+            log.error(dto.getEventDate() + ", " + dto.getEventValue());
         }
 
         return list;

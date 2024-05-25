@@ -199,7 +199,7 @@
     const arrCost = Array.from({length: 12}, () => 0);   // 월별 비용 저장
 
     dtoList.forEach(function (e, i) {
-      arrCost[parseInt(e.replaceDate)-1] = e.replacePrice
+      arrCost[parseInt(e.eventDate)-1] = e.eventValue
     })
 
     // 차트 출력
