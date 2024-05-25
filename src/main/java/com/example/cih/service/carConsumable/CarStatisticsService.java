@@ -8,5 +8,6 @@ public interface CarStatisticsService {
 
     List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO);
     List<StatisticsResDTO> getStatisticsFuelAmount(StatisticsReqDTO statisticsReqDTO);
+    List<StatisticsResDTO> getStatisticsDistance(StatisticsReqDTO statisticsReqDTO);
 
 }

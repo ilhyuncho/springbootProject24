@@ -45,6 +45,9 @@ public class StatisticsRestController {
         else if( "#fuelAmount".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsFuelAmount(satisticsReqDTO);
         }
+        else if( "#distance".equals(satisticsReqDTO.getTargetId())){
+            listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
+        }
         
 
         return listDto;

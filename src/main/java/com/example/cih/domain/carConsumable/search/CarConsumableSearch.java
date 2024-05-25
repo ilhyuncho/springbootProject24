@@ -8,4 +8,5 @@ import java.util.List;
 public interface CarConsumableSearch {
     List<StatisticsResDTO> statisticsConsume(StatisticsReqDTO statisticsReqDTO);
     List<StatisticsResDTO> statisticsFuelAmount(StatisticsReqDTO statisticsReqDTO);
+    List<StatisticsResDTO> statisticsDistance(StatisticsReqDTO statisticsReqDTO);
 }

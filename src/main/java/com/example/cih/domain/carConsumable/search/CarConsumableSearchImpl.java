@@ -107,4 +107,39 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         return list;
     }
+
+    @Override
+    public List<StatisticsResDTO> statisticsDistance(StatisticsReqDTO statisticsReqDTO) {
+        QCarConsumable carConsumable = QCarConsumable.carConsumable;
+
+        StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%Y-%m"));
+
+        StringTemplate formattedDateOnlyMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%m"));
+
+        JPQLQuery<CarConsumable> query = from(carConsumable);
+        query.groupBy(formattedDateYearMonth);
+
+        query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
+        query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
+
+        JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
+                ,formattedDateOnlyMonth.as("eventDate")
+                ,carConsumable.gasLitter.sum().as("eventValue")
+        ));
+
+        List<StatisticsResDTO> list = dtoQuery.fetch();
+        long count = query.fetchCount();
+
+        for (StatisticsResDTO dto : list) {
+            log.error(dto.getEventDate() + ", " + dto.getEventValue());
+        }
+
+        return list;
+    }
 }
