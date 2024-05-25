@@ -32,8 +32,8 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     }
 
     @Override
-    public List<StatisticsResDTO> getStatisticsFuelEff(StatisticsReqDTO statisticsReqDTO) {
-        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsFuelEff(statisticsReqDTO);
+    public List<StatisticsResDTO> getStatisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
+        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsFuelAmount(statisticsReqDTO);
 
         return listDto;
     }

@@ -28,13 +28,13 @@ public class StatisticsRestController {
     private final UserService userService;
     private final CarStatisticsService carStatisticsService;
 
-    @ApiOperation(value = "내차 월별 지출 내역 조회", notes = "")
+    @ApiOperation(value = "내차 통계 내역 조회", notes = "")
     @GetMapping("/get")
     public List<StatisticsResDTO> get(@Valid StatisticsReqDTO satisticsReqDTO,
                                              BindingResult bindingResult,
                                              Principal principal){
 
-        log.error("statistics-consume : " + satisticsReqDTO.getTargetId());
+        log.error("statistics-restGet : " + satisticsReqDTO.getTargetId());
         User user = userService.findUser(principal.getName());
 
         List<StatisticsResDTO> listDto = new ArrayList<>();
@@ -43,7 +43,7 @@ public class StatisticsRestController {
             listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
         }
         else if( "#fuelAmount".equals(satisticsReqDTO.getTargetId())){
-            listDto = carStatisticsService.getStatisticsFuelEff(satisticsReqDTO);
+            listDto = carStatisticsService.getStatisticsFuelAmount(satisticsReqDTO);
         }
         
 

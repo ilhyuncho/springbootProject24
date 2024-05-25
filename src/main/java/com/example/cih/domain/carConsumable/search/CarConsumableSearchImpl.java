@@ -66,7 +66,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<StatisticsResDTO> statisticsFuelEff(StatisticsReqDTO statisticsReqDTO) {
+    public List<StatisticsResDTO> statisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
         LocalDate selectDate = LocalDate.of(statisticsReqDTO.getSelectYear(), 1, 1);
 
         QCarConsumable carConsumable = QCarConsumable.carConsumable;

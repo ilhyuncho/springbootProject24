@@ -7,6 +7,6 @@ import java.util.List;
 public interface CarStatisticsService {
 
     List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO);
-    List<StatisticsResDTO> getStatisticsFuelEff(StatisticsReqDTO statisticsReqDTO);
+    List<StatisticsResDTO> getStatisticsFuelAmount(StatisticsReqDTO statisticsReqDTO);
 
 }
