@@ -34,7 +34,7 @@ public class StatisticsRestController {
                                              BindingResult bindingResult,
                                              Principal principal){
 
-        log.error("statistics-restGet : " + satisticsReqDTO.getTargetId());
+        log.error("statistics-restGet : " + satisticsReqDTO.getTargetId() + "," + satisticsReqDTO.getSelectYear());
         User user = userService.findUser(principal.getName());
 
         List<StatisticsResDTO> listDto = new ArrayList<>();
