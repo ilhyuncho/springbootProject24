@@ -115,8 +115,11 @@
   const refreshConsumeBtn = document.querySelector(".refreshConsumeBtn")
   const refreshFuelEffBtn = document.querySelector(".refreshFuelEffBtn")
 
+  const consumeChart = document.getElementById('consumeChart');
+  const fuelEffChart = document.getElementById('fuelEffChart');
 
-  getConsumeList('#consume')
+
+  getStatisticsList('#consume')
 
 
   refreshConsumeBtn.addEventListener("click", function(e) {
@@ -124,7 +127,7 @@
     const target = e.target
     const targetId = target.getAttribute("data-bs-target")
 
-    getConsumeList(targetId)
+    getStatisticsList(targetId)
   },false)
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
@@ -137,21 +140,13 @@
       const target = event.target
       const targetId = target.getAttribute("data-bs-target")
 
-      //if( targetId === "#consume" ){
-        getConsumeList(targetId)
-      //}
-      // else if(targetId === "#fuelEff" ){
-      //   getFuelEffList()
-      // }
-      // else if(targetId === "#fuelAmount"){
-      //   getFuelAmountList()
-      // }
+      getStatisticsList(targetId)
 
       tabTrigger.show()
     })
   })
 
-  function getConsumeList(targetId){
+  function getStatisticsList(targetId){
 
     const formObj = {
       carId:carId,
@@ -159,20 +154,16 @@
       targetId:targetId
     }
 
-    getConsumeHistory(formObj).then(data => {
+    getStatisticsHistory(formObj).then(data => {
 
-      console.log('-----------------------')
-      console.log(data)
-
-      printConsumeList(data, targetId) // 목록 처리
+      printList(data, targetId) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
     })
   }
 
-
-  function printConsumeList(dtoList, targetId) {
+  function printList(dtoList, targetId) {
 
     const arrMonth = Array.from({length: 12}, (item, index) =>
             String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
@@ -183,22 +174,22 @@
       arrCost[parseInt(e.replaceDate)-1] = e.replacePrice
     })
 
-    console.log(arrCost)
-
+    // 차트 출력
+    let ctx = null
     if( targetId === '#consume'){
-      printChart(arrMonth, arrCost)
+       ctx = consumeChart
     }
     else if( targetId === '#fuelEff'){
-      printFuelEffChart(arrMonth, arrCost)
+       ctx = fuelEffChart
     }
 
+    if( ctx !== null){
+      printChart(arrMonth, arrCost, ctx)
+    }
 
   }
 
-  function printChart(arrMonth, arrCost) {
-
-    ///////// 차트 /////////
-    const ctx = document.getElementById('consumeChart');
+  function printChart(arrMonth, arrCost, ctx) {
 
     let chartStatus = Chart.getChart(ctx);
     if (chartStatus !== undefined) {
@@ -210,7 +201,7 @@
       data: {
         labels: arrMonth,
         datasets: [{
-          label: '# of Votes',
+          label: '# of Value',
           data: arrCost,
           borderWidth: 1
         }]
@@ -225,35 +216,5 @@
     });
   }
 
-  function printFuelEffChart(arrMonth, arrCost) {
-
-    ///////// 차트 /////////
-    const ctx = document.getElementById('fuelEffChart');
-
-    let chartStatus = Chart.getChart(ctx);
-    if (chartStatus !== undefined) {
-      chartStatus.destroy();
-    }
-
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: arrMonth,
-        datasets: [{
-          label: '# of Votes',
-          data: arrCost,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-  }
 
 </script>

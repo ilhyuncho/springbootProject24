@@ -29,8 +29,8 @@ public class StatisticsRestController {
     private final CarStatisticsService carStatisticsService;
 
     @ApiOperation(value = "내차 월별 지출 내역 조회", notes = "")
-    @GetMapping("/consume")
-    public List<StatisticsResDTO> getConsume(@Valid StatisticsReqDTO satisticsReqDTO,
+    @GetMapping("/get")
+    public List<StatisticsResDTO> get(@Valid StatisticsReqDTO satisticsReqDTO,
                                              BindingResult bindingResult,
                                              Principal principal){
 
