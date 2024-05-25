@@ -42,7 +42,7 @@ public class StatisticsRestController {
         if( "#consume".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
         }
-        else if( "#fuelEff".equals(satisticsReqDTO.getTargetId())){
+        else if( "#fuelAmount".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsFuelEff(satisticsReqDTO);
         }
         

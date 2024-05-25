@@ -24,10 +24,10 @@
               <button class="nav-link active" id="consume-tab" data-bs-toggle="tab" data-bs-target="#consume" type="button" role="tab" aria-controls="consume" aria-selected="true">월별 지출</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="fuelEff-tab" data-bs-toggle="tab" data-bs-target="#fuelEff" type="button" role="tab" aria-controls="fuelEff" aria-selected="false">월별 평균 연비</button>
+              <button class="nav-link" id="fuelAmount-tab" data-bs-toggle="tab" data-bs-target="#fuelAmount" type="button" role="tab" aria-controls="fuelAmount" aria-selected="false">월별 주유량</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="fuelAmount-tab" data-bs-toggle="tab" data-bs-target="#fuelAmount" type="button" role="tab" aria-controls="fuelAmount" aria-selected="false">월별 주유량</button>
+              <button class="nav-link" id="fuelEff-tab" data-bs-toggle="tab" data-bs-target="#fuelEff" type="button" role="tab" aria-controls="fuelEff" aria-selected="false">월별 평균 연비</button>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -54,11 +54,11 @@
               </div>
 
             </div>
-            <div class="tab-pane fade" id="fuelEff" role="tabpanel" aria-labelledby="fuelEff-tab">
+            <div class="tab-pane fade" id="fuelAmount" role="tabpanel" aria-labelledby="fuelAmount-tab">
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectFuelEffYear">
+                  <select name="selectYearName" id="selectFuelAmountYear">
                     <option value="2024" selected>2024</option>
                     <option value="2025">2025</option>
                     <option value="2026">2026</option>
@@ -66,23 +66,20 @@
                     <option value="2028">2028</option>
                   </select>
 
-                  <button type="button" class="btn btn-info refreshFuelEffBtn">조회1</button>
+                  <button type="button" class="btn btn-info refreshFuelAmountBtn">조회1</button>
                 </div>
               </div>
 
               <div class="row mt-3">
                 <div>
-                  <canvas id="fuelEffChart"></canvas>
+                  <canvas id="fuelAmountChart"></canvas>
                 </div>
               </div>
 
             </div>
-            <div class="tab-pane fade" id="repair" role="tabpanel" aria-labelledby="repair-tab">
-              <div class="row mt-3">
+            <div class="tab-pane fade" id="fuelEff" role="tabpanel" aria-labelledby="fuelEff-tab">
 
-              </div>
             </div>
-            <div class="tab-pane fade" id="fuelAmount" role="tabpanel" aria-labelledby="fuelAmount-tab">...</div>
           </div>
 
         </div><!-- <div class="card-body">-->
@@ -111,12 +108,12 @@
   const carId = [[${carId}]]
 
   const selectConsumeYear = document.querySelector('#selectConsumeYear');
-  const selectFuelEffYear = document.querySelector('#selectFuelEffYear');
+  const selectFuelAmountYear = document.querySelector('#selectFuelAmountYear');
   const refreshConsumeBtn = document.querySelector(".refreshConsumeBtn")
-  const refreshFuelEffBtn = document.querySelector(".refreshFuelEffBtn")
+  const refreshFuelAmountBtn = document.querySelector(".refreshFuelAmountBtn")
 
   const consumeChart = document.getElementById('consumeChart');
-  const fuelEffChart = document.getElementById('fuelEffChart');
+  const fuelAmountChart = document.getElementById('fuelAmountChart');
 
 
   getStatisticsList('#consume')
@@ -179,8 +176,8 @@
     if( targetId === '#consume'){
        ctx = consumeChart
     }
-    else if( targetId === '#fuelEff'){
-       ctx = fuelEffChart
+    else if( targetId === '#fuelAmount'){
+       ctx = fuelAmountChart
     }
 
     if( ctx !== null){
