@@ -66,7 +66,7 @@
                     <option value="2028">2028</option>
                   </select>
 
-                  <button type="button" class="btn btn-info refreshFuelAmountBtn">조회1</button>
+                  <button type="button" class="btn btn-info refreshFuelAmountBtn" data-bs-target="#fuelAmount">조회1</button>
                 </div>
               </div>
 
@@ -116,7 +116,23 @@
   const fuelAmountChart = document.getElementById('fuelAmountChart');
 
 
-  getStatisticsList('#consume')
+  let arrElement = []
+
+  const consumeObj = {
+    "targetId": "#consume",
+    "selectYear": selectConsumeYear.value,
+    "chart": consumeChart,
+  }
+  const fuelAmountObj = {
+    "targetId": "#fuelAmount",
+    "selectYear": selectFuelAmountYear.value,
+    "chart": fuelAmountChart,
+  }
+  arrElement.push(consumeObj);
+  arrElement.push(fuelAmountObj);
+
+
+  getStatisticsList('#consume', selectConsumeYear.value)
 
 
   refreshConsumeBtn.addEventListener("click", function(e) {
@@ -124,8 +140,22 @@
     const target = e.target
     const targetId = target.getAttribute("data-bs-target")
 
-    getStatisticsList(targetId)
+    const selectYear = selectConsumeYear.value
+
+    getStatisticsList(targetId, selectYear)
   },false)
+
+  refreshFuelAmountBtn.addEventListener("click", function(e) {
+
+    const target = e.target
+    const targetId = target.getAttribute("data-bs-target")
+
+    const selectYear = selectFuelAmountYear.value
+
+    getStatisticsList(targetId, selectYear)
+  },false)
+
+
 
   var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
   triggerTabList.forEach(function (triggerEl) {
@@ -136,18 +166,19 @@
 
       const target = event.target
       const targetId = target.getAttribute("data-bs-target")
+      const selectYear = arrElement.find(o => o.targetId === targetId).selectYear
 
-      getStatisticsList(targetId)
+      getStatisticsList(targetId, selectYear)
 
       tabTrigger.show()
     })
   })
 
-  function getStatisticsList(targetId){
+  function getStatisticsList(targetId, selectYear){
 
     const formObj = {
       carId:carId,
-      selectYear:selectConsumeYear.value,
+      selectYear:selectYear,
       targetId:targetId
     }
 
@@ -172,28 +203,20 @@
     })
 
     // 차트 출력
-    let ctx = null
-    if( targetId === '#consume'){
-       ctx = consumeChart
-    }
-    else if( targetId === '#fuelAmount'){
-       ctx = fuelAmountChart
-    }
+    let chart = arrElement.find(o => o.targetId === targetId).chart
 
-    if( ctx !== null){
-      printChart(arrMonth, arrCost, ctx)
-    }
+    printChart(arrMonth, arrCost, chart)
 
   }
 
-  function printChart(arrMonth, arrCost, ctx) {
+  function printChart(arrMonth, arrCost, chart) {
 
-    let chartStatus = Chart.getChart(ctx);
+    let chartStatus = Chart.getChart(chart);
     if (chartStatus !== undefined) {
       chartStatus.destroy();
     }
 
-    new Chart(ctx, {
+    new Chart(chart, {
       type: 'bar',
       data: {
         labels: arrMonth,
@@ -212,6 +235,5 @@
       }
     });
   }
-
 
 </script>
