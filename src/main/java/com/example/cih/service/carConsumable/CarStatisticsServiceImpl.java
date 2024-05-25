@@ -1,5 +1,6 @@
 package com.example.cih.service.carConsumable;
 
+import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.car.*;
 import com.example.cih.domain.carConsumable.CarConsumableRepository;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
@@ -26,6 +27,9 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     @Override
     public List<StatisticsResDTO> getStatisticsConsume(StatisticsReqDTO statisticsReqDTO) {
 
+        Car car = carRepository.findById(statisticsReqDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
         List<StatisticsResDTO> listDto = carConsumableRepository.statisticsConsume(statisticsReqDTO);
 
         return listDto;
@@ -33,6 +37,10 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
     @Override
     public List<StatisticsResDTO> getStatisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
+
+        Car car = carRepository.findById(statisticsReqDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
         List<StatisticsResDTO> listDto = carConsumableRepository.statisticsFuelAmount(statisticsReqDTO);
 
         return listDto;

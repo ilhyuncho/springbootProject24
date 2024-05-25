@@ -1,4 +1,5 @@
 package com.example.cih.domain.carConsumable.search;
+import com.example.cih.domain.car.Car;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
 

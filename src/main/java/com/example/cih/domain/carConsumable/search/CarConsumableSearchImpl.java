@@ -1,5 +1,6 @@
 package com.example.cih.domain.carConsumable.search;
 
+import com.example.cih.domain.car.Car;
 import com.example.cih.domain.carConsumable.CarConsumable;
 import com.example.cih.domain.carConsumable.QCarConsumable;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
@@ -25,8 +26,6 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
     @Override
     public List<StatisticsResDTO> statisticsConsume(StatisticsReqDTO statisticsReqDTO) {
 
-        LocalDate selectDate = LocalDate.of(statisticsReqDTO.getSelectYear(), 1, 1);
-
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
 
         //        DateTemplate<LocalDate> formattedDate = Expressions.dateTemplate(
@@ -48,7 +47,9 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<CarConsumable> query = from(carConsumable);
         query.groupBy(formattedDateYearMonth);
 
-        query.where(carConsumable.replaceDate.year().eq(selectDate.getYear()));
+        query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
+        query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
+
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
@@ -67,7 +68,6 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
     @Override
     public List<StatisticsResDTO> statisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
-        LocalDate selectDate = LocalDate.of(statisticsReqDTO.getSelectYear(), 1, 1);
 
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
 
@@ -90,8 +90,8 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<CarConsumable> query = from(carConsumable);
         query.groupBy(formattedDateYearMonth);
 
-        query.where(carConsumable.replaceDate.year().eq(selectDate.getYear()));
-
+        query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
+        query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
