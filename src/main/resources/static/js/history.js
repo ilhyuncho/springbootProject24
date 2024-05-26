@@ -51,4 +51,12 @@ async function getStatisticsHistory(formObj){
     //console.log(response)
     return response.data
 }
+
+async function getStatisticsTotal(formObj){
+
+    const response = await axios.get(`/statistics/total`, {params: formObj})
+
+    //console.log(response)
+    return response.data
+}
 // 통계------------------end-------------------------------------

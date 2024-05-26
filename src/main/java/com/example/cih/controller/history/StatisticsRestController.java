@@ -48,7 +48,20 @@ public class StatisticsRestController {
         else if( "#distance".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
         }
-        
+
+        return listDto;
+    }
+
+    @ApiOperation(value = "내차 통계 총 내역 조회", notes = "")
+    @GetMapping("/total")
+    public List<StatisticsResDTO> total(@Valid StatisticsReqDTO satisticsReqDTO,
+                                      BindingResult bindingResult,
+                                      Principal principal){
+
+        log.error("statistics-totalGet : " + satisticsReqDTO.getTargetId() + "," + satisticsReqDTO.getSelectYear());
+        User user = userService.findUser(principal.getName());
+
+        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
 
         return listDto;
     }

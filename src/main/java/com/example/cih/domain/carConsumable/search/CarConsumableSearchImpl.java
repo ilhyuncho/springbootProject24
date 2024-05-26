@@ -174,4 +174,35 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         return listStatisticsResDTO;
     }
 
+    @Override
+    public List<StatisticsResDTO> statisticsTotal(StatisticsReqDTO statisticsReqDTO) {
+        QCarConsumable carConsumable = QCarConsumable.carConsumable;
+
+        StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , carConsumable.replaceDate
+                , ConstantImpl.create("%Y-%m"));
+
+        JPQLQuery<CarConsumable> query = from(carConsumable);
+        query.groupBy(formattedDateYearMonth);
+
+        query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
+
+        JPQLQuery<StatisticsDistanceDTO> dtoQuery = query.select(Projections.bean(StatisticsDistanceDTO.class
+                ,carConsumable.replaceDate.as("eventDate")
+                ,carConsumable.accumKm.max().as("eventValue")
+        ));
+
+        List<StatisticsDistanceDTO> list = dtoQuery.fetch();
+        long count = query.fetchCount();
+
+//        for (StatisticsDistanceDTO car : list) {
+//            log.error(car.getEventDate() + ", " + car.getEventValue());
+//        }
+
+        // 전달 누적 주행 거리를 빼서 각 월을 주행 거리를 계산
+        List<StatisticsResDTO> listStatisticsResDTO = getCalcDiffDistance(list, statisticsReqDTO.getSelectYear());
+
+        return listStatisticsResDTO;
+    }
 }

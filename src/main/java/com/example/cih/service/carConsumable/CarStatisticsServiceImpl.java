@@ -56,4 +56,14 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
         return listDto;
     }
 
+    @Override
+    public List<StatisticsResDTO> getStatisticsTotal(StatisticsReqDTO statisticsReqDTO) {
+        Car car = carRepository.findById(statisticsReqDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsTotal(statisticsReqDTO);
+
+        return listDto;
+    }
+
 }
