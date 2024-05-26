@@ -125,13 +125,41 @@
               </div>
 
               <div class="row mt-3">
-                <div>
+                <div class="col">
+                  <div class="card">
+                    <div class="card-header">
+                      Total Info
+                    </div>
+                    <div class="card-body">
+                      <!--            dto 값 출력 부분-->
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 주유비</span>
+                        <input type="text" class="form-control totalGasCost" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 정비 비용</span>
+                        <input type="text" class="form-control totalRepairCost" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">평균 연비</span>
+                        <input type="text" class="form-control averageFuelEff" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 주유량</span>
+                        <input type="text" class="form-control totalGasAmount" readonly>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">총 운행거리</span>
+                        <input type="text" class="form-control totalAccKm" readonly>
+                      </div>
+                    </div><!-- <div class="card-body">-->
 
-
+                  </div>
                 </div>
-              </div>
 
+              </div><!-- <div class="row mt-3">-->
             </div>
+
 
           </div><!-- <div class="tab-content" id="myTabContent">-->
 
@@ -164,6 +192,13 @@
   const selectFuelAmountYear = document.querySelector('#selectFuelAmountYear');
   const selectDistanceYear = document.querySelector('#selectDistanceYear');
   const selectTotalYear = document.querySelector('#selectTotalYear');
+
+  const totalGasCost = document.querySelector(".totalGasCost")
+  const totalRepairCost = document.querySelector(".totalRepairCost")
+  const averageFuelEff = document.querySelector(".averageFuelEff")
+  const totalGasAmount = document.querySelector(".totalGasAmount")
+  const totalAccKm = document.querySelector(".totalAccKm")
+
 
   const consumeChart = document.getElementById('consumeChart');
   const fuelAmountChart = document.getElementById('fuelAmountChart');
@@ -289,18 +324,28 @@
 
   }
 
-  function printStatisticsTotal(dtoList, targetId) {
+  function printStatisticsTotal(dto, targetId) {
 
     const arrMonth = Array.from({length: 12}, (item, index) =>
             String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
 
     const arrCost = Array.from({length: 12}, () => 0);   // 월별 비용 저장
 
-    dtoList.forEach(function (e, i) {
-      arrCost[parseInt(e.eventDate)-1] = e.eventValue
-    })
+
+    totalGasCost.value = dto.gasCost
+    totalRepairCost.value = dto.repairCost
+    averageFuelEff.value = dto.averageFuelEff
+    totalGasAmount.value = dto.gasAmount
+    totalAccKm.value = dto.accKm
 
     console.log('printStatisticsTotal()~~~')
+    console.log(dto.gasCost)
+    console.log(dto.repairCost)
+    console.log(dto.averageFuelEff)
+    console.log(dto.gasAmount)
+    console.log(dto.accKm)
+
+
 
     // 출력
 

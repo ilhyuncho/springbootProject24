@@ -5,6 +5,7 @@ import com.example.cih.domain.car.*;
 import com.example.cih.domain.carConsumable.CarConsumableRepository;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
+import com.example.cih.dto.statistics.StatisticsTotalResDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,13 +58,13 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
     }
 
     @Override
-    public List<StatisticsResDTO> getStatisticsTotal(StatisticsReqDTO statisticsReqDTO) {
+    public StatisticsTotalResDTO getStatisticsTotal(StatisticsReqDTO statisticsReqDTO) {
         Car car = carRepository.findById(statisticsReqDTO.getCarId())
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
-        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsTotal(statisticsReqDTO);
+        StatisticsTotalResDTO totalDTO = carConsumableRepository.statisticsTotal(statisticsReqDTO);
 
-        return listDto;
+        return totalDTO;
     }
 
 }

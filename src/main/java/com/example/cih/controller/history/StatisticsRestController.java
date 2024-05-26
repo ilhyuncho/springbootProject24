@@ -4,6 +4,7 @@ package com.example.cih.controller.history;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
+import com.example.cih.dto.statistics.StatisticsTotalResDTO;
 import com.example.cih.service.carConsumable.CarStatisticsService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -54,15 +55,26 @@ public class StatisticsRestController {
 
     @ApiOperation(value = "내차 통계 총 내역 조회", notes = "")
     @GetMapping("/total")
-    public List<StatisticsResDTO> total(@Valid StatisticsReqDTO satisticsReqDTO,
+    public StatisticsTotalResDTO total(@Valid StatisticsReqDTO satisticsReqDTO,
                                       BindingResult bindingResult,
                                       Principal principal){
 
         log.error("statistics-totalGet : " + satisticsReqDTO.getTargetId() + "," + satisticsReqDTO.getSelectYear());
         User user = userService.findUser(principal.getName());
 
-        List<StatisticsResDTO> listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
+        StatisticsTotalResDTO totalDTO = carStatisticsService.getStatisticsTotal(satisticsReqDTO);
 
-        return listDto;
+       // log.error(totalDTO.getAverageFuelEff() + ", " + totalDTO.getAccKm());
+
+
+//        StatisticsTotalResDTO dto = StatisticsTotalResDTO.builder()
+//                .repairCost(1000)
+//                .gasAmount(12222)
+//                .averageFuelEff(22221)
+//                .accKm(23232)
+//                .gasCost(3232)
+//                .build();
+
+        return totalDTO;
     }
 }

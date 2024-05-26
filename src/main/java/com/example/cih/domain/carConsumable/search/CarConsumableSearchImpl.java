@@ -6,6 +6,7 @@ import com.example.cih.domain.carConsumable.QCarConsumable;
 import com.example.cih.dto.statistics.StatisticsDistanceDTO;
 import com.example.cih.dto.statistics.StatisticsReqDTO;
 import com.example.cih.dto.statistics.StatisticsResDTO;
+import com.example.cih.dto.statistics.StatisticsTotalResDTO;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -175,7 +176,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
     }
 
     @Override
-    public List<StatisticsResDTO> statisticsTotal(StatisticsReqDTO statisticsReqDTO) {
+    public StatisticsTotalResDTO statisticsTotal(StatisticsReqDTO statisticsReqDTO) {
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
 
         StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
@@ -200,9 +201,8 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 //            log.error(car.getEventDate() + ", " + car.getEventValue());
 //        }
 
-        // 전달 누적 주행 거리를 빼서 각 월을 주행 거리를 계산
-        List<StatisticsResDTO> listStatisticsResDTO = getCalcDiffDistance(list, statisticsReqDTO.getSelectYear());
 
-        return listStatisticsResDTO;
+
+        return null;
     }
 }
