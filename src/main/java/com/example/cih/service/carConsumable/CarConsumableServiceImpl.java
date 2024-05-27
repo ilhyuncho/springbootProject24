@@ -16,8 +16,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -224,10 +224,13 @@ public class CarConsumableServiceImpl implements CarConsumableService {
             LocalDate lastReplaceDate = carConsumable.getReplaceDate();
             LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
 
-            Period between = Period.between(nextReplaceDay, LocalDate.now());
-            int diffDays = between.getDays();
+            log.error("lastReplaceDate : " + lastReplaceDate + ",  nextReplaceDay : " + nextReplaceDay);
 
-            if( (diffDays < 0 && (10 + diffDays) > 0) || (diffDays > 0) ){
+            // 두 날짜 차이 계산
+            long diffDays = Duration.between(LocalDate.now().atStartOfDay(), nextReplaceDay.atStartOfDay()).toDays();
+            log.error(diffDays);
+
+            if(diffDays <= 0 || (diffDays - 30) < 0){
                 log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
                 return ReplaceAlarm.READY_CYCLE;
             }
