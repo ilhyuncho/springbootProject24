@@ -206,16 +206,20 @@
     "targetId": "#consume",
     "selectYear": selectConsumeYear,
     "chart": consumeChart,
+    "label1": "# 주유",
+    "label2": "# 정비"
   }
   const fuelAmountObj = {
     "targetId": "#fuelAmount",
     "selectYear": selectFuelAmountYear,
     "chart": fuelAmountChart,
+    "label1": "# 주유",
   }
   const distanceObj = {
     "targetId": "#distance",
     "selectYear": selectDistanceYear,
     "chart": distanceChart,
+    "label1": "운행 거리",
   }
   const totalObj = {
     "targetId": "#total",
@@ -327,19 +331,34 @@
 
   function printStatisticsList(dtoList, targetId) {
 
-    const arrMonth = Array.from({length: 12}, (item, index) =>
-            String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
-
-    const arrCost = Array.from({length: 12}, () => 0);   // 월별 비용 저장
+    const arrFirst = Array.from({length: 12}, () => 0);   // 월별 비용 저장
+    const arrSecond = Array.from({length: 12}, () => 0);   // 월별 비용 저장
 
     dtoList.forEach(function (e, i) {
-      arrCost[parseInt(e.eventDate)-1] = e.eventValue
+      if( e.refConsumableId === 1){
+        arrFirst[parseInt(e.eventDate)-1] = e.eventValue
+      }
+      else{
+        arrSecond[parseInt(e.eventDate)-1] = e.eventValue
+      }
     })
 
-    // 차트 출력
-    let chart = arrElement.find(o => o.targetId === targetId).chart
+    let dataset = []
 
-    printChart(arrMonth, arrCost, chart)
+    if(targetId === "#consume" || targetId === "#fuelAmount"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label1,
+        data: arrFirst, borderWidth: 1})
+    }
+    if(targetId === "#consume"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label2,
+        data: arrSecond, borderWidth: 1})
+    }
+    if(targetId === "#distance"){
+      dataset.push({label: arrElement.find(o => o.targetId === targetId).label1,
+        data: arrFirst, borderWidth: 1})
+    }
+
+    printChart(dataset, targetId)
 
   }
 
@@ -361,7 +380,13 @@
     // console.log(dto.gasAmount)
     // console.log(dto.accKm)
   }
-  function printChart(arrMonth, arrCost, chart) {
+  function printChart(dataset, targetId) {
+
+    const arrMonth = Array.from({length: 12}, (item, index) =>
+            String(index + 1).padStart(2, "0"));   // 숫자 앞자리 0으로 채우기
+
+    // 차트 출력
+    let chart = arrElement.find(o => o.targetId === targetId).chart
 
     let chartStatus = Chart.getChart(chart);
     if (chartStatus !== undefined) {
@@ -372,11 +397,7 @@
       type: 'bar',
       data: {
         labels: arrMonth,
-        datasets: [{
-          label: '# of Value',
-          data: arrCost,
-          borderWidth: 1
-        }]
+        datasets: dataset
       },
       options: {
         scales: {

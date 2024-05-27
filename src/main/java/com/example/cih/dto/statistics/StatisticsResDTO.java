@@ -11,5 +11,6 @@ public class StatisticsResDTO {
 
     private String eventDate;
     private int eventValue;
+    private Long refConsumableId;
 
 }

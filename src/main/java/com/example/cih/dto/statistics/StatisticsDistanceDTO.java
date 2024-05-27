@@ -13,5 +13,6 @@ public class StatisticsDistanceDTO {
 
     private LocalDate eventDate;
     private int eventValue;
+    private Long refConsumableId;
 
 }
