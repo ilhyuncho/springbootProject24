@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,10 @@ public class UserRepositoryTest {
 
     @Autowired
     RefCarConsumableRepository refCarConsumableRepository;
+
+
+    int index = 0;
+
 
     @Test
     public void InsertUserData(){
@@ -77,25 +82,32 @@ public class UserRepositoryTest {
             shopItemRepository.save(shopItem);
         });
 
-        IntStream.rangeClosed(1,2).forEach(i -> {
-            RefCarConsumable refCarConsumable = RefCarConsumable.builder()
-                    .name("소모품1_" + i)
-                    .repairType("점검")
-                    .replaceCycleKm(10000 + (1000 * i))
-                    .replaceCycleMonth(12 + i)
-                    .viewOrder(i)
-                    .build();
 
-            refCarConsumableRepository.save(refCarConsumable);
-        });
 
-        IntStream.rangeClosed(3,4).forEach(i -> {
+
+        List<String> listName = new ArrayList<>();
+
+        listName.add("엔진오일 및 오일 필터");
+        listName.add("에어컨 필터");
+        listName.add("브레이크 오일");
+        listName.add("에어클리너 필터");
+        listName.add("배터리");
+        listName.add("점화플러그");
+        listName.add("구동 벨트");
+        listName.add("파워스티어링 오일");
+        listName.add("브레이크 패드 및 디스크");
+        listName.add("미션 오일");
+
+
+        listName.forEach(name -> {
+            int random = (int) (Math.random() * 50);
+
             RefCarConsumable refCarConsumable = RefCarConsumable.builder()
-                    .name("소모품2_" + i)
-                    .repairType("교체")
-                    .replaceCycleKm(20000 + (1000 * i))
-                    .replaceCycleMonth(12 + i)
-                    .viewOrder(i)
+                    .name(name)
+                    .repairType( random % 2 == 0 ? "교체" : "점검" )
+                    .replaceCycleKm(5000 + (100 * random))
+                    .replaceCycleMonth(12 + random)
+                    .viewOrder(index++)
                     .build();
 
             refCarConsumableRepository.save(refCarConsumable);
