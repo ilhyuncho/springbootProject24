@@ -12,6 +12,6 @@ public interface CarConsumableRepository extends JpaRepository<CarConsumable, Lo
 
     List<CarConsumable> findByCar(Car car);
 
-    List<CarConsumable> findByCarAndRefConsumableId(Car car, RefCarConsumable refCarConsumable);
+    List<CarConsumable> findByCarAndRefCarConsumable(Car car, RefCarConsumable refCarConsumable);
     List<CarConsumable> findByCarAndConsumableType(Car car, ConsumableType consumableType);
 }

@@ -11,9 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class StatisticsDistanceDTO {
-
+    private ConsumableType consumableType;
     private LocalDate eventDate;
     private int eventValue;
-    private ConsumableType consumableType;
-
 }

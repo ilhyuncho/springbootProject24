@@ -9,9 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class StatisticsResDTO {
-
+    private ConsumableType consumableType;
     private String eventDate;
     private int eventValue;
-    private ConsumableType consumableType;
-
+    private int chartBarOrder;
 }

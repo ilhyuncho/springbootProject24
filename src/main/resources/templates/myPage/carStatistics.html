@@ -331,13 +331,13 @@
 
   function printStatisticsList(dtoList, targetId) {
 
-    const arrFirst = Array.from({length: 12}, () => 0);   // 월별 비용 저장
-    const arrSecond = Array.from({length: 12}, () => 0);   // 월별 비용 저장
+    const arrFirst = Array.from({length: 12}, () => 0);
+    const arrSecond = Array.from({length: 12}, () => 0);
 
     console.log(dtoList)
 
     dtoList.forEach(function (e, i) {
-      if( e.consumableType === 'GAS'){
+      if( e.chartBarOrder === 1){
         arrFirst[parseInt(e.eventDate)-1] = e.eventValue
       }
       else{

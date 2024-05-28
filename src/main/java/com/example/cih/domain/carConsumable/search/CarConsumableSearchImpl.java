@@ -48,19 +48,28 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
 
-
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
-                ,formattedDateOnlyMonth.as("eventDate")
                 ,carConsumable.consumableType.as("consumableType")
+                ,formattedDateOnlyMonth.as("eventDate")
                 ,carConsumable.replacePrice.sum().as("eventValue")
         ));
 
         List<StatisticsResDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
-        for (StatisticsResDTO dto : list) {
-            log.error(dto.getEventDate() + ", " + dto.getConsumableType() + ", " + dto.getEventValue());
+        for (StatisticsResDTO statisticsResDTO : list) {
+            if(statisticsResDTO.getConsumableType() == ConsumableType.GAS){
+                statisticsResDTO.setChartBarOrder(1);
+            }
+            if(statisticsResDTO.getConsumableType() == ConsumableType.REPAIR){
+                statisticsResDTO.setChartBarOrder(2);
+            }
         }
+
+        for (StatisticsResDTO dto : list) {
+            log.error(dto.toString());
+        }
+
 
         return list;
     }
@@ -69,12 +78,6 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
     public List<StatisticsResDTO> statisticsFuelAmount(StatisticsReqDTO statisticsReqDTO) {
 
         QCarConsumable carConsumable = QCarConsumable.carConsumable;
-
-        //        DateTemplate<LocalDate> formattedDate = Expressions.dateTemplate(
-//                LocalDate.class
-//                ,"DATE_FORMAT({0}, {1})"
-//                , carConsumable.replaceDate
-//                , "%Y-%m-%d");
 
         StringTemplate formattedDateYearMonth = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
@@ -95,17 +98,19 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
-                ,carConsumable.gasLitter.sum().as("eventValue")
                 ,carConsumable.consumableType.as("consumableType")
-
+                ,carConsumable.gasLitter.sum().as("eventValue")
         ));
 
         List<StatisticsResDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
+        list.forEach(a->a.setChartBarOrder(1));
+
         for (StatisticsResDTO dto : list) {
-            log.error(dto.getEventDate() + ", " + dto.getEventValue());
+            log.error(dto.toString());
         }
+
 
         return list;
     }
@@ -126,19 +131,23 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         JPQLQuery<StatisticsDistanceDTO> dtoQuery = query.select(Projections.bean(StatisticsDistanceDTO.class
                 ,carConsumable.replaceDate.as("eventDate")
-                ,carConsumable.accumKm.max().as("eventValue")
                 ,carConsumable.consumableType.as("consumableType")
+                ,carConsumable.accumKm.max().as("eventValue")
         ));
 
         List<StatisticsDistanceDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
         for (StatisticsDistanceDTO car : list) {
-            log.error(car.getEventDate() + ", " + car.getEventValue());
+            log.error(car.toString());
         }
 
         // 전달 누적 주행 거리를 빼서 각 월을 주행 거리를 계산
         List<StatisticsResDTO> listStatisticsResDTO = getCalcDiffDistance(list, statisticsReqDTO.getSelectYear());
+
+        for (StatisticsResDTO car : listStatisticsResDTO) {
+            log.error(car.toString());
+        }
 
         return listStatisticsResDTO;
     }
@@ -162,9 +171,8 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
                     listStatisticsResDTO.add(StatisticsResDTO.builder()
                             .eventDate(dateMM)
                             .eventValue(dto.getEventValue() - mapTemp.get(before1MonthYYYYMM))
-
                             .consumableType(dto.getConsumableType())
-
+                            .chartBarOrder(1)
                             .build());
                 }
             }
@@ -187,7 +195,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
                 , ConstantImpl.create("%Y"));
 
         JPQLQuery<CarConsumable> query = from(carConsumable);
-        query.groupBy(formattedDateYear, carConsumable.refConsumableId );
+        query.groupBy(formattedDateYear, carConsumable.refCarConsumable );
 
         query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
