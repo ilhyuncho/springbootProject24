@@ -1,5 +1,6 @@
 package com.example.cih.dto.consumable;
 
+import com.example.cih.domain.carConsumable.ConsumableType;
 import com.example.cih.domain.carConsumable.RepairType;
 import lombok.*;
 
@@ -16,14 +17,15 @@ import java.time.LocalDate;
 public class ConsumableRegDTO {
 
     private Long consumableId;
+    private ConsumableType consumableType;
     private Long carId;
     private int replacePrice;
     private int accumKm;
     private int gasLitter;
     private String replaceShop;
 
-    @Enumerated(EnumType.STRING)
-    private RepairType repairType;
+//    @Enumerated(EnumType.STRING)
+//    private RepairType repairType;
 
     @NotNull
     private LocalDate replaceDate;

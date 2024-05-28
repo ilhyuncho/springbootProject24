@@ -1,5 +1,6 @@
 package com.example.cih.dto.statistics;
 
+import com.example.cih.domain.carConsumable.ConsumableType;
 import lombok.*;
 
 @Data
@@ -11,6 +12,6 @@ public class StatisticsResDTO {
 
     private String eventDate;
     private int eventValue;
-    private Long refConsumableId;
+    private ConsumableType consumableType;
 
 }

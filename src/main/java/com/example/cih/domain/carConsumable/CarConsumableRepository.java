@@ -2,6 +2,7 @@ package com.example.cih.domain.carConsumable;
 
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.carConsumable.search.CarConsumableSearch;
+import com.example.cih.domain.reference.RefCarConsumable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -11,5 +12,6 @@ public interface CarConsumableRepository extends JpaRepository<CarConsumable, Lo
 
     List<CarConsumable> findByCar(Car car);
 
-    List<CarConsumable> findByCarAndRefConsumableId(Car car, Long refConsumableId);
+    List<CarConsumable> findByCarAndRefConsumableId(Car car, RefCarConsumable refCarConsumable);
+    List<CarConsumable> findByCarAndConsumableType(Car car, ConsumableType consumableType);
 }

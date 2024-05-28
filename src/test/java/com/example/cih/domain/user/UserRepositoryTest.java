@@ -83,10 +83,19 @@ public class UserRepositoryTest {
         });
 
 
+        RefCarConsumable refCarConsumable1 = RefCarConsumable.builder()
+                .name("주유")
+                .repairType("상시")
+                .replaceCycleKm(0)
+                .replaceCycleMonth(0)
+                .viewOrder(0)
+                .build();
+
+        refCarConsumableRepository.save(refCarConsumable1);
+
 
 
         List<String> listName = new ArrayList<>();
-
         listName.add("엔진오일 및 오일 필터");
         listName.add("에어컨 필터");
         listName.add("브레이크 오일");

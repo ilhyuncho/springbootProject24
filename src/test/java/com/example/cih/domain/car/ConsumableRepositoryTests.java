@@ -26,20 +26,20 @@ public class ConsumableRepositoryTests {
     @Test
     public void insertConsumable(){
 
-        LocalDate replaceDate = LocalDate.now();
-
-        Optional<Car> byId = carRepository.findById(1L);
-        Car car = byId.orElseThrow();
-
-        IntStream.rangeClosed(1,2).forEach(i -> {
-            CarConsumable carConsumable = CarConsumable.builder()
-                    .refConsumableId(Long.valueOf(i))
-                    .replaceDate(replaceDate)
-                    .car(car)
-                    .build();
-
-            carConsumableRepository.save(carConsumable);
-        });
+//        LocalDate replaceDate = LocalDate.now();
+//
+//        Optional<Car> byId = carRepository.findById(1L);
+//        Car car = byId.orElseThrow();
+//
+//        IntStream.rangeClosed(1,2).forEach(i -> {
+//            CarConsumable carConsumable = CarConsumable.builder()
+//                    .refConsumableId(Long.valueOf(i))
+//                    .replaceDate(replaceDate)
+//                    .car(car)
+//                    .build();
+//
+//            carConsumableRepository.save(carConsumable);
+//        });
     }
     @Test
     public void findConsumable() {

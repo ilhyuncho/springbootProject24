@@ -43,7 +43,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
                 , ConstantImpl.create("%m"));
 
         JPQLQuery<CarConsumable> query = from(carConsumable);
-        query.groupBy(formattedDateYearMonth, carConsumable.refConsumableId);
+        query.groupBy(formattedDateYearMonth, carConsumable.consumableType);
 
         query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
@@ -51,7 +51,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
-                ,carConsumable.refConsumableId.as("refConsumableId")
+                ,carConsumable.consumableType.as("consumableType")
                 ,carConsumable.replacePrice.sum().as("eventValue")
         ));
 
@@ -59,7 +59,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         long count = query.fetchCount();
 
         for (StatisticsResDTO dto : list) {
-            log.error(dto.getEventDate() + ", " + dto.getRefConsumableId() + ", " + dto.getEventValue());
+            log.error(dto.getEventDate() + ", " + dto.getConsumableType() + ", " + dto.getEventValue());
         }
 
         return list;
@@ -91,12 +91,12 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         query.where(carConsumable.replaceDate.year().eq(statisticsReqDTO.getSelectYear()));
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
-        query.where(carConsumable.refConsumableId.eq(ConsumableType.GAS.getType()));
+        query.where(carConsumable.consumableType.eq(ConsumableType.GAS));
 
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
                 ,carConsumable.gasLitter.sum().as("eventValue")
-                ,carConsumable.refConsumableId.as("refConsumableId")
+                ,carConsumable.consumableType.as("consumableType")
 
         ));
 
@@ -127,15 +127,15 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<StatisticsDistanceDTO> dtoQuery = query.select(Projections.bean(StatisticsDistanceDTO.class
                 ,carConsumable.replaceDate.as("eventDate")
                 ,carConsumable.accumKm.max().as("eventValue")
-                ,carConsumable.refConsumableId.as("refConsumableId")
+                ,carConsumable.consumableType.as("consumableType")
         ));
 
         List<StatisticsDistanceDTO> list = dtoQuery.fetch();
         long count = query.fetchCount();
 
-//        for (StatisticsDistanceDTO car : list) {
-//            log.error(car.getEventDate() + ", " + car.getEventValue());
-//        }
+        for (StatisticsDistanceDTO car : list) {
+            log.error(car.getEventDate() + ", " + car.getEventValue());
+        }
 
         // 전달 누적 주행 거리를 빼서 각 월을 주행 거리를 계산
         List<StatisticsResDTO> listStatisticsResDTO = getCalcDiffDistance(list, statisticsReqDTO.getSelectYear());
@@ -162,7 +162,9 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
                     listStatisticsResDTO.add(StatisticsResDTO.builder()
                             .eventDate(dateMM)
                             .eventValue(dto.getEventValue() - mapTemp.get(before1MonthYYYYMM))
-                            .refConsumableId(ConsumableType.GAS.getType())
+
+                            .consumableType(dto.getConsumableType())
+
                             .build());
                 }
             }
@@ -191,7 +193,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
 
         JPQLQuery<StatisticsTotalDTO> dtoQuery = query.select(Projections.bean(StatisticsTotalDTO.class
-                ,carConsumable.refConsumableId
+                ,carConsumable.consumableType
                 ,carConsumable.gasLitter.sum().as("gasAmount")  // 총 주유량
                 ,carConsumable.replacePrice.sum().as("cost")    // 총 정비 비용 & 총 주유 비용
                 ,carConsumable.accumKm.max().as("accKm")        // 총 운행 거리
@@ -205,14 +207,16 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
             StatisticsTotalResDTO resultDTO = StatisticsTotalResDTO.builder()
                     .accKm(totalAcckm).build();
 
-            for (StatisticsTotalDTO car : list) {
-                if(car.getRefConsumableId().equals(ConsumableType.GAS.getType()))
+            list.forEach(log::error);
+
+            for (StatisticsTotalDTO dto : list) {
+                if(dto.getConsumableType().equals(ConsumableType.GAS))
                 {
-                    resultDTO.setGasAmount(car.getGasAmount());
-                    resultDTO.setGasCost(car.getCost());
+                    resultDTO.setGasAmount(dto.getGasAmount());
+                    resultDTO.setGasCost(dto.getCost());
                 }
-                else if(car.getRefConsumableId().equals(ConsumableType.REPAIR.getType())){
-                    resultDTO.setRepairCost(car.getCost());
+                else if(dto.getConsumableType().equals(ConsumableType.REPAIR)){
+                    resultDTO.setRepairCost(dto.getCost());
                 }
             }
 

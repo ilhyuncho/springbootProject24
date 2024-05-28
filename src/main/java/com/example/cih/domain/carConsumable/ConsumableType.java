@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ConsumableType {
-    GAS(1L), REPAIR(2L);
+    GAS(1), REPAIR(2);
 
-    private final Long type;
+    private final int type;
 }

@@ -1,5 +1,6 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.carConsumable.RepairType;
 import com.example.cih.domain.carConsumable.ReplaceAlarm;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class CarConsumableDTO {
     private Long consumableId;
     private String name;
-    private String repairType;
+    private RepairType repairType;
     private int replaceCycleKm;
     private int replaceCycleMonth;
     private int replacePrice;

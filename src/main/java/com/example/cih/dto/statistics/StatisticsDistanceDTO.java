@@ -1,5 +1,6 @@
 package com.example.cih.dto.statistics;
 
+import com.example.cih.domain.carConsumable.ConsumableType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,6 +14,6 @@ public class StatisticsDistanceDTO {
 
     private LocalDate eventDate;
     private int eventValue;
-    private Long refConsumableId;
+    private ConsumableType consumableType;
 
 }
