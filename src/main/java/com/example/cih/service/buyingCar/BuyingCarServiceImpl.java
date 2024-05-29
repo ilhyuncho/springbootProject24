@@ -9,8 +9,8 @@ import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.user.UserService;
@@ -54,7 +54,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     }
 
     @Override
-    public PageResponseDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId) {
+    public BuyingCarListResDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -63,11 +63,22 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
         List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
 
-        return PageResponseDTO.<BuyingCarViewDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(listBuyingCarViewDTO)
-                .total((int)resultDTO.getTotalElements())
-                .build();
+        int maxProposalPrice = 0;
+        if( listBuyingCarViewDTO.size() > 0){
+            // stream max, Comparator 활용
+            maxProposalPrice = listBuyingCarViewDTO.stream()
+                    .max(Comparator.comparingInt(BuyingCarViewDTO::getProposalPrice)).get().getProposalPrice();
+        }
+        return new BuyingCarListResDTO<BuyingCarViewDTO>(
+                pageRequestDTO, listBuyingCarViewDTO,
+               (int)resultDTO.getTotalElements(),maxProposalPrice);
+
+
+//        return PageResponseDTO.<BuyingCarViewDTO>withAll()
+//                .pageRequestDTO(pageRequestDTO)
+//                .dtoList(listBuyingCarViewDTO)
+//                .total((int)resultDTO.getTotalElements())
+//                .build();
     }
 
     @Override
@@ -77,8 +88,6 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
 
         BuyingCar highProposalPriceInfo = buyingCarRepository.findHighProposalPriceInfo(sellingCarId);
-
-
         if(highProposalPriceInfo != null)
         {
             BuyingCarViewDTO buyingCarViewDTO = entityToDTO(highProposalPriceInfo);

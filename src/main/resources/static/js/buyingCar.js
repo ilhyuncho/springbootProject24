@@ -31,11 +31,11 @@ async function getList({currentUser, sellingCarId, page, size}){
     return result.data
 }
 
-async function getHighProposalPrice(sellingCarId){
-
-    const result = await axios.get(`/buyingCar/highProposalPrice`, {params: {sellingCarId}})
-
-    //console.log(result.data)
-    return result.data
-}
+// async function getHighProposalPrice(sellingCarId){
+//
+//     const result = await axios.get(`/buyingCar/highProposalPrice`, {params: {sellingCarId}})
+//
+//     //console.log(result.data)
+//     return result.data
+// }
 

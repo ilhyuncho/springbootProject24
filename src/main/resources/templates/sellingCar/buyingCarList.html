@@ -73,7 +73,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">고객 제안 가격</span>
-            <input type="text" class="form-control userProposalPrice" readonly>
+            <input type="text" class="form-control userProposalPrice" th:value="0원" readonly>
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">최고 제안 가격</span>
@@ -196,7 +196,6 @@
   let size = 5
 
   printBuyingCarList(page,size)
-  printHighProposalPrice()
 
   function initOfferBtn(data) {
 
@@ -222,21 +221,25 @@
     getList({currentUser, sellingCarId, page, size}).then(data=> {
         printList(data.dtoList) // 목록 처리
         printPages(data)        // 페이지 처리
-    }).catch(e=>{
-      console.error(e)
-    })
-  }
 
-  function printHighProposalPrice(){
-    getHighProposalPrice(sellingCarId).then(data=> {
-      if(data.proposalPrice){
-        highProposalPrice.value = makePriceCurrency(data.proposalPrice)
-      }
+        // 최고 가격 set
+        highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
 
     }).catch(e=>{
       console.error(e)
     })
   }
+
+  // function printHighProposalPrice(){
+  //   getHighProposalPrice(sellingCarId).then(data=> {
+  //     if(data.proposalPrice){
+  //       highProposalPrice.value = makePriceCurrency(data.proposalPrice)
+  //     }
+  //
+  //   }).catch(e=>{
+  //     console.error(e)
+  //   })
+  // }
 
   // 목록 출력
   function printList(dtoList){
@@ -331,7 +334,6 @@
     purchaseOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
-      printHighProposalPrice()
 
       initModalDisplay(formObj)
 
@@ -353,7 +355,6 @@
     cancelOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
-      printHighProposalPrice()
 
       initModalDisplay(formObj)
 
@@ -442,7 +443,6 @@
     }
     page = target.getAttribute("data-page")
     printBuyingCarList(page,size)
-    printHighProposalPrice()
 
   },false)
 

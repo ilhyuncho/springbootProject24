@@ -5,6 +5,7 @@ import com.example.cih.domain.buyingCar.BuyingCarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
@@ -85,14 +86,14 @@ public class BuyingCarRestController {
 
     @ApiOperation(value = "구매 제안 리스트 전달", notes = "list 전달")
     @GetMapping("/list")
-    public PageResponseDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO,
+    public BuyingCarListResDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO,
                                                           String userName,
                                                           Long sellingCarId){
 
-        PageResponseDTO<BuyingCarViewDTO> pageBuyingCarViewDTO =
+        BuyingCarListResDTO<BuyingCarViewDTO> buyingCarListResDTO =
                 buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
 
-        return pageBuyingCarViewDTO;
+        return buyingCarListResDTO;
     }
     @ApiOperation(value = "구매 희망 최고 가격", notes = "")
     @GetMapping("/highProposalPrice")
