@@ -108,6 +108,12 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO)
+
+//                .map(HistoryCarDTO::twice)
+//                .flatMap(List::stream)
+//                // 디버깅 용. 스트림을 들여다봄
+//                .peek(historyCarDTO -> System.out.println("HistoryCarDTO" + historyCarDTO))
+
                 .sorted(Comparator.comparing(HistoryCarDTO::getReplaceDate))
                 .collect(Collectors.toList());
 

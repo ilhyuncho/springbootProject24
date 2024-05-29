@@ -3,6 +3,7 @@ package com.example.cih.dto.history;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,4 +17,8 @@ public class HistoryCarDTO {
     private String replaceShop;
     private String repairType;
     private LocalDate replaceDate;
+
+    public List<HistoryCarDTO> twice(){
+        return List.of(this, this);
+    }
 }
