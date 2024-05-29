@@ -243,6 +243,8 @@
     e.stopPropagation()
     e.preventDefault()
 
+    eventDate.value = new Date().toISOString().substring(0, 10);  // 오늘 날짜 셋팅
+
     addGasHistoryModal.show()
   }, false)
 
@@ -290,6 +292,8 @@
   document.querySelector(".addRepairHistoryBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
+
+    repairEventDate.value = new Date().toISOString().substring(0, 10);  // 오늘 날짜 셋팅
 
     addRepairHistoryModal.show()
   }, false)
