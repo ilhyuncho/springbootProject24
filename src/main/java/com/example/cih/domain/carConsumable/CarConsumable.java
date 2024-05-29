@@ -35,9 +35,6 @@ public class CarConsumable {
     private String replaceShop;         // 점검 장소
     private int gasLitter;
 
-//    @Enumerated(EnumType.STRING)
-//    private RepairType repairType;          // 정비 종류
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")
     private Car car;
