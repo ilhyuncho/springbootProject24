@@ -92,6 +92,10 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
 
+        // List의 sort 기능 적용 ( stream 에 처리 하기 전 방식 )
+        listHistoryCarDTO.sort(Comparator.comparing(HistoryCarDTO::getReplaceDate));
+
+
         return listHistoryCarDTO;
     }
     @Override
@@ -103,7 +107,9 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .findByCarAndConsumableType(car, ConsumableType.GAS));
 
         List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
-                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
+                .map(CarConsumableServiceImpl::entityToDTO)
+                .sorted(Comparator.comparing(HistoryCarDTO::getReplaceDate))
+                .collect(Collectors.toList());
 
         return listHistoryCarDTO;
     }
@@ -117,7 +123,9 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .findByCarAndConsumableType(car, ConsumableType.REPAIR));
 
         List<HistoryCarDTO> listHistoryCarDTO = listCarConsumable.stream()
-                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
+                .map(CarConsumableServiceImpl::entityToDTO)
+                .sorted(Comparator.comparing(HistoryCarDTO::getReplaceDate))
+                .collect(Collectors.toList());
 
         return listHistoryCarDTO;
     }
