@@ -210,7 +210,11 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         List<StatisticsTotalDTO> list = dtoQuery.fetch();
 
         if(list.size() > 0) {
-            int totalAcckm = list.stream().mapToInt(StatisticsTotalDTO::getAccKm).max().getAsInt();
+           // int totalAcckm = list.stream().mapToInt(StatisticsTotalDTO::getAccKm).max().getAsInt();
+            Integer totalAcckm = list.stream()
+                    .reduce(0, (acc, dto) -> Math.max(acc, dto.getAccKm()), Integer::max);
+            // or
+            //list.stream().mapToInt(StatisticsTotalDTO::getAccKm).reduce(0, Integer::max);
 
             StatisticsTotalResDTO resultDTO = StatisticsTotalResDTO.builder()
                     .accKm(totalAcckm).build();
