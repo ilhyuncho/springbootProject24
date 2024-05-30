@@ -1,22 +1,14 @@
 package com.example.cih.admin.shop;
 
 
-import com.example.cih.common.fileHandler.FileHandler;
-import com.example.cih.domain.shop.ShopItem;
+import com.example.cih.common.handler.FileHandler;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.car.CarViewDTO;
-import com.example.cih.dto.order.OrderDTO;
 import com.example.cih.dto.shop.ShopItemDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
-import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.shop.ShopItemService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.nio.file.Files;
 import java.security.Principal;
 import java.util.List;
 

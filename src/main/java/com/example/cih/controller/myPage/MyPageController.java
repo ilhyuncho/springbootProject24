@@ -1,10 +1,9 @@
 package com.example.cih.controller.myPage;
 
 
-import com.example.cih.common.fileHandler.FileHandler;
+import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.Projection;
-import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarViewDTO;
@@ -42,6 +41,7 @@ public class MyPageController {
 
     @ApiOperation(value = "보유 차 리스트 조회", notes = "")
     @GetMapping("/carList")
+    //@PreAuthorize("principal.username != #userName")
     public String getCarList(PageRequestDTO pageRequestDTO, String userName,
                               Model model){
 

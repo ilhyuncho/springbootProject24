@@ -1,4 +1,4 @@
-package com.example.cih.common.fileHandler;
+package com.example.cih.common.handler;
 
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.controller.fileUpload.UploadResultDTO;

@@ -1,6 +1,6 @@
 package com.example.cih.service.car;
 
-import com.example.cih.common.fileHandler.FileHandler;
+import com.example.cih.common.handler.FileHandler;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
