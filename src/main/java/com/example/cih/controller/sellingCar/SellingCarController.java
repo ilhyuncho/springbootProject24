@@ -22,13 +22,14 @@ import java.util.List;
 @RequestMapping("/sellingCar")
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("hasRole('USER')")
+
 public class SellingCarController {
 
     private final SellingCarService sellingCarService;
 
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
+    @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회, @PreAuthorize("hasRole('USER')") 과 다름
     public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                               Model model){
 

@@ -80,9 +80,11 @@
             <input type="text" class="form-control highProposalPrice" readonly>
           </div>
 
-          <div class="row mt-3">
+          <div class="row mt-3" th:with="user=${#authentication.principal}">
             <div class="float-end">
-              <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">new</button>
+              <a th:if="${user != null && user.username == carViewDTO.userName}">
+                 <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
+              </a>
             </div>
           </div>
 
@@ -204,12 +206,12 @@
     }
     else if(data === 'new'){
       console.log('btn-> new')
-      purchaseOfferBtn.innerHTML = 'new'
+      purchaseOfferBtn.innerHTML = '가격 제안'
       purchaseOfferBtn.setAttribute("btn-type", "new")
     }
     else{
       console.log('btn-> modify')
-      purchaseOfferBtn.innerHTML = 'modify'
+      purchaseOfferBtn.innerHTML = '가격 수정'
       purchaseOfferBtn.setAttribute("btn-type", "modify")
     }
   }
@@ -246,9 +248,9 @@
     let str = '';
     let btnType = 'new'
 
-    if(carOwner === currentUser){ // 해당 차 소유자 일 경우
-      btnType = 'hidden'
-    }
+    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+    //   btnType = 'hidden'
+    // }
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){
@@ -275,7 +277,7 @@
       }
     }
 
-//    initOfferBtn(btnType)
+    initOfferBtn(btnType)
 
     buyingCarList.innerHTML = str
   }
@@ -386,7 +388,7 @@
       userCurrentPrice.value= ''
       userProposalPrice.value=''
 
-    //  initOfferBtn('new')
+      initOfferBtn('new')
 
       modifyOfferModal.hide()
     }

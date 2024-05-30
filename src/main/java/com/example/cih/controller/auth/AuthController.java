@@ -18,7 +18,8 @@ public class AuthController {
 
         log.error("login get................");
 
-        // 로그아웃 호출 URL : http://localhost:8090/auth/login?logout
+        // 로그아웃 호출 URL : http://localhost:8090/logout
+        // 으로 redirect : http://localhost:8090/auth/login?logout
         if( logout != null){
             log.error("user logout======================");
         }

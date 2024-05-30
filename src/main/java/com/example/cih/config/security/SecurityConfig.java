@@ -20,7 +20,8 @@ import javax.sql.DataSource;
 @Log4j2
 @Configuration
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)  // 어노테이션으로 권한을 설정
+                                        // prePostEnabled = true -> @PreAuthorize를 이용해서 권한 체크
 public class SecurityConfig {
 
     private final DataSource dataSource;
@@ -40,7 +41,7 @@ public class SecurityConfig {
         http.rememberMe().key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30);
+                .tokenValiditySeconds(60*60*24*30); // 30일?
 
         // 모든 경로에 접근 가능
         return http.build();
@@ -49,9 +50,11 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
+        // 정적 자원들의 시큐리티 적용 제외
         log.error("-------------web configure----------------");
 
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        return (web) -> web.ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean

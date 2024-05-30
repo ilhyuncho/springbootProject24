@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 실제 인증을 처리할때 호출
-        log.error("loadUserByUsername : " + username);
+        log.error("loadUserByUsername!!~~~~~~~~~~~~ : " + username);
 
         // UserDetails 인터페이스를 구현한 User라는 클래스를 제공
         UserDetails userDetails = User.builder().username("user1")
