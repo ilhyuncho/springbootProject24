@@ -34,7 +34,7 @@ class OrderRepositoryTest {
     @Commit
     public void insertOrder(){
 
-        User user = userRepository.findByUserName("user1").orElseGet(
+        User user = userRepository.findByUserName("member1").orElseGet(
                 () -> User.builder()
                         .userName("user1")
                         .address(Address.builder().build())

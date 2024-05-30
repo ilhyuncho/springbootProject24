@@ -45,6 +45,7 @@ public class MyPageController {
     public String getCarList(PageRequestDTO pageRequestDTO, String userName,
                               Model model){
 
+        log.error("userName : " + userName);
         UserDTO userDTO = userService.findUserDTO(userName);
 
         List<CarViewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());

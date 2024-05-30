@@ -133,6 +133,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .sorted(Comparator.comparing(HistoryCarDTO::getReplaceDate))
                 .collect(Collectors.toList());
 
+        listCarConsumable.forEach(log::error);
         return listHistoryCarDTO;
     }
 

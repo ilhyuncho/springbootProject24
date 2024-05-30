@@ -70,7 +70,7 @@ public class UserRepositoryTest {
                     .build();
 
             User user = User.builder()
-                    .userName("user" + i)
+                    .userName("member" + i)
                     .address(address)
                     .billingAddress(address1)
                     .build();

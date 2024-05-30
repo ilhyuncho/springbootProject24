@@ -26,7 +26,7 @@ abstract class ApplicationTests {
     @BeforeAll()
     public void beforeAll(){
 
-        user = userRepository.findByUserName("user1").orElseGet(
+        user = userRepository.findByUserName("member1").orElseGet(
                 () -> {
                     City city = new City("000-222","buchoen", "korea" );
                     Address address = Address.builder()
@@ -43,7 +43,7 @@ abstract class ApplicationTests {
                             .build();
 
                     User user = User.builder()
-                            .userName("user1")
+                            .userName("member1")
                             .address(address)
                             .billingAddress(address1)
                             .build();

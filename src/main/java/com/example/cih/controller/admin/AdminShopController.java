@@ -1,4 +1,4 @@
-package com.example.cih.admin.shop;
+package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.handler.FileHandler;
@@ -124,7 +124,7 @@ public class AdminShopController {
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
-        redirectAttributes.addAttribute("userName","user1");
+       // redirectAttributes.addAttribute("userName","user1");
 
         return "redirect:/admin/shopItem";
     }
