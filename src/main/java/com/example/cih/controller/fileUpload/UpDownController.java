@@ -1,5 +1,6 @@
 package com.example.cih.controller.fileUpload;
 
+import com.example.cih.common.util.Util;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 @RestController
 @Log4j2
@@ -27,6 +29,7 @@ public class UpDownController {
 
     @Value("${com.cih.upload.path}")
     private String uploadPath;
+
 
     @ApiOperation(value = "Upload Post", notes = "POST 방식으로 파일 등록")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -40,6 +43,12 @@ public class UpDownController {
             uploadFileDTO.getFiles().forEach(multipartFile -> {
                 String originalFileName = multipartFile.getOriginalFilename();
                 String uuid = UUID.randomUUID().toString();
+
+                // Stream.generate 활용 예제
+                Stream<UUID> uuid1 = Util.createUUID(4);
+                uuid1.forEach(log::error);
+
+
                 boolean bImage = false;
 
                 Path savePath = Paths.get(uploadPath, uuid + "_" + originalFileName);

@@ -19,20 +19,38 @@ public class CarRepositoryTest extends ApplicationTests {
     @Test
     public void insertCar(){
 
-        IntStream.rangeClosed(1,100).forEach(i -> {
-            Car car = Car.builder()
-                    .carNumber("45마3192" + (i-1))
-                    .carGrade(CarSize.MIDDLE_LARGE)
-                    .carModel("model" + (i % 10))
-                    .carYears(2010 + (i % 10))
-                    .carColors("color" + i)
-                    .carKm(10000L + (i % 10) )
-                    .build();
+        // 1, 3 만 생성
+        IntStream.iterate(1, idx -> idx < 5,  idx -> idx + 2).forEach(
+                i -> {
+                    Car car = Car.builder()
+                            .carNumber("45마3192" + (i - 1))
+                            .carGrade(CarSize.MIDDLE_LARGE)
+                            .carModel("model" + (i % 10))
+                            .carYears(2010 + (i % 10))
+                            .carColors("color" + i)
+                            .carKm(10000L + (i % 10))
+                            .build();
 
-            Car result = carRepository.save(car);
+                    Car result = carRepository.save(car);
 
-            log.info("BNO: " + result.getCarId());
-        });
+                    log.info("BNO: " + result.getCarId());
+                }
+        );
+
+//        IntStream.rangeClosed(1,100).forEach(i -> {
+//            Car car = Car.builder()
+//                    .carNumber("45마3192" + (i-1))
+//                    .carGrade(CarSize.MIDDLE_LARGE)
+//                    .carModel("model" + (i % 10))
+//                    .carYears(2010 + (i % 10))
+//                    .carColors("color" + i)
+//                    .carKm(10000L + (i % 10) )
+//                    .build();
+//
+//            Car result = carRepository.save(car);
+//
+//            log.info("BNO: " + result.getCarId());
+//        });
     }
 
     @Test
