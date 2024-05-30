@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 
 @Log4j2
@@ -14,6 +15,12 @@ public class RefCarConsumableRepositoryTest {
     @Autowired
     private RefCarConsumableRepository refCarConsumableRepository;
 
+    @Test
+    public void testRandom(){
+        Random random = new Random();
+        // 4 개 생성, 2~ 9 까지
+        random.ints(4, 2, 10).forEach(log::error);
+    }
     @Test
     public void insertRefConsumable(){
 

@@ -1,5 +1,6 @@
 package com.example.cih.domain.user;
 
+import com.example.cih.common.util.Util;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.reference.RefCarConsumable;
@@ -41,17 +42,29 @@ public class UserRepositoryTest {
     @Test
     public void InsertUserData(){
 
+        // zip-code 생성  ( Stream 활용 테스트 겸 )
+        IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
+        List<String> listZipcode = randomStream.mapToObj(String::valueOf).map(a -> {
+            StringBuilder buf = new StringBuilder(a);
+            buf.insert(3, "-");
+            return buf.toString();
+        })
+        .peek(log::error)
+        .collect(Collectors.toList());
+
+
         IntStream.rangeClosed(1, 10).forEach(i -> {
-            City city = new City("000-111", "buchoen", "korea");
+
+            City city = new City(listZipcode.get(0), "buchoen", "korea");
             Address address = Address.builder()
                     .city(city)
                     .street("sudoro257")
                     .detailAddress("2dong404ho")
                     .build();
 
-            City city1 = new City("000-111", "buchoen", "korea");
+            City city1 = new City(listZipcode.get(1), "buchoen", "korea");
             Address address1 = Address.builder()
-                    .city(city)
+                    .city(city1)
                     .street("sudoro257")
                     .detailAddress("2dong404ho")
                     .build();
@@ -92,9 +105,7 @@ public class UserRepositoryTest {
                 .build();
 
         refCarConsumableRepository.save(refCarConsumable1);
-
-
-
+        /////////////////////////////////
         List<String> listName = new ArrayList<>();
         listName.add("엔진오일 및 오일 필터");
         listName.add("에어컨 필터");
