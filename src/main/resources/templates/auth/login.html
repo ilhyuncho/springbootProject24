@@ -23,6 +23,10 @@
 
                                         <th:block th:if="${param.logout != null}">
                                             <h1>Logout........</h1>
+
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                 <a class="btn btn-primary" th:href="|@{/auth/login}|">Login</a>
+                                            </div>
                                         </th:block>
 
                                         <form th:action="@{/auth/login}" method="post" id="f1" th:if="${param.logout == null}">
