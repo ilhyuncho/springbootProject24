@@ -18,23 +18,55 @@
                 </div>
                 <div class="card-body">
 
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">notiId</th>
-                            <th scope="col">notiMessage</th>
-                            <th scope="col">notiTarget</th>
-                        </tr>
-                        </thead>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="news-tab" data-bs-toggle="tab" data-bs-target="#news"
+                                    type="button" role="tab" aria-controls="news" aria-selected="true">뉴스</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="event-tab" data-bs-toggle="tab" data-bs-target="#event"
+                                    type="button" role="tab" aria-controls="event" aria-selected="false">이벤트</button>
+                        </li>
+                    </ul>
 
-                        <tbody>
-                        <tr th:each="dto:${list}">
-                            <td>[[${dto.notiId}]]</td>
-                            <td>[[${dto.notiMessage}]]</td>
-                            <td>[[${dto.notiTarget}]]</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="event" role="tabpanel" aria-labelledby="event-tab">
+
+                            <div class="row mt-3">
+                                <table id="tableEventId">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">notiId</th>
+                                        <th scope="col">notiMessage</th>
+                                        <th scope="col">notiTarget</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableEvent">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="news-tab">
+
+                            <div class="row mt-3">
+                                <table id="tableNewsId">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">notiId1</th>
+                                        <th scope="col">notiMessage1</th>
+                                        <th scope="col">notiTarget1</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableNews">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    </div><!-- <div class="tab-content" id="myTabContent">-->
 
                 </div><!-- <div class="card-body">-->
             </div>
@@ -42,13 +74,92 @@
     </div>
 
 
-
-
-
-
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/event.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const tableEvent = document.getElementById("tableEvent");
+    const tableNews = document.getElementById("tableNews");
+
+    let arrElement = []
+    const eventObj = {
+        "targetId": "#event",
+        "tableId": tableEvent
+    }
+    const newsObj = {
+        "targetId": "#news",
+        "tableId": tableNews
+    }
+
+    arrElement.push(eventObj);
+    arrElement.push(newsObj);
+
+    getList('#event')
+
+    var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+    triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl)
+
+        triggerEl.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            const target = event.target
+            const targetId = target.getAttribute("data-bs-target")
+
+            getList(targetId)
+
+            tabTrigger.show()
+        })
+    })
+    function getList(targetId){
+
+        const formObj = {
+            targetId:targetId
+        }
+
+        getNotiList(formObj).then(data => {
+
+            printNotiList(data, arrElement.find(o => o.targetId === targetId).tableId) // 목록 처리
+
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
+
+    function makeHistoryData(arr, dtoData){
+        arr[0] = dtoData.notiId
+        arr[1] = dtoData.notiMessage
+        arr[2] = dtoData.notiTarget
+    }
+    function printNotiList(dtoList, tableRef) {    // 목록 출력
+
+        // 기존 행 삭제
+        while (tableRef.firstChild) {
+            tableRef.removeChild(tableRef.firstChild);
+        }
+
+        if(dtoList && dtoList.length > 0) {
+            dtoList.forEach(function (e, i) {
+                const arr = []
+                makeHistoryData(arr, e)
+
+                let newRow = tableRef.insertRow(-1);
+
+                for (let j = 0, k = 0; j < arr.length; j++){
+                    if(arr[j] !== ''){
+                        let newCell = newRow.insertCell(k);
+                        let newText = document.createTextNode(arr[j]);
+                        newCell.appendChild(newText);
+                        k++;
+                    }
+                }
+            })
+        }
+    }
 
 </script>

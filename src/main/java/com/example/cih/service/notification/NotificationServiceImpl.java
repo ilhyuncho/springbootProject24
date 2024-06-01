@@ -1,11 +1,9 @@
 package com.example.cih.service.notification;
 
-import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.NewsNotification;
 import com.example.cih.domain.notification.NewsNotificationRepository;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.domain.notification.EventNotificationRepository;
-import com.example.cih.dto.notification.NotificationDTO;
+import com.example.cih.dto.notification.NotificationResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -26,16 +24,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<NotificationDTO> readNotification(PageRequestDTO pageRequestDTO) {
+    public List<NotificationResDTO> readEventNotification(PageRequestDTO pageRequestDTO) {
 
         List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
 
-//        for (NewsNotification newsNotification : newsNotifications) {
-//            newsNotification.setNotiTarget("수정4!!!!");
-//            newsNotificationRepository.save(newsNotification);  // DB에는 업데이트 되지 않는다
-//        }
-
-        List<NotificationDTO> dtoList = newsNotifications.stream().map(noti -> modelMapper.map(noti, NotificationDTO.class))
+        List<NotificationResDTO> dtoList = newsNotifications
+                .stream().map(noti -> modelMapper.map(noti, NotificationResDTO.class))
                 .collect(Collectors.toList());
 
         dtoList.stream().forEach( list -> log.error("readNotification: " + list));
@@ -43,4 +37,9 @@ public class NotificationServiceImpl implements NotificationService {
         return dtoList;
     }
 
+    @Override
+    public List<NotificationResDTO> readNewsNotification(PageRequestDTO pageRequestDTO) {
+
+        return null;
+    }
 }

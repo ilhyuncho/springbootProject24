@@ -2,7 +2,7 @@ package com.example.cih.controller.notification;
 
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.notification.NotificationDTO;
+import com.example.cih.dto.notification.NotificationResDTO;
 import com.example.cih.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,9 +23,9 @@ public class NotificationController {
     @GetMapping("/news")
     public String getNews(PageRequestDTO pageRequestDTO, Model model){
 
-        List<NotificationDTO> listNotificationDTO = notificationService.readNotification(pageRequestDTO);
+        List<NotificationResDTO> listDTO = notificationService.readNewsNotification(pageRequestDTO);
 
-        model.addAttribute("list", listNotificationDTO);
+        model.addAttribute("list", listDTO);
 
         return "/notification/news";
     }

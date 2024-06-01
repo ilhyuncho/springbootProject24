@@ -1,9 +1,7 @@
-async function getList({currentUser, sellingCarId, page, size}){
+async function getNotiList(formObj){
 
-    //console.log({currentUser, sellingCarId, page, size})
+    const response = await axios.get(`/notification/list`, {params: formObj})
 
-    const result = await axios.get(`/buyingCar/list`, {params: {userName:currentUser, sellingCarId, page, size}})
-
-    //console.log(result.data)
-    return result.data
+    console.log(response)
+    return response.data
 }

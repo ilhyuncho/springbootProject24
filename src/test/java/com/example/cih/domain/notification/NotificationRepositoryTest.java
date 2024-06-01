@@ -51,7 +51,12 @@ public class NotificationRepositoryTest {
 
             EventNotification result = eventNotificationRepository.save(noti);
             log.info("Noti Id: " + result.getNotiId());
+
+
+
         });
+
+
     }
 
     @Test

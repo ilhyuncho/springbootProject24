@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class NotificationDTO {
+public class NotificationResDTO {
     private Long notiId;
     private String notiMessage;
     private String notiTarget;
