@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Log4j2
 public class HelloController {
 
+    @GetMapping("/")
+    public String main(Model model){
+
+        log.error("main()!!!");
+        return "/index";
+    }
     @GetMapping("/hello")
     public void hello(Model model){
 

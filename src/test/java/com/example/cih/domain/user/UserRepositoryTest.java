@@ -3,6 +3,9 @@ package com.example.cih.domain.user;
 import com.example.cih.common.util.Util;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarSize;
+import com.example.cih.domain.member.Member;
+import com.example.cih.domain.member.MemberRepository;
+import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.shop.ShopItem;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
@@ -35,12 +39,33 @@ public class UserRepositoryTest {
     @Autowired
     RefCarConsumableRepository refCarConsumableRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     int index = 0;
 
 
     @Test
     public void InsertUserData(){
+
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+
+            Member member = Member.builder()
+                    .memberId("member" + i)
+                    .memberPw(passwordEncoder.encode("1111"))
+                    .email("email" + i + "@naver.com")
+                    .build();
+            member.addRole(MemberRole.USER);
+
+            if (i >= 90) {
+                member.addRole(MemberRole.ADMIN);
+            }
+            memberRepository.save(member);
+
+        });
 
         // zip-code 생성  ( Stream 활용 테스트 겸 )
         IntStream randomStream = Util.createRandomStream(2, 100000, 999999);
