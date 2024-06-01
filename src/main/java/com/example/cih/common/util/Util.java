@@ -1,5 +1,7 @@
 package com.example.cih.common.util;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -19,6 +21,10 @@ public class Util {
         return random.ints(size, startIndex, endIndex);
     }
 
+    public static LocalTime convertLocalTime(LocalDateTime localDateTime){
+        LocalTime localTime = localDateTime.query(LocalTime::from);
+        return localTime;
+    }
 
 
 }
