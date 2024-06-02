@@ -60,7 +60,7 @@ public class UserRepositoryTest {
                     .build();
             member.addRole(MemberRole.USER);
 
-            if (i >= 90) {
+            if (i >= 8) {
                 member.addRole(MemberRole.ADMIN);
             }
             memberRepository.save(member);
@@ -104,21 +104,21 @@ public class UserRepositoryTest {
         });
 
 
-        IntStream.rangeClosed(1,2).forEach(i -> {
-
-            ShopItem shopItem = ShopItem.builder()
-                    .itemName("item" + i)
-                    .price(1000 * i)
-                    .stockCount(10000)
-                    .build();
-
-            shopItem.addImage("1a1a1a", "ionic5.png");
-            shopItem.addImage("2a2a2a", "ionic51.png");
-
-            shopItem.addItemOption("option1", "option2");
-
-            shopItemRepository.save(shopItem);
-        });
+//        IntStream.rangeClosed(1,2).forEach(i -> {
+//
+//            ShopItem shopItem = ShopItem.builder()
+//                    .itemName("item" + i)
+//                    .price(1000 * i)
+//                    .stockCount(10000)
+//                    .build();
+//
+//            shopItem.addImage("1a1a1a", "ionic5.png");
+//            shopItem.addImage("2a2a2a", "ionic51.png");
+//
+//            shopItem.addItemOption("option1", "option2");
+//
+//            shopItemRepository.save(shopItem);
+//        });
 
 
         RefCarConsumable refCarConsumable1 = RefCarConsumable.builder()
