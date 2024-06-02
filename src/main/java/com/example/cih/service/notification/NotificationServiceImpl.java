@@ -1,5 +1,7 @@
 package com.example.cih.service.notification;
 
+import com.example.cih.domain.notification.EventNotification;
+import com.example.cih.domain.notification.EventNotificationRepository;
 import com.example.cih.domain.notification.NewsNotification;
 import com.example.cih.domain.notification.NewsNotificationRepository;
 import com.example.cih.dto.PageRequestDTO;
@@ -21,18 +23,25 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService {
 
     private final NewsNotificationRepository newsNotificationRepository;
+    private final EventNotificationRepository eventNotificationRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public List<NotificationResDTO> readEventNotification(PageRequestDTO pageRequestDTO) {
 
-        List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
+        List<EventNotification> eventNotification = eventNotificationRepository.findAll();
 
-        List<NotificationResDTO> dtoList = newsNotifications
-                .stream().map(noti -> modelMapper.map(noti, NotificationResDTO.class))
+        List<NotificationResDTO> dtoList = eventNotification
+                .stream().map(noti -> {
+                    return NotificationResDTO.builder()
+                            .notiId(noti.getNotiId())
+                            .notiMessage(noti.getNotiMessage())
+                            .expiredDate(noti.getExpiredDate())
+                            .build();
+                        })
                 .collect(Collectors.toList());
 
-        dtoList.stream().forEach( list -> log.error("readNotification: " + list));
+        dtoList.stream().forEach( list -> log.error("readEventNotification: " + list));
 
         return dtoList;
     }
@@ -40,6 +49,14 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationResDTO> readNewsNotification(PageRequestDTO pageRequestDTO) {
 
-        return null;
+        List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
+
+        List<NotificationResDTO> dtoList = newsNotifications
+                .stream().map(noti -> modelMapper.map(noti, NotificationResDTO.class))
+                .collect(Collectors.toList());
+
+        dtoList.stream().forEach( list -> log.error("readNewsNotification: " + list));
+
+        return dtoList;
     }
 }
