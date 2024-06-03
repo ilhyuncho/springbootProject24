@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -27,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<NotificationResDTO> readEventNotification(PageRequestDTO pageRequestDTO) {
+    public List<NotificationResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
 
         List<EventNotification> eventNotification = eventNotificationRepository.findAll();
 
@@ -49,7 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationResDTO> readNewsNotification(PageRequestDTO pageRequestDTO) {
+    public List<NotificationResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO) {
 
         List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
 
@@ -60,6 +61,37 @@ public class NotificationServiceImpl implements NotificationService {
         dtoList.forEach(list -> log.error("readNewsNotification: " + list));
 
         return dtoList;
+    }
+
+    @Override
+    public NotificationResDTO getEventInfo(Long notiId) {
+
+        Optional<EventNotification> result = eventNotificationRepository.findById(notiId);
+
+       if( result.isPresent()){
+           EventNotification eventNotification = result.get();
+
+           return entityToDTO(eventNotification);
+       }
+
+        return null;
+    }
+
+    private static NotificationResDTO entityToDTO(EventNotification eventNotification) {
+        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
+                .notiId(eventNotification.getNotiId())
+                .title(eventNotification.getTitle())
+                .name(eventNotification.getName())
+                .message(eventNotification.getMessage())
+                .expiredDate(eventNotification.getExpiredDate())
+                .build();
+
+        // 이미지 파일 정보 매핑
+        eventNotification.getNotificationImageSet().forEach(image -> {
+            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+        });
+
+        return notificationResDTO;
     }
 
     @Override

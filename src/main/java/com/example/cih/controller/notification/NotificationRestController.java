@@ -29,10 +29,10 @@ public class NotificationRestController {
 
         List<NotificationResDTO> listDto = new ArrayList<>();
         if( "#event".equals(targetId)){
-            listDto = notificationService.readEventNotification(pageRequestDTO);
+            listDto = notificationService.getListEventInfo(pageRequestDTO);
         }
         else{
-            listDto = notificationService.readNewsNotification(pageRequestDTO);
+            listDto = notificationService.getListNewsInfo(pageRequestDTO);
         }
 
         return listDto;

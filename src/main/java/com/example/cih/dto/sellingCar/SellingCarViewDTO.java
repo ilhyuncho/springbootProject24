@@ -1,7 +1,6 @@
 package com.example.cih.dto.sellingCar;
-import com.example.cih.domain.car.Car;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
-import com.example.cih.dto.car.CarImageDTO;
+import com.example.cih.dto.ImageDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,10 +23,10 @@ public class SellingCarViewDTO {
     private LocalDateTime expiredDate;
 
     @Builder.Default
-    private List<CarImageDTO> fileNames = new ArrayList<>();
+    private List<ImageDTO> fileNames = new ArrayList<>();
 
     public void addImage(String uuid, String fileName, int imageOrder){
-        CarImageDTO carImage = CarImageDTO.builder()
+        ImageDTO carImage = ImageDTO.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .imageOrder(imageOrder)

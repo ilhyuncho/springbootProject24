@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface NotificationService {
 
-    List<NotificationResDTO> readEventNotification(PageRequestDTO pageRequestDTO);
-    List<NotificationResDTO> readNewsNotification(PageRequestDTO pageRequestDTO);
+    List<NotificationResDTO> getListEventInfo(PageRequestDTO pageRequestDTO);
+    List<NotificationResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO);
+
+    NotificationResDTO getEventInfo(Long notiId);
 
     Long registerNotification(NotificationRegDTO notificationRegDTO);
     Long registerNewsNotification(NotificationRegDTO notificationRegDTO);

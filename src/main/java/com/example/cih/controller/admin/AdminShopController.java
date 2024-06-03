@@ -59,8 +59,7 @@ public class AdminShopController {
     }
 
     @GetMapping("/shopItem/{shopItemId}")
-    public String shopItemDetail(PageRequestDTO pageRequestDTO,
-                                 @PathVariable("shopItemId") Long shopItemId,
+    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
         ShopItemViewDTO shopItem = shopItemService.findOne(shopItemId);
@@ -71,8 +70,7 @@ public class AdminShopController {
     }
 
     @GetMapping("/shopItemModify/{shopItemId}")
-    public String shopItemModify(PageRequestDTO pageRequestDTO,
-                                 @PathVariable("shopItemId") Long shopItemId,
+    public String shopItemModify(@PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
         log.error("gdfgdfgdfghfghertyrtyrt");

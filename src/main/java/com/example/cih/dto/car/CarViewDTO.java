@@ -1,8 +1,10 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
+import com.example.cih.dto.ImageDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +22,7 @@ public class CarViewDTO extends CarSpecDTO {
     private String userName;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
-    private List<CarImageDTO> fileNames = new ArrayList<>();
+    private List<ImageDTO> fileNames = new ArrayList<>();
 
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
@@ -40,7 +42,7 @@ public class CarViewDTO extends CarSpecDTO {
     }
 
     public void addImage(String uuid, String fileName, int imageOrder){
-        CarImageDTO carImage = CarImageDTO.builder()
+        ImageDTO carImage = ImageDTO.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .imageOrder(imageOrder)

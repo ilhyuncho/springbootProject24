@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,13 +32,25 @@ public class NotiManageController {
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
-        List<NotificationResDTO> listDto = notificationService.readEventNotification(pageRequestDTO);
+        List<NotificationResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
 
         model.addAttribute("listDto", listDto);
 
         return "/admin/eventRegister";
     }
 
+    @GetMapping("/eventDetail/{notiId}")
+    public String getEventDetail(@PathVariable("notiId") Long notiId,
+                                 Model model) {
+
+        log.error("notiId : " + notiId);
+
+        NotificationResDTO eventInfo = notificationService.getEventInfo(notiId);
+
+        model.addAttribute("responseDTO", eventInfo);
+
+        return "/admin/eventDetail";
+    }
     @ApiOperation(value = "이벤트 넣기", notes = "")
     @PostMapping("/eventRegister")
     public String postEventRegister(NotificationRegDTO notificationRegDTO,
@@ -61,7 +74,7 @@ public class NotiManageController {
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
-        List<NotificationResDTO> listDto = notificationService.readNewsNotification(pageRequestDTO);
+        List<NotificationResDTO> listDto = notificationService.getListNewsInfo(pageRequestDTO);
 
         model.addAttribute("listDto", listDto);
 

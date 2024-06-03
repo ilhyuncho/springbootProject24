@@ -90,11 +90,9 @@
 
             <tbody>
             <tr th:each="dto:${listDto}">
-              <th scope="row">
-                <a th:href="|@{'/admin/shopItem/' + ${dto.notiId}}|"
-                   class="text-decoration-none"> [[${dto.notiId}]]</a>
-              </th>
-              <td>[[${dto.name}]]</td>
+              <th scope="row">[[${dto.notiId}]]</th>
+              <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
+                      class="text-decoration-none"> [[${dto.name}]]</a></td>
               <td>[[${dto.title}]]</td>
               <td>[[${dto.message}]]</td>
               <td>[[${dto.expiredDate}]]</td>
