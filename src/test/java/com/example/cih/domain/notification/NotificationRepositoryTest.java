@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -30,8 +30,8 @@ public class NotificationRepositoryTest {
 
             NewsNotification noti = NewsNotification.builder()
                             .notiId(Long.valueOf(i))
-                            .notiMessage("MEssage"+i)
-                            .notiTarget("target"+i)
+                            .message("MEssage"+i)
+                            .target("target"+i)
                             .build();
 
             NewsNotification result = newsNotificationRepository.save(noti);
@@ -45,8 +45,8 @@ public class NotificationRepositoryTest {
 
             EventNotification noti = EventNotification.builder()
                     .notiId(Long.valueOf(i))
-                    .notiMessage("eventMEssage"+i)
-                    .expiredDate(LocalDateTime.now())
+                    .message("eventMEssage"+i)
+                    .expiredDate(LocalDate.now())
                     .build();
 
             EventNotification result = eventNotificationRepository.save(noti);
@@ -68,11 +68,11 @@ public class NotificationRepositoryTest {
         for (Object o : all) {
             if( o.getClass().equals(NewsNotification.class)){
                 NewsNotification noti = (NewsNotification)o;
-                log.error("news-" + noti.getNotiId() + "_" + noti.getNotiMessage() + "_" +noti.getNotiTarget());
+                log.error("news-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getTarget());
             }
             else{
                 EventNotification noti = (EventNotification)o;
-                log.error("Event-" + noti.getNotiId() + "_" + noti.getNotiMessage() + "_" +noti.getExpiredDate());
+                log.error("Event-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getExpiredDate());
             }
         }
 

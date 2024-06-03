@@ -13,7 +13,9 @@ import java.util.List;
 public class NotificationRegDTO {
     private String eventName;
     private String eventTitle;
+    private String eventMessage;
 
+    private String expiredDate;
     private List<String> fileNames= new ArrayList<>();
 
 }

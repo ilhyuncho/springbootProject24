@@ -18,6 +18,6 @@ import javax.persistence.*;
 @Setter
 public class NewsNotification extends Notification{
 
-    @Column(name="notiTarget", length = 30, nullable = false)
-    private String notiTarget;
+    @Column(name="target", length = 30, nullable = false)
+    private String target;
 }

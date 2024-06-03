@@ -11,7 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +35,9 @@ public class NotificationServiceImpl implements NotificationService {
                 .stream().map(noti -> {
                     return NotificationResDTO.builder()
                             .notiId(noti.getNotiId())
-                            .notiMessage(noti.getNotiMessage())
+                            .name(noti.getName())
+                            .title(noti.getTitle())
+                            .message(noti.getMessage())
                             .expiredDate(noti.getExpiredDate())
                             .build();
                         })
@@ -63,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Long registerNotification(NotificationRegDTO notificationRegDTO) {
 
-        eventNotificationRepository.findByNotiName(notificationRegDTO.getEventName())
+        eventNotificationRepository.findByName(notificationRegDTO.getEventName())
                 .ifPresent(m -> {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
@@ -77,10 +79,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     private static EventNotification dtoToEntity(NotificationRegDTO notificationRegDTO) {
         EventNotification eventNotification = EventNotification.builder()
-                .notiName(notificationRegDTO.getEventName())
-                .notiTitle(notificationRegDTO.getEventTitle())
-                .notiMessage("fsdfsdf")
-                .expiredDate(LocalDateTime.now())
+                .name(notificationRegDTO.getEventName())
+                .title(notificationRegDTO.getEventTitle())
+                .message(notificationRegDTO.getEventMessage())
+                .expiredDate(LocalDate.parse(notificationRegDTO.getExpiredDate()))
                 .build();
 
         if(notificationRegDTO.getFileNames() != null){

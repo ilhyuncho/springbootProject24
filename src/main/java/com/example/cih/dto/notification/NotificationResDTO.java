@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,8 +15,9 @@ import java.time.LocalDateTime;
 
 public class NotificationResDTO {
     private Long notiId;
-    private String notiMessage;
-    private String notiTarget;
-    private LocalDateTime expiredDate;
+    private String name;
+    private String title;
+    private String message;
+    private LocalDate expiredDate;
 
 }

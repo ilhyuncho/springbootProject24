@@ -22,12 +22,11 @@ public abstract class Notification {
     @Column(name="notiId")
     private Long notiId;
 
-    private String notiName;
-    private String notiTitle;
+    private String name;
+    private String title;
 
-
-    @Column(name="notiMessage", length = 500, nullable = false)
-    private String notiMessage;
+    @Column(name="message", length = 500, nullable = false)
+    private String message;
 
     @OneToMany(mappedBy = "notification", //
             cascade = {CascadeType.ALL}, // ShopItem 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용

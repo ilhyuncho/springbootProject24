@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface NotificationRepository<T extends Notification, ID>
         extends JpaRepository<T, ID> {
 
-    Optional<Notification> findByNotiName(String notiName);
+    Optional<Notification> findByName(String Name);
 }
 
