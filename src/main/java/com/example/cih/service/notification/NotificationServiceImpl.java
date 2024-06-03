@@ -43,7 +43,7 @@ public class NotificationServiceImpl implements NotificationService {
                         })
                 .collect(Collectors.toList());
 
-        dtoList.stream().forEach( list -> log.error("readEventNotification: " + list));
+        dtoList.forEach(list -> log.error("readEventNotification: " + list));
 
         return dtoList;
     }
@@ -57,7 +57,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .stream().map(noti -> modelMapper.map(noti, NotificationResDTO.class))
                 .collect(Collectors.toList());
 
-        dtoList.stream().forEach( list -> log.error("readNewsNotification: " + list));
+        dtoList.forEach(list -> log.error("readNewsNotification: " + list));
 
         return dtoList;
     }
@@ -70,13 +70,16 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
 
-        EventNotification eventNotification = dtoToEntity(notificationRegDTO);
+        EventNotification eventNotification = dtoToEventEntity(notificationRegDTO);
+
+        if(notificationRegDTO.getFileNames() != null){
+            addFileNames(notificationRegDTO, eventNotification);
+        }
 
         EventNotification saveItem = eventNotificationRepository.save(eventNotification);
 
         return saveItem.getNotiId();
     }
-
     @Override
     public Long registerNewsNotification(NotificationRegDTO notificationRegDTO) {
 
@@ -85,48 +88,41 @@ public class NotificationServiceImpl implements NotificationService {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
 
-        NewsNotification eventNotification = dtoToEntity1(notificationRegDTO);
+        NewsNotification newsNotification = dtoToNewsEntity(notificationRegDTO);
 
-        NewsNotification saveItem = newsNotificationRepository.save(eventNotification);
+        if(notificationRegDTO.getFileNames() != null){
+            addFileNames(notificationRegDTO, newsNotification);
+        }
+
+        NewsNotification saveItem = newsNotificationRepository.save(newsNotification);
 
         return saveItem.getNotiId();
     }
 
+    public void addFileNames(NotificationRegDTO notificationRegDTO, Notification notification){
 
+        notificationRegDTO.getFileNames().forEach(fileName ->{
+            String[] arr = fileName.split("_");
+            notification.addImage(arr[0], arr[1]);
+        });
+    }
+    private static EventNotification dtoToEventEntity(NotificationRegDTO notificationRegDTO) {
 
-    private static EventNotification dtoToEntity(NotificationRegDTO notificationRegDTO) {
-        EventNotification eventNotification = EventNotification.builder()
+        return EventNotification.builder()
                 .name(notificationRegDTO.getName())
                 .title(notificationRegDTO.getTitle())
                 .message(notificationRegDTO.getMessage())
                 .expiredDate(LocalDate.parse(notificationRegDTO.getExpiredDate()))
                 .build();
-
-        if(notificationRegDTO.getFileNames() != null){
-            notificationRegDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
-                eventNotification.addImage(arr[0], arr[1]);
-            });
-        }
-
-        return eventNotification;
     }
-    private static NewsNotification dtoToEntity1(NotificationRegDTO notificationRegDTO) {
-        NewsNotification newsNotification = NewsNotification.builder()
+    private static NewsNotification dtoToNewsEntity(NotificationRegDTO notificationRegDTO) {
+
+        return NewsNotification.builder()
                 .name(notificationRegDTO.getName())
                 .title(notificationRegDTO.getTitle())
                 .message(notificationRegDTO.getMessage())
                 .target("targetTemp")
                 .build();
-
-        if(notificationRegDTO.getFileNames() != null){
-            notificationRegDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
-                newsNotification.addImage(arr[0], arr[1]);
-            });
-        }
-
-        return newsNotification;
     }
 
 }

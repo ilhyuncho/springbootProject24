@@ -15,6 +15,7 @@ public class NotificationRegDTO {
     private String title;
     private String message;
     private String expiredDate;
+    private String target;
     private List<String> fileNames= new ArrayList<>();
 
 }
