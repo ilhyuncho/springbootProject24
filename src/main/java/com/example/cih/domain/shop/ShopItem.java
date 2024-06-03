@@ -60,7 +60,7 @@ public class ShopItem {
         this.stockCount = stockCount;
     }
 
-    //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
+    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  begin---------------
     public void addImage(String uuid, String fileName){
         ItemImage carImage = ItemImage.builder()
                 .uuid(uuid)
@@ -89,7 +89,7 @@ public class ShopItem {
         itemOptionSet.forEach(option -> option.changeItem(null));
         this.itemOptionSet.clear();
     }
-    //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
+    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  end---------------
 
     public int removeStock(int count) {
         if( stockCount < count){

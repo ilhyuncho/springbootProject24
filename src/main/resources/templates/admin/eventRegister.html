@@ -18,41 +18,17 @@
         </div>
         <div class="card-body">
 
-          <!-- 인증 정보에서 사용자 정보 가져오기-->
-<!--          <div class="input-group mb-3" th:with="user=${#authentication.principal}">-->
-<!--            <span class="input-group-text">고객 명</span>-->
-<!--            <label>-->
-<!--              <input type="text" name="userID" class="form-control" th:value="${user.username}">-->
-<!--            </label>-->
-<!--          </div>-->
-          <!-- 인증 정보에서 사용자 정보 가져오기-->
-
-          <form action="/admin/shopItem" method="post" id="myForm">
+          <form action="/admin/eventRegister" method="post" id="myForm">
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemName</span>
-              <input type="text" name="itemName" class="form-control" th:value="item1"
+              <span class="input-group-text">이벤트 이름</span>
+              <input type="text" name="eventName" class="form-control" th:value="item1"
                      value="th:value안될때">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemPrice</span>
-              <input type="text" name="price" class="form-control" th:value="10000">
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">ItemStock</span>
-              <input type="text" name="stockCount" class="form-control" th:value="100">
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption1</span>
-              <input type="text" name="itemOption1" class="form-control" th:value="option1">
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption2</span>
-              <input type="text" name="itemOption2" class="form-control" th:value="option2">
+              <span class="input-group-text">이벤트 title</span>
+              <input type="text" name="eventTitle" class="form-control" th:value="dfgdfg">
             </div>
 
             <div class="input-group mb-3">
@@ -61,7 +37,6 @@
                 <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
               </div>
             </div>
-
 
             <div class="my-4">
               <div class="float-end">
@@ -89,38 +64,29 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          상품 리스트
+          이벤트 리스트
         </div>
         <div class="card-body">
           <table class="table">
             <thead>
             <tr>
-              <th scope="col">shopItemId</th>
-              <th scope="col">itemName</th>
-              <th scope="col">price</th>
-              <th scope="col">stockCount</th>
-              <th scope="col">itemOption1</th>
-              <th scope="col">itemOption2</th>
+              <th scope="col">notiId</th>
+              <th scope="col">notiMessage</th>
+              <th scope="col">notiTarget</th>
+              <th scope="col">expiredDate</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr th:each="dto:${itemList}">
+            <tr th:each="dto:${listDto}">
               <th scope="row">
-                <a th:href="|@{'/admin/shopItem/' + ${dto.shopItemId}}|"
-                   class="text-decoration-none"> [[${dto.shopItemId}]]</a>
-
-                <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
-                  <img style="width:100px" th:each="fileName: ${dto.fileNames}"
-                       th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
-                </div>
+                <a th:href="|@{'/admin/shopItem/' + ${dto.notiId}}|"
+                   class="text-decoration-none"> [[${dto.notiId}]]</a>
               </th>
 
-              <td>[[${dto.itemName}]]</td>
-              <td>[[${dto.price}]]</td>
-              <td>[[${dto.stockCount}]]</td>
-              <td>[[${dto.itemOption1}]]</td>
-              <td>[[${dto.itemOption2}]]</td>
+              <td>[[${dto.notiMessage}]]</td>
+              <td>[[${dto.notiTarget}]]</td>
+              <td>[[${dto.expiredDate}]]</td>
 
             </tr>
             </tbody>
@@ -247,7 +213,7 @@
   }
 
   document.querySelector(".submitBtn").addEventListener("click", function(e){
-    console.log("imgLink:")
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -268,7 +234,7 @@
     console.log("str" + str)
     target.innerHTML = str;
 
-    // 실제 등록 처리d
+    // 실제 등록 처리
     document.querySelector("#myForm").submit();
     //document.querySelector("form").submit();
 
