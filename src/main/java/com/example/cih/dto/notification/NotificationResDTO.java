@@ -21,6 +21,7 @@ public class NotificationResDTO {
     private String name;
     private String title;
     private String message;
+    private String target;
     private LocalDate expiredDate;
 
     @Builder.Default

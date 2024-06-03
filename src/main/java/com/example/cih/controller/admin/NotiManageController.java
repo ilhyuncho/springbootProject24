@@ -47,10 +47,26 @@ public class NotiManageController {
 
         NotificationResDTO eventInfo = notificationService.getEventInfo(notiId);
 
+        log.error("eventInfo : " + eventInfo);
         model.addAttribute("responseDTO", eventInfo);
 
         return "/admin/eventDetail";
     }
+
+    @GetMapping("/newsDetail/{notiId}")
+    public String getNewsDetail(@PathVariable("notiId") Long notiId,
+                                 Model model) {
+
+        log.error("notiId : " + notiId);
+
+        NotificationResDTO newsInfo = notificationService.getNewsInfo(notiId);
+
+        log.error("newsInfo : " + newsInfo);
+        model.addAttribute("responseDTO", newsInfo);
+
+        return "/admin/newsDetail";
+    }
+
     @ApiOperation(value = "이벤트 넣기", notes = "")
     @PostMapping("/eventRegister")
     public String postEventRegister(NotificationRegDTO notificationRegDTO,

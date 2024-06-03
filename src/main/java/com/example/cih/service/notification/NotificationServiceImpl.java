@@ -71,27 +71,24 @@ public class NotificationServiceImpl implements NotificationService {
        if( result.isPresent()){
            EventNotification eventNotification = result.get();
 
-           return entityToDTO(eventNotification);
+           return entityToEventDTO(eventNotification);
        }
-
+       log.error("getEventInfo() EventNotification is null!!!");
         return null;
     }
 
-    private static NotificationResDTO entityToDTO(EventNotification eventNotification) {
-        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
-                .notiId(eventNotification.getNotiId())
-                .title(eventNotification.getTitle())
-                .name(eventNotification.getName())
-                .message(eventNotification.getMessage())
-                .expiredDate(eventNotification.getExpiredDate())
-                .build();
+    @Override
+    public NotificationResDTO getNewsInfo(Long notiId) {
 
-        // 이미지 파일 정보 매핑
-        eventNotification.getNotificationImageSet().forEach(image -> {
-            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
-        });
+        Optional<NewsNotification> result = newsNotificationRepository.findById(notiId);
 
-        return notificationResDTO;
+        if( result.isPresent()){
+            NewsNotification newsNotification = result.get();
+
+            return entityToNewsDTO(newsNotification);
+        }
+        log.error("getNewsInfo() NewsNotification is null!!!");
+        return null;
     }
 
     @Override
@@ -137,6 +134,38 @@ public class NotificationServiceImpl implements NotificationService {
             String[] arr = fileName.split("_");
             notification.addImage(arr[0], arr[1]);
         });
+    }
+    private static NotificationResDTO entityToEventDTO(EventNotification eventNotification) {
+        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
+                .notiId(eventNotification.getNotiId())
+                .title(eventNotification.getTitle())
+                .name(eventNotification.getName())
+                .message(eventNotification.getMessage())
+                .expiredDate(eventNotification.getExpiredDate())
+                .build();
+
+        // 이미지 파일 정보 매핑
+        eventNotification.getNotificationImageSet().forEach(image -> {
+            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+        });
+
+        return notificationResDTO;
+    }
+    private static NotificationResDTO entityToNewsDTO(NewsNotification newsNotification) {
+        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
+                .notiId(newsNotification.getNotiId())
+                .title(newsNotification.getTitle())
+                .name(newsNotification.getName())
+                .message(newsNotification.getMessage())
+                .target(newsNotification.getTarget())
+                .build();
+
+        // 이미지 파일 정보 매핑
+        newsNotification.getNotificationImageSet().forEach(image -> {
+            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+        });
+
+        return notificationResDTO;
     }
     private static EventNotification dtoToEventEntity(NotificationRegDTO notificationRegDTO) {
 

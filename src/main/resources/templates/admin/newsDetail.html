@@ -5,7 +5,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>Event Detail</title>
+  <title>News Detail</title>
 </head>
 
 <div layout:fragment="content">
@@ -14,30 +14,25 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-         이벤트 상세 정보
+         뉴스 상세 정보
         </div>
         <div class="card-body">
 
           <form action="/admin/eventRegister" method="post" id="myForm">
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 이름</span>
+              <span class="input-group-text">뉴스 이름</span>
               <input type="text" name="name" class="form-control" th:value="${responseDTO.name}" readonly>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 title</span>
+              <span class="input-group-text">뉴스 title</span>
               <input type="text" name="title" class="form-control" th:value="${responseDTO.title}" readonly>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 message</span>
+              <span class="input-group-text">뉴스 message</span>
               <input type="text" name="message" class="form-control" th:value="${responseDTO.message}" readonly>
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="expiredDate" class="form-control" th:value="${responseDTO.expiredDate}" readonly>
             </div>
 
             <div class="my-4">
