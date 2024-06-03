@@ -12,6 +12,7 @@ public interface NotificationService {
     List<NotificationResDTO> readNewsNotification(PageRequestDTO pageRequestDTO);
 
     Long registerNotification(NotificationRegDTO notificationRegDTO);
+    Long registerNewsNotification(NotificationRegDTO notificationRegDTO);
 
 
 }

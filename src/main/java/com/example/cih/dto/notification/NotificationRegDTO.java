@@ -6,15 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
+//@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class NotificationRegDTO {
-    private String eventName;
-    private String eventTitle;
-    private String eventMessage;
-
+    private String name;
+    private String title;
+    private String message;
     private String expiredDate;
     private List<String> fileNames= new ArrayList<>();
 

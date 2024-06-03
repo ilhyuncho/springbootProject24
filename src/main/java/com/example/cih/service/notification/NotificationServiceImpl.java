@@ -65,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Long registerNotification(NotificationRegDTO notificationRegDTO) {
 
-        eventNotificationRepository.findByName(notificationRegDTO.getEventName())
+        eventNotificationRepository.findByName(notificationRegDTO.getName())
                 .ifPresent(m -> {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
@@ -77,11 +77,28 @@ public class NotificationServiceImpl implements NotificationService {
         return saveItem.getNotiId();
     }
 
+    @Override
+    public Long registerNewsNotification(NotificationRegDTO notificationRegDTO) {
+
+        newsNotificationRepository.findByName(notificationRegDTO.getName())
+                .ifPresent(m -> {
+                    throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
+                });
+
+        NewsNotification eventNotification = dtoToEntity1(notificationRegDTO);
+
+        NewsNotification saveItem = newsNotificationRepository.save(eventNotification);
+
+        return saveItem.getNotiId();
+    }
+
+
+
     private static EventNotification dtoToEntity(NotificationRegDTO notificationRegDTO) {
         EventNotification eventNotification = EventNotification.builder()
-                .name(notificationRegDTO.getEventName())
-                .title(notificationRegDTO.getEventTitle())
-                .message(notificationRegDTO.getEventMessage())
+                .name(notificationRegDTO.getName())
+                .title(notificationRegDTO.getTitle())
+                .message(notificationRegDTO.getMessage())
                 .expiredDate(LocalDate.parse(notificationRegDTO.getExpiredDate()))
                 .build();
 
@@ -93,6 +110,23 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         return eventNotification;
+    }
+    private static NewsNotification dtoToEntity1(NotificationRegDTO notificationRegDTO) {
+        NewsNotification newsNotification = NewsNotification.builder()
+                .name(notificationRegDTO.getName())
+                .title(notificationRegDTO.getTitle())
+                .message(notificationRegDTO.getMessage())
+                .target("targetTemp")
+                .build();
+
+        if(notificationRegDTO.getFileNames() != null){
+            notificationRegDTO.getFileNames().forEach(fileName ->{
+                String[] arr = fileName.split("_");
+                newsNotification.addImage(arr[0], arr[1]);
+            });
+        }
+
+        return newsNotification;
     }
 
 }

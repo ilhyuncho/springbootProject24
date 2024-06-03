@@ -36,9 +36,8 @@
                                 <table id="tableNewsId">
                                     <thead>
                                     <tr>
-                                        <th scope="col">notiId1</th>
-                                        <th scope="col">notiMessage1</th>
-                                        <th scope="col">notiTarget1</th>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableNews">
@@ -53,9 +52,8 @@
                                 <table id="tableEventId">
                                     <thead>
                                     <tr>
-                                        <th scope="col">notiId</th>
-                                        <th scope="col">notiMessage</th>
-                                        <th scope="col">notiTarget</th>
+                                        <th scope="col">번호</th>
+                                        <th scope="col">제목</th>
                                         <th scope="col">이벤트 기간</th>
                                     </tr>
                                     </thead>
@@ -132,9 +130,8 @@
 
     function makeHistoryData(arr, dtoData){
         arr[0] = dtoData.notiId
-        arr[1] = dtoData.notiMessage
-        arr[2] = dtoData.notiTarget
-        arr[3] = dtoData.expiredDate
+        arr[1] = dtoData.title
+        arr[2] = dtoData.expiredDate === null ? '' : dtoData.expiredDate
     }
     function printNotiList(dtoList, tableRef) {    // 목록 출력
 
