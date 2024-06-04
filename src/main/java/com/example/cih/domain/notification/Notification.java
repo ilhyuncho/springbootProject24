@@ -5,6 +5,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,8 @@ public abstract class Notification {
 
     @Column(name="message", length = 500, nullable = false)
     private String message;
+
+    private LocalDateTime regDate;
 
     @OneToMany(mappedBy = "notification", //
             cascade = {CascadeType.ALL}, // ShopItem 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용

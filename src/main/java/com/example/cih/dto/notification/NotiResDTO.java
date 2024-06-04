@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class NotiResDTO {
     private String name;
     private String title;
     private String message;
+    private LocalDate regDate;
 
     @Builder.Default
     private List<ImageDTO> fileNames = new ArrayList<>();

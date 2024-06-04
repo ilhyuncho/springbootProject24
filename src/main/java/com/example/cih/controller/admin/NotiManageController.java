@@ -52,18 +52,6 @@ public class NotiManageController {
         return "/admin/eventDetail";
     }
 
-    @GetMapping("/newsDetail/{notiId}")
-    public String getNewsDetail(@PathVariable("notiId") Long notiId,
-                                 Model model) {
-
-        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
-
-        log.error("newsInfo : " + newsInfo);
-        model.addAttribute("responseDTO", newsInfo);
-
-        return "/admin/newsDetail";
-    }
-
     @ApiOperation(value = "이벤트 넣기", notes = "")
     @PostMapping("/eventRegister")
     public String postEventRegister(NotificationRegDTO notificationRegDTO,
@@ -77,7 +65,7 @@ public class NotiManageController {
             return "redirect:/admin/eventRegister";
         }
 
-        Long NotiId = notificationService.registerNotification(notificationRegDTO);
+        Long NotiId = notificationService.registerEventNotification(notificationRegDTO);
 
         return "redirect:/admin/eventRegister";
     }
@@ -112,4 +100,15 @@ public class NotiManageController {
         return "redirect:/admin/newsRegister";
     }
 
+    @GetMapping("/newsDetail/{notiId}")
+    public String getNewsDetail(@PathVariable("notiId") Long notiId,
+                                Model model) {
+
+        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
+
+        log.error("newsInfo : " + newsInfo);
+        model.addAttribute("responseDTO", newsInfo);
+
+        return "/admin/newsDetail";
+    }
 }

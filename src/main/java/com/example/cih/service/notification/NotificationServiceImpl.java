@@ -1,6 +1,7 @@
 package com.example.cih.service.notification;
 
 import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.common.util.Util;
 import com.example.cih.domain.notification.*;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.notification.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +26,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NewsNotificationRepository newsNotificationRepository;
     private final EventNotificationRepository eventNotificationRepository;
-    private final NotificationRepository<Notification, Long> notificationRepository;
 
     private final ModelMapper modelMapper;
 
@@ -41,6 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
                             .name(noti.getName())
                             .title(noti.getTitle())
                             .message(noti.getMessage())
+                            .regDate(Util.convertLocalDate(noti.getRegDate()))
                             .expiredDate(noti.getExpiredDate())
                             .build();
                         })
@@ -57,7 +59,17 @@ public class NotificationServiceImpl implements NotificationService {
         List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
 
         List<NotiNewsResDTO> dtoList = newsNotifications
-                .stream().map(noti -> modelMapper.map(noti, NotiNewsResDTO.class))
+                .stream().map(noti -> {
+
+                    return NotiNewsResDTO.builder()
+                            .notiId(noti.getNotiId())
+                            .name(noti.getName())
+                            .title(noti.getTitle())
+                            .message(noti.getMessage())
+                            .regDate(Util.convertLocalDate(noti.getRegDate()))
+                            .target(noti.getTarget())
+                            .build();
+                })
                 .collect(Collectors.toList());
 
         dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
@@ -94,7 +106,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Long registerNotification(NotificationRegDTO notificationRegDTO) {
+    public Long registerEventNotification(NotificationRegDTO notificationRegDTO) {
 
         eventNotificationRepository.findByName(notificationRegDTO.getName())
                 .ifPresent(m -> {
@@ -167,6 +179,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .name(notificationRegDTO.getName())
                 .title(notificationRegDTO.getTitle())
                 .message(notificationRegDTO.getMessage())
+                .regDate(LocalDateTime.now())
                 .expiredDate(LocalDate.parse(notificationRegDTO.getExpiredDate()))
                 .build();
     }
@@ -176,6 +189,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .name(notificationRegDTO.getName())
                 .title(notificationRegDTO.getTitle())
                 .message(notificationRegDTO.getMessage())
+                .regDate(LocalDateTime.now())
                 .target("targetTemp")
                 .build();
     }

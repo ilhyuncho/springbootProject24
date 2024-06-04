@@ -38,6 +38,7 @@
                                     <tr>
                                         <th scope="col">번호</th>
                                         <th scope="col">제목</th>
+                                        <th scope="col">등록 날짜</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableNews">
@@ -55,6 +56,7 @@
                                         <th scope="col">번호</th>
                                         <th scope="col">제목</th>
                                         <th scope="col">이벤트 기간</th>
+                                        <th scope="col">등록 날짜</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tableEvent">
@@ -135,6 +137,7 @@
         arr[0] = dtoData.notiId
         arr[1] = dtoData.title
         arr[2] = dtoData.expiredDate === undefined ? '' : dtoData.expiredDate
+        arr[3] = dtoData.regDate
     }
     function printNotiList(dtoList, tableRef) {    // 목록 출력
 

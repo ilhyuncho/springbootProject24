@@ -13,7 +13,7 @@ public interface NotificationService {
     NotiEventResDTO getEventInfo(Long notiId);
     NotiNewsResDTO getNewsInfo(Long notiId);
 
-    Long registerNotification(NotificationRegDTO notificationRegDTO);
+    Long registerEventNotification(NotificationRegDTO notificationRegDTO);
     Long registerNewsNotification(NotificationRegDTO notificationRegDTO);
 
 

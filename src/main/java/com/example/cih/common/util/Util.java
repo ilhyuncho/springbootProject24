@@ -1,5 +1,6 @@
 package com.example.cih.common.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Random;
@@ -24,6 +25,11 @@ public class Util {
     public static LocalTime convertLocalTime(LocalDateTime localDateTime){
         LocalTime localTime = localDateTime.query(LocalTime::from);
         return localTime;
+    }
+
+    public static LocalDate convertLocalDate(LocalDateTime localDateTime){
+        LocalDate localDate = localDateTime.query(LocalDate::from);
+        return localDate;
     }
 
 
