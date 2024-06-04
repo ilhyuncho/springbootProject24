@@ -6,23 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class NotificationResDTO {
+public class NotiResDTO {
     private Long notiId;
     private String name;
     private String title;
     private String message;
-    private String target;
-    private LocalDate expiredDate;
 
     @Builder.Default
     private List<ImageDTO> fileNames = new ArrayList<>();

@@ -86,11 +86,13 @@
     let arrElement = []
     const eventObj = {
         "targetId": "#event",
-        "tableId": tableEvent
+        "tableId": tableEvent,
+        "pathName": "event"
     }
     const newsObj = {
         "targetId": "#news",
-        "tableId": tableNews
+        "tableId": tableNews,
+        "pathName": "news"
     }
 
     arrElement.push(eventObj);
@@ -116,7 +118,8 @@
     function getList(targetId){
 
         const formObj = {
-            targetId:targetId
+            targetId:targetId,
+            pathName:arrElement.find(o => o.targetId === targetId).pathName
         }
 
         getNotiList(formObj).then(data => {
@@ -131,7 +134,7 @@
     function makeHistoryData(arr, dtoData){
         arr[0] = dtoData.notiId
         arr[1] = dtoData.title
-        arr[2] = dtoData.expiredDate === null ? '' : dtoData.expiredDate
+        arr[2] = dtoData.expiredDate === undefined ? '' : dtoData.expiredDate
     }
     function printNotiList(dtoList, tableRef) {    // 목록 출력
 

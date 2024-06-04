@@ -1,8 +1,9 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.notification.NotificationRegDTO;
-import com.example.cih.dto.notification.NotificationResDTO;
+import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.notification.*;
 import com.example.cih.service.notification.NotificationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class NotiManageController {
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
-        List<NotificationResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
+        List<NotiEventResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
 
         model.addAttribute("listDto", listDto);
 
@@ -43,9 +44,7 @@ public class NotiManageController {
     public String getEventDetail(@PathVariable("notiId") Long notiId,
                                  Model model) {
 
-        log.error("notiId : " + notiId);
-
-        NotificationResDTO eventInfo = notificationService.getEventInfo(notiId);
+        NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
 
         log.error("eventInfo : " + eventInfo);
         model.addAttribute("responseDTO", eventInfo);
@@ -57,9 +56,7 @@ public class NotiManageController {
     public String getNewsDetail(@PathVariable("notiId") Long notiId,
                                  Model model) {
 
-        log.error("notiId : " + notiId);
-
-        NotificationResDTO newsInfo = notificationService.getNewsInfo(notiId);
+        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
 
         log.error("newsInfo : " + newsInfo);
         model.addAttribute("responseDTO", newsInfo);
@@ -90,7 +87,7 @@ public class NotiManageController {
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
-        List<NotificationResDTO> listDto = notificationService.getListNewsInfo(pageRequestDTO);
+        List<NotiNewsResDTO> listDto = notificationService.getListNewsInfo(pageRequestDTO);
 
         model.addAttribute("listDto", listDto);
 

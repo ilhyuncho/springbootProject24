@@ -2,7 +2,9 @@ package com.example.cih.controller.notification;
 
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.notification.NotificationResDTO;
+import com.example.cih.dto.notification.NotiEventResDTO;
+import com.example.cih.dto.notification.NotiNewsResDTO;
+import com.example.cih.dto.notification.NotiResDTO;
 import com.example.cih.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,13 +22,13 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @GetMapping("/news")
+    @GetMapping
     public String getNews(PageRequestDTO pageRequestDTO, Model model){
 
-        List<NotificationResDTO> listDTO = notificationService.getListNewsInfo(pageRequestDTO);
+        List<NotiNewsResDTO> listDTO = notificationService.getListNewsInfo(pageRequestDTO);
 
         model.addAttribute("list", listDTO);
 
-        return "/notification/news";
+        return "/notification/noti";
     }
 }

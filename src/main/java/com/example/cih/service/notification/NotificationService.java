@@ -1,18 +1,17 @@
 package com.example.cih.service.notification;
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.notification.NotificationRegDTO;
-import com.example.cih.dto.notification.NotificationResDTO;
+import com.example.cih.dto.notification.*;
 
 import java.util.List;
 
 public interface NotificationService {
 
-    List<NotificationResDTO> getListEventInfo(PageRequestDTO pageRequestDTO);
-    List<NotificationResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO);
+    List<NotiEventResDTO> getListEventInfo(PageRequestDTO pageRequestDTO);
+    List<NotiNewsResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO);
 
-    NotificationResDTO getEventInfo(Long notiId);
-    NotificationResDTO getNewsInfo(Long notiId);
+    NotiEventResDTO getEventInfo(Long notiId);
+    NotiNewsResDTO getNewsInfo(Long notiId);
 
     Long registerNotification(NotificationRegDTO notificationRegDTO);
     Long registerNewsNotification(NotificationRegDTO notificationRegDTO);

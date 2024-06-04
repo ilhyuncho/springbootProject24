@@ -3,8 +3,7 @@ package com.example.cih.service.notification;
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.notification.*;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.notification.NotificationRegDTO;
-import com.example.cih.dto.notification.NotificationResDTO;
+import com.example.cih.dto.notification.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -25,16 +24,19 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NewsNotificationRepository newsNotificationRepository;
     private final EventNotificationRepository eventNotificationRepository;
+    private final NotificationRepository<Notification, Long> notificationRepository;
+
     private final ModelMapper modelMapper;
 
     @Override
-    public List<NotificationResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
+    public List<NotiEventResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
 
         List<EventNotification> eventNotification = eventNotificationRepository.findAll();
 
-        List<NotificationResDTO> dtoList = eventNotification
+        List<NotiEventResDTO> dtoList = eventNotification
                 .stream().map(noti -> {
-                    return NotificationResDTO.builder()
+
+                    return NotiEventResDTO.builder()
                             .notiId(noti.getNotiId())
                             .name(noti.getName())
                             .title(noti.getTitle())
@@ -44,48 +46,48 @@ public class NotificationServiceImpl implements NotificationService {
                         })
                 .collect(Collectors.toList());
 
-        dtoList.forEach(list -> log.error("readEventNotification: " + list));
+        dtoList.forEach(list -> log.error("getListEventInfo: " + list));
 
         return dtoList;
     }
 
     @Override
-    public List<NotificationResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO) {
+    public List<NotiNewsResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO) {
 
         List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
 
-        List<NotificationResDTO> dtoList = newsNotifications
-                .stream().map(noti -> modelMapper.map(noti, NotificationResDTO.class))
+        List<NotiNewsResDTO> dtoList = newsNotifications
+                .stream().map(noti -> modelMapper.map(noti, NotiNewsResDTO.class))
                 .collect(Collectors.toList());
 
-        dtoList.forEach(list -> log.error("readNewsNotification: " + list));
+        dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
 
         return dtoList;
     }
 
     @Override
-    public NotificationResDTO getEventInfo(Long notiId) {
+    public NotiEventResDTO getEventInfo(Long notiId) {
 
         Optional<EventNotification> result = eventNotificationRepository.findById(notiId);
 
        if( result.isPresent()){
            EventNotification eventNotification = result.get();
 
-           return entityToEventDTO(eventNotification);
+           return (NotiEventResDTO)entityToNotiResDTO(eventNotification);
        }
        log.error("getEventInfo() EventNotification is null!!!");
         return null;
     }
 
     @Override
-    public NotificationResDTO getNewsInfo(Long notiId) {
+    public NotiNewsResDTO getNewsInfo(Long notiId) {
 
         Optional<NewsNotification> result = newsNotificationRepository.findById(notiId);
 
         if( result.isPresent()){
             NewsNotification newsNotification = result.get();
 
-            return entityToNewsDTO(newsNotification);
+            return (NotiNewsResDTO)entityToNotiResDTO(newsNotification);
         }
         log.error("getNewsInfo() NewsNotification is null!!!");
         return null;
@@ -127,6 +129,30 @@ public class NotificationServiceImpl implements NotificationService {
 
         return saveItem.getNotiId();
     }
+    private NotiResDTO entityToNotiResDTO(Notification notification) {
+
+        NotiResDTO notiResDTO;
+        if( notification.getClass().equals(NewsNotification.class)){
+            NewsNotification noti = (NewsNotification)notification;
+
+            NotiNewsResDTO notiNewsResDTO = modelMapper.map(noti, NotiNewsResDTO.class);
+            log.error("NotiNewsResDTO : " + notiNewsResDTO);
+            notiResDTO = notiNewsResDTO;
+        }
+        else{
+            EventNotification noti = (EventNotification)notification;
+
+            NotiEventResDTO notiEventResDTO = modelMapper.map(noti, NotiEventResDTO.class);
+            log.error("NotiEventResDTO : " + notiEventResDTO);
+            notiResDTO = notiEventResDTO;
+        }
+        // 이미지 파일 정보 매핑
+        notification.getNotificationImageSet().forEach(image -> {
+            notiResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+        });
+
+        return notiResDTO;
+    }
 
     public void addFileNames(NotificationRegDTO notificationRegDTO, Notification notification){
 
@@ -134,38 +160,6 @@ public class NotificationServiceImpl implements NotificationService {
             String[] arr = fileName.split("_");
             notification.addImage(arr[0], arr[1]);
         });
-    }
-    private static NotificationResDTO entityToEventDTO(EventNotification eventNotification) {
-        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
-                .notiId(eventNotification.getNotiId())
-                .title(eventNotification.getTitle())
-                .name(eventNotification.getName())
-                .message(eventNotification.getMessage())
-                .expiredDate(eventNotification.getExpiredDate())
-                .build();
-
-        // 이미지 파일 정보 매핑
-        eventNotification.getNotificationImageSet().forEach(image -> {
-            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
-        });
-
-        return notificationResDTO;
-    }
-    private static NotificationResDTO entityToNewsDTO(NewsNotification newsNotification) {
-        NotificationResDTO notificationResDTO = NotificationResDTO.builder()
-                .notiId(newsNotification.getNotiId())
-                .title(newsNotification.getTitle())
-                .name(newsNotification.getName())
-                .message(newsNotification.getMessage())
-                .target(newsNotification.getTarget())
-                .build();
-
-        // 이미지 파일 정보 매핑
-        newsNotification.getNotificationImageSet().forEach(image -> {
-            notificationResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
-        });
-
-        return notificationResDTO;
     }
     private static EventNotification dtoToEventEntity(NotificationRegDTO notificationRegDTO) {
 
@@ -185,5 +179,4 @@ public class NotificationServiceImpl implements NotificationService {
                 .target("targetTemp")
                 .build();
     }
-
 }
