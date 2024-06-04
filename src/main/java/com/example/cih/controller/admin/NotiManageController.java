@@ -1,8 +1,6 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.notification.*;
 import com.example.cih.service.notification.NotificationService;
 import io.swagger.annotations.ApiOperation;
@@ -108,6 +106,7 @@ public class NotiManageController {
 
         log.error("newsInfo : " + newsInfo);
         model.addAttribute("responseDTO", newsInfo);
+        //model.addAttribute("targetId", "news");
 
         return "/admin/newsDetail";
     }

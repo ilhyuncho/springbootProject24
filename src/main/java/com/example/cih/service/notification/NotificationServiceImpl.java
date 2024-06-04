@@ -26,6 +26,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NewsNotificationRepository newsNotificationRepository;
     private final EventNotificationRepository eventNotificationRepository;
+    private final NotificationRepository notificationRepository;
 
     private final ModelMapper modelMapper;
 
@@ -103,6 +104,16 @@ public class NotificationServiceImpl implements NotificationService {
         }
         log.error("getNewsInfo() NewsNotification is null!!!");
         return null;
+    }
+
+    @Override
+    public NotiResDTO getNotiInfo(Long notiId) {
+
+        Optional<Notification> result = notificationRepository.findById(notiId);
+
+        NotiResDTO notiNewsResDTO = entityToNotiResDTO(result.get());
+
+        return notiNewsResDTO;
     }
 
     @Override

@@ -85,6 +85,11 @@
     const tableEvent = document.getElementById("tableEvent");
     const tableNews = document.getElementById("tableNews");
 
+    const eventTab = document.getElementById("event-tab");
+    const newsTab = document.getElementById("news-tab");
+    const eventContent = document.getElementById("event");
+    const newsContent = document.getElementById("news");
+
     let arrElement = []
     const eventObj = {
         "targetId": "#event",
@@ -96,11 +101,22 @@
         "tableId": tableNews,
         "pathName": "news"
     }
-
     arrElement.push(eventObj);
     arrElement.push(newsObj);
 
-    getList('#news')
+    if( [[${targetId}]] === 'event'){
+        console.log('news~~~~~~~~')
+
+        newsTab.classList.remove("active");
+        eventTab.classList.add("active");
+
+        newsContent.classList.remove("show", "active");
+        eventContent.classList.add("show", "active");
+    }
+
+
+
+    getList('#' + [[${targetId}]])
 
     var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
     triggerTabList.forEach(function (triggerEl) {
@@ -126,7 +142,8 @@
 
         getNotiList(formObj).then(data => {
 
-            printNotiList(data, arrElement.find(o => o.targetId === targetId).tableId) // 목록 처리
+            printNotiList(data, arrElement.find(o => o.targetId === targetId).tableId
+                            ,arrElement.find(o => o.targetId === targetId).pathName) // 목록 처리
 
         }).catch(e=>{
             console.error(e)
@@ -139,7 +156,7 @@
         arr[2] = dtoData.expiredDate === undefined ? '' : dtoData.expiredDate
         arr[3] = dtoData.regDate
     }
-    function printNotiList(dtoList, tableRef) {    // 목록 출력
+    function printNotiList(dtoList, tableRef, pathName) {    // 목록 출력
 
         // 기존 행 삭제
         while (tableRef.firstChild) {
@@ -155,9 +172,21 @@
 
                 for (let j = 0, k = 0; j < arr.length; j++){
                     if(arr[j] !== ''){
+
                         let newCell = newRow.insertCell(k);
                         let newText = document.createTextNode(arr[j]);
-                        newCell.appendChild(newText);
+
+                        if( j === 1 ){
+                            const url="/notification/show/" + pathName + "/" + arr[0];
+                            const link = document.createElement("a");
+                            link.setAttribute("href",url);
+                            link.appendChild(newText);
+
+                            newCell.appendChild(link);
+                        }
+                        else{
+                            newCell.appendChild(newText);
+                        }
                         k++;
                     }
                 }
