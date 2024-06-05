@@ -16,6 +16,9 @@ public class NotificationRegDTO {
     private String message;
     private String expiredDate;
     private String target;
+    private Boolean isUse;
+    private Boolean isPopup;
+
     private List<String> fileNames= new ArrayList<>();
 
 }

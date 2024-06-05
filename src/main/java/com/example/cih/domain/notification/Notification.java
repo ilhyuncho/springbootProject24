@@ -31,6 +31,9 @@ public abstract class Notification {
 
     private LocalDateTime regDate;
 
+    private Boolean isUse;
+    private Boolean isPopup;
+
     @OneToMany(mappedBy = "notification", //
             cascade = {CascadeType.ALL}, // ShopItem 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
             fetch = FetchType.LAZY,

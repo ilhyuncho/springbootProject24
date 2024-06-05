@@ -29,6 +29,7 @@ public class NotificationRestController {
     public List<NotiEventResDTO> getEventList(PageRequestDTO pageRequestDTO,
                                          String targetId, Model model){
 
+        pageRequestDTO.setType("u");
         List<NotiEventResDTO> listEventInfo = notificationService.getListEventInfo(pageRequestDTO);
         return listEventInfo;
     }

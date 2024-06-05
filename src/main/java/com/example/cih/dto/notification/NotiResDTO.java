@@ -22,6 +22,8 @@ public class NotiResDTO {
     private String title;
     private String message;
     private LocalDate regDate;
+    private Boolean isUse;
+    private Boolean isPopup;
 
     @Builder.Default
     private List<ImageDTO> fileNames = new ArrayList<>();

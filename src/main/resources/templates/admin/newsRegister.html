@@ -14,7 +14,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-         이벤트 등록
+         뉴스 등록
         </div>
         <div class="card-body">
 
@@ -33,6 +33,19 @@
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 message</span>
               <input type="text" name="message" class="form-control" value='news message1'>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">뉴스 활성화</span>
+
+              <input type="radio" name="isUse" checked value="1">활성화</input>
+              <input type="radio" name="isUse" value="0">비활성화</input>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">뉴스 팝업창</span>
+              <input type="radio" name="isPopup" checked value="1">활성화</input>
+              <input type="radio" name="isPopup" value="0">비활성화</input>
             </div>
 
             <div class="input-group mb-3">
@@ -78,6 +91,8 @@
               <th scope="col">notiName</th>
               <th scope="col">notiTitle</th>
               <th scope="col">notiMessage</th>
+              <th scope="col">활성화 여부</th>
+              <th scope="col">팝업창 여부</th>
             </tr>
             </thead>
 
@@ -88,6 +103,8 @@
                       class="text-decoration-none"> [[${dto.name}]]</a></td>
               <td>[[${dto.title}]]</td>
               <td>[[${dto.message}]]</td>
+              <td>[[${dto.isUse}]]</td>
+              <td>[[${dto.isPopup}]]</td>
 
             </tr>
             </tbody>

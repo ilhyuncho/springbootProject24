@@ -8,6 +8,8 @@ import com.example.cih.dto.notification.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,10 +35,18 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotiEventResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
 
-        List<EventNotification> eventNotification = eventNotificationRepository.findAll();
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
+
+
+        Page<EventNotification> result = eventNotificationRepository.searchAll(types, keyword, pageable);
+        List<EventNotification> eventNotification = result.getContent();
+
 
         List<NotiEventResDTO> dtoList = eventNotification
-                .stream().map(noti -> {
+                .stream()
+                .map(noti -> {
 
                     return NotiEventResDTO.builder()
                             .notiId(noti.getNotiId())
@@ -45,8 +55,10 @@ public class NotificationServiceImpl implements NotificationService {
                             .message(noti.getMessage())
                             .regDate(Util.convertLocalDate(noti.getRegDate()))
                             .expiredDate(noti.getExpiredDate())
+                            .isUse(noti.getIsUse())
+                            .isPopup(noti.getIsPopup())
                             .build();
-                        })
+                })
                 .collect(Collectors.toList());
 
         dtoList.forEach(list -> log.error("getListEventInfo: " + list));
@@ -69,6 +81,8 @@ public class NotificationServiceImpl implements NotificationService {
                             .message(noti.getMessage())
                             .regDate(Util.convertLocalDate(noti.getRegDate()))
                             .target(noti.getTarget())
+                            .isUse(noti.getIsUse())
+                            .isPopup(noti.getIsPopup())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -184,23 +198,27 @@ public class NotificationServiceImpl implements NotificationService {
             notification.addImage(arr[0], arr[1]);
         });
     }
-    private static EventNotification dtoToEventEntity(NotificationRegDTO notificationRegDTO) {
+    private static EventNotification dtoToEventEntity(NotificationRegDTO dto) {
 
         return EventNotification.builder()
-                .name(notificationRegDTO.getName())
-                .title(notificationRegDTO.getTitle())
-                .message(notificationRegDTO.getMessage())
+                .name(dto.getName())
+                .title(dto.getTitle())
+                .message(dto.getMessage())
                 .regDate(LocalDateTime.now())
-                .expiredDate(LocalDate.parse(notificationRegDTO.getExpiredDate()))
+                .isUse(dto.getIsUse())
+                .isPopup(dto.getIsPopup())
+                .expiredDate(LocalDate.parse(dto.getExpiredDate()))
                 .build();
     }
-    private static NewsNotification dtoToNewsEntity(NotificationRegDTO notificationRegDTO) {
+    private static NewsNotification dtoToNewsEntity(NotificationRegDTO dto) {
 
         return NewsNotification.builder()
-                .name(notificationRegDTO.getName())
-                .title(notificationRegDTO.getTitle())
-                .message(notificationRegDTO.getMessage())
+                .name(dto.getName())
+                .title(dto.getTitle())
+                .message(dto.getMessage())
                 .regDate(LocalDateTime.now())
+                .isUse(dto.getIsUse())
+                .isPopup(dto.getIsPopup())
                 .target("targetTemp")
                 .build();
     }

@@ -42,6 +42,19 @@
             </div>
 
             <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 활성화</span>
+
+              <input type="radio" name="isUse" checked value="1">활성화</input>
+              <input type="radio" name="isUse" value="0">비활성화</input>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 팝업창</span>
+              <input type="radio" name="isPopup" checked value="1">활성화</input>
+              <input type="radio" name="isPopup" value="0">비활성화</input>
+            </div>
+
+            <div class="input-group mb-3">
               <span class="input-group-text">Page Images</span>
               <div class="float-end uploadHidden">
                 <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
@@ -84,6 +97,8 @@
               <th scope="col">notiName</th>
               <th scope="col">notiTitle</th>
               <th scope="col">notiMessage</th>
+              <th scope="col">활성화 여부</th>
+              <th scope="col">팝업창 여부</th>
               <th scope="col">expiredDate</th>
             </tr>
             </thead>
@@ -95,6 +110,8 @@
                       class="text-decoration-none"> [[${dto.name}]]</a></td>
               <td>[[${dto.title}]]</td>
               <td>[[${dto.message}]]</td>
+              <td>[[${dto.isUse}]]</td>
+              <td>[[${dto.isPopup}]]</td>
               <td>[[${dto.expiredDate}]]</td>
             </tr>
             </tbody>
