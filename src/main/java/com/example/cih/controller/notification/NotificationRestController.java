@@ -4,8 +4,8 @@ package com.example.cih.controller.notification;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.notification.NotiEventResDTO;
 import com.example.cih.dto.notification.NotiNewsResDTO;
-import com.example.cih.dto.notification.NotiResDTO;
 import com.example.cih.service.notification.NotificationService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
@@ -23,6 +23,8 @@ import java.util.List;
 public class NotificationRestController {
     private final NotificationService notificationService;
 
+
+    @ApiOperation(value = "[공지사항] 이벤트 리스트 전달", notes = "고객 접근")
     @GetMapping("/event")
     public List<NotiEventResDTO> getEventList(PageRequestDTO pageRequestDTO,
                                          String targetId, Model model){
@@ -31,6 +33,7 @@ public class NotificationRestController {
         return listEventInfo;
     }
 
+    @ApiOperation(value = "[공지사항] 뉴스 리스트 전달", notes = "고객 접근")
     @GetMapping("/news")
     public List<NotiNewsResDTO> getNewsList(PageRequestDTO pageRequestDTO,
                                          String targetId, Model model){

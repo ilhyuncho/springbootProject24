@@ -24,24 +24,16 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @ApiOperation(value = "[공지사항] 클릭 or 상세 화면에서 list클릭시", notes = "")
+    @ApiOperation(value = "[공지사항] 클릭 or 상세 화면에서 list클릭시", notes = "고객 접근")
     @GetMapping("/get/{targetId}")
-    public String getNews(@PathVariable("targetId") String targetId,
-                          PageRequestDTO pageRequestDTO, Model model){
+    public String getNews(@PathVariable("targetId") String targetId, Model model){
 
-        if(targetId.equals("target_news")){
-            List<NotiNewsResDTO> listDTO = notificationService.getListNewsInfo(pageRequestDTO);
-            model.addAttribute("list", listDTO);
-        }
-        else{
-            List<NotiEventResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
-            model.addAttribute("list", listDto);
-        }
-
-        model.addAttribute("targetId", targetId);
+        // html 파일에서 @PathVariable("targetId") 로 파악함
+        //model.addAttribute("targetId", targetId);
         return "/notification/noti";
     }
 
+    @ApiOperation(value = "뉴스&이벤트 상세 페이지로 이동", notes = "고객 접근")
     @GetMapping("/show/{pathName}/{notiId}")
     public String show(@PathVariable("notiId") Long notiId,
                        @PathVariable("pathName") String pathName,
