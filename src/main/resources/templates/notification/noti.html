@@ -142,7 +142,7 @@
 
         getNotiList(formObj).then(data => {
 
-            printNotiList(data, arrElement.find(o => o.targetId === targetId).tableId
+            printNotiList(data.dtoList, arrElement.find(o => o.targetId === targetId).tableId
                             ,arrElement.find(o => o.targetId === targetId).pathName) // 목록 처리
 
         }).catch(e=>{

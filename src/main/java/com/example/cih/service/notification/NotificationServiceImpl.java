@@ -4,6 +4,7 @@ import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.common.util.Util;
 import com.example.cih.domain.notification.*;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,12 +34,11 @@ public class NotificationServiceImpl implements NotificationService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<NotiEventResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<NotiEventResDTO> getListEventInfo(PageRequestDTO pageRequestDTO) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
-
 
         Page<EventNotification> result = eventNotificationRepository.searchAll(types, keyword, pageable);
         List<EventNotification> eventNotification = result.getContent();
@@ -63,15 +63,25 @@ public class NotificationServiceImpl implements NotificationService {
 
         dtoList.forEach(list -> log.error("getListEventInfo: " + list));
 
-        return dtoList;
+
+
+        return PageResponseDTO.<NotiEventResDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 
     @Override
-    public List<NotiNewsResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<NotiNewsResDTO> getListNewsInfo(PageRequestDTO pageRequestDTO) {
 
-        List<NewsNotification> newsNotifications = newsNotificationRepository.findAll();
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
 
-        List<NotiNewsResDTO> dtoList = newsNotifications
+       // Page<NewsNotification> result = newsNotificationRepository.findAll();
+        Page<NewsNotification> result = newsNotificationRepository.searchAll(types, keyword, pageable);
+        List<NotiNewsResDTO> dtoList = result
                 .stream().map(noti -> {
 
                     return NotiNewsResDTO.builder()
@@ -89,7 +99,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
 
-        return dtoList;
+        return PageResponseDTO.<NotiNewsResDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 
     @Override

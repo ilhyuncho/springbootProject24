@@ -1,6 +1,7 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
 import com.example.cih.service.notification.NotificationService;
 import io.swagger.annotations.ApiOperation;
@@ -9,10 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -26,13 +24,12 @@ public class NotiManageController {
 
     @ApiOperation(value = "[이벤트] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/eventList")
-    public String getEventRegister(Model model) {
+    public String getEventRegister(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO
+                                   ,Model model) {
 
-        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResponseDTO<NotiEventResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
 
-        List<NotiEventResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
-
-        model.addAttribute("listDto", listDto);
+        model.addAttribute("responseDTO", listDto);
 
         return "/admin/eventRegister";
     }
@@ -69,13 +66,12 @@ public class NotiManageController {
 
     @ApiOperation(value = "[뉴스] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsList")
-    public String getNewsRegister(Model model) {
+    public String getNewsRegister(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO
+                                  ,Model model) {
 
-        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResponseDTO<NotiNewsResDTO> listDto = notificationService.getListNewsInfo(pageRequestDTO);
 
-        List<NotiNewsResDTO> listDto = notificationService.getListNewsInfo(pageRequestDTO);
-
-        model.addAttribute("listDto", listDto);
+        model.addAttribute("responseDTO", listDto);
 
         return "/admin/newsRegister";
     }

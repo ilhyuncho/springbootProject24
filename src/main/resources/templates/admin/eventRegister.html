@@ -84,43 +84,67 @@
   </div>
 
   <div class="row mt-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          이벤트 리스트
+    <form action="/admin/eventList" method="get" id="myForm1">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            이벤트 리스트
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+              <tr>
+                <th scope="col">notiId</th>
+                <th scope="col">notiName</th>
+                <th scope="col">notiTitle</th>
+                <th scope="col">notiMessage</th>
+                <th scope="col">활성화 여부</th>
+                <th scope="col">팝업창 여부</th>
+                <th scope="col">expiredDate</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr th:each="dto:${responseDTO.dtoList}">
+                <th scope="row">[[${dto.notiId}]]</th>
+                <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
+                        class="text-decoration-none"> [[${dto.name}]]</a></td>
+                <td>[[${dto.title}]]</td>
+                <td>[[${dto.message}]]</td>
+                <td>[[${dto.isUse}]]</td>
+                <td>[[${dto.isPopup}]]</td>
+                <td>[[${dto.expiredDate}]]</td>
+              </tr>
+              </tbody>
+            </table>
+
+            <!-- 페이지 번호 출력-->
+            <div class="float-end">
+              <ul class="pagination flex-wrap">
+
+                <li class="page-item" th:if="${responseDTO.prev}">
+                  <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+                </li>
+
+                <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                  <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                  </li>
+                </th:block>
+
+                <li class="page-item" th:if="${responseDTO.next}">
+                  <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+                </li>
+
+              </ul>
+            </div>
+            <!-- 페이지 번호 출력-->
+
+          </div><!-- <div class="card-body">-->
+
         </div>
-        <div class="card-body">
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">notiId</th>
-              <th scope="col">notiName</th>
-              <th scope="col">notiTitle</th>
-              <th scope="col">notiMessage</th>
-              <th scope="col">활성화 여부</th>
-              <th scope="col">팝업창 여부</th>
-              <th scope="col">expiredDate</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr th:each="dto:${listDto}">
-              <th scope="row">[[${dto.notiId}]]</th>
-              <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
-                      class="text-decoration-none"> [[${dto.name}]]</a></td>
-              <td>[[${dto.title}]]</td>
-              <td>[[${dto.message}]]</td>
-              <td>[[${dto.isUse}]]</td>
-              <td>[[${dto.isPopup}]]</td>
-              <td>[[${dto.expiredDate}]]</td>
-            </tr>
-            </tbody>
-          </table>
-
-        </div><!-- <div class="card-body">-->
-
       </div>
-    </div>
+    </form>
   </div>
 
   <!--    첨부파일 추가를 위한 모달창-->
@@ -272,6 +296,29 @@
     //document.querySelector("form").submit();
 
   }, false)
+
+
+
+  // 페이지 버튼 클릭 이벤트 begin ------------------
+  document.querySelector(".pagination").addEventListener("click", function(e){
+
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+
+    const num = target.getAttribute("data-num")
+    const formObj = document.querySelector("#myForm1")
+
+    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formObj.submit();
+
+  }, false)
+  // 페이지 버튼 클릭 이벤트 end ------------------
+
 
 </script>
 </html>
