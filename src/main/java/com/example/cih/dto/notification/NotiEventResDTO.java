@@ -1,13 +1,10 @@
 package com.example.cih.dto.notification;
 
 
-import com.example.cih.dto.ImageDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -17,6 +14,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class NotiEventResDTO extends NotiResDTO {
 
-    private LocalDate expiredDate;
+    private LocalDateTime eventStartTime;
+    private LocalDateTime eventEndTime;
 
 }

@@ -48,4 +48,26 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
 
         return new PageImpl<>(list, pageable, count);
     }
+
+    @Override
+    public EventNotification searchTodayRandomEvent() {
+
+        QEventNotification eventNotification = QEventNotification.eventNotification;
+        JPQLQuery<EventNotification> query = from(eventNotification);
+
+        //query.where(eventNotification.expiredDate
+
+       // this.getQuerydsl().applyPagination(pageable, query);
+        List<EventNotification> list = query.fetch();
+        long count = query.fetchCount();
+
+        for (EventNotification event : list) {
+            log.error(event.toString());
+        }
+
+
+        return null;
+    }
+
+
 }

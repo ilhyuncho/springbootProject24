@@ -1,5 +1,7 @@
 package com.example.cih.common.util;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@Log4j2
 public class Util {
 
     public static Stream<UUID> createUUID(long count){
@@ -28,8 +31,16 @@ public class Util {
     }
 
     public static LocalDate convertLocalDate(LocalDateTime localDateTime){
-        LocalDate localDate = localDateTime.query(LocalDate::from);
+        LocalDate localDate = localDateTime.query(java.time.LocalDate::from);
         return localDate;
+    }
+
+    public static LocalDateTime convertStringToLocalDateTime(String str){
+        LocalDate date = LocalDate.parse(str);
+        LocalDateTime now = LocalDateTime.now();
+
+        return LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth()
+                                                , now.getHour(), now.getMinute(), now.getSecond() );
     }
 
 

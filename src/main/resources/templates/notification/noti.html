@@ -55,7 +55,8 @@
                                     <tr>
                                         <th scope="col">번호</th>
                                         <th scope="col">제목</th>
-                                        <th scope="col">이벤트 기간</th>
+                                        <th scope="col">이벤트 시작</th>
+                                        <th scope="col">이벤트 종료</th>
                                         <th scope="col">등록 날짜</th>
                                     </tr>
                                     </thead>
@@ -75,8 +76,9 @@
 
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/js/event.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/event.js"></script>
+    <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -153,8 +155,9 @@
     function makeHistoryData(arr, dtoData){
         arr[0] = dtoData.notiId
         arr[1] = dtoData.title
-        arr[2] = dtoData.expiredDate === undefined ? '' : dtoData.expiredDate
-        arr[3] = dtoData.regDate
+        arr[2] = dtoData.eventStartTime === undefined ? '' : stringToDateFormat(dtoData.eventStartTime)
+        arr[3] = dtoData.eventEndTime === undefined ? '' : stringToDateFormat(dtoData.eventEndTime)
+        arr[4] = dtoData.regDate
     }
     function printNotiList(dtoList, tableRef, pathName) {    // 목록 출력
 

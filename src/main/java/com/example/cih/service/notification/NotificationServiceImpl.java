@@ -54,7 +54,8 @@ public class NotificationServiceImpl implements NotificationService {
                             .title(noti.getTitle())
                             .message(noti.getMessage())
                             .regDate(Util.convertLocalDate(noti.getRegDate()))
-                            .expiredDate(noti.getExpiredDate())
+                            .eventStartTime(noti.getEventStartTime())
+                            .eventEndTime(noti.getEventEndTime())
                             .isUse(noti.getIsUse())
                             .isPopup(noti.getIsPopup())
                             .build();
@@ -147,6 +148,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Long registerEventNotification(NotificationRegDTO notificationRegDTO) {
 
+        log.error("notificationRegDTO : " + notificationRegDTO);
+
         eventNotificationRepository.findByName(notificationRegDTO.getName())
                 .ifPresent(m -> {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
@@ -180,6 +183,16 @@ public class NotificationServiceImpl implements NotificationService {
 
         return saveItem.getNotiId();
     }
+
+    @Override
+    public NotiEventResDTO getRandomPopupEventInfo() {
+
+        EventNotification eventNotification = eventNotificationRepository.searchTodayRandomEvent();
+
+
+        return null;
+    }
+
     private NotiResDTO entityToNotiResDTO(Notification notification) {
 
         NotiResDTO notiResDTO;
@@ -221,7 +234,8 @@ public class NotificationServiceImpl implements NotificationService {
                 .regDate(LocalDateTime.now())
                 .isUse(dto.getIsUse())
                 .isPopup(dto.getIsPopup())
-                .expiredDate(LocalDate.parse(dto.getExpiredDate()))
+                .eventStartTime(Util.convertStringToLocalDateTime(dto.getEventStartTime()))
+                .eventEndTime(Util.convertStringToLocalDateTime(dto.getEventEndTime()))
                 .build();
     }
     private static NewsNotification dtoToNewsEntity(NotificationRegDTO dto) {

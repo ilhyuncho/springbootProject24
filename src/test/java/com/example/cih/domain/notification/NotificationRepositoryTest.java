@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -46,12 +47,13 @@ public class NotificationRepositoryTest {
             EventNotification noti = EventNotification.builder()
                     .notiId(Long.valueOf(i))
                     .message("eventMEssage"+i)
-                    .expiredDate(LocalDate.now())
+                    //.expiredDate(LocalDate.now())
+                    .eventStartTime(LocalDateTime.now())
+                    .eventEndTime(LocalDateTime.now())
                     .build();
 
             EventNotification result = eventNotificationRepository.save(noti);
             log.info("Noti Id: " + result.getNotiId());
-
 
 
         });
@@ -72,7 +74,7 @@ public class NotificationRepositoryTest {
             }
             else{
                 EventNotification noti = (EventNotification)o;
-                log.error("Event-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getExpiredDate());
+                log.error("Event-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getEventStartTime());
             }
         }
 

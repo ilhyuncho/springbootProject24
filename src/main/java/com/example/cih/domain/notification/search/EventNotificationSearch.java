@@ -6,4 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface EventNotificationSearch {
     Page<EventNotification> searchAll(String[] types, String keyword, Pageable pageable);
+
+    EventNotification searchTodayRandomEvent();
+
 }
