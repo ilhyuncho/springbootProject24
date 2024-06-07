@@ -65,7 +65,7 @@
                 <a th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
-                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                <button type="button" class="btn btn-secondary saveBtn">Save</button>
                 <button type="button" class="btn btn-danger removeBtn">Remove</button>
               </div>
             </div>
@@ -237,7 +237,7 @@
 
   // Car 수정 요청
   const link = [[${pageRequestDTO.getLink()}]]
-  document.querySelector(".modBtn").addEventListener("click", function (e) {
+  document.querySelector(".saveBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 

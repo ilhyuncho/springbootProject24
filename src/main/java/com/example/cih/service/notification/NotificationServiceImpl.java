@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,6 +143,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         NotiResDTO notiNewsResDTO = entityToNotiResDTO(result.get());
 
+        log.error("notiNewsResDTO : " + notiNewsResDTO);
         return notiNewsResDTO;
     }
 
@@ -185,6 +187,45 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void modifyEventNotification(Long notiId, NotificationRegDTO dto) {
+
+        EventNotification eventNotification = eventNotificationRepository.findById(notiId)
+                .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
+
+//        eventNotification.changeInfo(dto.getName()
+//                                    , dto.getTitle()
+//                                    , dto.getMessage()
+//                                    , dto.getIsUse()
+//                                    ,dto.getIsPopup());
+
+        eventNotification.changeEventTime(Util.convertStringToLocalDateTime(dto.getEventStartTime())
+        , Util.convertStringToLocalDateTime(dto.getEventEndTime()));
+
+        log.error("modifyEventNotification() eventNotification : " + eventNotification);
+        EventNotification save = eventNotificationRepository.save(eventNotification);
+        log.error("modifyEventNotification() save : " + save);
+
+//        Optional<Notification> result = notificationRepository.findById(notiId);
+//
+//        if( result.isPresent()){
+//            Notification notification = result.get();
+//
+//            notification.changeInfo(dto.getName()
+//                    , dto.getTitle()
+//                    , dto.getMessage()
+//                    , dto.getIsUse()
+//                    ,dto.getIsPopup());
+//
+//            notificationRepository.save(notification);
+//        }
+//        else{
+//            log.error("gsdgdfgdfgdfg");
+//        }
+
+
+    }
+
+    @Override
     public NotiEventResDTO getRandomPopupEventInfo() {
 
         EventNotification eventNotification = eventNotificationRepository.searchTodayRandomEvent();
@@ -201,21 +242,24 @@ public class NotificationServiceImpl implements NotificationService {
             NewsNotification noti = (NewsNotification)notification;
 
             NotiNewsResDTO notiNewsResDTO = modelMapper.map(noti, NotiNewsResDTO.class);
-            log.error("NotiNewsResDTO : " + notiNewsResDTO);
+
             notiResDTO = notiNewsResDTO;
         }
         else{
             EventNotification noti = (EventNotification)notification;
 
             NotiEventResDTO notiEventResDTO = modelMapper.map(noti, NotiEventResDTO.class);
-            log.error("NotiEventResDTO : " + notiEventResDTO);
+
+            notiEventResDTO.setEventStartDate(notiEventResDTO.getEventStartTime().toLocalDate());
+            notiEventResDTO.setEventEndDate(notiEventResDTO.getEventEndTime().toLocalDate());
+
             notiResDTO = notiEventResDTO;
         }
         // 이미지 파일 정보 매핑
         notification.getNotificationImageSet().forEach(image -> {
             notiResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
         });
-
+        log.error("entityToNotiResDTO(), notiResDTO : " + notiResDTO);
         return notiResDTO;
     }
 

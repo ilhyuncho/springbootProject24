@@ -44,7 +44,7 @@ public abstract class Notification {
     @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
     private Set<NotificationImage> notificationImageSet = new HashSet<>();
 
-    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  begin---------------
+    //Notification 엔티티 에서 NotificationImage 엔티티 객체들을 모두 관리  begin---------------
     public void addImage(String uuid, String fileName){
         NotificationImage notificationImage = NotificationImage.builder()
                 .uuid(uuid)
@@ -59,6 +59,14 @@ public abstract class Notification {
         notificationImageSet.forEach(image -> image.changeNotification(null));
         this.notificationImageSet.clear();
     }
-    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  end---------------
+    //Notification 엔티티 에서 NotificationImage 엔티티 객체들을 모두 관리  end---------------
 
+
+    public void changeInfo(String name, String title, String message, Boolean isUse, Boolean isPopup){
+        this.name = name;
+        this.title = title;
+        this.message = message;
+        this.isUse = isUse;
+        this.isPopup = isPopup;
+    }
 }

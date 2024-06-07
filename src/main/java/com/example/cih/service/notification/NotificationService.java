@@ -18,6 +18,8 @@ public interface NotificationService {
     Long registerEventNotification(NotificationRegDTO notificationRegDTO);
     Long registerNewsNotification(NotificationRegDTO notificationRegDTO);
 
+    void modifyEventNotification(Long notiId, NotificationRegDTO notificationRegDTO);
+
     NotiEventResDTO getRandomPopupEventInfo();
 
 

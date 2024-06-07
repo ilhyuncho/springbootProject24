@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -45,6 +46,43 @@ public class NotiManageController {
 
         return "/admin/eventDetail";
     }
+
+    @ApiOperation(value = "[이벤트] 수정 페이지 접근", notes = "관리자 접근")
+    @GetMapping("/eventModify/{notiId}")
+    public String getEventModify(@PathVariable("notiId") Long notiId,
+                                 Model model) {
+
+        NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
+
+        model.addAttribute("responseDTO", eventInfo);
+
+        return "/admin/eventModify";
+    }
+
+    @ApiOperation(value = "이벤트 세부 정보 변경 (post)", notes = "")
+    @PostMapping("/eventModify/{notiId}")
+    public String postEventModify(@PathVariable("notiId") Long notiId,
+                                  NotificationRegDTO notificationRegDTO,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal ){
+        log.error("eventModify post....notiId : " + notiId);
+        log.error("eventModify post....NotificationRegDTO : " + notificationRegDTO);
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            //redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+           // return "redirect:/myPage/carDetail?" + link;
+        }
+
+        notificationService.modifyEventNotification(notiId, notificationRegDTO );
+
+        return "redirect:/admin/eventDetail/" + notiId;
+    }
+
+
 
     @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
     @PostMapping("/eventRegister")
