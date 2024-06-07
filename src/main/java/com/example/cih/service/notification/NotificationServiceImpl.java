@@ -192,37 +192,17 @@ public class NotificationServiceImpl implements NotificationService {
         EventNotification eventNotification = eventNotificationRepository.findById(notiId)
                 .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
 
-//        eventNotification.changeInfo(dto.getName()
-//                                    , dto.getTitle()
-//                                    , dto.getMessage()
-//                                    , dto.getIsUse()
-//                                    ,dto.getIsPopup());
+        eventNotification.changeInfo(dto.getName()
+                                    , dto.getTitle()
+                                    , dto.getMessage()
+                                    , dto.getIsUse()
+                                    , dto.getIsPopup());
 
         eventNotification.changeEventTime(Util.convertStringToLocalDateTime(dto.getEventStartTime())
         , Util.convertStringToLocalDateTime(dto.getEventEndTime()));
 
         log.error("modifyEventNotification() eventNotification : " + eventNotification);
         EventNotification save = eventNotificationRepository.save(eventNotification);
-        log.error("modifyEventNotification() save : " + save);
-
-//        Optional<Notification> result = notificationRepository.findById(notiId);
-//
-//        if( result.isPresent()){
-//            Notification notification = result.get();
-//
-//            notification.changeInfo(dto.getName()
-//                    , dto.getTitle()
-//                    , dto.getMessage()
-//                    , dto.getIsUse()
-//                    ,dto.getIsPopup());
-//
-//            notificationRepository.save(notification);
-//        }
-//        else{
-//            log.error("gsdgdfgdfgdfg");
-//        }
-
-
     }
 
     @Override
