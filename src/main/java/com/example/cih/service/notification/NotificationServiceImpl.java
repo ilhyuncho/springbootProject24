@@ -189,8 +189,9 @@ public class NotificationServiceImpl implements NotificationService {
 
         EventNotification eventNotification = eventNotificationRepository.searchTodayRandomEvent();
 
+        NotiEventResDTO notiEventResDTO = modelMapper.map(eventNotification, NotiEventResDTO.class);
 
-        return null;
+        return notiEventResDTO;
     }
 
     private NotiResDTO entityToNotiResDTO(Notification notification) {

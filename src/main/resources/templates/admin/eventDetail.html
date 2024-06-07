@@ -36,8 +36,12 @@
             </div>
 
             <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 시작 날짜</span>
+              <input type="date" name="eventStartTime" class="form-control" th:value="${responseDTO.eventStartTime}" readonly>
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="expiredDate" class="form-control" th:value="${responseDTO.expiredDate}" readonly>
+              <input type="date" name="eventEndTime" class="form-control" th:value="${responseDTO.eventEndTime}" readonly>
             </div>
 
             <div class="my-4">
@@ -78,8 +82,6 @@
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
-
-  const expiredDate = document.querySelector('.expiredDate');
 
   // 에러 처리 부분 begin ----------------------------
   const errors = [[${errors}]]

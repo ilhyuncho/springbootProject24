@@ -2,7 +2,9 @@ package com.example.cih.controller;
 
 
 
-import com.example.cih.common.util.Util;
+import com.example.cih.dto.notification.NotiEventResDTO;
+import com.example.cih.service.notification.NotificationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,10 @@ import java.time.LocalTime;
 
 @Controller
 @Log4j2
+@RequiredArgsConstructor
 public class HelloController {
+
+    private final NotificationService notificationService;
 
     @GetMapping("/")
     public String mainPage(Model model){
@@ -24,10 +29,11 @@ public class HelloController {
                     var currTime = LocalTime.from(time);
                     return currTime.getHour() >= 13;
                 });
-
         log.error("isItEventTime : " + isItEventTime);
 
-        model.addAttribute("eventId", "1");
+        NotiEventResDTO eventDTO = notificationService.getRandomPopupEventInfo();
+
+        model.addAttribute("eventDTO", eventDTO);
 
         return "/index";
     }

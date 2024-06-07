@@ -37,11 +37,16 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">가격 수정 요청</h5>
+                    <h5 class="modal-title">이벤트~</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
+
+                    <input type="text" class="form-control eventTitle" readonly>
+                    <br>
+
+
+                    <a th:href="|@{'/notification/show/event/' + ${eventDTO.notiId}}|" class="text-decoration-none">
                         <button type="button" class="btn btn-primary">자세히 보기</button>
                     </a>
                 </div>
@@ -64,6 +69,7 @@
 
    const eventModal = new bootstrap.Modal(document.querySelector(".eventModal"))
    const tempList = document.querySelector('.tempList')          // 구매 희망 목록 DOM
+   const eventTitle = document.querySelector(".eventTitle")
 
    const currentUser = [[${#authentication.principal.username}]]
    const sellingCarId = 1
@@ -72,13 +78,14 @@
    let size = 5
 
 
-   const eventId = [[${eventId}]]
-   console.log("eventId : " + eventId)
+   const eventDTO = [[${eventDTO}]]
+   console.log("eventDTO : " + eventDTO.notiId)
 
     printMainView()
 
-   if( eventId > 0){
+   if( eventDTO.notiId > 0){
        // get Event Data??
+       eventTitle.value = eventDTO.title
        eventModal.show()
    }
 

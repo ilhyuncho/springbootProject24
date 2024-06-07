@@ -10,7 +10,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @Log4j2
 public class EventNotificationSearchImpl extends QuerydslRepositorySupport implements EventNotificationSearch {
@@ -55,18 +58,21 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
         QEventNotification eventNotification = QEventNotification.eventNotification;
         JPQLQuery<EventNotification> query = from(eventNotification);
 
-        //query.where(eventNotification.expiredDate
+        LocalDateTime now = LocalDateTime.now();
 
-       // this.getQuerydsl().applyPagination(pageable, query);
+        query.where(eventNotification.eventStartTime.before(now).and(eventNotification.eventEndTime.after(now)));
+
         List<EventNotification> list = query.fetch();
-        long count = query.fetchCount();
 
-        for (EventNotification event : list) {
-            log.error(event.toString());
-        }
+        int skipIndex = new Random().nextInt(list.size());
 
+        Optional<EventNotification> result = list
+                                            .stream()
+                                            .skip(skipIndex)
+                                            .findFirst();
 
-        return null;
+        return result.orElse(null);
+
     }
 
 
