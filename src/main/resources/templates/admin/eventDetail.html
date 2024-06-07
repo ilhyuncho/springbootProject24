@@ -44,6 +44,18 @@
               <input type="date" name="eventEndTime" class="form-control" th:value="${responseDTO.eventEndDate}" readonly>
             </div>
 
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 활성화</span>
+              <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 팝업창</span>
+              <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
+            </div>
+
             <div class="my-4">
               <div class="float-end">
                 <a th:href="|@{/admin/eventList}|" class="text-decoration-none">

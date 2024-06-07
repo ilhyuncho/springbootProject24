@@ -201,6 +201,16 @@ public class NotificationServiceImpl implements NotificationService {
         eventNotification.changeEventTime(Util.convertStringToLocalDateTime(dto.getEventStartTime())
         , Util.convertStringToLocalDateTime(dto.getEventEndTime()));
 
+        // 첨부파일 처리
+        eventNotification.clearImages();
+
+        if(dto.getFileNames() != null){
+            for (String fileName : dto.getFileNames() ) {
+                String[] index = fileName.split("_");
+                eventNotification.addImage(index[0], index[1]);
+            }
+        }
+
         log.error("modifyEventNotification() eventNotification : " + eventNotification);
         EventNotification save = eventNotificationRepository.save(eventNotification);
     }
