@@ -5,7 +5,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>Event Modify</title>
+  <title>News Modify</title>
 </head>
 
 <div layout:fragment="content">
@@ -14,44 +14,35 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-         이벤트 수정 페이지
+         뉴스 수정 페이지
         </div>
         <div class="card-body">
 
-          <form action="/admin/eventModify" method="post" id="myForm">
+          <form action="/admin/newsModify" method="post" id="myForm">
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 이름</span>
+              <span class="input-group-text">뉴스 이름</span>
               <input type="text" name="name" class="form-control" th:value="${responseDTO.name}">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 title</span>
+              <span class="input-group-text">뉴스 title</span>
               <input type="text" name="title" class="form-control" th:value="${responseDTO.title}">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 message</span>
+              <span class="input-group-text">뉴스 message</span>
               <input type="text" name="message" class="form-control" th:value="${responseDTO.message}">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 시작 날짜</span>
-              <input type="date" name="eventStartTime" class="form-control" th:value="${responseDTO.eventStartDate}">
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="eventEndTime" class="form-control" th:value="${responseDTO.eventEndDate}">
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 활성화</span>
+              <span class="input-group-text">뉴스 활성화</span>
               <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" >활성화</input>
               <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" >비활성화</input>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 팝업창</span>
+              <span class="input-group-text">뉴스 팝업창</span>
               <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" >활성화</input>
               <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" >비활성화</input>
             </div>
@@ -85,7 +76,7 @@
 
             <div class="my-4">
               <div class="float-end">
-                <a th:href="|@{/admin/eventList}|" class="text-decoration-none">
+                <a th:href="|@{/admin/newsList}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
                 <button type="button" class="btn btn-secondary saveBtn">Save</button>
@@ -93,9 +84,10 @@
               </div>
             </div>
 
-
           </form>
         </div><!-- <div class="card-body">-->
+
+
 
       </div>
     </div>
@@ -122,6 +114,7 @@
       </div>
     </div>
   </div>  <!--  <div class="modal uploadModal" tabindex="-1">-->
+
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -153,6 +146,7 @@
   // 에러 처리 부분 end ----------------------------
 
   const notiId = [[${responseDTO.notiId}]]
+
 
 
 
@@ -195,7 +189,7 @@
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/admin/eventModify/${notiId}`
+    formObj.action = `/admin/newsModify/${notiId}`
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()
@@ -245,7 +239,6 @@
     const uploadFiles = uploadResult.querySelectorAll("img")
 
     let str= ''
-
     for(let i=0; i<uploadFiles.length;i++){
       const uploadFile = uploadFiles[i]
       const imgLink = uploadFile.getAttribute("data-src")

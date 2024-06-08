@@ -56,6 +56,23 @@
               <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
             </div>
 
+            <div class="row mt-3">
+              <div class="col">
+                <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+                  <th:block th:each="fileName:${responseDTO.fileNames}">
+                    <div class="card col-4">
+                      <div class="card-header d-flex justify-content-center">
+                        [[${fileName.fileName}]]
+                      </div>
+                      <div class="card-body">
+                        <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+            </div><!-- <div class="row mt-3">-->
+
             <div class="my-4">
               <div class="float-end">
                 <a th:href="|@{/admin/eventList}|" class="text-decoration-none">
@@ -70,23 +87,6 @@
 
           </form>
         </div><!-- <div class="card-body">-->
-
-        <div class="row mt-3">
-          <div class="col">
-            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-              <th:block th:each="fileName:${responseDTO.fileNames}">
-                <div class="card col-4">
-                  <div class="card-header d-flex justify-content-center">
-                    [[${fileName.fileName}]]
-                  </div>
-                  <div class="card-body">
-                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
-                  </div>
-                </div>
-              </th:block>
-            </div>
-          </div>
-        </div><!-- <div class="row mt-3">-->
 
       </div>
     </div>

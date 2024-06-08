@@ -35,31 +35,51 @@
               <input type="text" name="message" class="form-control" th:value="${responseDTO.message}" readonly>
             </div>
 
+            <div class="input-group mb-3">
+              <span class="input-group-text">뉴스 활성화</span>
+
+              <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">뉴스 팝업창</span>
+              <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" onclick="return false;">활성화</input>
+              <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col">
+                <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+                  <th:block th:each="fileName:${responseDTO.fileNames}">
+                    <div class="card col-4">
+                      <div class="card-header d-flex justify-content-center">
+                        [[${fileName.fileName}]]
+                      </div>
+                      <div class="card-body">
+                        <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+            </div><!-- <div class="row mt-3">-->
+
             <div class="my-4">
               <div class="float-end">
-                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+                <a th:href="|@{/admin/newsList}|" class="text-decoration-none">
+                  <button type="button" class="btn btn-primary">List</button>
+                </a>
+                <a th:href="|@{'/admin/newsModify/' + ${responseDTO.notiId}}|" class="text-decoration-none">
+                  <button type="button" class="btn btn-secondary">Modify</button>
+                </a>
               </div>
             </div>
+
           </form>
         </div><!-- <div class="card-body">-->
 
-        <div class="row mt-3">
-          <div class="col">
-            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-              <th:block th:each="fileName:${responseDTO.fileNames}">
-                <div class="card col-4">
-                  <div class="card-header d-flex justify-content-center">
-                    [[${fileName.fileName}]]
-                  </div>
-                  <div class="card-body">
-                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
-                  </div>
-                </div>
-              </th:block>
-            </div>
-          </div>
-        </div><!-- <div class="row mt-3">-->
+
 
       </div>
     </div>

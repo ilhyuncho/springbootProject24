@@ -59,7 +59,7 @@ public class NotiManageController {
         return "/admin/eventModify";
     }
 
-    @ApiOperation(value = "이벤트 세부 정보 변경 (post)", notes = "")
+    @ApiOperation(value = "[이벤트] 세부 정보 변경 (post)", notes = "")
     @PostMapping("/eventModify/{notiId}")
     public String postEventModify(@PathVariable("notiId") Long notiId,
                                   NotificationRegDTO notificationRegDTO,
@@ -81,9 +81,6 @@ public class NotiManageController {
 
         return "redirect:/admin/eventDetail/" + notiId;
     }
-
-
-
     @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
     @PostMapping("/eventRegister")
     public String postEventRegister(NotificationRegDTO notificationRegDTO,
@@ -101,7 +98,7 @@ public class NotiManageController {
 
         return "redirect:/admin/eventList";
     }
-
+/////////////////////////////////////////////////////////////////////////////////////////
     @ApiOperation(value = "[뉴스] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsList")
     public String getNewsRegister(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO
@@ -143,5 +140,39 @@ public class NotiManageController {
         //model.addAttribute("targetId", "news");
 
         return "/admin/newsDetail";
+    }
+    @ApiOperation(value = "[뉴스] 수정 페이지 접근", notes = "관리자 접근")
+    @GetMapping("/newsModify/{notiId}")
+    public String getNewsModify(@PathVariable("notiId") Long notiId,
+                                 Model model) {
+
+        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
+
+        model.addAttribute("responseDTO", newsInfo);
+
+        return "/admin/newsModify";
+    }
+
+    @ApiOperation(value = "[뉴스] 세부 정보 변경 (post)", notes = "")
+    @PostMapping("/newsModify/{notiId}")
+    public String postNewsModify(@PathVariable("notiId") Long notiId,
+                                  NotificationRegDTO notificationRegDTO,
+                                  BindingResult bindingResult,
+                                  RedirectAttributes redirectAttributes,
+                                  Principal principal ){
+        log.error("newsModify post....notiId : " + notiId);
+        log.error("newsModify post....NotificationRegDTO : " + notificationRegDTO);
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+           // redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+            return "redirect:/myPage/newsDetail/" + notiId;
+        }
+
+        notificationService.modifyNewsNotification(notiId, notificationRegDTO );
+
+        return "redirect:/admin/newsDetail/" + notiId;
     }
 }

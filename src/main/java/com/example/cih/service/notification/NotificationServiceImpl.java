@@ -216,6 +216,34 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void modifyNewsNotification(Long notiId, NotificationRegDTO dto) {
+
+        NewsNotification newsNotification = newsNotificationRepository.findById(notiId)
+                .orElseThrow(() -> new NoSuchElementException("해당 뉴스 정보가 존재하지않습니다"));
+
+        newsNotification.changeInfo(dto.getName()
+                , dto.getTitle()
+                , dto.getMessage()
+                , dto.getIsUse()
+                , dto.getIsPopup());
+
+       // newsNotification.changeTarget(dto.getTarget());
+
+        // 첨부파일 처리
+        newsNotification.clearImages();
+
+        if(dto.getFileNames() != null){
+            for (String fileName : dto.getFileNames() ) {
+                String[] index = fileName.split("_");
+                newsNotification.addImage(index[0], index[1]);
+            }
+        }
+
+        log.error("modifyNewsNotification() newsNotification : " + newsNotification);
+        NewsNotification save = newsNotificationRepository.save(newsNotification);
+    }
+
+    @Override
     public NotiEventResDTO getRandomPopupEventInfo() {
 
         EventNotification eventNotification = eventNotificationRepository.searchTodayRandomEvent();

@@ -20,4 +20,8 @@ public class NewsNotification extends Notification{
 
     @Column(name="target", length = 30, nullable = false)
     private String target;
+
+    public void changeTarget(String target){
+        this.target = target;
+    }
 }
