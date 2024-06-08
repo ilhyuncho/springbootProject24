@@ -21,7 +21,11 @@ public interface NotificationService {
     void modifyEventNotification(Long notiId, NotificationRegDTO notificationRegDTO);
     void modifyNewsNotification(Long notiId, NotificationRegDTO notificationRegDTO);
 
+    void deleteEventNotification(Long notiId);
+    void deleteNewsNotification(Long notiId);
+
     NotiEventResDTO getRandomPopupEventInfo();
+
 
 
 }

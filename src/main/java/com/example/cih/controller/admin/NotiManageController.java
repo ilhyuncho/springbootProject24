@@ -1,5 +1,6 @@
 package com.example.cih.controller.admin;
 
+import com.example.cih.common.handler.FileHandler;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
@@ -22,6 +23,8 @@ import java.util.List;
 @Log4j2
 public class NotiManageController {
     private final NotificationService notificationService;
+
+    private final FileHandler fileHandler;
 
     @ApiOperation(value = "[이벤트] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/eventList")
@@ -58,6 +61,23 @@ public class NotiManageController {
 
         return "/admin/eventModify";
     }
+    @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
+    @PostMapping("/eventRegister")
+    public String postEventRegister(NotificationRegDTO notificationRegDTO,
+                                    BindingResult bindingResult,
+                                    RedirectAttributes redirectAttributes){
+
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(log::error);
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/admin/eventList";
+        }
+
+        Long NotiId = notificationService.registerEventNotification(notificationRegDTO);
+
+        return "redirect:/admin/eventList";
+    }
 
     @ApiOperation(value = "[이벤트] 세부 정보 변경 (post)", notes = "")
     @PostMapping("/eventModify/{notiId}")
@@ -81,23 +101,27 @@ public class NotiManageController {
 
         return "redirect:/admin/eventDetail/" + notiId;
     }
-    @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
-    @PostMapping("/eventRegister")
-    public String postEventRegister(NotificationRegDTO notificationRegDTO,
-                                    BindingResult bindingResult,
-                                    RedirectAttributes redirectAttributes){
 
-        if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(log::error);
+    @ApiOperation(value = "[이벤트] 삭제", notes = "관리자 접근")
+    @PostMapping("/eventDelete/{notiId}")
+    public String postEventDelete(@PathVariable("notiId") Long notiId,
+                                 NotiDeleteRegDTO notiDeleteRegDTO,
+                                 RedirectAttributes redirectAttributes){
+        log.error("eventDelete......post: " + notiId);
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/admin/eventList";
+        notificationService.deleteEventNotification(notiId);
+
+        // 첨부파일 삭제
+        List<String> fileNames = notiDeleteRegDTO.getFileNames();
+        if(fileNames != null && fileNames.size() > 0){
+            fileHandler.removeFiles(fileNames);
         }
 
-        Long NotiId = notificationService.registerEventNotification(notificationRegDTO);
+        redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/admin/eventList";
     }
+
 /////////////////////////////////////////////////////////////////////////////////////////
     @ApiOperation(value = "[뉴스] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsList")
@@ -109,24 +133,6 @@ public class NotiManageController {
         model.addAttribute("responseDTO", listDto);
 
         return "/admin/newsRegister";
-    }
-
-    @ApiOperation(value = "[뉴스] 신규 등록", notes = "관리자 접근")
-    @PostMapping("/newsRegister")
-    public String postNewsRegister(NotificationRegDTO notificationRegDTO,
-                                   BindingResult bindingResult,
-                                   RedirectAttributes redirectAttributes){
-
-        if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(log::error);
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/admin/newsList";
-        }
-
-        Long NotiId = notificationService.registerNewsNotification(notificationRegDTO);
-
-        return "redirect:/admin/newsList";
     }
 
     @ApiOperation(value = "[뉴스] 상세 페이지 접근", notes = "관리자 접근")
@@ -144,7 +150,7 @@ public class NotiManageController {
     @ApiOperation(value = "[뉴스] 수정 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsModify/{notiId}")
     public String getNewsModify(@PathVariable("notiId") Long notiId,
-                                 Model model) {
+                                Model model) {
 
         NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
 
@@ -152,8 +158,24 @@ public class NotiManageController {
 
         return "/admin/newsModify";
     }
+    @ApiOperation(value = "[뉴스] 신규 등록", notes = "관리자 접근")
+    @PostMapping("/newsRegister")
+    public String postNewsRegister(NotificationRegDTO notificationRegDTO,
+                                   BindingResult bindingResult,
+                                   RedirectAttributes redirectAttributes){
 
-    @ApiOperation(value = "[뉴스] 세부 정보 변경 (post)", notes = "")
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(log::error);
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/admin/newsList";
+        }
+
+        Long NotiId = notificationService.registerNewsNotification(notificationRegDTO);
+
+        return "redirect:/admin/newsList";
+    }
+    @ApiOperation(value = "[뉴스] 세부 정보 변경 (post)", notes = "관리자 접근")
     @PostMapping("/newsModify/{notiId}")
     public String postNewsModify(@PathVariable("notiId") Long notiId,
                                   NotificationRegDTO notificationRegDTO,
@@ -174,5 +196,25 @@ public class NotiManageController {
         notificationService.modifyNewsNotification(notiId, notificationRegDTO );
 
         return "redirect:/admin/newsDetail/" + notiId;
+    }
+
+    @ApiOperation(value = "[뉴스] 삭제", notes = "관리자 접근")
+    @PostMapping("/newsDelete/{notiId}")
+    public String postNewsDelete(@PathVariable("notiId") Long notiId,
+                                 NotiDeleteRegDTO notiDeleteRegDTO,
+                                RedirectAttributes redirectAttributes){
+        log.error("newsDelete......post: " + notiId);
+
+        notificationService.deleteNewsNotification(notiId);
+
+        // 첨부파일 삭제
+        List<String> fileNames = notiDeleteRegDTO.getFileNames();
+        if(fileNames != null && fileNames.size() > 0){
+            fileHandler.removeFiles(fileNames);
+        }
+
+        redirectAttributes.addFlashAttribute("result", "removed");
+
+        return "redirect:/admin/newsList";
     }
 }

@@ -285,9 +285,11 @@
     const target = document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
 
-    console.log("uploadFiles.length" + uploadFiles.length)
-    let str= ''
+    if(eventStartTime.value === '' || eventEndTime.value === ''){
+      alert("이벤트 날짜를 입력하세요..")
+    }
 
+    let str= ''
     for(let i = 0 ; i < uploadFiles.length;i++){
       const uploadFile = uploadFiles[i]
       const imgLink = uploadFile.getAttribute("data-src")
@@ -301,7 +303,6 @@
 
     // 실제 등록 처리
     document.querySelector("#myForm").submit();
-    //document.querySelector("form").submit();
 
   }, false)
 

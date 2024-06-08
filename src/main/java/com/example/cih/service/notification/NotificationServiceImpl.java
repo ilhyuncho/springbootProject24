@@ -244,6 +244,23 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void deleteEventNotification(Long notiId) {
+        EventNotification result = eventNotificationRepository.findById(notiId)
+                .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
+
+        eventNotificationRepository.delete(result);
+    }
+
+    @Override
+    public void deleteNewsNotification(Long notiId) {
+
+        NewsNotification result = newsNotificationRepository.findById(notiId)
+                .orElseThrow(() -> new NoSuchElementException("해당 뉴스 정보가 존재하지않습니다"));
+
+        newsNotificationRepository.delete(result);
+    }
+
+    @Override
     public NotiEventResDTO getRandomPopupEventInfo() {
 
         EventNotification eventNotification = eventNotificationRepository.searchTodayRandomEvent();
