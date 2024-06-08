@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
 
@@ -37,30 +38,20 @@ public class NotiManageController {
 
         return "/admin/eventRegister";
     }
-
-    @ApiOperation(value = "[이벤트] 상세 페이지 접근", notes = "관리자 접근")
-    @GetMapping("/eventDetail/{notiId}")
-    public String getEventDetail(@PathVariable("notiId") Long notiId,
+    @ApiOperation(value = "[이벤트] 상세, 수정 페이지 접근", notes = "관리자 접근")
+    @GetMapping({"/eventDetail/{notiId}", "/eventModify/{notiId}"})
+    public String getEventDetailOrModify(HttpServletRequest request,
+                                 @PathVariable("notiId") Long notiId,
                                  Model model) {
 
         NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
 
         model.addAttribute("responseDTO", eventInfo);
 
-        return "/admin/eventDetail";
+        String requestURI = request.getRequestURI();
+        return requestURI.substring(0, requestURI.lastIndexOf("/"));
     }
 
-    @ApiOperation(value = "[이벤트] 수정 페이지 접근", notes = "관리자 접근")
-    @GetMapping("/eventModify/{notiId}")
-    public String getEventModify(@PathVariable("notiId") Long notiId,
-                                 Model model) {
-
-        NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
-
-        model.addAttribute("responseDTO", eventInfo);
-
-        return "/admin/eventModify";
-    }
     @ApiOperation(value = "[이벤트] 신규 등록", notes = "관리자 접근")
     @PostMapping("/eventRegister")
     public String postEventRegister(NotificationRegDTO notificationRegDTO,
@@ -135,28 +126,18 @@ public class NotiManageController {
         return "/admin/newsRegister";
     }
 
-    @ApiOperation(value = "[뉴스] 상세 페이지 접근", notes = "관리자 접근")
-    @GetMapping("/newsDetail/{notiId}")
-    public String getNewsDetail(@PathVariable("notiId") Long notiId,
-                                Model model) {
-
-        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
-
-        model.addAttribute("responseDTO", newsInfo);
-        //model.addAttribute("targetId", "news");
-
-        return "/admin/newsDetail";
-    }
-    @ApiOperation(value = "[뉴스] 수정 페이지 접근", notes = "관리자 접근")
-    @GetMapping("/newsModify/{notiId}")
-    public String getNewsModify(@PathVariable("notiId") Long notiId,
-                                Model model) {
+    @ApiOperation(value = "[이벤트] 상세, 수정 페이지 접근", notes = "관리자 접근")
+    @GetMapping({"/newsDetail/{notiId}", "/newsModify/{notiId}"})
+    public String getNewsDetailOrModify(HttpServletRequest request,
+                                         @PathVariable("notiId") Long notiId,
+                                         Model model) {
 
         NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
 
         model.addAttribute("responseDTO", newsInfo);
 
-        return "/admin/newsModify";
+        String requestURI = request.getRequestURI();
+        return requestURI.substring(0, requestURI.lastIndexOf("/"));
     }
     @ApiOperation(value = "[뉴스] 신규 등록", notes = "관리자 접근")
     @PostMapping("/newsRegister")
