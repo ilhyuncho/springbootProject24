@@ -60,6 +60,7 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
 
         LocalDateTime now = LocalDateTime.now();
 
+        query.where(eventNotification.isUse.eq(true).and(eventNotification.isPopup.eq(true)));
         query.where(eventNotification.eventStartTime.before(now).and(eventNotification.eventEndTime.after(now)));
 
         List<EventNotification> list = query.fetch();
