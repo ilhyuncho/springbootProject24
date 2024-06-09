@@ -20,7 +20,7 @@
 
                     <!-- 인증 정보에서 사용자 정보 가져오기-->
                     <div class="input-group mb-3" th:with="user=${#authentication.principal}">
-                        <span class="input-group-text">고객 명</span>
+                        <span class="input-group-text">고객 명(확인용)</span>
                         <label>
                             <input type="text" name="userID" class="form-control" th:value="${user.username}">
                         </label>

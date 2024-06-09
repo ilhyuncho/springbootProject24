@@ -6,8 +6,7 @@ import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
-import com.example.cih.domain.reference.RefCarConsumable;
-import com.example.cih.domain.reference.RefCarConsumableRepository;
+import com.example.cih.domain.reference.*;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +41,9 @@ public class UserRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    RefMissionRepository refMissionRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -98,6 +101,8 @@ public class UserRepositoryTest {
                     .userName("member" + i)
                     .address(address)
                     .billingAddress(address1)
+                    .mPoint(0)
+                    .mGrade(1)
                     .build();
 
             Long userId = userRepository.save(user).getUserId();
@@ -130,6 +135,48 @@ public class UserRepositoryTest {
                 .build();
 
         refCarConsumableRepository.save(refCarConsumable1);
+        /////////////////////////////////
+
+        List<RefMission> listRefMission = new ArrayList<>();
+        RefMission refMission = RefMission.builder()
+                .missionName("첫로그인")
+                .missionDesc("첫로그인 설명")
+                .AccumCycle(AccumCycle.FIRST_TIME)
+                .gainPoint(1000)
+                .viewOrder(1)
+                .build();
+        listRefMission.add(refMission);
+
+        RefMission refMission1 = RefMission.builder()
+                .missionName("매일 로그인")
+                .missionDesc("매일 로그인 설명")
+                .AccumCycle(AccumCycle.EVERYDAY)
+                .gainPoint(50)
+                .viewOrder(2)
+                .build();
+        listRefMission.add(refMission1);
+
+        RefMission refMission2 = RefMission.builder()
+                .missionName("내차 등록")
+                .missionDesc("내차 등록 설명")
+                .AccumCycle(AccumCycle.EACH_ITEM)
+                .gainPoint(500)
+                .viewOrder(3)
+                .build();
+        listRefMission.add(refMission2);
+
+        RefMission refMission3 = RefMission.builder()
+                .missionName("차 판매 등록")
+                .missionDesc("차 판매 등록 설명")
+                .AccumCycle(AccumCycle.EACH_ITEM)
+                .gainPoint(400)
+                .viewOrder(4)
+                .build();
+        listRefMission.add(refMission3);
+
+        refMissionRepository.saveAll(listRefMission);
+
+
         /////////////////////////////////
         List<String> listName = new ArrayList<>();
         listName.add("엔진오일 및 오일 필터");
