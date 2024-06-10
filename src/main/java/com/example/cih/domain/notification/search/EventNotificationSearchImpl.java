@@ -64,16 +64,17 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
         query.where(eventNotification.eventStartTime.before(now).and(eventNotification.eventEndTime.after(now)));
 
         List<EventNotification> list = query.fetch();
+        if( list.size() > 0){
+            int skipIndex = new Random().nextInt(list.size());
 
-        int skipIndex = new Random().nextInt(list.size());
+            Optional<EventNotification> result = list
+                    .stream()
+                    .skip(skipIndex)
+                    .findFirst();
 
-        Optional<EventNotification> result = list
-                                            .stream()
-                                            .skip(skipIndex)
-                                            .findFirst();
-
-        return result.orElse(null);
-
+            return result.orElse(null);
+        }
+        return null;
     }
 
 

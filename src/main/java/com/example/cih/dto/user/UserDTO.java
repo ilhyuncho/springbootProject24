@@ -14,5 +14,8 @@ public class UserDTO {
     private Long userID;
     private String userName;
     private String address;
+    private String billingAddress;
 
+    private Integer mGrade;     // 등급
+    private Integer mPoint;     // 획득 포인트
 }

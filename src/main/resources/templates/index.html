@@ -40,15 +40,18 @@
                     <h5 class="modal-title">이벤트~</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div th:if="${eventDTO != null}">
+                    <div class="modal-body" th:with="notiId = ${eventDTO.notiId}">
 
-                    <input type="text" class="form-control eventTitle" readonly>
-                    <br>
+                        <label>
+                            <input type="text" class="form-control eventTitle" readonly>
+                        </label>
+                        <br>
 
-
-                    <a th:href="|@{'/notification/show/event/' + ${eventDTO.notiId}}|" class="text-decoration-none">
-                        <button type="button" class="btn btn-primary">자세히 보기</button>
-                    </a>
+                        <a th:href="|@{'/notification/show/event/' + notiId}|" class="text-decoration-none">
+                            <button type="button" class="btn btn-primary">자세히 보기</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark closeEventBtn">Close</button>
@@ -78,12 +81,10 @@
    let size = 5
 
 
-   const eventDTO = [[${eventDTO}]]
-   console.log("eventDTO : " + eventDTO.notiId)
-
     printMainView()
 
-   if( eventDTO.notiId > 0){
+   const eventDTO = [[${eventDTO}]]
+   if(eventDTO != null && eventDTO.notiId > 0){
        // get Event Data??
        eventTitle.value = eventDTO.title
        eventModal.show()

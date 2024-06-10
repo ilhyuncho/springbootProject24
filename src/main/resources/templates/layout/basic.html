@@ -36,6 +36,7 @@
 
                 <!-- 고객이 로그인 했다면.. 표시-->
                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
+                    <li><a class="dropdown-item" th:href="|@{/myPage/myInfo(userName=${#authentication.principal.username})}|">나의 정보</a></li>
                     <li><a class="dropdown-item" th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|">내차 정보</a></li>
                     <li><a class="dropdown-item" th:href="|@{/userCredit/info(userName=${#authentication.principal.username})}|">결제 정보</a></li>
                     <li><a class="dropdown-item" th:href="|@{/order/list(userName=${#authentication.principal.username})}|">구매 내역</a></li>

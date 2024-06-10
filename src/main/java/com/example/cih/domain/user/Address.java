@@ -24,6 +24,10 @@ public class Address implements Serializable {
     @NotEmpty
     private String detailAddress;
 
+    public String fullAddress(){
+        return city.getCountry() + " " + city.getCityName() + " " + street + " " + detailAddress;
+    }
+
 // 같을 기준으로 인스턴스를 비교하려면 필요 함
 //    @Override
 //    public int hashCode() {

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>My Info</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          나의 정보
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">주소</span>
+            <input type="text" class="form-control" th:value="${userDTO.address}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">결제 주소</span>
+            <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">고객 이름</span>
+            <input type="text" class="form-control" th:value="${userDTO.userName}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">고객 등급</span>
+            <input type="text" class="form-control" th:value="${userDTO.getMGrade()}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">포인트</span>
+            <input type="text" class="form-control" th:value="${userDTO.mPoint}" readonly>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>

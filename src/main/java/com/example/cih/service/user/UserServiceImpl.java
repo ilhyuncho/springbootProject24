@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        UserDTO userDTO = entityToDTO(user);
         return userDTO;
     }
 
@@ -39,5 +39,17 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    private static UserDTO entityToDTO(User user) {
+        UserDTO userDTO = UserDTO.builder()
+                .userID(user.getUserId())
+                .userName(user.getUserName())
+                .address(user.getAddress().fullAddress())
+                .billingAddress(user.getBillingAddress().fullAddress())
+                .mPoint(user.getMPoint())
+                .mGrade(user.getMGrade())
+                .build();
+
+        return userDTO;
+    }
 
 }
