@@ -25,6 +25,7 @@ public class SecurityConfig {
 
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -32,7 +33,7 @@ public class SecurityConfig {
 
         // 로그인 화면에서 로그인 진행
         http.formLogin().loginPage("/auth/login")
-                .successHandler(new LoginSuccessHandler());
+                .successHandler(loginSuccessHandler);
 
         // CSRF 토큰 비활성화
         http.csrf().disable();

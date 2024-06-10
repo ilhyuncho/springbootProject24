@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "user")
 @Table(name="userMissions")
 public class UserMission extends BaseEntity {
     @Id
@@ -24,9 +24,7 @@ public class UserMission extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
-    @JoinColumn(name="REF_MISSION_ID")
-    private RefMission refMission;
+    private RefMissionType refMissionType;
 
     private Integer gainPoint;
 

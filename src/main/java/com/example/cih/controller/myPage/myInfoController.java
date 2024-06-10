@@ -1,9 +1,8 @@
 package com.example.cih.controller.myPage;
 
 
-import com.example.cih.domain.user.User;
-import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.user.UserDTO;
+import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class myInfoController {
 
     private final UserService userService;
+    private final UserMissionService userMissionService;
 
     @ApiOperation(value = "나의 정보 조회", notes = "")
     @GetMapping("/myInfo")
@@ -31,6 +31,11 @@ public class myInfoController {
                              Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
+
+        // 테스트 용
+        userMissionService.getListUserMission(userName);
+
+
 
         log.error("userDTO : " + userDTO);
         model.addAttribute("userDTO", userDTO);

@@ -65,7 +65,10 @@ public class User {
               ownCars.add(car);
           }
           car.setUser(this);
+      }
 
+      public void addMPoint(Integer point){
+          this.mPoint += point;
       }
 
 }
