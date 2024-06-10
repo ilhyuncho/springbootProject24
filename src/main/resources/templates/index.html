@@ -14,10 +14,11 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    리스트
+                    메인 페이지
                 </div>
 
                 <div class="card-body">
+                    <span class="col-2">[[${session.greeting}]]</span>
 
                     <div class="row mt-3">
                         <ul class="list-group tempList">
@@ -48,7 +49,7 @@
                         </label>
                         <br>
 
-                        <a th:href="|@{'/notification/show/event/' + notiId}|" class="text-decoration-none">
+                        <a th:href="|@{'/notification/show/event/' + ${notiId}}|" class="text-decoration-none">
                             <button type="button" class="btn btn-primary">자세히 보기</button>
                         </a>
                     </div>
@@ -79,6 +80,9 @@
    // 페이지 번호 클릭
    let page = 1
    let size = 5
+
+   const greeting = [[${session.greeting}]]
+   console.log("session.greeting : " +  greeting)
 
 
     printMainView()

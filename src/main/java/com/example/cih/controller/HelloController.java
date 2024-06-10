@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -21,7 +22,10 @@ public class HelloController {
     private final NotificationService notificationService;
 
     @GetMapping("/")
-    public String mainPage(Model model){
+    public String mainPage( Model model){
+
+        // 자동으로 템플릿으로 session값 전달
+//       String temp = session.getAttribute("greeting").toString();
 
         // 임시로
         boolean isItEventTime = LocalDateTime.now()

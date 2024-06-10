@@ -1,6 +1,7 @@
 package com.example.cih.config.security;
 
 
+import com.example.cih.common.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -9,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -32,7 +31,8 @@ public class SecurityConfig {
         log.info("----------configure------------");
 
         // 로그인 화면에서 로그인 진행
-        http.formLogin().loginPage("/auth/login");
+        http.formLogin().loginPage("/auth/login")
+                .successHandler(new LoginSuccessHandler());
 
         // CSRF 토큰 비활성화
         http.csrf().disable();
