@@ -8,10 +8,12 @@ import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
+import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,9 +33,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class SellingCarServiceImpl implements SellingCarService {
     private final SellingCarRepository sellingCarRepository;
-
-    private final UserService userService;
     private final CarRepository carRepository;
+    private final UserService userService;
+    private final UserMissionService userMissionService;
+
 
     @Override
     public void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
@@ -43,6 +46,8 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
 
         car.registerSellingCar(sellingCarRegDTO.getRequiredPrice());
+
+        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
     }
 
     @Override

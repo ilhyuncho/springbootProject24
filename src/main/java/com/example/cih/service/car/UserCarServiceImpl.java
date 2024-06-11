@@ -1,20 +1,22 @@
 package com.example.cih.service.car;
 
-import com.example.cih.common.handler.FileHandler;
+import com.example.cih.common.exception.AlreadyRegisterException;
 import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserRepository;
+import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarKmUpdateDTO;
 import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
@@ -29,10 +31,9 @@ import java.util.stream.Collectors;
 public class UserCarServiceImpl implements UserCarService {
 
     private final CarRepository carRepository;
-    private final UserRepository userRepository;
-    private final FileHandler fileHandler;
 
     private final UserService userService;
+    private final UserMissionService userMissionService;
 
     @Override
     public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
@@ -40,6 +41,17 @@ public class UserCarServiceImpl implements UserCarService {
         User user = userService.findUser(userName);
 
         Car car = dtoToEntity(carInfoDTO, user);
+
+        List<Projection.CarSummary> listUserCar = carRepository.findByUser(user);
+
+        boolean isExist = listUserCar.stream()
+                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carInfoDTO.getCarNumber()));
+
+        if(isExist){
+            throw new AlreadyRegisterException("해당 차량은 이미 등록 했습니다");
+        }
+
+        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
 
         return carRepository.save(car).getCarId();
     }

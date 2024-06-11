@@ -25,7 +25,7 @@ public class UserMission extends BaseEntity {
     private User user;
 
     private RefMissionType refMissionType;
-
     private Integer gainPoint;
+    private String checkValue;
 
 }
