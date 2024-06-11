@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>My Point Info</title>
+</head>
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          나의 포인트 정보
+        </div>
+        <div class="card-body">
+
+          <div class="row mt-3">
+            <div class="col">
+              <strong class="opt-tit">기간</strong>
+              <div class="opt-box">
+                <select class="sel-tp01" id="searchPeriod" style="width:100px;">
+                  <option value="7">7일</option>
+                  <option value="30">30일</option>
+                  <option value="90">90일</option>
+                </select>
+                <select class="sel-tp02" id="searchMethod" style="width:100px;">
+                  <option value="all">전체</option>
+                  <option value="payment">지급</option>
+                  <option value="consume">차감</option>
+                </select>
+                <span class="inp-t inp-date" style="width: 150px;">
+					<input type="date" title="날짜" id="fromDay" >
+                </span>
+                <span class="form-t">~</span>
+                <span class="inp-t inp-date" style="width: 150px;">
+                    <input type="date" title="날짜" id="toDay">
+                </span>
+                <button type="button" class="btn btn-primary searchBtn" id="btnSearch" style="width: 80px;"><span>조회</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <table id="tableMyPoint_temp">
+              <thead>
+              <tr>
+                <th scope="col">획득 경로</th>
+                <th scope="col">획득 포인트</th>
+                <th scope="col">이용 시간</th>
+              </tr>
+              </thead>
+              <tbody id="tableMyPoint">
+              </tbody>
+            </table>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  let page = 1
+  let size = 5
+
+
+
+  const fromDay = document.querySelector('#fromDay');
+  const toDay = document.querySelector('#toDay');
+  const searchPeriod = document.querySelector('#searchPeriod');
+  const searchMethod = document.querySelector('#searchMethod');
+  const tableMyPoint = document.getElementById("tableMyPoint");
+
+
+  getMyPointInfo()
+
+  function getMyPointInfo(formObj){
+    getMyPoint(formObj).then(data => {
+
+      printMyPoint(data) // 목록 처리
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  function makeHistoryData(arr, dtoData){
+    arr[0] = dtoData.refMissionName
+    arr[1] = dtoData.gainPoint
+    arr[2] = dtoData.regDate
+  }
+
+  function printMyPoint(dtoList ) {    // 목록 출력
+    // 기존 행 삭제
+    while (tableMyPoint.firstChild) {
+      tableMyPoint.removeChild(tableMyPoint.firstChild);
+    }
+
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makeHistoryData(arr, e)
+
+        let newRow = tableMyPoint.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          let newCell = newRow.insertCell(j);
+          let newText = document.createTextNode(arr[j]);
+          newCell.appendChild(newText);
+        }
+
+      })
+    }
+  }
+
+  // 모달창의 파일 업로드 처리
+  document.querySelector(".searchBtn").addEventListener("click", function(e){
+
+    console.log("fromDay : " + fromDay.value)
+    console.log("toDay : " + toDay.value)
+    console.log("searchMethod : " +  searchMethod.value)
+    console.log("searchPeriod : " +  searchPeriod.value)
+
+
+    const formObj = {
+      searchMethod:searchMethod.value,
+      searchPeriod:searchPeriod.value,
+      fromDay:fromDay.value,
+      toDay:toDay.value
+    }
+
+    getMyPointInfo(formObj)
+
+  }, false)
+</script>

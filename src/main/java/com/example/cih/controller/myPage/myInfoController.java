@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 @Controller
 @RequestMapping("/myPage")
 @RequiredArgsConstructor
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class myInfoController {
 
     private final UserService userService;
-    private final UserMissionService userMissionService;
 
     @ApiOperation(value = "나의 정보 조회", notes = "")
     @GetMapping("/myInfo")
@@ -32,15 +30,21 @@ public class myInfoController {
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        // 테스트 용
-        userMissionService.getListUserMission(userName);
-
-
-
-        log.error("userDTO : " + userDTO);
         model.addAttribute("userDTO", userDTO);
 
         return "/myPage/myInfo";
     }
-    
+
+    @ApiOperation(value = "나의 포인트정보 페이지 이동", notes = "")
+    @GetMapping("/myPointInfo")
+    //@PreAuthorize("principal.username != #userName")
+    public String getMyPointInfo(String userName,
+                            Model model){
+
+       // UserDTO userDTO = userService.findUserDTO(userName);
+
+        return "/myPage/myPointInfo";
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
+import com.example.cih.dto.user.UserMissionResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -116,25 +118,29 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<UserMission> getListUserMission(String userName) {
+    public List<UserMissionResDTO> getListUserMission(String userName) {
 
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
         List<UserMission> listUserMission = userMissionRepository.findByUser(user);
 
-        for (UserMission userMission : listUserMission) {
-
-            if(userMission.getRefMissionType() == RefMissionType.DAILY_LOGIN){
-                log.error("DAILY_LOGIN : " +  userMission.toString());
-            }
-            if(userMission.getRefMissionType() == RefMissionType.FIRST_LOGIN){
-                log.error("FIRST_LOGIN : " +  userMission.toString());
-            }
-        }
+        List<UserMissionResDTO> listDTO = listUserMission.stream()
+                .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
 
         listUserMission.forEach(log::error);
 
-        return listUserMission;
+        return listDTO;
+    }
+
+    private static UserMissionResDTO entityToDTO(UserMission userMission) {
+
+        UserMissionResDTO dto = UserMissionResDTO.builder()
+                .refMissionName(userMission.getRefMissionType().getTypeName())
+                .gainPoint(userMission.getGainPoint())
+                .regDate(userMission.getRegDate().toLocalDate())
+                .build();
+
+        return dto;
     }
 }

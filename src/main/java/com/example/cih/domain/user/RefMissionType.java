@@ -11,15 +11,21 @@ import java.util.stream.Collectors;
 
 
 public enum RefMissionType {
-    MISSION_NONE(0L), FIRST_LOGIN(1L), DAILY_LOGIN(2L), REGISTER_CAR(3L), SELL_CAR(4L);
+    MISSION_NONE(0L, "없음"),
+    FIRST_LOGIN(1L, "첫 로그인"),
+    DAILY_LOGIN(2L, "매일 로그인"),
+    REGISTER_CAR(3L, "내차 등록"),
+    SELL_CAR(4L, "차 판매 등록");
 
     private final Long type;
+    private final String typeName;
 
     private final static Map<Long, RefMissionType> typeMap = Arrays.stream(RefMissionType.values())
             .collect(Collectors.toMap(RefMissionType::getType, Function.identity()));
 
-    RefMissionType(Long type) {
+    RefMissionType(Long type, String typeName) {
         this.type = type;
+        this.typeName = typeName;
     }
 
     @JsonCreator
@@ -32,4 +38,7 @@ public enum RefMissionType {
     public Long getType(){
         return type;
     }
+
+    public String getTypeName(){return typeName;}
+
 }

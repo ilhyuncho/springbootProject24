@@ -39,7 +39,7 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">포인트</span>
+            <span class="input-group-text">포인트<a th:href="|@{/myPage/myPointInfo(userName=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
             <input type="text" class="form-control" th:value="${userDTO.mPoint}" readonly>
           </div>
 

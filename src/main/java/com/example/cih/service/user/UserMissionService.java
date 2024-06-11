@@ -3,7 +3,7 @@ package com.example.cih.service.user;
 import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
-import com.example.cih.domain.user.UserMission;
+import com.example.cih.dto.user.UserMissionResDTO;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface UserMissionService {
 
     RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue);
 
-    List<UserMission> getListUserMission(String userName);
+    List<UserMissionResDTO> getListUserMission(String userName);
 }
