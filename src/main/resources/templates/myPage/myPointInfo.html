@@ -82,12 +82,24 @@
   const tableMyPoint = document.getElementById("tableMyPoint");
 
 
-  getMyPointInfo()
+  var beforeDay = 90;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
+  var nowDate = new Date();
+  var startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+
+  var tomorrowDate = nowDate.setDate(nowDate.getDate() + 1)
+  var endDate = new Date(tomorrowDate).toISOString().substring(0, 10)
+
+  const formObj = {
+    fromDay:startDate,
+    toDay:endDate
+  }
+
+  getMyPointInfo(formObj)
 
   function getMyPointInfo(formObj){
     getMyPoint(formObj).then(data => {
 
-      printMyPoint(data) // 목록 처리
+      printMyPoint(data.dtoList) // 목록 처리
 
     }).catch(e=>{
       console.error(e)
@@ -123,20 +135,60 @@
     }
   }
 
+  // function temp(){
+  //   var toDay = $util.date().currdate;
+  //
+  //   toDay = $util.formatDate(toDay,"-");
+  //
+  //   var data = parseInt($(this).attr("data"));
+  //
+  //   var nowDate = new Date();
+  //   var weekDate = nowDate.getTime() - (data*24*60*60*1000);
+  //   nowDate.setTime(weekDate);
+  //
+  //   var weekYear = nowDate.getFullYear();
+  //   var weekMonth = nowDate.getMonth()+1;
+  //   var weekDay = nowDate.getDate();
+  //
+  //   if(weekMonth < 10){
+  //     weekMonth = "0"+weekMonth;
+  //   }
+  //   if(weekDay <10){
+  //     weekDay = "0"+weekDay;
+  //   }
+  //
+  //   var resultDate = weekYear+"-"+weekMonth+"-"+weekDay;
+  //
+  //   var fromDay = $util.dateToNumber(resultDate);
+  //   var toDay = $util.dateToNumber(toDay);
+  //
+  //   $("#fromDay").val(fromDay);
+  //   $("#toDay").val(toDay);
+  //
+  // }
+  //
+  //
+
+
+
+
   // 모달창의 파일 업로드 처리
   document.querySelector(".searchBtn").addEventListener("click", function(e){
 
     console.log("fromDay : " + fromDay.value)
     console.log("toDay : " + toDay.value)
-    console.log("searchMethod : " +  searchMethod.value)
-    console.log("searchPeriod : " +  searchPeriod.value)
+    // console.log("searchMethod : " +  searchMethod.value)
+    // console.log("searchPeriod : " +  searchPeriod.value)
 
+    let endDate = new Date(toDay.value)
+    endDate = endDate.setDate(endDate.getDate() + 1)  // 내일 날짜
+    endDate = new Date(endDate).toISOString().substring(0, 10) // 2024-04-03 으로 포멧 변경
 
     const formObj = {
       searchMethod:searchMethod.value,
       searchPeriod:searchPeriod.value,
       fromDay:fromDay.value,
-      toDay:toDay.value
+      toDay:endDate
     }
 
     getMyPointInfo(formObj)

@@ -4,9 +4,14 @@ import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.user.UserMissionReqDTO;
 import com.example.cih.dto.user.UserMissionResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -118,19 +123,34 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<UserMissionResDTO> getListUserMission(String userName) {
+    public PageResponseDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO,
+                                                      User user, UserMissionReqDTO userMissionReqDTO) {
 
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
+       // List<UserMission> listUserMission = userMissionRepository.findByUser(user);
 
-        List<UserMission> listUserMission = userMissionRepository.findByUser(user);
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
 
-        List<UserMissionResDTO> listDTO = listUserMission.stream()
+        Page<UserMission> result = userMissionRepository.searchUserMission(types, keyword, pageable, userMissionReqDTO);
+
+        List<UserMission> userMissionList = result.getContent();
+
+        List<UserMissionResDTO> dtoList = userMissionList.stream()
                 .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
 
-        listUserMission.forEach(log::error);
 
-        return listDTO;
+//        List<UserMissionResDTO> listDTO = listUserMission.stream()
+//                .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
+//
+//        listUserMission.forEach(log::error);
+
+    //    return listDTO;
+        return PageResponseDTO.<UserMissionResDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 
     private static UserMissionResDTO entityToDTO(UserMission userMission) {

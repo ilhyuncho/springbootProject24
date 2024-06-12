@@ -39,8 +39,11 @@ public class Util {
         LocalDate date = LocalDate.parse(str);
         LocalDateTime now = LocalDateTime.now();
 
-        return LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth()
-                                                , now.getHour(), now.getMinute(), now.getSecond() );
+        return LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
+                0, 0, 0);
+
+//        return LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(),
+//                                now.getHour(), now.getMinute(), now.getSecond() );
     }
 
 

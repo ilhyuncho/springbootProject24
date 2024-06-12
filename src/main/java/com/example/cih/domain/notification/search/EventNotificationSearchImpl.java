@@ -65,6 +65,7 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
 
         List<EventNotification> list = query.fetch();
         if( list.size() > 0){
+            // 해당 이벤트 중 랜덤으로 하나 결정
             int skipIndex = new Random().nextInt(list.size());
 
             Optional<EventNotification> result = list
