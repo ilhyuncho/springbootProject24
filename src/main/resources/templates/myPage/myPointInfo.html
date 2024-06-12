@@ -22,15 +22,10 @@
             <div class="col">
               <strong class="opt-tit">기간</strong>
               <div class="opt-box">
-                <select class="sel-tp01" id="searchPeriod" style="width:100px;">
+                <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
                   <option value="7">7일</option>
                   <option value="30">30일</option>
                   <option value="90">90일</option>
-                </select>
-                <select class="sel-tp02" id="searchMethod" style="width:100px;">
-                  <option value="all">전체</option>
-                  <option value="payment">지급</option>
-                  <option value="consume">차감</option>
                 </select>
                 <span class="inp-t inp-date" style="width: 150px;">
 					<input type="date" title="날짜" id="fromDay" >
@@ -73,12 +68,9 @@
   let page = 1
   let size = 5
 
-
-
   const fromDay = document.querySelector('#fromDay');
   const toDay = document.querySelector('#toDay');
   const searchPeriod = document.querySelector('#searchPeriod');
-  const searchMethod = document.querySelector('#searchMethod');
   const tableMyPoint = document.getElementById("tableMyPoint");
 
 
@@ -106,7 +98,7 @@
     })
   }
 
-  function makeHistoryData(arr, dtoData){
+  function makePointData(arr, dtoData){
     arr[0] = dtoData.refMissionName
     arr[1] = dtoData.gainPoint
     arr[2] = dtoData.regDate
@@ -121,7 +113,7 @@
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
         const arr = []
-        makeHistoryData(arr, e)
+        makePointData(arr, e)
 
         let newRow = tableMyPoint.insertRow(-1);
 
@@ -133,6 +125,18 @@
 
       })
     }
+  }
+
+  function changePeriodSelect(){
+
+    var beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
+    var nowDate = new Date();
+    var startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+    var endDate = new Date().toISOString().substring(0, 10)
+
+  // 날짜 input 값 설정
+    fromDay.value = startDate
+    toDay.value = endDate
   }
 
   // function temp(){
@@ -172,21 +176,17 @@
 
 
 
-  // 모달창의 파일 업로드 처리
+  // 포인트 조회 요청 처리
   document.querySelector(".searchBtn").addEventListener("click", function(e){
 
     console.log("fromDay : " + fromDay.value)
     console.log("toDay : " + toDay.value)
-    // console.log("searchMethod : " +  searchMethod.value)
-    // console.log("searchPeriod : " +  searchPeriod.value)
 
     let endDate = new Date(toDay.value)
     endDate = endDate.setDate(endDate.getDate() + 1)  // 내일 날짜
     endDate = new Date(endDate).toISOString().substring(0, 10) // 2024-04-03 으로 포멧 변경
 
     const formObj = {
-      searchMethod:searchMethod.value,
-      searchPeriod:searchPeriod.value,
       fromDay:fromDay.value,
       toDay:endDate
     }

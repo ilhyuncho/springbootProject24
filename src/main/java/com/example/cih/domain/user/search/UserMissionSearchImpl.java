@@ -24,7 +24,6 @@ public class UserMissionSearchImpl extends QuerydslRepositorySupport implements 
     public Page<UserMission> searchUserMission(String[] types, String keyword, Pageable pageable,
                                                UserMissionReqDTO userMissionReqDTO ) {
 
-        log.error("searchUserMission()~~");
         LocalDateTime searchStartTime = Util.convertStringToLocalDateTime(userMissionReqDTO.getFromDay());
         LocalDateTime searchEndTime = Util.convertStringToLocalDateTime(userMissionReqDTO.getToDay());
         log.error("searchStartTime : " + searchStartTime);
@@ -34,9 +33,10 @@ public class UserMissionSearchImpl extends QuerydslRepositorySupport implements 
         JPQLQuery<UserMission> query = from(userMission);
 
         query.where(userMission.regDate.after(searchStartTime).and(userMission.regDate.before(searchEndTime)));
+        query.orderBy(userMission.regDate.desc());
 
         //paging
-       // this.getQuerydsl().applyPagination(pageable, query);    // MariaDB가 페이징 처리에 사용하는 limit을 적용
+        //this.getQuerydsl().applyPagination(pageable, query);    // MariaDB가 페이징 처리에 사용하는 limit을 적용
 
         List<UserMission> userMissionList = query.fetch();
         long count = query.fetchCount();

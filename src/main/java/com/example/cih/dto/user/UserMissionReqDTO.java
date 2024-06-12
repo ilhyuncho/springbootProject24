@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserMissionReqDTO {
-
-    private String searchMethod;
-    private Integer searchPeriod;
     private String fromDay;
     private String toDay;
 }
