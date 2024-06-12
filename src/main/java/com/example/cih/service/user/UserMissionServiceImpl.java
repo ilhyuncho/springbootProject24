@@ -5,7 +5,7 @@ import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.user.UserMissionListResDTO;
 import com.example.cih.dto.user.UserMissionReqDTO;
 import com.example.cih.dto.user.UserMissionResDTO;
 import lombok.RequiredArgsConstructor;
@@ -123,11 +123,8 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public PageResponseDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO,
+    public UserMissionListResDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO,
                                                       User user, UserMissionReqDTO userMissionReqDTO) {
-
-       // List<UserMission> listUserMission = userMissionRepository.findByUser(user);
-
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
@@ -139,28 +136,22 @@ public class UserMissionServiceImpl implements UserMissionService{
         List<UserMissionResDTO> dtoList = userMissionList.stream()
                 .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
 
-
-//        List<UserMissionResDTO> listDTO = listUserMission.stream()
-//                .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
-//
-//        listUserMission.forEach(log::error);
-
-    //    return listDTO;
-        return PageResponseDTO.<UserMissionResDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total((int)result.getTotalElements())
-                .build();
+        return new UserMissionListResDTO<UserMissionResDTO>(
+                pageRequestDTO, dtoList,
+                (int)result.getTotalElements(), user.getMPoint());
+//        return PageResponseDTO.<UserMissionResDTO>withAll()
+//                .pageRequestDTO(pageRequestDTO)
+//                .dtoList(dtoList)
+//                .total((int)result.getTotalElements())
+//                .build();
     }
 
     private static UserMissionResDTO entityToDTO(UserMission userMission) {
 
-        UserMissionResDTO dto = UserMissionResDTO.builder()
+        return UserMissionResDTO.builder()
                 .refMissionName(userMission.getRefMissionType().getTypeName())
                 .gainPoint(userMission.getGainPoint())
                 .regDate(userMission.getRegDate().toLocalDate())
                 .build();
-
-        return dto;
     }
 }

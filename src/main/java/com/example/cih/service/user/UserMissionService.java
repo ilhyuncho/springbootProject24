@@ -5,6 +5,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.user.UserMissionListResDTO;
 import com.example.cih.dto.user.UserMissionReqDTO;
 import com.example.cih.dto.user.UserMissionResDTO;
 
@@ -16,5 +17,5 @@ public interface UserMissionService {
 
     RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue);
 
-    PageResponseDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO, User user, UserMissionReqDTO userMissionReqDTO);
+    UserMissionListResDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO, User user, UserMissionReqDTO userMissionReqDTO);
 }

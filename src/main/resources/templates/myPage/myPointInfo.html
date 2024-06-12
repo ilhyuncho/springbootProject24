@@ -10,7 +10,6 @@
 <div layout:fragment="content">
 
   <div class="row mt-3">
-
     <div class="col">
       <div class="card">
         <div class="card-header">
@@ -18,10 +17,28 @@
         </div>
         <div class="card-body">
 
+          <div class="input-group mb-3">
+            <span class="input-group-text">나의 포인트</span>
+            <input type="text" class="form-control myMPoint" readonly>
+          </div>
+
+        </div><!-- <div class="card-body">-->
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          나의 포인트 적립 내역
+        </div>
+        <div class="card-body">
+
           <div class="row mt-3">
             <div class="col">
-              <strong class="opt-tit">기간</strong>
               <div class="opt-box">
+                <strong class="opt-tit">기간</strong>
                 <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
                   <option value="7">7일</option>
                   <option value="30">30일</option>
@@ -58,6 +75,8 @@
     </div>
   </div>
 
+
+
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/myInfo.js"></script>
 
@@ -72,7 +91,7 @@
   const toDay = document.querySelector('#toDay');
   const searchPeriod = document.querySelector('#searchPeriod');
   const tableMyPoint = document.getElementById("tableMyPoint");
-
+  const myMPoint = document.querySelector('.myMPoint');
 
   var beforeDay = 90;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
   var nowDate = new Date();
@@ -90,6 +109,9 @@
 
   function getMyPointInfo(formObj){
     getMyPoint(formObj).then(data => {
+
+      // 유저의 총 포인트 set
+      myMPoint.value = data.totalMPoint
 
       printMyPoint(data.dtoList) // 목록 처리
 
