@@ -6,11 +6,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum CarSize {
-    LARGE("L1"),
-    MIDDLE_LARGE("ML1"),
-    MIDDLE("M1"),
-    SMALL("S1"),
-    SMALL_MIDDLE("SM1");
+    LARGE("대형"),
+    MIDDLE_LARGE("준대형"),
+    MIDDLE("중형"),
+
+    SMALL_MIDDLE("준중형"),
+    SMALL("소형");
+
     private final static Map<String, CarSize> valueMap = Arrays.stream(CarSize.values())
             .collect(Collectors.toMap(CarSize::getValue, Function.identity()));
 

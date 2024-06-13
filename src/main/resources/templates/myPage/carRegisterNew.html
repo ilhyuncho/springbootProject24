@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Car Register</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    차량 추가
+                </div>
+                <div class="card-body">
+
+                    <!-- 인증 정보에서 사용자 정보 가져오기-->
+                    <div class="input-group mb-3" th:with="user=${#authentication.principal}">
+                        <span class="input-group-text">고객 명(확인용)</span>
+                        <label>
+                            <input type="text" name="userID" class="form-control" th:value="${user.username}">
+                        </label>
+                    </div>
+                    <!-- 인증 정보에서 사용자 정보 가져오기-->
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">차량 번호 입력</span>
+                            <label>
+                                <input type="text" class="form-control carNumber" placeholder="123마4567">
+                            </label>
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary findBtn">찾기</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                </div><!-- <div class="card-body">-->
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal findCarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title cartHeader">내 차량 정보</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">차량 번호</span>
+                        <input type="text" class="form-control modalCarNumber" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">모델 명</span>
+                        <input type="text" class="form-control modalCarModel">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info findReqBtn">확인</button>
+                    <button type="button" class="btn btn-outline-dark closeModifyBtn">최소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/myPage.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const findCarModal = new bootstrap.Modal(document.querySelector(".findCarModal"))
+    const carNumber = document.querySelector('.carNumber')
+    const modalCarNumber = document.querySelector('.modalCarNumber')
+    const modalCarModel = document.querySelector('.modalCarModel')
+
+    // 사용자 인증 정보 확인 begin ----------------------
+    const authlog = [[${#authentication}]]
+    const authPrincipal = [[${#authentication.principal}]]
+    // 사용자 인증 정보 확인 end ----------------------
+
+    // 에러 처리 부분 begin ----------------------------
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은 ${errors[i].code} \n`
+        }
+
+        // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
+        // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
+        history.replaceState({}, null, null)
+        alert(errorMsg)
+    }
+    // 에러 처리 부분 end ----------------------------
+
+
+    // 내차 찾기 요청
+    document.querySelector(".findBtn").addEventListener("click", function(e){
+
+        const formObj = {
+            carNumber:carNumber.value
+        }
+
+        findMyCar(formObj).then(result => {
+            console.log(result)
+
+            // 모달 창 값 셋팅
+            modalCarNumber.value = result.carNumber
+            modalCarModel.value = result.carModel
+
+            findCarModal.show()
+
+        }).catch(e => {
+            console.log(e)
+        })
+        console.log(carNumber.value)
+
+    }, false)
+
+    // [모달] 내차 확인
+    document.querySelector(".findReqBtn").addEventListener("click", function(e){
+
+        const formObj = {
+            carNumber:modalCarNumber.value
+        }
+
+        RegisterMyCar(formObj).then(result => {
+            console.log(result)
+
+            if(result.carId > 0){
+                alert(result.carId)
+                console.log(result.carId)
+
+                // 화면 재 갱신
+                // self.location = '/myPage/carDetail?carId=' + result.carId
+                //     + '&userName=' + [[${#authentication.principal.username}]]
+            }
+            else{
+                alert('실패')
+            }
+
+
+        }).catch(e => {
+            console.log(e)
+        })
+        console.log(carNumber.value)
+
+    }, false)
+
+</script>
+</html>

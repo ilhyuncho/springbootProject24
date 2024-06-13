@@ -1,8 +1,16 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.domain.reference.RefCarSample;
+import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarKmUpdateDTO;
+import com.example.cih.dto.car.CarRegDTO;
+import com.example.cih.dto.user.UserMissionListResDTO;
+import com.example.cih.dto.user.UserMissionReqDTO;
+import com.example.cih.dto.user.UserMissionResDTO;
 import com.example.cih.service.car.UserCarService;
+import com.example.cih.service.reference.RefCarSampleService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
@@ -24,6 +34,7 @@ import java.util.Map;
 public class MyPageRestController {
 
     private final UserCarService userCarService;
+    private final RefCarSampleService refCarSampleService;
 
     @ApiOperation(value = "내차 누적 주행거리 갱신", notes = "차 소유주가 등록")
     @PostMapping("/updateCarKm")
@@ -39,6 +50,33 @@ public class MyPageRestController {
         userCarService.modifyMyCarKm(carKmUpdateDTO);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
+
+        return resultMap;
+    }
+
+    @ApiOperation(value = "나의 차량 조회", notes = "")
+    @GetMapping("/findMyCar")
+    public RefCarSample findMyCar(String carNumber, Principal principal){
+
+        log.error("carNumber : " + carNumber);
+
+        RefCarSample myCar = refCarSampleService.findMyCar(carNumber);
+
+        return myCar;
+    }
+
+    @ApiOperation(value = "차 등록 New (post)", notes = "")
+    @PostMapping(value="/carRegisterNew")
+    public Map<String,String> postCarRegisterNew(@RequestBody CarRegDTO carRegDTO,
+                                     Principal principal ){
+
+        log.error("carRegDTO : " + carRegDTO);
+
+        Long carId = userCarService.registerNew(principal.getName(), carRegDTO.getCarNumber());
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        resultMap.put("carId", carId.toString());
 
         return resultMap;
     }

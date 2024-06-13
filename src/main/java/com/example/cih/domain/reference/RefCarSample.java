@@ -1,4 +1,5 @@
 package com.example.cih.domain.reference;
+import com.example.cih.domain.car.CarSize;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class RefCarSample {
 
     private String carNumber;
     private String carModel;
-    private String carGrade;        // 등급 ( 소형, 중형, 대형.. )
+    @Enumerated(EnumType.STRING)
+    private CarSize carGrade;        // 등급 ( 소형, 중형, 대형.. )
     private String carOption;       // 옵션
     private String company;
     private String companyNation;

@@ -39,6 +39,8 @@ public class MyPageController {
     private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
 
+
+
     @ApiOperation(value = "보유 차 리스트 조회", notes = "")
     @GetMapping("/carList")
     //@PreAuthorize("principal.username != #userName")
@@ -57,7 +59,7 @@ public class MyPageController {
     @ApiOperation(value = "차 등록 페이지로 이동", notes = "")
     @GetMapping("/carRegister")
     public String getCarRegister(){
-        return "/myPage/carRegister";
+        return "/myPage/carRegisterNew";
     }
 
     @ApiOperation(value = "차 등록 (post)", notes = "")
@@ -83,6 +85,7 @@ public class MyPageController {
         return "redirect:/myPage/carList";
         //return "redirect:/myPage/carList?userName=" + principal.getName();
     }
+
     @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
     @GetMapping({"/carDetail", "/carModify"})
     public String getCarDetailOrModify(HttpServletRequest request,

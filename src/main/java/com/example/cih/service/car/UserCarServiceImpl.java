@@ -5,12 +5,14 @@ import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.Projection;
+import com.example.cih.domain.reference.RefCarSample;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarKmUpdateDTO;
 import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.service.reference.RefCarSampleService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +36,12 @@ public class UserCarServiceImpl implements UserCarService {
 
     private final UserService userService;
     private final UserMissionService userMissionService;
+    private final RefCarSampleService refCarSampleService;
 
     @Override
     public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
         // 고객 정보 get
         User user = userService.findUser(userName);
-
         Car car = dtoToEntity(carInfoDTO, user);
 
         List<Projection.CarSummary> listUserCar = carRepository.findByUser(user);
@@ -55,6 +57,34 @@ public class UserCarServiceImpl implements UserCarService {
 
         return carRepository.save(car).getCarId();
     }
+
+    @Override
+    public Long registerNew(String userName, String carNumber) {
+
+        // 유저의 기존 등록 차 정보 get
+        User user = userService.findUser(userName);
+        List<Projection.CarSummary> userCarList = carRepository.findByUser(user);
+        boolean isRegister = userCarList.stream().anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
+        if(isRegister){
+            return 0L;
+        }
+
+        // 등록 하려는 차 정보 get
+        RefCarSample refCarSample = refCarSampleService.findMyCar(carNumber);
+
+        // 차 등록
+        Car car = Car.builder().carNumber(refCarSample.getCarNumber())
+                        .carColors(refCarSample.getCarColor())
+                        .carModel(refCarSample.getCarModel())
+                        .carYears(refCarSample.getCarYear())
+                        .carGrade(refCarSample.getCarGrade())
+                        .carKm(0L)
+                        .user(user)
+                .build();
+
+        return carRepository.save(car).getCarId();
+    }
+
     @Override
     public CarViewDTO readMyCarDetailInfo(String userName, Long carId) {
         // 고객 정보 get

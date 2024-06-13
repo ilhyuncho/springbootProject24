@@ -14,6 +14,7 @@ import java.util.List;
 public interface UserCarService {
 
     Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO);
+    Long registerNew(String userName, String carNumber);
 
     CarViewDTO readMyCarDetailInfo(String userName, Long carId);
 
