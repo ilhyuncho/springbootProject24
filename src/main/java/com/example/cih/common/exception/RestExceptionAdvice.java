@@ -40,7 +40,7 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {ItemNotFoundException.class})
-    public ResponseEntity<?> handleBoardNotFound(ItemNotFoundException e, WebRequest request){
+    public ResponseEntity<?> handleItemNotFound(ItemNotFoundException e, WebRequest request){
 
         log.error("RestExceptionAdvice - ItemNotFoundException!!! ");
         log.error(e.getMessage());
@@ -52,6 +52,21 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 request
         );
     }
+
+    @ExceptionHandler(value = {AlreadyRegisterException.class})
+    public ResponseEntity<?> handleAlreadyRegisterException(AlreadyRegisterException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - AlreadyRegisterException!!! ");
+        log.error(e.getMessage());
+        return super.handleExceptionInternal(
+                e,
+                e.getMessage(),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                request
+        );
+    }
+
     @ExceptionHandler(value = {NoSuchElementException.class})
     public ResponseEntity<?> handleBoardNotFound(NoSuchElementException e, WebRequest request){
 

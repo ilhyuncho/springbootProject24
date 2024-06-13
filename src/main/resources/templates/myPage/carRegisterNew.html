@@ -143,25 +143,20 @@
         }
 
         RegisterMyCar(formObj).then(result => {
+
             console.log(result)
 
             if(result.carId > 0){
-                alert(result.carId)
-                console.log(result.carId)
-
                 // 화면 재 갱신
-                // self.location = '/myPage/carDetail?carId=' + result.carId
-                //     + '&userName=' + [[${#authentication.principal.username}]]
+                self.location = '/myPage/carDetail?carId=' + result.carId
+                    + '&userName=' + [[${#authentication.principal.username}]]
             }
-            else{
-                alert('실패')
-            }
-
-
         }).catch(e => {
-            console.log(e)
+            console.log(e.response.data)
+            alert(e.response.data)
+
+            findCarModal.hide()
         })
-        console.log(carNumber.value)
 
     }, false)
 

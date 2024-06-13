@@ -20,9 +20,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -66,7 +64,8 @@ public class UserCarServiceImpl implements UserCarService {
         List<Projection.CarSummary> userCarList = carRepository.findByUser(user);
         boolean isRegister = userCarList.stream().anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
         if(isRegister){
-            return 0L;
+            throw new AlreadyRegisterException("이미 등록된 차량입니다.");
+           // return 0L;
         }
 
         // 등록 하려는 차 정보 get
