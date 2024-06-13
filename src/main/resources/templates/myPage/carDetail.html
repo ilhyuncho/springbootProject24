@@ -48,7 +48,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarKm</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carKm +' km'} " name="carKm" >
+            <input type="text" class="form-control currCarKm" th:value="${responseDTO.carKm +' km'} " name="carKm" >
           </div>
 
           <div class="input-group mb-3">
@@ -257,8 +257,8 @@
   const cancelCarName = document.querySelector(".cancelCarName")
   const owner = document.querySelector(".owner")
   const updateKmValue = document.querySelector(".updateKmValue")
-
   const sellingCancelBtn = document.querySelector(".sellingCancelBtn")
+  const currCarKm = document.querySelector(".currCarKm")
 
   document.querySelector(".closeShowModalBtn").addEventListener("click", function (e){
     sellingCarShowModal.hide()
@@ -380,6 +380,8 @@
   document.querySelector(".updateKmBtn").addEventListener("click", function (e) {
     e.stopPropagation()
     e.preventDefault()
+
+    updateKmValue.value = currCarKm.value
 
     updateKmModal.show()
 

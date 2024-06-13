@@ -36,25 +36,25 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
 
-    @Override
-    public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
-        // 고객 정보 get
-        User user = userService.findUser(userName);
-        Car car = dtoToEntity(carInfoDTO, user);
-
-        List<Projection.CarSummary> listUserCar = carRepository.findByUser(user);
-
-        boolean isExist = listUserCar.stream()
-                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carInfoDTO.getCarNumber()));
-
-        if(isExist){
-            throw new AlreadyRegisterException("해당 차량은 이미 등록 했습니다");
-        }
-
-        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
-
-        return carRepository.save(car).getCarId();
-    }
+//    @Override
+//    public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
+//        // 고객 정보 get
+//        User user = userService.findUser(userName);
+//        Car car = dtoToEntity(carInfoDTO, user);
+//
+//        List<Projection.CarSummary> listUserCar = carRepository.findByUser(user);
+//
+//        boolean isExist = listUserCar.stream()
+//                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carInfoDTO.getCarNumber()));
+//
+//        if(isExist){
+//            throw new AlreadyRegisterException("해당 차량은 이미 등록 했습니다");
+//        }
+//
+//        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
+//
+//        return carRepository.save(car).getCarId();
+//    }
 
     @Override
     public Long registerNew(String userName, String carNumber) {
@@ -81,6 +81,8 @@ public class UserCarServiceImpl implements UserCarService {
                         .user(user)
                 .build();
 
+        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
+
         return carRepository.save(car).getCarId();
     }
 
@@ -100,6 +102,8 @@ public class UserCarServiceImpl implements UserCarService {
                 .filter(car -> Objects.equals(car.getCarId(), carId))
                 .findFirst()
                 .orElse(null);
+
+        log.error("carViewDTO : " + carViewDTO);
 
         return carViewDTO;
     }
