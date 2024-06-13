@@ -122,16 +122,21 @@
         findMyCar(formObj).then(result => {
             console.log(result)
 
-            // 모달 창 값 셋팅
-            modalCarNumber.value = result.carNumber
-            modalCarModel.value = result.carModel
+            if(result.carNumber === carNumber.value){
+                // 모달 창 값 셋팅
+                modalCarNumber.value = result.carNumber
+                modalCarModel.value = result.carModel
 
-            findCarModal.show()
+                findCarModal.show()
+            }
+            else{
+                alert("해당 차량은 조회가 되지 않습니다!!!")
+            }
 
         }).catch(e => {
             console.log(e)
         })
-        console.log(carNumber.value)
+        //console.log(carNumber.value)
 
     }, false)
 
