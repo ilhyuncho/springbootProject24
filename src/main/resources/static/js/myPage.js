@@ -11,7 +11,7 @@ async function findMyCar(formObj) {
 async function RegisterMyCar(formObj) {
      //console.log(formObj)
 
-    const response = await axios.post(`/myPage/carRegisterNew`,formObj)
+    const response = await axios.post(`/myPage/carRegister`,formObj)
         // .catch(function (error) {
         //     if (error.response) {
         //         console.log("요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.");

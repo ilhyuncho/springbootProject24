@@ -66,13 +66,13 @@ public class MyPageRestController {
     }
 
     @ApiOperation(value = "차 등록 New (post)", notes = "")
-    @PostMapping(value="/carRegisterNew")
-    public Map<String,String> postCarRegisterNew(@RequestBody CarRegDTO carRegDTO,
+    @PostMapping(value="/carRegister")
+    public Map<String,String> postCarRegister(@RequestBody CarRegDTO carRegDTO,
                                      Principal principal ){
 
         log.error("carRegDTO : " + carRegDTO);
 
-        Long carId = userCarService.registerNew(principal.getName(), carRegDTO.getCarNumber());
+        Long carId = userCarService.register(principal.getName(), carRegDTO.getCarNumber());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

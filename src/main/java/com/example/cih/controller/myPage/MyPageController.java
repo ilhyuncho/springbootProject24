@@ -59,32 +59,8 @@ public class MyPageController {
     @ApiOperation(value = "차 등록 페이지로 이동", notes = "")
     @GetMapping("/carRegister")
     public String getCarRegister(){
-        return "/myPage/carRegisterNew";
+        return "/myPage/carRegister";
     }
-
-//    @ApiOperation(value = "차 등록 (post)", notes = "")
-//    @PostMapping(value="/carRegister")
-//    public String postCarRegister(@Valid CarInfoDTO carInfoDTO,
-//                           BindingResult bindingResult,
-//                           RedirectAttributes redirectAttributes,
-//                           Principal principal ){    // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
-//
-//        if(bindingResult.hasErrors()) {
-//            // throw new BindException(bindingResult);
-//            // 바로 에러 처리 하지 말고.. 다시 입력창으로 redirect 시키고... 팝업 노출
-//            bindingResult.getAllErrors().forEach(log::error);
-//
-//            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-//            return "redirect:/myPage/carRegister";
-//        }
-//
-//        Long carId = userCarService.register(principal.getName(), carInfoDTO, null);
-//
-//        redirectAttributes.addFlashAttribute("result", carId);
-//        redirectAttributes.addAttribute("userName", principal.getName());
-//        return "redirect:/myPage/carList";
-//        //return "redirect:/myPage/carList?userName=" + principal.getName();
-//    }
 
     @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
     @GetMapping({"/carDetail", "/carModify"})

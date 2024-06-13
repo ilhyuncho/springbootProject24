@@ -1,7 +1,6 @@
 package com.example.cih.service.car;
 
 import com.example.cih.common.exception.AlreadyRegisterException;
-import com.example.cih.controller.fileUpload.UploadFileDTO;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.car.Projection;
@@ -36,28 +35,8 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
 
-//    @Override
-//    public Long register(String userName, CarInfoDTO carInfoDTO, UploadFileDTO uploadFileDTO) {
-//        // 고객 정보 get
-//        User user = userService.findUser(userName);
-//        Car car = dtoToEntity(carInfoDTO, user);
-//
-//        List<Projection.CarSummary> listUserCar = carRepository.findByUser(user);
-//
-//        boolean isExist = listUserCar.stream()
-//                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carInfoDTO.getCarNumber()));
-//
-//        if(isExist){
-//            throw new AlreadyRegisterException("해당 차량은 이미 등록 했습니다");
-//        }
-//
-//        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
-//
-//        return carRepository.save(car).getCarId();
-//    }
-
     @Override
-    public Long registerNew(String userName, String carNumber) {
+    public Long register(String userName, String carNumber) {
 
         // 유저의 기존 등록 차 정보 get
         User user = userService.findUser(userName);
