@@ -22,13 +22,11 @@
             <thead>
               <tr>
                 <th scope="col">carNumber</th>
-                <th scope="col">carId</th>
                 <th scope="col">carColors</th>
                 <th scope="col">carGrade</th>
                 <th scope="col">carKm</th>
                 <th scope="col">carModel</th>
                 <th scope="col">carYears</th>
-                <th scope="col">userId</th>
               </tr>
             </thead>
 
@@ -45,15 +43,11 @@
                          th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
                   </div>
                 </th>
-
-                <td>[[${dto.carId}]]</td>
                 <td>[[${dto.carColors}]]</td>
                 <td>[[${dto.carGrade}]]</td>
                 <td>[[${dto.carKm}]]</td>
                 <td>[[${dto.carModel}]]</td>
                 <td>[[${dto.carYears}]]</td>
-                <td>[[${dto.userId}]]</td>
-
               </tr>
               </tbody>
           </table>

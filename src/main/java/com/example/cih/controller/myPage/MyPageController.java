@@ -3,10 +3,9 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.car.Car;
-import com.example.cih.domain.car.Projection;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;
@@ -50,7 +49,7 @@ public class MyPageController {
         log.error("userName : " + userName);
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        List<CarViewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
+        List<CarViewNewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
         model.addAttribute("list", listCarDTO);
 
@@ -73,7 +72,7 @@ public class MyPageController {
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
+        CarViewNewDTO carViewDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
 
         model.addAttribute("responseDTO", carViewDTO);
         model.addAttribute("userName", userName);
@@ -108,23 +107,7 @@ public class MyPageController {
 
         return "redirect:/myPage/carDetail?" + link;
     }
-    @ApiOperation(value = "차 세부 정보 요약 페이지로 이동", notes = "")
-    @GetMapping("/carSummary")
-    public String getCarSummary(PageRequestDTO pageRequestDTO, String userName,
-                                     Model model){
 
-        log.error("userName: " + userName);
-
-        UserDTO userDTO = userService.findUserDTO(userName);
-        log.error("userDTO: " + userDTO);
-
-        // Projection 타입으로 리턴
-        List<Projection.CarSummary> carSummaries = userCarService.readMyCarSummaryList(pageRequestDTO, userDTO.getUserName());
-
-        model.addAttribute("list", carSummaries);
-
-        return "carSummary";
-    }
     @ApiOperation(value = "차 정보 삭제", notes = "")
     @PostMapping("/deleteCar")
     public String postDeleteCar(CarInfoDTO carInfoDTO,

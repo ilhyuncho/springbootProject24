@@ -11,6 +11,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarKmUpdateDTO;
 import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.service.reference.RefCarSampleService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
@@ -66,18 +67,18 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public CarViewDTO readMyCarDetailInfo(String userName, Long carId) {
+    public CarViewNewDTO readMyCarDetailInfo(String userName, Long carId) {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
 
-        List<CarViewDTO> carViewDTOList = ownCarList.stream().
+        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         // 요청된 carId 정보만 필터
-        CarViewDTO carViewDTO = carViewDTOList.stream()
+        CarViewNewDTO carViewDTO = carViewDTOList.stream()
                 .filter(car -> Objects.equals(car.getCarId(), carId))
                 .findFirst()
                 .orElse(null);
@@ -88,18 +89,18 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public List<CarViewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
+    public List<CarViewNewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
         // 고객 정보 get
         User user = userService.findUser(userName);
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
 
-        List<CarViewDTO> carViewDTOList = ownCarList.stream().
+        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )
-        for (CarViewDTO car : carViewDTOList) {
+        for (CarViewNewDTO car : carViewDTOList) {
             car.getFileNames().stream()
                     .filter(carImage -> carImage.getImageOrder() != 0)
                     .collect(Collectors.toList())
@@ -107,24 +108,6 @@ public class UserCarServiceImpl implements UserCarService {
         }
 
         return carViewDTOList;
-    }
-
-    @Override
-    public List<Projection.CarSummary> readMyCarSummaryList(PageRequestDTO pageRequestDTO, String userName){
-
-        // 고객 정보 get
-        User user = userService.findUser(userName);
-
-        // 보유 차량 get
-        List<Projection.CarSummary> carSummaryList = carRepository.findByUser(user);
-
-        for (Projection.CarSummary carSummary : carSummaryList) {
-            log.error(carSummary.getCarInfo());
-            log.error(carSummary.getCarNumber());
-        }
-
-        return carSummaryList;
-
     }
 
     @Override
@@ -183,8 +166,8 @@ public class UserCarServiceImpl implements UserCarService {
         return car;
     }
 
-    private static CarViewDTO entityToDTO(Car car) {
-        CarViewDTO carViewDTO = CarViewDTO.writeCarViewDTOBuilder()
+    private static CarViewNewDTO entityToDTO(Car car) {
+        CarViewNewDTO carViewDTO = CarViewNewDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
@@ -192,10 +175,6 @@ public class UserCarServiceImpl implements UserCarService {
                 .carGrade(car.getCarGrade())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
-                .modDate(car.getModDate())
-                .regDate(car.getRegDate())
-                .userId(car.getUser().getUserId())
-                .userName(car.getUser().getUserName())
                 .build();
 
         // 경매 정보 매핑
