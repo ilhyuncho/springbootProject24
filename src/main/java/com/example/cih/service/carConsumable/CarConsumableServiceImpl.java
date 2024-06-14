@@ -33,7 +33,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     private final RefCarConsumableRepository refCarConsumableRepository;
 
     @Override
-    public List<CarConsumableDTO> readOne(Long carId){
+    public List<CarConsumableDTO> getConsumableInfo(Long carId){
 
         List<RefCarConsumable> refListCarConsumable = refCarConsumableRepository.findAll()
                 .stream().sorted(Comparator.comparing(RefCarConsumable::getViewOrder)).collect(Collectors.toList());

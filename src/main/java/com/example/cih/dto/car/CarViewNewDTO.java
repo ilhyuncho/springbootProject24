@@ -1,7 +1,5 @@
 package com.example.cih.dto.car;
 
-import com.example.cih.common.validator.CarGradeVali;
-import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.dto.ImageDTO;
 import lombok.*;
@@ -9,7 +7,6 @@ import lombok.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +22,7 @@ public class CarViewNewDTO{
     @Pattern(regexp = "[0-9]{2,3}[가-힣][0-9]{4}$")
     private String  carNumber;
 
-    @CarGradeVali(enumClass = CarSize.class)
-    private CarSize carGrade;
+    private String carGrade;
 
     @NotEmpty
     private String  carModel;
@@ -46,7 +42,7 @@ public class CarViewNewDTO{
     private SellingCarStatus sellingCarStatus;
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
-    public CarViewNewDTO(Long carId, String carNumber, CarSize carGrade, String carModel, int carYears,
+    public CarViewNewDTO(Long carId, String carNumber, String carGrade, String carModel, int carYears,
                          String carColors, Long carKm) {
         this.carId = carId;
         this.carNumber = carNumber;

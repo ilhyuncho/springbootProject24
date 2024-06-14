@@ -30,15 +30,10 @@ public class ConsumableController {
     public String get(@ModelAttribute("carId") Long carId,
                       String userName, Model model){
 
-        User user = userService.findUser(userName);
-
-        List<CarConsumableDTO> listCarConsumableDTO = carConsumableService.readOne(carId);
+        List<CarConsumableDTO> listCarConsumableDTO = carConsumableService.getConsumableInfo(carId);
 
         model.addAttribute("listDTO", listCarConsumableDTO);
 
-        for (CarConsumableDTO carConsumableDTO : listCarConsumableDTO) {
-            log.error(carConsumableDTO.toString());
-        }
         return "/consumable/info";
     }
 

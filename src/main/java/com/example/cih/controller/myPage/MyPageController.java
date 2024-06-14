@@ -5,6 +5,7 @@ import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.car.Car;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarInfoDTO;
+import com.example.cih.dto.car.CarInfoNewDTO;
 import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.car.UserCarService;
@@ -39,14 +40,12 @@ public class MyPageController {
     private final FileHandler fileHandler;
 
 
-
     @ApiOperation(value = "보유 차 리스트 조회", notes = "")
     @GetMapping("/carList")
     //@PreAuthorize("principal.username != #userName")
     public String getCarList(PageRequestDTO pageRequestDTO, String userName,
                               Model model){
 
-        log.error("userName : " + userName);
         UserDTO userDTO = userService.findUserDTO(userName);
 
         List<CarViewNewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
@@ -64,11 +63,9 @@ public class MyPageController {
     @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
     @GetMapping({"/carDetail", "/carModify"})
     public String getCarDetailOrModify(HttpServletRequest request,
-                                    PageRequestDTO pageRequestDTO, String userName,
+                                    String userName,
                                     @RequestParam("carId") Long carId,
                                     Model model){
-
-        String requestURI = request.getRequestURI();
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
@@ -77,26 +74,23 @@ public class MyPageController {
         model.addAttribute("responseDTO", carViewDTO);
         model.addAttribute("userName", userName);
 
-        return requestURI;
+        return request.getRequestURI();
     }
 
     @ApiOperation(value = "차 세부 변경 (post)", notes = "")
     @PostMapping("/carModify")
-    public String postCarModify(PageRequestDTO pageRequestDTO,
-                                @Valid CarInfoDTO carInfoDTO,
+    public String postCarModify(@Valid CarInfoNewDTO carInfoDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
         log.error("car modify post...." + carInfoDTO);
-
-        String link = pageRequestDTO.getLink();
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
-            return "redirect:/myPage/carDetail?" + link;
+            return "redirect:/myPage/carDetail";
         }
 
         userCarService.modifyMyCar(carInfoDTO);
@@ -105,12 +99,12 @@ public class MyPageController {
         redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
         redirectAttributes.addAttribute("userName", principal.getName());
 
-        return "redirect:/myPage/carDetail?" + link;
+        return "redirect:/myPage/carDetail";
     }
 
     @ApiOperation(value = "차 정보 삭제", notes = "")
     @PostMapping("/deleteCar")
-    public String postDeleteCar(CarInfoDTO carInfoDTO,
+    public String postDeleteCar(CarInfoNewDTO carInfoDTO,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
         log.error("remove......post: " + carInfoDTO);

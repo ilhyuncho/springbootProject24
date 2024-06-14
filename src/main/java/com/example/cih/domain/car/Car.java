@@ -109,12 +109,8 @@ public class Car extends BaseEntity {
         this.sellingCar = null;
     }
 
-    public void change(String carNumber, Long carKm, CarSize carGrade,
-                       String carModel, int carYears, String carColors ){
-        this.carNumber = carNumber;
+    public void change( Long carKm, int carYears, String carColors ){
         this.carKm = carKm;
-        this.carGrade = carGrade;
-        this.carModel = carModel;
         this.carYears = carYears;
         this.carColors = carColors;
     }

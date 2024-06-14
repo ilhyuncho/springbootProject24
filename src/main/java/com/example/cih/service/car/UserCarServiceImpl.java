@@ -8,10 +8,7 @@ import com.example.cih.domain.reference.RefCarSample;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.car.CarInfoDTO;
-import com.example.cih.dto.car.CarKmUpdateDTO;
-import com.example.cih.dto.car.CarViewDTO;
-import com.example.cih.dto.car.CarViewNewDTO;
+import com.example.cih.dto.car.*;
 import com.example.cih.service.reference.RefCarSampleService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
@@ -35,6 +32,50 @@ public class UserCarServiceImpl implements UserCarService {
     private final UserService userService;
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
+
+    @Override
+    public List<CarViewNewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
+        // 고객 정보 get
+        User user = userService.findUser(userName);
+
+        // 전체 보유 Car list
+        List<Car> ownCarList = user.getOwnCars();
+
+        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
+                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        // 대표 이미지만 필터링 ( ImageOrder = 0 )
+        for (CarViewNewDTO car : carViewDTOList) {
+            car.getFileNames().stream()
+                    .filter(carImage -> carImage.getImageOrder() != 0)
+                    .collect(Collectors.toList())
+                    .forEach(x-> car.getFileNames().remove(x));
+        }
+
+        return carViewDTOList;
+    }
+
+    @Override
+    public CarViewNewDTO readMyCarDetailInfo(String userName, Long carId) {
+        // 고객 정보 get
+        User user = userService.findUser(userName);
+
+        // 전체 보유 Car list
+        List<Car> ownCarList = user.getOwnCars();
+
+        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
+                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        // 요청된 carId 정보만 필터
+        CarViewNewDTO carViewDTO = carViewDTOList.stream()
+                .filter(car -> Objects.equals(car.getCarId(), carId))
+                .findFirst()
+                .orElse(null);
+
+        log.error("carViewDTO : " + carViewDTO);
+
+        return carViewDTO;
+    }
 
     @Override
     public Long register(String userName, String carNumber) {
@@ -65,59 +106,13 @@ public class UserCarServiceImpl implements UserCarService {
 
         return carRepository.save(car).getCarId();
     }
-
     @Override
-    public CarViewNewDTO readMyCarDetailInfo(String userName, Long carId) {
-        // 고객 정보 get
-        User user = userService.findUser(userName);
-
-        // 전체 보유 Car list
-        List<Car> ownCarList = user.getOwnCars();
-
-        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
-                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
-
-        // 요청된 carId 정보만 필터
-        CarViewNewDTO carViewDTO = carViewDTOList.stream()
-                .filter(car -> Objects.equals(car.getCarId(), carId))
-                .findFirst()
-                .orElse(null);
-
-        log.error("carViewDTO : " + carViewDTO);
-
-        return carViewDTO;
-    }
-
-    @Override
-    public List<CarViewNewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
-        // 고객 정보 get
-        User user = userService.findUser(userName);
-
-        // 전체 보유 Car list
-        List<Car> ownCarList = user.getOwnCars();
-
-        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
-                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
-
-        // 대표 이미지만 필터링 ( ImageOrder = 0 )
-        for (CarViewNewDTO car : carViewDTOList) {
-            car.getFileNames().stream()
-                    .filter(carImage -> carImage.getImageOrder() != 0)
-                    .collect(Collectors.toList())
-                    .forEach(x-> car.getFileNames().remove(x));
-        }
-
-        return carViewDTOList;
-    }
-
-    @Override
-    public void modifyMyCar(CarInfoDTO carInfoDTO) {
+    public void modifyMyCar(CarInfoNewDTO carInfoDTO) {
 
         Optional<Car> byId = carRepository.findById(carInfoDTO.getCarId());
         Car car = byId.orElseThrow();
 
-        car.change(carInfoDTO.getCarNumber(), carInfoDTO.getCarKm(), carInfoDTO.getCarGrade(),
-                     carInfoDTO.getCarModel(), carInfoDTO.getCarYears(), carInfoDTO.getCarColors());
+        car.change(carInfoDTO.getCarKm(), carInfoDTO.getCarYears(), carInfoDTO.getCarColors());
 
         // 첨부파일 처리
         car.clearImages();
@@ -145,34 +140,13 @@ public class UserCarServiceImpl implements UserCarService {
         carRepository.deleteById(carId);
     }
 
-    // DTO를 엔티티로 변환하기
-    private static Car dtoToEntity(CarInfoDTO carSpecDTO, User user) {
-        Car car = Car.writeWithUserBuilder()
-                .carColors(carSpecDTO.getCarColors())
-                .carYears(carSpecDTO.getCarYears())
-                .carModel(carSpecDTO.getCarModel())
-                .carKm(carSpecDTO.getCarKm())
-                .carNumber(carSpecDTO.getCarNumber())
-                .carGrade(carSpecDTO.getCarGrade())
-                .user(user)
-                .build();
-
-        if(carSpecDTO.getFileNames() != null){
-            carSpecDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
-                car.addImage(arr[0], arr[1]);
-            });
-        }
-        return car;
-    }
-
     private static CarViewNewDTO entityToDTO(Car car) {
         CarViewNewDTO carViewDTO = CarViewNewDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())
-                .carGrade(car.getCarGrade())
+                .carGrade(car.getCarGrade().getValue())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
                 .build();
@@ -191,6 +165,5 @@ public class UserCarServiceImpl implements UserCarService {
 
         return carViewDTO;
     }
-
 
 }

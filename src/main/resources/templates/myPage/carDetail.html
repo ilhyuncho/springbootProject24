@@ -61,7 +61,7 @@
           <input type="hidden" name="sellingCarId" th:value="${responseDTO.sellingCarId}">
 
           <div class="my-4" th:with="user=${#authentication.principal}">
-            <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
+            <div class="float-end">
 
               <a th:href="|@{/history(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">차량 기록</button>

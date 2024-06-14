@@ -65,7 +65,7 @@ public class MyPageRestController {
         return myCar;
     }
 
-    @ApiOperation(value = "차 등록 New (post)", notes = "")
+    @ApiOperation(value = "차 등록 (post)", notes = "")
     @PostMapping(value="/carRegister")
     public Map<String,String> postCarRegister(@RequestBody CarRegDTO carRegDTO,
                                      Principal principal ){

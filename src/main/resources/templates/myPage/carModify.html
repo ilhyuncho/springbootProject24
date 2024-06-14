@@ -24,17 +24,17 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarNumber</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carNumber}" name="carNumber">
+              <input type="text" class="form-control" th:value="${responseDTO.carNumber}" name="carNumber" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarGrade</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carGrade}" name="carGrade">
+              <input type="text" class="form-control" th:value="${responseDTO.carGrade}" name="carGrade" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarModel</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carModel}" name="carModel">
+              <input type="text" class="form-control" th:value="${responseDTO.carModel}" name="carModel" readonly>
             </div>
 
             <div class="input-group mb-3">
@@ -236,12 +236,11 @@
 
 
   // Car 수정 요청
-  const link = [[${pageRequestDTO.getLink()}]]
   document.querySelector(".saveBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/myPage/carModify?${link}`
+    formObj.action = `/myPage/carModify?userName=`+ [[${#authentication.principal.username}]]
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()

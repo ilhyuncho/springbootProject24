@@ -8,7 +8,7 @@ import com.example.cih.dto.history.HistoryCarDTO;
 import java.util.List;
 
 public interface CarConsumableService {
-    List<CarConsumableDTO> readOne(Long carId);
+    List<CarConsumableDTO> getConsumableInfo(Long carId);
     List<HistoryCarDTO> getAllHistoryList(Long carId);
     List<HistoryCarDTO> getGasHistoryList(Long carId);
     List<HistoryCarDTO> getRepairHistoryList(Long carId);
