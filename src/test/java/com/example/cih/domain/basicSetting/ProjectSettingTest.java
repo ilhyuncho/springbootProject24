@@ -7,6 +7,7 @@ import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.*;
+import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.City;
@@ -122,21 +123,21 @@ public class ProjectSettingTest {
         });
 
 
-//        IntStream.rangeClosed(1,2).forEach(i -> {
-//
-//            ShopItem shopItem = ShopItem.builder()
-//                    .itemName("item" + i)
-//                    .price(1000 * i)
-//                    .stockCount(10000)
-//                    .build();
-//
+        IntStream.rangeClosed(1,2).forEach(i -> {
+
+            ShopItem shopItem = ShopItem.builder()
+                    .itemName("item" + i)
+                    .price(1000 * i)
+                    .stockCount(10000)
+                    .build();
+
 //            shopItem.addImage("1a1a1a", "ionic5.png");
 //            shopItem.addImage("2a2a2a", "ionic51.png");
-//
-//            shopItem.addItemOption("option1", "option2");
-//
-//            shopItemRepository.save(shopItem);
-//        });
+
+            shopItem.addItemOption("option1", "option2");
+
+            shopItemRepository.save(shopItem);
+        });
 
 
         RefCarConsumable refCarConsumable1 = RefCarConsumable.builder()
