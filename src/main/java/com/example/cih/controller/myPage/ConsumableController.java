@@ -34,7 +34,7 @@ public class ConsumableController {
 
         model.addAttribute("listDTO", listCarConsumableDTO);
 
-        return "/consumable/info";
+        return "/consumable/consumableInfo";
     }
 
     @ApiOperation(value = "소모품 히스토리", notes = "")
@@ -44,7 +44,7 @@ public class ConsumableController {
 
         User user = userService.findUser(userName);
 
-        List<CarConsumableInfoDTO> listDTO = carConsumableService.readDetailInfo(carId, consumableId);
+        List<CarConsumableInfoDTO> listDTO = carConsumableService.getConsumableDetail(carId, consumableId);
 
         model.addAttribute("listDTO", listDTO);
 

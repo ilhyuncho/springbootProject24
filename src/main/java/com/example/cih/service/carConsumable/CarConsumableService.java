@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface CarConsumableService {
     List<CarConsumableDTO> getConsumableInfo(Long carId);
+    List<CarConsumableInfoDTO> getConsumableDetail(Long carId, Long consumableId);
     List<HistoryCarDTO> getAllHistoryList(Long carId);
     List<HistoryCarDTO> getGasHistoryList(Long carId);
     List<HistoryCarDTO> getRepairHistoryList(Long carId);
-    List<CarConsumableInfoDTO> readDetailInfo(Long carId, Long consumableId);
+
     void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO);
 
 }
