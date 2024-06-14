@@ -42,12 +42,11 @@
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectConsumeYear">
-                    <option value="2024" selected>2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectConsumeYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
                   </select>
 
                   <button type="button" class="btn btn-info refreshConsumeBtn" data-bs-target="#consume">조회</button>
@@ -65,12 +64,11 @@
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectFuelAmountYear">
-                    <option value="2024" selected>2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectFuelAmountYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
                   </select>
 
                   <button type="button" class="btn btn-info refreshFuelAmountBtn" data-bs-target="#fuelAmount">조회1</button>
@@ -88,12 +86,11 @@
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectDistanceYear">
-                    <option value="2024" selected>2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectDistanceYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
                   </select>
 
                   <button type="button" class="btn btn-info refreshDistanceBtn" data-bs-target="#distance">조회2</button>
@@ -112,12 +109,11 @@
 
               <div class="row mt-3">
                 <div class="input-group-prepend">
-                  <select name="selectYearName" id="selectTotalYear">
-                    <option value="2024" selected>2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
+                  <label for="selectConsumeYear">연도</label>
+                  <select name="selectYearName" id="selectTotalYear"
+                          th:with="endYear= ${#calendars.format(#calendars.createNow(),'yyyy')}, startYear= ${endYear}-3">
+                    <option th:each="i, stat: ${#numbers.sequence( startYear, endYear)}" th:value="${i}"
+                            th:selected="${stat.index} == 3">[[${i}]]</option>
                   </select>
 
                   <button type="button" class="btn btn-info refreshTotalBtn" data-bs-target="#total">조회3</button>
