@@ -42,7 +42,7 @@
                                     <div class="updownCount">
                                         <span><i class="fas fa-arrow-alt-circle-up up" th:data-num="${dto.cartId}"></i></span>
                                         <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
-                                               class="p_itemCount" th:value="${dto.itemCount}">
+                                               class="itemCount" th:value="${dto.itemCount}">
                                         <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                     </div>
                                 </td>
@@ -189,7 +189,7 @@
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
 
                 totalPrice += itemPrice * itemCount;
-                console.log("moveUp : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
+               // console.log("reCalculation : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
             }
         }, false)
 
@@ -206,20 +206,37 @@
         });
     }, false)
 
+    // 상품 갯수 수동 변경
+    document.querySelectorAll(".itemCount").forEach(function (item,idx){
+        item.addEventListener('change', function(){
+
+            var inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            var p_count = inputTag.value;
+
+            // console.log("moveUp : " + item + ",  " + idx)
+            // console.log("p_num : " + p_count )
+            inputTag.setAttribute('value', p_count )
+            inputTag.value = p_count
+
+            // 결제 금액 재 계산
+            reCalculation()
+        });
+    }, false)
+
     // 주문 수량 갯수 변경 ( up, down button )
     document.querySelectorAll(".updownCount").forEach(function (item,idx){
         // 갯수 증가
         item.children[0].addEventListener('click', function(){
-            changeItemCount(item, idx, -1);
+            changeItemCount(idx, -1);
         });
         // 갯수 감소
         item.children[2].addEventListener('click', function(){
-            changeItemCount(item, idx, 1);
+            changeItemCount(idx, 1);
         });
 
     }, false)
 
-    function changeItemCount(item, idx, value){
+    function changeItemCount(idx, value){
         var inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
         var p_count = parseInt(inputTag.getAttribute('value'));
 
