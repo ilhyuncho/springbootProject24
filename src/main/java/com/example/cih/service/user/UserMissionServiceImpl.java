@@ -5,6 +5,7 @@ import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.dto.user.UserMissionListResDTO;
 import com.example.cih.dto.user.UserMissionReqDTO;
 import com.example.cih.dto.user.UserMissionResDTO;
@@ -131,10 +132,16 @@ public class UserMissionServiceImpl implements UserMissionService{
 
         Page<UserMission> result = userMissionRepository.searchUserMission(types, keyword, pageable, userMissionReqDTO);
 
-        List<UserMission> userMissionList = result.getContent();
+        // Page는 map을 지원해서 내부 데이터를 다른것으로 변경 가능
+        List<UserMissionResDTO> dtoList = result.map(UserMissionServiceImpl::entityToDTO)
+                .stream().collect(Collectors.toList());
 
-        List<UserMissionResDTO> dtoList = userMissionList.stream()
-                .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
+//        List<UserMission> userMissionList = result.getContent();
+//        List<UserMissionResDTO> dtoList = userMissionList.stream()
+//                .map(UserMissionServiceImpl::entityToDTO).collect(Collectors.toList());
+
+        // List.copyOf 활용 예 ( 불변 객체 리턴 )
+        //List<UserMissionResDTO> unModifyCartDTOList = List.copyOf(dtoList);
 
         return new UserMissionListResDTO<UserMissionResDTO>(
                 pageRequestDTO, dtoList,
