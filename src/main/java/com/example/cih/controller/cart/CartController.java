@@ -2,10 +2,8 @@ package com.example.cih.controller.cart;
 
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.cart.CartDTO;
 import com.example.cih.dto.cart.CartDetailResDTO;
-import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
@@ -34,7 +33,7 @@ public class CartController {
                        Principal principal){
 
 
-        PageResponseDTO<CartDetailResDTO> listDto = cartService.getCartAll(pageRequestDTO, principal.getName());
+        List<CartDetailResDTO> listDto = cartService.getCartAll(principal.getName());
         model.addAttribute("responseDTO", listDto);
 
         return "/cart/cartListNew";

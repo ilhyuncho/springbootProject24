@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,17 +26,6 @@ import java.util.Map;
 //@PreAuthorize("hasRole('USER')")
 public class CartRestController {
     private final CartService cartService;
-
-    @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
-    @GetMapping("/list")
-    public PageResponseDTO<CartDetailResDTO> getCartList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
-                                                         Model model,
-                                                         Principal principal){
-
-        PageResponseDTO<CartDetailResDTO> cartAll = cartService.getCartAll(pageRequestDTO, principal.getName());
-
-        return cartAll;
-    }
 
     @ApiOperation(value = "장바구니 상품 취소", notes = "DELETE 방식으로 특정 상품 삭제")
     @DeleteMapping("/{cartId}")

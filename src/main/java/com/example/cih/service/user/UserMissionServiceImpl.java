@@ -143,6 +143,12 @@ public class UserMissionServiceImpl implements UserMissionService{
         // List.copyOf 활용 예 ( 불변 객체 리턴 )
         //List<UserMissionResDTO> unModifyCartDTOList = List.copyOf(dtoList);
 
+        // 에러 발생!!!
+        //unModifyCartDTOList.add(CartResponseDTO.builder().build());
+
+        // 하지만 list안이 객체라면 수정 가능 하다..( 주의 해서 사용해야 함 )
+        //unModifyCartDTOList.get(0).setItemName("update Temp");
+
         return new UserMissionListResDTO<UserMissionResDTO>(
                 pageRequestDTO, dtoList,
                 (int)result.getTotalElements(), user.getMPoint());
