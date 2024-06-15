@@ -4,6 +4,7 @@ package com.example.cih.controller.cart;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.cart.CartDTO;
+import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,11 @@ public class CartController {
                        Model model,
                        Principal principal){
 
-        return "/cart/cartList";
+
+        PageResponseDTO<CartDetailResDTO> listDto = cartService.getCartAll(pageRequestDTO, principal.getName());
+        model.addAttribute("responseDTO", listDto);
+
+        return "/cart/cartListNew";
     }
 
     @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")

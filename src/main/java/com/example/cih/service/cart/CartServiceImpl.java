@@ -10,6 +10,7 @@ import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartDTO;
 import com.example.cih.domain.cart.CartRepository;
+import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.dto.cart.CartResponseDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.user.UserService;
@@ -64,7 +65,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public PageResponseDTO<CartResponseDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName) {
+    public PageResponseDTO<CartDetailResDTO> getCartAll(PageRequestDTO pageRequestDTO, String userName) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -75,17 +76,18 @@ public class CartServiceImpl implements CartService {
         Page<Cart> result = cartRepository.findByUser(user, pageable );
 
         // Page는 map을 지원해서 내부 데이터를 다른것으로 변경 가능
-        List<CartResponseDTO> cartDTOList = result.map(cart -> CartResponseDTO.builder()
+        List<CartDetailResDTO> cartDTOList = result.map(cart -> CartDetailResDTO.builder()
                 .cartId(cart.getCartId())
                 .shopItemId(cart.getShopItem().getShopItemId())
                 .itemName(cart.getShopItem().getItemName())
                 .itemCount(cart.getItemCount())
+                .itemPrice(cart.getShopItem().getPrice())
                 .option1(cart.getItemOption() != null ? cart.getItemOption().getOption1() : "옵션 없음") // view에 보여줄때 Option 설명으로 변경 해야 할듯 - cih
                 .build()).stream()
                 .collect(Collectors.toList());
 
         // List.copyOf 활용 예 ( 불변 객체 리턴 )
-        List<CartResponseDTO> unModifyCartDTOList = List.copyOf(cartDTOList);
+        List<CartDetailResDTO> unModifyCartDTOList = List.copyOf(cartDTOList);
         // 에러 발생!!!
         //unModifyCartDTOList.add(CartResponseDTO.builder().build());
 
@@ -110,7 +112,7 @@ public class CartServiceImpl implements CartService {
 //            cartDTOList.add(cartDTO);
 //        }
 
-        return PageResponseDTO.<CartResponseDTO>withAll()
+        return PageResponseDTO.<CartDetailResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(unModifyCartDTOList)
                 .total((int)result.getTotalElements())
