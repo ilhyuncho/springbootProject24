@@ -7,17 +7,12 @@ import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder
 public class OrderDetailDTO{
+    private Long cartId;
     private Long itemId;
     private Integer itemCount;
     private Integer itemPrice;
-
-    @Builder
-    public OrderDetailDTO(Long itemId, Integer itemCount, Integer itemPrice) {
-        this.itemId = itemId;
-        this.itemCount = itemCount;
-        this.itemPrice = itemPrice;
-    }
-
 }

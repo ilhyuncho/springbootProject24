@@ -2,6 +2,8 @@ package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.common.exception.orderNotFoundException;
+import com.example.cih.domain.cart.Cart;
+import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.delivery.Delivery;
@@ -31,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ShopItemRepository shopItemRepository;
-
+    private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
 
     private final UserService userService;
@@ -40,15 +42,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Long order(String userName, OrderReqDTO orderReqDTO ){
 
-
         // 고객 정보 get
         User user = userService.findUser(userName);
+
 
         // 배송 정보 생성
         Delivery delivery = new Delivery(user.getAddress());
 
         // 상세 구매 아이템 정보 생성
         List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(item -> {
+
+            Cart cart = cartRepository.findById(item.getCartId())
+                    .orElseThrow(() -> new ItemNotFoundException("해당 장바구니 정보가 존재하지않습니다"));
+            cart.changeIsActive(false);
 
             ShopItem shopItem = shopItemRepository.findById(item.getItemId())
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));

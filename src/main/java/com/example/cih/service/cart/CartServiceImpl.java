@@ -42,6 +42,7 @@ public class CartServiceImpl implements CartService {
                 .shopItem(shopItem)
                 .itemCount(cartDTO.getItemCount())
                 .user(user)
+                .isActive(true)
                 .metricWeight(10)   // 학습용
                 .build();
 
@@ -64,7 +65,9 @@ public class CartServiceImpl implements CartService {
 
         List<Cart> result = cartRepository.findByUser(user);
 
-        List<CartDetailResDTO> cartDetailResDTOList = result.stream().map(cart -> CartDetailResDTO.builder()
+        List<CartDetailResDTO> cartDetailResDTOList = result.stream()
+                        .filter(Cart::getIsActive)
+                        .map(cart -> CartDetailResDTO.builder()
                         .cartId(cart.getCartId())
                         .shopItemId(cart.getShopItem().getShopItemId())
                         .itemName(cart.getShopItem().getItemName())

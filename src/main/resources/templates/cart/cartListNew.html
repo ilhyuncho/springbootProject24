@@ -48,6 +48,8 @@
                             </td>
                             <td><input type="hidden" th:name="p_itemId+${stat.index}" th:value="${dto.shopItemId}">
                             </td>
+                            <td><input type="hidden" th:name="p_cartId+${stat.index}" th:value="${dto.cartId}">
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -205,18 +207,21 @@
             var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
             const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
             const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
+            const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
 
             const selected = selectedTag.checked
             if( selected === true){
                 var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
                 var itemId = parseInt(itemIdTag.getAttribute('value'));
+                var cartId = parseInt(cartIdTag.getAttribute('value'));
 
                 totalPrice += itemPrice * itemCount;
                 console.log(idx + "-> itemPrice : " + itemPrice + ", itemCount : " + itemCount + ", itemId : " + itemId)
 
                 let itemInfo = {
                     itemId: itemId,
+                    cartId: cartId,
                     itemCount: itemCount,
                     itemPrice: itemPrice,
                 };
@@ -233,6 +238,11 @@
         ////////////////////////////////////////////////////
         addOrderItem(formObj).then(result => {
             //console.log(result)
+
+            alert("정상적으로 주문 되었습니다")
+
+            // 주문 페이지 로 이동
+            self.location = '/order/list?userName=' + [[${#authentication.principal.username}]]
 
         }).catch(e => {
             console.log(e)
