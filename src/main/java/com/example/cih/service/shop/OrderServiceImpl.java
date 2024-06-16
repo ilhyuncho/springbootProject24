@@ -8,6 +8,7 @@ import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.order.OrderDTO;
+import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,22 +38,27 @@ public class OrderServiceImpl implements OrderService {
     private final ShopItemService shopItemService;
 
     @Override
-    public Long order(String userName, Long itemId, int count){
+    public Long order(String userName, OrderReqDTO orderReqDTO ){
 
-        log.error(userName + "," + itemId + "," + count);
+
         // 고객 정보 get
         User user = userService.findUser(userName);
-
-        ShopItem shopItem = shopItemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
         // 배송 정보 생성
         Delivery delivery = new Delivery(user.getAddress());
 
-        // 주문 상품 생성
-        OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
+        // 상세 구매 아이템 정보 생성
+        List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(item -> {
 
-        Order order = Order.createOrder(user, delivery, orderItem);
+            ShopItem shopItem = shopItemRepository.findById(item.getItemId())
+                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
+            // 주문 상품 생성
+            return OrderItem.createOrderItem(shopItem, item.getItemCount());
+        }).collect(Collectors.toList());
+
+
+        Order order = Order.createOrder(user, delivery, listOrderItem);
 
         Order save = orderRepository.save(order);
 

@@ -9,12 +9,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 public class OrderDetailDTO{
-    private Integer itemId;
+    private Long itemId;
     private Integer itemCount;
     private Integer itemPrice;
 
     @Builder
-    public OrderDetailDTO(Integer itemId, Integer itemCount, Integer itemPrice) {
+    public OrderDetailDTO(Long itemId, Integer itemCount, Integer itemPrice) {
         this.itemId = itemId;
         this.itemCount = itemCount;
         this.itemPrice = itemPrice;

@@ -197,20 +197,22 @@
         e.preventDefault()
         e.stopPropagation()
 
+        let totalPrice = 0;
         let arrayItemInfo = [];
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
-            var selectedTag = document.querySelector('input[name=p_selected'+idx+']');
+            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
             var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            var itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-            var itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
+            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
 
-            var selected = selectedTag.checked
+            const selected = selectedTag.checked
             if( selected === true){
                 var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
                 var itemId = parseInt(itemIdTag.getAttribute('value'));
 
+                totalPrice += itemPrice * itemCount;
                 console.log(idx + "-> itemPrice : " + itemPrice + ", itemCount : " + itemCount + ", itemId : " + itemId)
 
                 let itemInfo = {
@@ -224,6 +226,7 @@
 
         let formObj = {
             deliveryFee: deliveryFee.value,
+            totalPrice: totalPrice,
             listOrderDetail: arrayItemInfo
         }
 

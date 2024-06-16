@@ -41,7 +41,7 @@ public class Order {
 
     private int orderStatus;            // 주문 상태
 
-    public static Order createOrder(User userInfo, Delivery delivery, OrderItem... orderItems){
+    public static Order createOrder(User userInfo, Delivery delivery, List<OrderItem> listOrderItem){
         Order order = Order.builder()
                 .user(userInfo)
                 .orderDate(LocalDateTime.now())
@@ -50,7 +50,7 @@ public class Order {
                 .orderItemList(new ArrayList<>())
                 .build();
 
-        for (OrderItem orderItem : orderItems) {
+        for (OrderItem orderItem : listOrderItem) {
             order.addOrderItem(orderItem);
         }
 

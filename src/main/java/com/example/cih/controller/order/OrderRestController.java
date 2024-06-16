@@ -27,10 +27,10 @@ public class OrderRestController {
     public String add(@RequestBody OrderReqDTO orderReqDTO,
                       Principal principal) throws ParseException {
 
-        log.error(orderReqDTO.getDeliveryFee());
+        log.error(orderReqDTO.toString());
         orderReqDTO.getListOrderDetail().forEach(log::error);
 
-        //Long order = orderService.order(principal.getName(), orderDTO.getShopItemId(), orderDTO.getItemCount());
+        Long order = orderService.order(principal.getName(), orderReqDTO);
         return "/shop/main";
     }
 
