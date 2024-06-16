@@ -14,80 +14,78 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">장바구니</h5>
-                    <form action="/order/add" method="post" id="myForm">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">선택</th>
-                                <th scope="col">상품 이름</th>
-                                <th scope="col">가격</th>
-                                <th scope="col">주문 수량</th>
-                                <th scope="col">옵션</th>
-                            </tr>
-                            </thead>
 
-                            <tbody >
-                            <tr id="tableOrderList" th:each="dto, stat :${responseDTO}">
-                                <th scope="col">
-                                    <input type="checkbox" class="checkbox" th:name="p_selected+${stat.index}" id="scales" checked />
-                                </th>
-                                <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.cartId}}|"
-                                        class="text-decoration-none"> [[${dto.itemName}]]</a>
-                                </td>
-                                <td>
-                                    <input type="text" th:name="p_price+${stat.index}"  id="p_price" size="2" maxlength="4"
-                                           class="p_price" th:value="${dto.itemPrice}">
-                                </td>
-                                <td>
-                                    <div class="updownCount">
-                                        <span><i class="fas fa-arrow-alt-circle-up up" th:data-num="${dto.cartId}"></i></span>
-                                        <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
-                                               class="itemCount" th:value="${dto.itemCount}">
-                                        <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
-                                    </div>
-                                </td>
-                                <td>[[${dto.option1}]]
-                                </td>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">선택</th>
+                            <th scope="col">상품 이름</th>
+                            <th scope="col">가격</th>
+                            <th scope="col">주문 수량</th>
+                            <th scope="col">옵션</th>
+                        </tr>
+                        </thead>
 
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="my-4">
-                            <div class="float-end">
-
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">상품 금액</span>
-                                    <label>
-                                        <input type="text" class="form-control orderPrice"  readonly>
-                                    </label>
+                        <tbody >
+                        <tr id="tableOrderList" th:each="dto, stat :${responseDTO}">
+                            <th scope="col">
+                                <input type="checkbox" class="checkbox" th:name="p_selected+${stat.index}" id="scales" checked />
+                            </th>
+                            <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.cartId}}|"
+                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
+                            </td>
+                            <td>
+                                <input type="text" th:name="p_price+${stat.index}"  id="p_price" size="2" maxlength="4"
+                                       class="p_price" th:value="${dto.itemPrice}">
+                            </td>
+                            <td>
+                                <div class="updownCount">
+                                    <span><i class="fas fa-arrow-alt-circle-up up" th:data-num="${dto.cartId}"></i></span>
+                                    <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
+                                           class="itemCount" th:value="${dto.itemCount}">
+                                    <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                 </div>
+                            </td>
+                            <td>[[${dto.option1}]]
+                            </td>
 
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">배송비</span>
-                                    <label>
-                                        <input type="text" class="form-control deliveryFee" readonly>
-                                    </label>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">상품 할인</span>
-                                    <label>
-                                        <input type="text" class="form-control discountPrice" readonly>
-                                    </label>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">결제 예정 금액</span>
-                                    <label>
-                                        <input type="text" class="form-control expectedPrice" readonly>
-                                    </label>
-                                </div>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                               <button type="button" class="btn btn-primary submitBtn">주문 하기</button>
+                    <div class="my-4">
+                        <div class="float-end">
 
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">상품 금액</span>
+                                <label>
+                                    <input type="text" class="form-control orderPrice"  readonly>
+                                </label>
                             </div>
-                        </div>
 
-                    </form>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">배송비</span>
+                                <label>
+                                    <input type="text" class="form-control deliveryFee" readonly>
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">상품 할인</span>
+                                <label>
+                                    <input type="text" class="form-control discountPrice" readonly>
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">결제 예정 금액</span>
+                                <label>
+                                    <input type="text" class="form-control expectedPrice" readonly>
+                                </label>
+                            </div>
+
+                           <button type="button" class="btn btn-primary submitBtn">주문 하기</button>
+
+                        </div>
+                    </div>
 
                 </div><!-- <div class="card-body">-->
             </div>
@@ -96,6 +94,7 @@
 
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/cart.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -201,8 +200,20 @@
         e.preventDefault()
         e.stopPropagation()
 
-        // 실제 등록 처리
-        document.querySelector("#myForm").submit();
+        const formObj = new FormData();
+
+        formObj.append("shopItemId", 4);
+        formObj.append("orderCount", 7);
+        formObj.append("itemPrice", 10);
+
+        addOrderItem(formObj).then(result => {
+            //console.log(result)
+
+
+        }).catch(e => {
+            console.log(e)
+        })
+
 
     }, false)
 

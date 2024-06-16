@@ -34,9 +34,12 @@ public class OrderController {
 
     @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
     @PostMapping("/add")
-    public String add(OrderDTO orderDTO, String userName){
+    public String add(OrderDTO orderDTO,
+                      Principal principal){
 
-        Long order = orderService.order(userName, orderDTO.getShopItemId(), orderDTO.getOrderCount());
+        log.error("orderDTO : " + orderDTO);
+
+        Long order = orderService.order(principal.getName(), orderDTO.getShopItemId(), orderDTO.getOrderCount());
         return "/shop/main";
     }
 

@@ -29,6 +29,7 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final ShopItemRepository shopItemRepository;
 
     private final OrderItemRepository orderItemRepository;
 
@@ -42,18 +43,20 @@ public class OrderServiceImpl implements OrderService {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
-//        ShopItem shopItem = shopItemService.findOne(itemId);
-//
-//        Delivery delivery = new Delivery(user.getAddress());
-//        // 주문 상품 생성
-//        OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
-//
-//        Order order = Order.createOrder(user, delivery, orderItem);
-//
-//        orderRepository.save(order);
+        ShopItem shopItem = shopItemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
-        //return order.getOrderId();
-        return 0L;
+        // 배송 정보 생성
+        Delivery delivery = new Delivery(user.getAddress());
+
+        // 주문 상품 생성
+        OrderItem orderItem = OrderItem.createOrderItem(shopItem, count );
+
+        Order order = Order.createOrder(user, delivery, orderItem);
+
+        Order save = orderRepository.save(order);
+
+        return save.getOrderId();
     }
 
     @Override

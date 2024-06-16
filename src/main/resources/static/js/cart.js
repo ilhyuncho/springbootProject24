@@ -32,3 +32,13 @@ async function removeCartItem(cartId){
 
     return result.data
 }
+
+// 장바구니 -> 주문 테이블 로
+async function addOrderItem(formObj) {
+    // console.log(formObj)
+
+    const response = await axios.post(`/order/add`, formObj)
+
+    // console.log(response)
+    return response.data
+}
