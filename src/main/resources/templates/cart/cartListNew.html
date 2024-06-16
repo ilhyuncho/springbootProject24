@@ -50,6 +50,8 @@
                             </td>
                             <td><input type="hidden" th:name="p_cartId+${stat.index}" th:value="${dto.cartId}">
                             </td>
+                            <td><button class="btn-sm btn-danger" th:onclick="removeCart([[${dto.cartId}]], this)" >X</button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -113,36 +115,7 @@
 
 
 
-    // 결제 금액 다시 계산
-    function reCalculation(){
 
-        var totalPrice = 0;
-        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
-
-            var selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            var itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-
-            var selected = selectedTag.checked
-            if( selected === true){
-                var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
-                var itemCount = parseInt(itemCountTag.getAttribute('value'));
-
-                totalPrice += itemPrice * itemCount;
-               // console.log("reCalculation : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
-            }
-        }, false)
-
-        orderPrice.value = totalPrice
-
-        // 배송비 계산
-        const deliveryPrice = (totalPrice > 15000) ? 0 : 2500
-        deliveryFee.value = deliveryPrice
-
-        // 결제 예정 금액 다시 계산 해야 함
-        expectedPrice.value = totalPrice + deliveryPrice
-
-    }
 
     // 상품 선택 변경 ( checkbox )
     document.querySelectorAll(".checkbox").forEach(function (item,idx){
@@ -181,19 +154,6 @@
         });
 
     }, false)
-
-    function changeItemCount(idx, value){
-        var inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
-        var p_count = parseInt(inputTag.getAttribute('value'));
-
-        // console.log("moveUp : " + item + ",  " + idx)
-        // console.log("p_num : " + p_num )
-        inputTag.setAttribute('value', p_count + value )
-        inputTag.value = p_count + value
-
-        // 결제 금액 재 계산
-        reCalculation()
-    }
 
     document.querySelector(".submitBtn").addEventListener("click", function(e){
         e.preventDefault()
@@ -247,9 +207,67 @@
         }).catch(e => {
             console.log(e)
         })
-
-
     }, false)
+
+    // 결제 금액 다시 계산
+    function reCalculation(){
+
+        var totalPrice = 0;
+        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
+
+            var selectedTag = document.querySelector('input[name=p_selected'+idx+']');
+            var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            var itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
+
+            var selected = selectedTag.checked
+            if( selected === true){
+                var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
+                var itemCount = parseInt(itemCountTag.getAttribute('value'));
+
+                totalPrice += itemPrice * itemCount;
+                // console.log("reCalculation : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
+            }
+        }, false)
+
+        orderPrice.value = totalPrice
+
+        // 배송비 계산
+        const deliveryPrice = (totalPrice > 15000) ? 0 : 2500
+        deliveryFee.value = deliveryPrice
+
+        // 결제 예정 금액 다시 계산 해야 함
+        expectedPrice.value = totalPrice + deliveryPrice
+    }
+
+    function changeItemCount(idx, value){
+        var inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
+        var p_count = parseInt(inputTag.getAttribute('value'));
+
+        // console.log("moveUp : " + item + ",  " + idx)
+        // console.log("p_num : " + p_num )
+        inputTag.setAttribute('value', p_count + value )
+        inputTag.value = p_count + value
+
+        // 결제 금액 재 계산
+        reCalculation()
+    }
+
+    // 상품 선택 삭제
+    function removeCart(cartId, obj){
+        if(!confirm("해당 항목을 정말 삭제 하겠습니까??")){
+            return
+        }
+
+        removeCartItem(cartId).then(result=>{
+            alert(result.cartId + '상품이 삭제 되었습니다')
+
+            // 장바구니 페이지 다시 로딩
+            self.location = '/cart/list'
+
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
 
 
 
