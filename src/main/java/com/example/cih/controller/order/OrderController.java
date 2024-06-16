@@ -3,7 +3,7 @@ package com.example.cih.controller.order;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.order.OrderDTO;
-import com.example.cih.dto.order.OrderDetailDTO;
+import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,17 +28,6 @@ public class OrderController {
     private final OrderService orderService;
     private final BuyingCarService buyingCarService;
     private final UserService userService;
-
-    @ApiOperation(value = "order 데이터 넣기", notes = "테스트 용")
-    @PostMapping("/add")
-    public String add(OrderDTO orderDTO,
-                      Principal principal){
-
-        log.error("orderDTO : " + orderDTO);
-
-        Long order = orderService.order(principal.getName(), orderDTO.getShopItemId(), orderDTO.getOrderCount());
-        return "/shop/main";
-    }
 
     @ApiOperation(value = "주문내역 조회", notes = "결제 완료된 내역 조회")
     @GetMapping("/list")
@@ -66,9 +52,9 @@ public class OrderController {
     public String orderDetail(Long orderId,
                               Model model){
 
-        OrderDetailDTO orderDetailDto = orderService.getOrderDetail(orderId);
+        OrderViewDTO orderViewDTO = orderService.getOrderDetail(orderId);
 
-        model.addAttribute("responseDTO", orderDetailDto);
+        model.addAttribute("responseDTO", orderViewDTO);
         return "/order/orderDetail";
     }
 

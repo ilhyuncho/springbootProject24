@@ -8,7 +8,7 @@ import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.order.OrderDTO;
-import com.example.cih.dto.order.OrderDetailDTO;
+import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -104,20 +103,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailDTO getOrderDetail(Long orderId) {
+    public OrderViewDTO getOrderDetail(Long orderId) {
 
        OrderItem orderItem = orderItemRepository.getOrderItemByOrderItemId(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("orderItem이 존재하지않습니다"));;
 
         log.error("getOrderDetail : " + orderItem.getShopItem().getItemName());
 
-        OrderDetailDTO orderDetailDTO = OrderDetailDTO.builder()
+        OrderViewDTO orderViewDTO = OrderViewDTO.builder()
                 .orderCount(orderItem.getOrderCount())
                 .itemName(orderItem.getShopItem().getItemName())
                 .itemPrice(orderItem.getShopItem().getPrice())
                 .build();
 
-        return orderDetailDTO;
+        return orderViewDTO;
     }
 
     @Override

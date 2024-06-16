@@ -1,20 +1,23 @@
 package com.example.cih.dto.order;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
+import java.io.Serializable;
+
+@Getter
 @NoArgsConstructor
-public class OrderDetailDTO {
-    private Long orderId;
-    private int orderStatus;
-    private int orderCount;
-    private Long shopItemId;
-    private String itemName;
-    private int itemPrice;
+@ToString
+public class OrderDetailDTO{
+    private Integer itemId;
+    private Integer itemCount;
+    private Integer itemPrice;
+
+    @Builder
+    public OrderDetailDTO(Integer itemId, Integer itemCount, Integer itemPrice) {
+        this.itemId = itemId;
+        this.itemCount = itemCount;
+        this.itemPrice = itemPrice;
+    }
+
 }
