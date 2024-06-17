@@ -155,11 +155,8 @@
         if(!confirm("정말로 구매를 취소 하겠습니까?")){
             return
         }
-        const formObj = {
-            orderItemId:orderItemId,
-        }
 
-        cancelOrderItem(formObj).then(result=>{
+        cancelOrderItem(orderItemId).then(result=>{
             alert('정상적으로 삭제 되었습니다.' + result.result)
 
             self.location = '/order/list' // 자바스크립트로 다른 url 호출

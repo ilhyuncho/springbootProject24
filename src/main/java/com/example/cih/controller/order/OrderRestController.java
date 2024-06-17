@@ -1,6 +1,5 @@
 package com.example.cih.controller.order;
 
-import com.example.cih.dto.order.OrderCancelDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.shop.OrderService;
@@ -9,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.json.ParseException;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -39,13 +37,10 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "상품 구매 취소", notes = "")
-    @PostMapping("/cancel")
-    public Map<String, String> PostCancel(@RequestBody OrderCancelDTO orderCancelDTO,
-                         Model model){
+    @PostMapping("/cancel/{orderItemId}")
+    public Map<String, String> PostCancel(@PathVariable("orderItemId") Long orderItemId){
 
-        log.error("PostCancel()~~~ orderId : " + orderCancelDTO.getOrderItemId() + "]" );
-
-       orderService.cancelOrder(orderCancelDTO.getOrderItemId());
+        orderService.cancelOrder(orderItemId);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

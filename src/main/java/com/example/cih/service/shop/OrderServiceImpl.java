@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderViewDTO getOrderDetail(Long orderId) {
 
-       OrderItem orderItem = orderItemRepository.getOrderItemByOrderItemId(orderId)
+       OrderItem orderItem = orderItemRepository.getOrderItemByOrderId(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("orderItem이 존재하지않습니다"));;
 
         log.error("getOrderDetail : " + orderItem.getShopItem().getItemName());

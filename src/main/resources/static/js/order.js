@@ -12,12 +12,12 @@ async function addOrderItem(formObj) {
     return response.data
 }
 
-async function cancelOrderItem(formObj) {
+async function cancelOrderItem(orderItemId) {
 
-    console.log("cancelOrder....................")
-    console.log(formObj)
+    console.log("cancelOrderItem....................")
+    console.log(orderItemId)
 
-    const response = await axios.post(`/order/cancel`, formObj)
+    const response = await axios.post(`/order/cancel/${orderItemId}`)
 
     //console.log(response)
     return response.data
