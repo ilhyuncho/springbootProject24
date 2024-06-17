@@ -9,7 +9,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.order.OrderDTO;
+import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.service.user.UserService;
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageResponseDTO<OrderDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
+    public PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
 //        List<CarInfoDTO> dtoList = result.getContent().stream()
 //                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
 
-        List<OrderDTO> orderDTOList = new ArrayList<>();
+        List<OrderItemResDTO> orderDTOList = new ArrayList<>();
 
         for (Order order : orderList) {
             log.error("OrderID-" + order.getOrderId());
@@ -95,10 +95,11 @@ public class OrderServiceImpl implements OrderService {
             for (OrderItem orderItem : orderItemList) {
                 log.error("OrderItemID-" + orderItem.getOrderItemId());
                 log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
-                OrderDTO orderDTO = OrderDTO.builder()
+                OrderItemResDTO orderDTO = OrderItemResDTO.builder()
                         .orderId(order.getOrderId())
-                        .deliveryStatus(order.getDeliveryStatus().getName())
+                        .orderItemId(orderItem.getOrderItemId())
                         .orderCount(orderItem.getOrderCount())
+                        .deliveryStatus(orderItem.getDeliveryStatus().getName())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
                         .itemPrice(orderItem.getShopItem().getPrice())
@@ -108,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        return PageResponseDTO.<OrderDTO>withAll()
+        return PageResponseDTO.<OrderItemResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(orderDTOList)
                 .total((int)result.getTotalElements())
@@ -133,20 +134,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order cancelOrder(Long orderId){
+    public void cancelOrder(Long orderItemId){
 
-        Order order = orderRepository.findById(orderId)
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> {
                     log.info("User expected to delete cart but was empty. orderId = '{}',"
-                            , orderId);
-                    return new orderNotFoundException("해당 주문이 존재 하지 않습니다");
+                            , orderItemId);
+                    return new orderNotFoundException("해당 주문 아이템 존재 하지 않습니다");
                 });
 
-        log.error("cancelOrder" + order.getOrderId());
+        log.error("cancelOrder" + orderItem.getOrderItemId());
 
-        order.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
-
-        return order;
+        orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
     }
 
 }

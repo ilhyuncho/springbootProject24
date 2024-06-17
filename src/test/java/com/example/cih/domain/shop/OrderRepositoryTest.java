@@ -54,7 +54,6 @@ class OrderRepositoryTest {
                 .user(user)
                 .orderDate(LocalDateTime.now())
                 .delivery(new Delivery(user.getAddress()))
-                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderItemList(new ArrayList<>())
                 .build();
 

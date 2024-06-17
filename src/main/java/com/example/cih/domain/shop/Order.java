@@ -39,14 +39,11 @@ public class Order {
     @Column(name = "orderDate")
     private LocalDateTime orderDate;    // 주문 시간
 
-    private DeliveryStatus deliveryStatus;            // 배송 상태
-
     public static Order createOrder(User userInfo, Delivery delivery, List<OrderItem> listOrderItem){
         Order order = Order.builder()
                 .user(userInfo)
                 .orderDate(LocalDateTime.now())
                 .delivery(delivery)
-                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderItemList(new ArrayList<>())
                 .build();
 
@@ -60,9 +57,5 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         orderItemList.add(orderItem);
         orderItem.setOrder(this);
-    }
-
-    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
-        this.deliveryStatus = deliveryStatus;
     }
 }

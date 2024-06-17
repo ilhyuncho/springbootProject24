@@ -43,9 +43,9 @@ public class OrderRestController {
     public Map<String, String> PostCancel(@RequestBody OrderCancelDTO orderCancelDTO,
                          Model model){
 
-        log.error("PostCancel()~~~ orderId : " + orderCancelDTO.getOrderId() + "]" );
+        log.error("PostCancel()~~~ orderId : " + orderCancelDTO.getOrderItemId() + "]" );
 
-       orderService.cancelOrder(orderCancelDTO.getOrderId());
+       orderService.cancelOrder(orderCancelDTO.getOrderItemId());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

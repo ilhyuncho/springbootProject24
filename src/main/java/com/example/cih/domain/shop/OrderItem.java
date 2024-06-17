@@ -26,6 +26,8 @@ public class OrderItem {
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 
+    private DeliveryStatus deliveryStatus;            // 배송 상태
+
     private int orderPrice;
     private int orderCount;
 
@@ -33,6 +35,7 @@ public class OrderItem {
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
+                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderPrice(shopItem.getPrice())
                 .orderCount(count)
                 .build();
@@ -43,6 +46,10 @@ public class OrderItem {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
+        this.deliveryStatus = deliveryStatus;
     }
 
 }

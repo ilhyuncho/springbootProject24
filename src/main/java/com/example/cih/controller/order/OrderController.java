@@ -2,7 +2,7 @@ package com.example.cih.controller.order;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
-import com.example.cih.dto.order.OrderDTO;
+import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
@@ -37,7 +37,7 @@ public class OrderController {
 
         User user = userService.findUser(principal.getName());
 
-        PageResponseDTO<OrderDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
+        PageResponseDTO<OrderItemResDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
 
         List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getBuyingCarInfo(user);
 
@@ -47,15 +47,15 @@ public class OrderController {
         return "/order/orderList";
     }
 
-    @ApiOperation(value = "주문내역 상세 조회", notes = "주문 내역을 자세히")
-    @GetMapping("/orderDetail")
-    public String orderDetail(Long orderId,
-                              Model model){
-
-        OrderViewDTO orderViewDTO = orderService.getOrderDetail(orderId);
-
-        model.addAttribute("responseDTO", orderViewDTO);
-        return "/order/orderDetail";
-    }
+//    @ApiOperation(value = "주문내역 상세 조회", notes = "주문 내역을 자세히")
+//    @GetMapping("/orderDetail")
+//    public String orderDetail(Long orderItemId,
+//                              Model model){
+//
+//        OrderViewDTO orderViewDTO = orderService.getOrderDetail(orderItemId);
+//
+//        model.addAttribute("responseDTO", orderViewDTO);
+//        return "/order/orderDetail";
+//    }
 
 }

@@ -9,5 +9,5 @@ import lombok.*;
 @ToString
 @Builder
 public class OrderCancelDTO {
-    private Long orderId;
+    private Long orderItemId;
 }
