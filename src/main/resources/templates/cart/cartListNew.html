@@ -232,7 +232,7 @@
         orderPrice.value = totalPrice
 
         // 배송비 계산
-        const deliveryPrice = (totalPrice > 15000) ? 0 : 2500
+        const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
         deliveryFee.value = deliveryPrice
 
         // 결제 예정 금액 다시 계산 해야 함
