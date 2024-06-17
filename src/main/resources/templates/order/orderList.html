@@ -61,7 +61,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Order ID</th>
-                            <th scope="col">Order Status</th>
+                            <th scope="col">배송 상태</th>
                             <th scope="col">Order Count</th>
                             <th scope="col">ShopItem ID</th>
                             <th scope="col">Item Name</th>
@@ -73,7 +73,7 @@
                         <tbody th:with="link = ${pageRequestDto.getLink()}">
                         <tr th:each="dto:${responseDTO.dtoList}">
                             <th scope="row">[[${dto.orderId}]]</th>
-                            <td>[[${dto.orderStatus}]]</td>
+                            <td>[[${dto.deliveryStatus}]]</td>
                             <td>[[${dto.orderCount}]]</td>
                             <td>[[${dto.shopItemId}]]</td>
                             <td>[[${dto.itemName}]]</td>

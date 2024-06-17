@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("orderStatus");
+        Pageable pageable = pageRequestDTO.getPageable("orderDate");
 
         User user = userService.findUser(userName);
 
@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
                 log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
                 OrderDTO orderDTO = OrderDTO.builder()
                         .orderId(order.getOrderId())
-                        .orderStatus(order.getOrderStatus())
+                        .deliveryStatus(order.getDeliveryStatus().getName())
                         .orderCount(orderItem.getOrderCount())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())

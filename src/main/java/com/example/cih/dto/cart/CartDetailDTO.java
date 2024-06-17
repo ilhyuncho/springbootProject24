@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDetailDTO {
-    //private int orderStatus;
     private int orderCount;
    // private Long shopItemId;
     private String itemName;

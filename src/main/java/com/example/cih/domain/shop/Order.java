@@ -39,14 +39,14 @@ public class Order {
     @Column(name = "orderDate")
     private LocalDateTime orderDate;    // 주문 시간
 
-    private int orderStatus;            // 주문 상태
+    private DeliveryStatus deliveryStatus;            // 배송 상태
 
     public static Order createOrder(User userInfo, Delivery delivery, List<OrderItem> listOrderItem){
         Order order = Order.builder()
                 .user(userInfo)
                 .orderDate(LocalDateTime.now())
                 .delivery(delivery)
-                .orderStatus(1)
+                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderItemList(new ArrayList<>())
                 .build();
 
