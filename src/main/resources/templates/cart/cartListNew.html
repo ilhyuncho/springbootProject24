@@ -96,6 +96,7 @@
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/cart.js"></script>
+    <script src="/js/order.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -112,8 +113,6 @@
 
     // 결제 금액 계산 호출
     reCalculation()
-
-
 
 
 
@@ -239,6 +238,7 @@
         expectedPrice.value = totalPrice + deliveryPrice
     }
 
+    // 주문 수량 변경
     function changeItemCount(idx, value){
         var inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
         var p_count = parseInt(inputTag.getAttribute('value'));
@@ -259,7 +259,7 @@
         }
 
         removeCartItem(cartId).then(result=>{
-            alert(result.cartId + '상품이 삭제 되었습니다')
+            alert(result.cartId + ' 상품이 삭제 되었습니다')
 
             // 장바구니 페이지 다시 로딩
             self.location = '/cart/list'
@@ -268,38 +268,5 @@
             console.log(e)
         })
     }
-
-
-
-
-    // removeBtn.addEventListener("click", function(e) {
-    //     const cartId = cartIdText.value
-    //
-    //     removeCartItem(cartId).then(result=>{
-    //         alert(result.cartId + '상품이 삭제 되었습니다')
-    //
-    //         cartIdText.value = ''
-    //         modifyModal.hide()
-    //
-    //         printCartList(1,5,true)
-    //     }).catch(e=>{
-    //         console.log(e)
-    //     })
-    // },false)
-
-
-    // clear 버튼 클릭 이벤트 begin ------------------
-    // document.querySelector(".clearBtn").addEventListener("click", function(e){
-    //
-    //     console.log("clearBtn.click()~~~~")
-    //
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //
-    //     self.location = '/dashBoard/carList'
-    // },false)
-    // clear 버튼 클릭 이벤트 end ------------------
-
-
 
 </script>

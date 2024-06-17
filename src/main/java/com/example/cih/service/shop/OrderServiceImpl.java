@@ -135,17 +135,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancelOrder(Long orderId){
 
-        log.error("cancelOrder:  orderId = " +orderId);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
                     log.info("User expected to delete cart but was empty. orderId = '{}',"
                             , orderId);
-                    return new orderNotFoundException("장바구니가 비어있습니다");
+                    return new orderNotFoundException("해당 주문이 존재 하지 않습니다");
                 });
 
         log.error("cancelOrder" + order.getOrderId());
-        orderRepository.delete(order);
 
+        order.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
 
         return order;
     }

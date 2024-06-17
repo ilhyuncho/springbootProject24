@@ -183,7 +183,7 @@
         const cartId = cartIdText.value
 
         removeCartItem(cartId).then(result=>{
-            alert(result.cartId + '상품이 삭제 되었습니다')
+            alert(result.cartId + ',상품이 삭제 되었습니다')
 
             cartIdText.value = ''
             modifyModal.hide()

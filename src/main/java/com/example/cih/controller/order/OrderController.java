@@ -58,17 +58,4 @@ public class OrderController {
         return "/order/orderDetail";
     }
 
-    @ApiOperation(value = "주문 취소", notes = "")
-    @PostMapping("/cancel")
-    public String cancel(Long orderId,
-                              Model model){
-
-        log.error("orderCancel()~~~ ");
-
-        orderService.cancelOrder(orderId);
-
-        // 임시로
-        return "redirect:/order/orderDetail";
-    }
-
 }

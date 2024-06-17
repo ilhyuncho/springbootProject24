@@ -61,4 +61,8 @@ public class Order {
         orderItemList.add(orderItem);
         orderItem.setOrder(this);
     }
+
+    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
+        this.deliveryStatus = deliveryStatus;
+    }
 }
