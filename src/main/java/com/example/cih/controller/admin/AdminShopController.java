@@ -2,8 +2,7 @@ package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.handler.FileHandler;
-import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.ShopItemService;
 import io.swagger.annotations.ApiOperation;
@@ -40,11 +39,11 @@ public class AdminShopController {
         return "/admin/shopItem";
     }
 
-    @ApiOperation(value = "상품 데이터 넣기", notes = "테스트 용")
+    @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
     @PostMapping("/shopItem")
-    public String postShopItem(ShopItemDTO shopItemDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes){
+    public String postShopItem(ShopItemReqDTO shopItemReqDTO,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes){
 
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(log::error);
@@ -53,7 +52,7 @@ public class AdminShopController {
             return "redirect:/admin/shopItem";
         }
 
-        Long ItemId = shopItemService.registerItem(shopItemDTO);
+        Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
         return "redirect:/admin/shopItem";
     }
@@ -73,7 +72,6 @@ public class AdminShopController {
     public String shopItemModify(@PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
-        log.error("gdfgdfgdfghfghertyrtyrt");
         ShopItemViewDTO shopItem = shopItemService.findOne(shopItemId);
 
         model.addAttribute("responseDTO", shopItem);
@@ -82,41 +80,38 @@ public class AdminShopController {
     }
 
     @PostMapping("/shopItemModify")
-    public String shopItemModify(PageRequestDTO pageRequestDTO,
-                                @Valid ShopItemDTO shopItemDTO,
+    public String shopItemModify(@Valid ShopItemReqDTO shopItemReqDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
-        log.error("shopItem modify post...." + shopItemDTO);
-
-        String link = pageRequestDTO.getLink();
+        log.error("shopItem modify post...." + shopItemReqDTO);
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("shopItemId", shopItemDTO.getShopItemId());
-            return "redirect:/admin/shopItem/" + shopItemDTO.getShopItemId();
+            redirectAttributes.addAttribute("shopItemId", shopItemReqDTO.getShopItemId());
+            return "redirect:/admin/shopItem/" + shopItemReqDTO.getShopItemId();
         }
 
-        shopItemService.modifyItem(shopItemDTO);
+        shopItemService.modifyItem(shopItemReqDTO);
 
         redirectAttributes.addFlashAttribute("result", "modified");
-        redirectAttributes.addAttribute("shopItemId", shopItemDTO.getShopItemId());
+        redirectAttributes.addAttribute("shopItemId", shopItemReqDTO.getShopItemId());
         redirectAttributes.addAttribute("userName", principal.getName());
 
-        return "redirect:/admin/shopItem/" + shopItemDTO.getShopItemId();
+        return "redirect:/admin/shopItem/" + shopItemReqDTO.getShopItemId();
     }
 
     @PostMapping("/shopItemDelete")
-    public String shopItemDelete(ShopItemDTO shopItemDTO,
-                                RedirectAttributes redirectAttributes){
-        log.error("remove......post: " + shopItemDTO);
+    public String shopItemDelete(ShopItemReqDTO shopItemReqDTO,
+                                 RedirectAttributes redirectAttributes){
+        log.error("remove......post: " + shopItemReqDTO);
 
-        shopItemService.deleteItem(shopItemDTO.getShopItemId());
+        shopItemService.deleteItem(shopItemReqDTO.getShopItemId());
 
         // Item이 db에서 삭제되었다면 첨부파일 삭제
-        List<String> fileNames = shopItemDTO.getFileNames();
+        List<String> fileNames = shopItemReqDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
             fileHandler.removeFiles(fileNames);
         }

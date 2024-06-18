@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
                         .shopItemId(cart.getShopItem().getShopItemId())
                         .itemName(cart.getShopItem().getItemName())
                         .itemCount(cart.getItemCount())
-                        .itemPrice(cart.getShopItem().getPrice())
+                        .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
                         .option1(cart.getItemOption() != null ? cart.getItemOption().getOption1() : "옵션 없음") // view에 보여줄때 Option 설명으로 변경 해야 할듯 - cih
                         .build())
                 .collect(Collectors.toList());

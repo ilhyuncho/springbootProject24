@@ -10,13 +10,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ShopItemDTO {
+public class ShopItemReqDTO {
     private Long shopItemId;
     private String itemName;
-    private int price;
+    private Integer originalPrice;
     private int stockCount;     // 재고수량
     private String itemOption1;
     private String itemOption2;
+
+    private Integer membershipPercent;
+    private Integer salePercent;
+    private String saleStartDate;
+    private String saleEndDate;
+
     private List<String> fileNames= new ArrayList<>();
 
 }

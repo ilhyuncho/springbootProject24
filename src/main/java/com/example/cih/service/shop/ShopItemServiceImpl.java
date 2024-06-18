@@ -1,9 +1,12 @@
 package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.common.util.Util;
+import com.example.cih.domain.shop.ItemPrice;
+import com.example.cih.domain.shop.ItemPriceRepository;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
-import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
+    private final ItemPriceRepository itemPriceRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -49,14 +53,24 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public Long registerItem(ShopItemDTO shopItemDTO) {
+    public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
-       shopItemRepository.findByItemName(shopItemDTO.getItemName())
+       shopItemRepository.findByItemName(shopItemReqDTO.getItemName())
                .ifPresent(m -> {
                    throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");
                });
 
-        ShopItem shopItem = dtoToEntity(shopItemDTO);
+       ItemPrice itemPrice = ItemPrice.builder()
+               .originalPrice(shopItemReqDTO.getOriginalPrice())
+               .membershipPercent(shopItemReqDTO.getMembershipPercent())
+               .salePercent(shopItemReqDTO.getSalePercent())
+               .saleStartDate(Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleStartDate()))
+               .saleEndDate(Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleEndDate()))
+               .build();
+
+        itemPriceRepository.save(itemPrice);
+
+        ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
 
         ShopItem saveItem = shopItemRepository.save(shopItem);
 
@@ -64,18 +78,18 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public void modifyItem(ShopItemDTO shopItemDTO) {
+    public void modifyItem(ShopItemReqDTO shopItemReqDTO) {
 
-        Optional<ShopItem> byId = shopItemRepository.findById(shopItemDTO.getShopItemId());
+        Optional<ShopItem> byId = shopItemRepository.findById(shopItemReqDTO.getShopItemId());
         ShopItem shopItem = byId.orElseThrow();
 
-        shopItem.change(shopItemDTO.getItemName(), shopItemDTO.getPrice(), shopItemDTO.getStockCount());
+        shopItem.change(shopItemReqDTO.getItemName(), shopItemReqDTO.getOriginalPrice(), shopItemReqDTO.getStockCount());
 
         // 첨부파일 처리
         shopItem.clearImages();
 
-        if(shopItemDTO.getFileNames() != null){
-            for (String fileName : shopItemDTO.getFileNames() ) {
+        if(shopItemReqDTO.getFileNames() != null){
+            for (String fileName : shopItemReqDTO.getFileNames() ) {
                 String[] index = fileName.split("_");
                 shopItem.addImage(index[0], index[1]);
             }
@@ -90,23 +104,24 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
 
-    private static ShopItem dtoToEntity(ShopItemDTO shopItemDTO) {
+    private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice) {
+
         ShopItem shopItem = ShopItem.builder()
-                .itemName(shopItemDTO.getItemName())
-                .price(shopItemDTO.getPrice())
-                .stockCount(shopItemDTO.getStockCount())
+                .itemName(shopItemReqDTO.getItemName())
+                .itemPrice(itemPrice)
+                .stockCount(shopItemReqDTO.getStockCount())
                 .build();
 
-        if(shopItemDTO.getFileNames() != null){
-            shopItemDTO.getFileNames().forEach(fileName ->{
+        if(shopItemReqDTO.getFileNames() != null){
+            shopItemReqDTO.getFileNames().forEach(fileName ->{
                 String[] arr = fileName.split("_");
                 shopItem.addImage(arr[0], arr[1]);
             });
         }
 
-        if(!shopItemDTO.getItemOption1().isBlank()
-                || !shopItemDTO.getItemOption2().isBlank() ){
-            shopItem.addItemOption(shopItemDTO.getItemOption1(),shopItemDTO.getItemOption2());
+        if(!shopItemReqDTO.getItemOption1().isBlank()
+                || !shopItemReqDTO.getItemOption2().isBlank() ){
+            shopItem.addItemOption(shopItemReqDTO.getItemOption1(), shopItemReqDTO.getItemOption2());
         }
         return shopItem;
     }
@@ -115,7 +130,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         ShopItemViewDTO shopItemViewDTO = ShopItemViewDTO.writeShopItemViewDTOBuilder()
                 .shopItemId(shopItem.getShopItemId())
                 .itemName(shopItem.getItemName())
-                .price(shopItem.getPrice())
+                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
                 .stockCount(shopItem.getStockCount())
                 .build();
 

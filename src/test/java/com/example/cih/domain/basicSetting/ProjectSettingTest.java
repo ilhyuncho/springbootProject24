@@ -7,6 +7,8 @@ import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.*;
+import com.example.cih.domain.shop.ItemPrice;
+import com.example.cih.domain.shop.ItemPriceRepository;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.domain.user.Address;
@@ -23,6 +25,7 @@ import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,6 +39,9 @@ public class ProjectSettingTest {
 
     @Autowired
     ShopItemRepository shopItemRepository;
+
+    @Autowired
+    ItemPriceRepository itemPriceRepository;
 
     @Autowired
     RefCarConsumableRepository refCarConsumableRepository;
@@ -125,9 +131,19 @@ public class ProjectSettingTest {
 
         IntStream.rangeClosed(1,2).forEach(i -> {
 
+            ItemPrice itemPrice = ItemPrice.builder()
+                    .originalPrice(10000 * i)
+                    .salePercent(10 * i)
+                    .saleStartDate(LocalDateTime.of(2024,6,1,0,0))
+                    .saleEndDate(LocalDateTime.of(2024,7,30,0,0))
+                    .membershipPercent(10)
+                    .build();
+
+            itemPriceRepository.save(itemPrice);
+
             ShopItem shopItem = ShopItem.builder()
                     .itemName("item" + i)
-                    .price(1000 * i)
+                    .itemPrice(itemPrice)
                     .stockCount(10000)
                     .build();
 

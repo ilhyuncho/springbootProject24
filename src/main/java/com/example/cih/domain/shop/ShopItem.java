@@ -29,7 +29,6 @@ public class ShopItem {
     private Long shopItemId;
 
     private String itemName;
-    private int price;
     private int stockCount;     // 재고수량
 
     @OneToMany(mappedBy = "shopItem", //
@@ -50,13 +49,17 @@ public class ShopItem {
     @BatchSize(size=20) // N번에 해당하는 쿼리를 모아서 한번에 실행, (N+1문제 해결)
     private Set<ItemOption> itemOptionSet = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_PRICE_ID")
+    private ItemPrice itemPrice;
+
 //    @ManyToMany(mappedBy = "")
 //    @JoinColumn(name = "uId")
 //    private List<Category> categoryList = new ArrayList<>();
 
     public void change(String itemName, int price, int stockCount){
         this.itemName = itemName;
-        this.price = price;
+        //this.price = price;   // 임시로
         this.stockCount = stockCount;
     }
 

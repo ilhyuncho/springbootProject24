@@ -29,7 +29,7 @@ public class ShopItemRepositoryTests {
 
             ShopItem shopItem = ShopItem.builder()
                     .itemName("item" + i)
-                    .price(1000 * i)
+                  //  .price(1000 * i)
                     .stockCount(10000)
                     .build();
 

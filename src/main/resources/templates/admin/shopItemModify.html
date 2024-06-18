@@ -28,8 +28,8 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">Price</span>
-              <input type="text" class="form-control" th:value="${responseDTO.price}" name="price">
+              <span class="input-group-text">originalPrice</span>
+              <input type="text" class="form-control" th:value="${responseDTO.originalPrice}" name="originalPrice">
             </div>
 
             <div class="input-group mb-3">
@@ -231,12 +231,11 @@
   }, false)
 
   // Item 수정 요청
-  const link = [[${pageRequestDTO.getLink()}]]
   document.querySelector(".modBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/admin/shopItemModify?${link}`
+    formObj.action = `/admin/shopItemModify`
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()

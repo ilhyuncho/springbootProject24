@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
                         .deliveryStatus(orderItem.getDeliveryStatus().getName())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
-                        .itemPrice(orderItem.getShopItem().getPrice())
+                        .itemPrice(orderItem.getShopItem().getItemPrice().getOriginalPrice())
                         .build();
 
                 orderDTOList.add(orderDTO);
@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
         OrderViewDTO orderViewDTO = OrderViewDTO.builder()
                 .orderCount(orderItem.getOrderCount())
                 .itemName(orderItem.getShopItem().getItemName())
-                .itemPrice(orderItem.getShopItem().getPrice())
+                .itemPrice(orderItem.getShopItem().getItemPrice().getOriginalPrice())
                 .build();
 
         return orderViewDTO;

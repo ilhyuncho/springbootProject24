@@ -36,7 +36,7 @@ public class OrderItem {
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
-                .orderPrice(shopItem.getPrice())
+                .orderPrice(shopItem.getItemPrice().getOriginalPrice())
                 .orderCount(count)
                 .build();
 

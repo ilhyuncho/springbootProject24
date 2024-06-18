@@ -36,13 +36,33 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemPrice</span>
-              <input type="text" name="price" class="form-control" th:value="10000">
+              <span class="input-group-text">OriginalPrice</span>
+              <input type="text" name="originalPrice" class="form-control" th:value="10000">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemStock</span>
               <input type="text" name="stockCount" class="form-control" th:value="100">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">MembershipPercent</span>
+              <input type="text" name="membershipPercent" class="form-control" th:value="10">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">SalePercent</span>
+              <input type="text" name="salePercent" class="form-control" th:value="10">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 시작 날짜</span>
+              <input type="date" name="saleStartDate" class="form-control saleStartDate">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종료 날짜</span>
+              <input type="date" name="saleEndDate" class="form-control saleEndDate">
             </div>
 
             <div class="input-group mb-3">
@@ -117,7 +137,7 @@
               </th>
 
               <td>[[${dto.itemName}]]</td>
-              <td>[[${dto.price}]]</td>
+              <td>[[${dto.originalPrice}]]</td>
               <td>[[${dto.stockCount}]]</td>
               <td>[[${dto.itemOption1}]]</td>
               <td>[[${dto.itemOption2}]]</td>
