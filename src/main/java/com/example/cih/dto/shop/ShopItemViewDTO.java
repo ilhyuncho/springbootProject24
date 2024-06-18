@@ -3,6 +3,7 @@ package com.example.cih.dto.shop;
 import com.example.cih.dto.ImageDTO;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class ShopItemViewDTO {
 
     private Integer membershipPercent;
     private Integer salePercent;
-    private String saleStartDate;
-    private String saleEndDate;
+    private LocalDate saleStartDate;
+    private LocalDate saleEndDate;
 
     @Builder.Default
     private List<ImageDTO> fileNames= new ArrayList<>();
@@ -32,7 +33,7 @@ public class ShopItemViewDTO {
     @Builder(builderMethodName = "writeShopItemViewDTOBuilder")
     public ShopItemViewDTO(Long shopItemId, String itemName, int originalPrice, int stockCount,
                            String itemOption1, String itemOption2, Integer membershipPercent,
-                           Integer salePercent,String saleStartDate, String saleEndDate) {
+                           Integer salePercent,LocalDate saleStartDate, LocalDate saleEndDate) {
 
         this.shopItemId = shopItemId;
         this.itemName = itemName;

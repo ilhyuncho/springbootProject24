@@ -33,6 +33,15 @@ public class ItemPrice {
 //    @Builder.Default
 //    private Boolean isOnSale = false;
 
+    public void changePriceInfo(Integer originalPrice, Integer membershipPercent, Integer salePercent
+            ,LocalDateTime saleStartDate, LocalDateTime saleEndDate){
+        this.originalPrice = originalPrice;
+        this.membershipPercent = membershipPercent;
+        this.salePercent = salePercent;
+        this.saleStartDate = saleStartDate;
+        this.saleEndDate = saleEndDate;
+    }
+
 }
 
 

@@ -47,6 +47,25 @@
               <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="itemOption2">
             </div>
 
+            <div class="input-group mb-3">
+              <span class="input-group-text">MembershipPercent</span>
+              <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" name="membershipPercent">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">SalePercent</span>
+              <input type="text" class="form-control" th:value="${responseDTO.salePercent}" name="salePercent">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 시작 날짜</span>
+              <input type="date" class="form-control" th:value="${responseDTO.saleStartDate}" name="saleStartDate" >
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종료 날짜</span>
+              <input type="date" class="form-control" th:value="${responseDTO.saleEndDate}" name="saleEndDate" >
+            </div>
+
             <!-- 첨부 파일 새로 등록-->
             <div class="input-group mb-3">
               <span class="input-group-text">Images</span>

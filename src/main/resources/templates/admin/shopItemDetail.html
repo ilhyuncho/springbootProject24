@@ -37,12 +37,31 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">ItemOption1</span>
-            <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="carYears">
+            <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">ItemOption2</span>
-            <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="carColors">
+            <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">MembershipPercent</span>
+            <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">SalePercent</span>
+            <input type="text" class="form-control" th:value="${responseDTO.salePercent}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 시작 날짜</span>
+            <input type="date" name="saleStartDate" class="form-control" th:value="${responseDTO.saleStartDate}" readonly>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">이벤트 종료 날짜</span>
+            <input type="date" name="saleEndDate" class="form-control" th:value="${responseDTO.saleEndDate}" readonly>
           </div>
 
           <div class="my-4">

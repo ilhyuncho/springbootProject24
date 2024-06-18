@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -80,8 +79,15 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public void modifyItem(ShopItemReqDTO shopItemReqDTO) {
 
-        Optional<ShopItem> byId = shopItemRepository.findById(shopItemReqDTO.getShopItemId());
-        ShopItem shopItem = byId.orElseThrow();
+        ShopItem shopItem = shopItemRepository.findById(shopItemReqDTO.getShopItemId())
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
+
+        // 수정 해야 하는지, 안해야 하는지. 먼저 체크??
+        ItemPrice itemPrice = shopItem.getItemPrice();
+        itemPrice.changePriceInfo(shopItemReqDTO.getOriginalPrice(),
+                shopItemReqDTO.getMembershipPercent(), shopItemReqDTO.getSalePercent(),
+                Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleStartDate()),
+                Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleEndDate()));
 
         shopItem.change(shopItemReqDTO.getItemName(), shopItemReqDTO.getOriginalPrice(), shopItemReqDTO.getStockCount());
 
@@ -132,6 +138,10 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .itemName(shopItem.getItemName())
                 .originalPrice(shopItem.getItemPrice().getOriginalPrice())
                 .stockCount(shopItem.getStockCount())
+                .membershipPercent(shopItem.getItemPrice().getMembershipPercent())
+                .salePercent(shopItem.getItemPrice().getSalePercent())
+                .saleStartDate(shopItem.getItemPrice().getSaleStartDate().toLocalDate())
+                .saleEndDate(shopItem.getItemPrice().getSaleEndDate().toLocalDate())
                 .build();
 
         // 임시로... cih
