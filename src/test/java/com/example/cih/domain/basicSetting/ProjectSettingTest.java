@@ -11,10 +11,7 @@ import com.example.cih.domain.shop.ItemPrice;
 import com.example.cih.domain.shop.ItemPriceRepository;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
-import com.example.cih.domain.user.Address;
-import com.example.cih.domain.user.City;
-import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserRepository;
+import com.example.cih.domain.user.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -122,7 +119,7 @@ public class ProjectSettingTest {
                     .address(address)
                     .billingAddress(address1)
                     .mPoint(0)
-                    .mGrade(1)
+                    .mGrade(UserGradeType.GRADE_E)
                     .build();
 
             Long userId = userRepository.save(user).getUserId();

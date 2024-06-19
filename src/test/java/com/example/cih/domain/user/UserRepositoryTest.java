@@ -102,7 +102,7 @@ public class UserRepositoryTest {
                     .address(address)
                     .billingAddress(address1)
                     .mPoint(0)
-                    .mGrade(1)
+                    .mGrade(UserGradeType.GRADE_A)
                     .build();
 
             Long userId = userRepository.save(user).getUserId();

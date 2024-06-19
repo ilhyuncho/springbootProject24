@@ -41,7 +41,11 @@ public class Cart extends BaseEntity {
     @Column(name="itemCount", nullable = false)
     private int itemCount;
 
+    @Column(name="discountPrice", nullable = false)
+    private int discountPrice;
+
     private Boolean isActive;   // 장바구니에 있는 상태
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemOptionId")

@@ -26,7 +26,7 @@ public class User {
     @Column(name="userName", length = 10, nullable = false)
     private String userName;
 
-    private Integer mGrade;     // 등급
+    private UserGradeType mGrade;     // 등급
     private Integer mPoint;     // 획득 포인트
 
     @Embedded   // 임베디드 타입 (복합값)

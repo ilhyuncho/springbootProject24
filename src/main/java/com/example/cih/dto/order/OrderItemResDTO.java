@@ -17,5 +17,6 @@ public class OrderItemResDTO {
     private int orderCount;
     private Long shopItemId;
     private String itemName;
-    private int itemPrice;
+    private int orderPrice;
+    private int discountPrice;
 }

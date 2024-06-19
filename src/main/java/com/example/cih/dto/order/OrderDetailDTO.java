@@ -15,4 +15,5 @@ public class OrderDetailDTO{
     private Long itemId;
     private Integer itemCount;
     private Integer itemPrice;
+    private Integer discountPrice;
 }

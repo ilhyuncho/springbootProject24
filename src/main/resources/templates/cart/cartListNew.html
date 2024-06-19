@@ -13,7 +13,7 @@
 <!--                    [[${pageRequestDto.size}]]-->
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">장바구니</h5>
+                    <h5 class="card-title">내 장바구니</h5>
 
                     <table class="table">
                         <thead>
@@ -21,6 +21,7 @@
                             <th scope="col">선택</th>
                             <th scope="col">상품 이름</th>
                             <th scope="col">가격</th>
+                            <th scope="col">할인 가격</th>
                             <th scope="col">주문 수량</th>
                             <th scope="col">옵션</th>
                         </tr>
@@ -34,9 +35,13 @@
                             <td><a th:href="|@{'/admin/eventDetail/' + ${dto.cartId}}|"
                                     class="text-decoration-none"> [[${dto.itemName}]]</a>
                             </td>
-                            <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="2" maxlength="4"
+                            <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10"
                                        class="p_price" th:value="${dto.itemPrice}">
                             </td>
+                            <td><input type="text" th:name="p_discountPrice+${stat.index}"  id="p_discountPrice" size="8" maxlength="10"
+                                       class="p_discountPrice" th:value="${dto.discountPrice}">
+                            </td>
+
                             <td><div class="updownCount">
                                     <span><i class="fas fa-arrow-alt-circle-up up" th:data-num="${dto.cartId}"></i></span>
                                     <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
@@ -163,7 +168,8 @@
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
             const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
             const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
             const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
             const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
@@ -171,6 +177,7 @@
             const selected = selectedTag.checked
             if( selected === true){
                 var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
+                var discountPrice = parseInt(discountPriceTag.getAttribute('value'));
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
                 var itemId = parseInt(itemIdTag.getAttribute('value'));
                 var cartId = parseInt(cartIdTag.getAttribute('value'));
@@ -183,6 +190,7 @@
                     cartId: cartId,
                     itemCount: itemCount,
                     itemPrice: itemPrice,
+                    discountPrice: discountPrice
                 };
                 arrayItemInfo.push(itemInfo);
             }
@@ -221,14 +229,16 @@
 
             var selectedTag = document.querySelector('input[name=p_selected'+idx+']');
             var itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            var discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
             var itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
 
             var selected = selectedTag.checked
             if( selected === true){
                 var itemPrice = parseInt(itemPriceTag.getAttribute('value'));
+                var discountPrice = parseInt(discountPriceTag.getAttribute('value'));
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
 
-                totalPrice += itemPrice * itemCount;
+                totalPrice += (itemPrice - discountPrice) * itemCount;
                 // console.log("reCalculation : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
             }
         }, false)

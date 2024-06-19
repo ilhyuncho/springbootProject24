@@ -1,6 +1,7 @@
 package com.example.cih.domain.shop;
 
 
+import com.example.cih.dto.order.OrderDetailDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,19 +29,19 @@ public class OrderItem {
 
     private DeliveryStatus deliveryStatus;            // 배송 상태
 
-    private int orderPrice;
+    private int orderPrice;                           // 실제 결제한 가격
     private int orderCount;
 
-    public static OrderItem createOrderItem(ShopItem shopItem, int count){
+    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO){
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
-                .orderPrice(shopItem.getItemPrice().getOriginalPrice())
-                .orderCount(count)
+                .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
+                .orderCount(orderDetailDTO.getItemCount())
                 .build();
 
-        shopItem.removeStock(count);
+        shopItem.removeStock(orderDetailDTO.getItemCount());
         return orderItem;
     }
 

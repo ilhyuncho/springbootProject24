@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
             // 주문 상품 생성
-            return OrderItem.createOrderItem(shopItem, item.getItemCount());
+            return OrderItem.createOrderItem(shopItem, item);
         }).collect(Collectors.toList());
 
 
@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
                         .deliveryStatus(orderItem.getDeliveryStatus().getName())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
-                        .itemPrice(orderItem.getShopItem().getItemPrice().getOriginalPrice())
+                        .orderPrice(orderItem.getOrderPrice())
                         .build();
 
                 orderDTOList.add(orderDTO);

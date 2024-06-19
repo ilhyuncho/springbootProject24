@@ -45,10 +45,11 @@ class OrderRepositoryTest {
         ShopItem shopItem1 = shopItemRepository.getById(1L);
         ShopItem shopItem2 = shopItemRepository.getById(2L);
 
+
         // 주문 상품 생성
-        OrderItem orderItem1 = OrderItem.createOrderItem(shopItem1, 2 );
-        OrderItem orderItem2 = OrderItem.createOrderItem(shopItem2, 5 );
-        OrderItem orderItem3 = OrderItem.createOrderItem(shopItem2, 8 );
+//        OrderItem orderItem1 = OrderItem.createOrderItem(shopItem1, 2 );
+//        OrderItem orderItem2 = OrderItem.createOrderItem(shopItem2, 5 );
+//        OrderItem orderItem3 = OrderItem.createOrderItem(shopItem2, 8 );
 
         Order order = Order.builder()
                 .user(user)
@@ -57,9 +58,9 @@ class OrderRepositoryTest {
                 .orderItemList(new ArrayList<>())
                 .build();
 
-        order.addOrderItem(orderItem1);
-        order.addOrderItem(orderItem2);
-        order.addOrderItem(orderItem3);
+//        order.addOrderItem(orderItem1);
+//        order.addOrderItem(orderItem2);
+//        order.addOrderItem(orderItem3);
 
         Order save = orderRepository.save(order);
 

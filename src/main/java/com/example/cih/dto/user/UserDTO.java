@@ -1,6 +1,7 @@
 package com.example.cih.dto.user;
 
 
+import com.example.cih.domain.user.UserGradeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ public class UserDTO {
     private String address;
     private String billingAddress;
 
-    private Integer mGrade;     // 등급
+    private UserGradeType mGrade;     // 등급
     private Integer mPoint;     // 획득 포인트
 }

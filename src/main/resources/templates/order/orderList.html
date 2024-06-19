@@ -62,7 +62,7 @@
                         <tr>
                             <th scope="col">상품 이름</th>
                             <th scope="col">주문 갯수</th>
-                            <th scope="col">Item Price</th>
+                            <th scope="col">주문 가격</th>
                             <th scope="col">배송 상태</th>
                         </tr>
                         </thead>
@@ -73,7 +73,7 @@
                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
                             </th>
                             <td>[[${dto.orderCount}]]</td>
-                            <td>[[${dto.itemPrice}]]</td>
+                            <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.deliveryStatus}]]</td>
                             <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
                                     <button type="button" class="btn btn-primary "

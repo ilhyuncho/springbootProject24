@@ -2,7 +2,7 @@ package com.example.cih.controller.cart;
 
 
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.cart.CartDTO;
+import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +41,7 @@ public class CartController {
 
     @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")
     @PostMapping("/add")
-    public String postAdd(@Valid CartDTO cartDTO,
+    public String postAdd(@Valid CartReqDTO cartReqDTO,
                       BindingResult bindingResult,
                       RedirectAttributes redirectAttributes,
                       Principal principal){
@@ -53,7 +53,7 @@ public class CartController {
             return "redirect:/shop/main";
         }
 
-        cartService.addCart(cartDTO, principal.getName());
+        cartService.addCart(cartReqDTO, principal.getName());
         
         return "/shop/main"; // 어디로 이동할지 정해야 함
     }
