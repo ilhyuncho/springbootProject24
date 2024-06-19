@@ -41,7 +41,7 @@ public class AdminShopController {
 
     @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
     @PostMapping("/shopItem")
-    public String postShopItem(ShopItemReqDTO shopItemReqDTO,
+    public String postShopItem(@Valid ShopItemReqDTO shopItemReqDTO,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes){
 

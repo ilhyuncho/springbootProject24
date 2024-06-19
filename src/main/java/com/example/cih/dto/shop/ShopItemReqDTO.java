@@ -2,6 +2,8 @@ package com.example.cih.dto.shop;
 
 import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ShopItemReqDTO {
+
     private Long shopItemId;
     private String itemName;
     private Integer originalPrice;
@@ -18,7 +21,12 @@ public class ShopItemReqDTO {
     private String itemOption1;
     private String itemOption2;
 
+    @Min(value = 0, message = "멤버쉽 할인율은 최소 0 부터")
+    @Max(value = 50, message = "멤버쉽 할인율은 최대 30 까지")
     private Integer membershipPercent;
+
+    @Min(value = 0, message = "이벤트 할인율은 최소 0 부터")
+    @Max(value = 50, message = "이벤트 할인율은 최대 30 까지")
     private Integer salePercent;
     private String saleStartDate;
     private String saleEndDate;

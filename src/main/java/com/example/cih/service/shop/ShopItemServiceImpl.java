@@ -48,6 +48,14 @@ public class ShopItemServiceImpl implements ShopItemService {
         List<ShopItemViewDTO> shopItemDTOList = shopItemList.stream().
                 map(ShopItemServiceImpl::entityToDTO).collect(Collectors.toList());
 
+        // 대표 이미지만 필터링 ( ImageOrder = 0 )
+        for (ShopItemViewDTO car : shopItemDTOList) {
+            car.getFileNames().stream()
+                    .filter(carImage -> carImage.getImageOrder() != 0)
+                    .collect(Collectors.toList())
+                    .forEach(x-> car.getFileNames().remove(x));
+        }
+
         return shopItemDTOList;
     }
 

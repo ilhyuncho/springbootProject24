@@ -47,7 +47,7 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">MembershipPercent</span>
-              <input type="text" name="membershipPercent" class="form-control" th:value="10">
+              <input type="text" name="membershipPercent" class="form-control membershipPercent" th:value="10">
             </div>
 
             <div class="input-group mb-3">
@@ -183,6 +183,12 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const saleStartDate = document.querySelector('.saleStartDate');
+  const saleEndDate = document.querySelector('.saleEndDate');
+  const SalePercent = document.querySelector('.SalePercent');
+  const membershipPercent = document.querySelector('.membershipPercent');
+
+
   // 사용자 인증 정보 확인 begin ----------------------
   // const authlog = [[${#authentication}]]
   // const authPrincipal = [[${#authentication.principal}]]
@@ -195,7 +201,9 @@
   let errorMsg = ''
   if (errors) {
     for (let i = 0; i < errors.length; i++) {
-      errorMsg += `${errors[i].field}은 ${errors[i].code} \n`
+      console.log(errors[i])
+
+      errorMsg += `${errors[i].field}은 ${errors[i].code} \n` + `, ${errors[i].defaultMessage}`
     }
 
     // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
@@ -272,6 +280,21 @@
     console.log("imgLink:")
     e.preventDefault()
     e.stopPropagation()
+
+    if(isNaN(membershipPercent.value) || isNaN(SalePercent.value)){
+      alert("숫자만 입력 가능합니다")
+      return;
+    }
+
+    if(saleStartDate.value === '' || saleEndDate.value === ''){
+      alert("이벤트 날짜를 입력하세요..")
+      return;
+    }
+
+    if(saleStartDate.value >= saleEndDate.value){
+      alert("이벤트 날짜 입력이 잘못 되었습니다..")
+      return;
+    }
 
     const target = document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
