@@ -45,6 +45,16 @@
             </div>
 
             <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종류</span>
+              <input type="text" name="message" class="form-control" th:value="${responseDTO.eventSelectType}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 설정값</span>
+              <input type="text" name="eventValue" class="form-control" th:value="${responseDTO.eventValue}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
               <span class="input-group-text">이벤트 활성화</span>
               <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
               <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>

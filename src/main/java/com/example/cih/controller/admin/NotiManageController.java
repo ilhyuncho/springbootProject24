@@ -1,6 +1,7 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.common.handler.FileHandler;
+import com.example.cih.domain.notification.EventType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
@@ -35,6 +36,7 @@ public class NotiManageController {
         PageResponseDTO<NotiEventResDTO> listDto = notificationService.getListEventInfo(pageRequestDTO);
 
         model.addAttribute("responseDTO", listDto);
+        model.addAttribute("eventTypeList", EventType.getAllTypes());
 
         return "/admin/eventRegister";
     }
@@ -47,6 +49,7 @@ public class NotiManageController {
         NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
 
         model.addAttribute("responseDTO", eventInfo);
+        model.addAttribute("eventTypeList", EventType.getAllTypes());
 
         String requestURI = request.getRequestURI();
         return requestURI.substring(0, requestURI.lastIndexOf("/"));

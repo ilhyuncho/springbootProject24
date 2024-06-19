@@ -23,8 +23,15 @@ public class EventNotification extends Notification {
     private LocalDateTime eventStartTime;
     private LocalDateTime eventEndTime;
 
-    public void changeEventTime(LocalDateTime eventStartTime, LocalDateTime eventEndTime ){
+    private EventType eventType;
+    private Integer eventValue;
+
+    public void changeEventInfo(LocalDateTime eventStartTime, LocalDateTime eventEndTime
+                               ,EventType eventType, Integer eventValue){
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
+        this.eventType = eventType;
+        this.eventValue = eventValue;
+
     }
 }

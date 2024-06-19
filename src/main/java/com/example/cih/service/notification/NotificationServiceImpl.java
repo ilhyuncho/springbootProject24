@@ -193,13 +193,15 @@ public class NotificationServiceImpl implements NotificationService {
                 .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
 
         eventNotification.changeInfo(dto.getName()
-                                    , dto.getTitle()
-                                    , dto.getMessage()
-                                    , dto.getIsUse()
-                                    , dto.getIsPopup());
+                                    ,dto.getTitle()
+                                    ,dto.getMessage()
+                                    ,dto.getIsUse()
+                                    ,dto.getIsPopup());
 
-        eventNotification.changeEventTime(Util.convertStringToLocalDateTime(dto.getEventStartTime())
-        , Util.convertStringToLocalDateTime(dto.getEventEndTime()));
+        eventNotification.changeEventInfo(Util.convertStringToLocalDateTime(dto.getEventStartTime())
+                                        ,Util.convertStringToLocalDateTime(dto.getEventEndTime())
+                                        ,EventType.fromValue(dto.getEventSelectType())
+                                        ,dto.getEventValue());
 
         // 첨부파일 처리
         eventNotification.clearImages();
@@ -290,6 +292,8 @@ public class NotificationServiceImpl implements NotificationService {
 
             notiEventResDTO.setEventStartDate(notiEventResDTO.getEventStartTime().toLocalDate());
             notiEventResDTO.setEventEndDate(notiEventResDTO.getEventEndTime().toLocalDate());
+            notiEventResDTO.setEventSelectType(noti.getEventType().getName());
+            notiEventResDTO.setEventValue(noti.getEventValue());
 
             notiResDTO = notiEventResDTO;
         }
@@ -319,6 +323,8 @@ public class NotificationServiceImpl implements NotificationService {
                 .isPopup(dto.getIsPopup())
                 .eventStartTime(Util.convertStringToLocalDateTime(dto.getEventStartTime()))
                 .eventEndTime(Util.convertStringToLocalDateTime(dto.getEventEndTime()))
+                .eventType(EventType.fromValue(dto.getEventSelectType()))
+                .eventValue(dto.getEventValue())
                 .build();
     }
     private static NewsNotification dtoToNewsEntity(NotificationRegDTO dto) {

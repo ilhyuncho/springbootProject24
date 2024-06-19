@@ -17,10 +17,13 @@ public class NotificationRegDTO {
     private String message;
     private String eventStartTime;
     private String eventEndTime;
-    //private String expiredDate;
+
     private String target;
     private Boolean isUse;
     private Boolean isPopup;
+
+    private Integer eventSelectType;
+    private Integer eventValue;
 
     private List<String> fileNames= new ArrayList<>();
 

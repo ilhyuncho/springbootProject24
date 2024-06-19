@@ -45,6 +45,20 @@
             </div>
 
             <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종류</span>
+              <select name="eventSelectType" id="eventTypeSelect">
+                <option th:each="i, stat: ${eventTypeList}" th:value="${i.getType()}"
+                        th:selected="${responseDTO.eventSelectType == i.getName}">[[${i.getName}]]
+               </option>
+              </select>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 설정값</span>
+              <input type="text" name="eventValue" class="form-control" th:value="${responseDTO.eventValue}">
+            </div>
+
+            <div class="input-group mb-3">
               <span class="input-group-text">이벤트 활성화</span>
               <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" >활성화</input>
               <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" >비활성화</input>
@@ -88,7 +102,7 @@
                 <a th:href="|@{/admin/eventList}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
-                <button type="button" class="btn btn-secondary saveBtn">Save</button>
+                <button type="button" class="btn btn-secondary saveBtn">이벤트 수정</button>
                 <button type="button" class="btn btn-danger removeBtn">Remove</button>
               </div>
             </div>

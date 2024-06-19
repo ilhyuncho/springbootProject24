@@ -47,6 +47,18 @@
             </div>
 
             <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 종류</span>
+              <select name="eventSelectType" id="eventTypeSelect">
+                <option th:each="i, stat: ${eventTypeList}" th:value="${i.getType()}">[[${i.getName}]]</option>
+              </select>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이벤트 설정값</span>
+              <input type="text" name="eventValue" class="form-control">
+            </div>
+
+            <div class="input-group mb-3">
               <span class="input-group-text">이벤트 활성화</span>
 
               <input type="radio" name="isUse" checked value="1">활성화</input>
@@ -68,7 +80,7 @@
 
             <div class="my-4">
               <div class="float-end">
-                <button type="submit" class="btn btn-primary submitBtn">Register</button>
+                <button type="submit" class="btn btn-primary submitBtn">이벤트 등록</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
               </div>
             </div>
