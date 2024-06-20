@@ -44,15 +44,17 @@ public class CartServiceImpl implements CartService {
 
             if(shopItem.getItemPrice().getMembershipPercent() > 0){
                 discountPrice += (int)(originalPrice * ((double)shopItem.getItemPrice().getMembershipPercent() / 100));
-                log.error(discountPrice);
+                log.error("등급 할인 : " + discountPrice);
             }
         }
         // 2. 이벤트 할인율 적용
-        if(event != null && event.getEventValue() > 0){
+        if(shopItem.getItemPrice().getIsEventTarget()
+                && event != null
+                && event.getEventValue() > 0){
 //            log.error(originalPrice + "," + (double)eventDiscountRate / 100);
 
             discountPrice += (int)(originalPrice * ((double)event.getEventValue() / 100));
-            log.error(discountPrice);
+            log.error("이벤트 할인 : " + discountPrice);
         }
 
         return discountPrice;
