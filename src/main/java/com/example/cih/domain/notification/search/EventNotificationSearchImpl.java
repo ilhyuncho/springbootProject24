@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -58,10 +59,11 @@ public class EventNotificationSearchImpl extends QuerydslRepositorySupport imple
         QEventNotification eventNotification = QEventNotification.eventNotification;
         JPQLQuery<EventNotification> query = from(eventNotification);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate nowDate = LocalDate.now();
 
         query.where(eventNotification.isUse.eq(true).and(eventNotification.isPopup.eq(true)));
-        query.where(eventNotification.eventStartTime.before(now).and(eventNotification.eventEndTime.after(now)));
+        // loe : 작거나 같음 , goe : 크거나 같음
+        query.where(eventNotification.eventStartDate.loe(nowDate).and(eventNotification.eventEndDate.goe(nowDate)));
 
         List<EventNotification> list = query.fetch();
         if( list.size() > 0){

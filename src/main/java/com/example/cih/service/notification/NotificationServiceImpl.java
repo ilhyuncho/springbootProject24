@@ -55,8 +55,8 @@ public class NotificationServiceImpl implements NotificationService {
                             .title(noti.getTitle())
                             .message(noti.getMessage())
                             .regDate(Util.convertLocalDate(noti.getRegDate()))
-                            .eventStartTime(noti.getEventStartTime())
-                            .eventEndTime(noti.getEventEndTime())
+                            .eventStartDate(noti.getEventStartDate())
+                            .eventEndDate(noti.getEventEndDate())
                             .isUse(noti.getIsUse())
                             .isPopup(noti.getIsPopup())
                             .build();
@@ -198,8 +198,8 @@ public class NotificationServiceImpl implements NotificationService {
                                     ,dto.getIsUse()
                                     ,dto.getIsPopup());
 
-        eventNotification.changeEventInfo(Util.convertStringToLocalDateTime(dto.getEventStartTime())
-                                        ,Util.convertStringToLocalDateTime(dto.getEventEndTime())
+        eventNotification.changeEventInfo(LocalDate.parse(dto.getEventStartDate())
+                                        ,LocalDate.parse(dto.getEventEndDate())
                                         ,EventType.fromValue(dto.getEventSelectType())
                                         ,dto.getEventValue());
 
@@ -269,6 +269,14 @@ public class NotificationServiceImpl implements NotificationService {
 
         if(eventNotification != null){
 
+            // 에러 발생: The destination property com.example.cih.dto.notification.NotiResDTO.setRegDate()
+            //  matches multiple source property hierarchies:
+
+            // 해결책
+            //modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            // or
+            modelMapper.getConfiguration().setAmbiguityIgnored(true);
+
             return modelMapper.map(eventNotification, NotiEventResDTO.class);
         }
 
@@ -290,8 +298,8 @@ public class NotificationServiceImpl implements NotificationService {
 
             NotiEventResDTO notiEventResDTO = modelMapper.map(noti, NotiEventResDTO.class);
 
-            notiEventResDTO.setEventStartDate(notiEventResDTO.getEventStartTime().toLocalDate());
-            notiEventResDTO.setEventEndDate(notiEventResDTO.getEventEndTime().toLocalDate());
+            notiEventResDTO.setEventStartDate(notiEventResDTO.getEventStartDate());
+            notiEventResDTO.setEventEndDate(notiEventResDTO.getEventEndDate());
             notiEventResDTO.setEventSelectType(noti.getEventType().getName());
             notiEventResDTO.setEventValue(noti.getEventValue());
 
@@ -321,8 +329,8 @@ public class NotificationServiceImpl implements NotificationService {
                 .regDate(LocalDateTime.now())
                 .isUse(dto.getIsUse())
                 .isPopup(dto.getIsPopup())
-                .eventStartTime(Util.convertStringToLocalDateTime(dto.getEventStartTime()))
-                .eventEndTime(Util.convertStringToLocalDateTime(dto.getEventEndTime()))
+                .eventStartDate(LocalDate.parse(dto.getEventStartDate()))
+                .eventEndDate(LocalDate.parse(dto.getEventEndDate()))
                 .eventType(EventType.fromValue(dto.getEventSelectType()))
                 .eventValue(dto.getEventValue())
                 .build();

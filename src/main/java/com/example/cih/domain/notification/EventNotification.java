@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -20,16 +20,16 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 public class EventNotification extends Notification {
 
-    private LocalDateTime eventStartTime;
-    private LocalDateTime eventEndTime;
+    private LocalDate eventStartDate;
+    private LocalDate eventEndDate;
 
     private EventType eventType;
     private Integer eventValue;
 
-    public void changeEventInfo(LocalDateTime eventStartTime, LocalDateTime eventEndTime
+    public void changeEventInfo(LocalDate eventStartDate, LocalDate eventEndDate
                                ,EventType eventType, Integer eventValue){
-        this.eventStartTime = eventStartTime;
-        this.eventEndTime = eventEndTime;
+        this.eventStartDate = eventStartDate;
+        this.eventEndDate = eventEndDate;
         this.eventType = eventType;
         this.eventValue = eventValue;
 

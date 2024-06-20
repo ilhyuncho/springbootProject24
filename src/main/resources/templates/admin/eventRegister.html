@@ -38,12 +38,12 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 시작 날짜</span>
-              <input type="date" name="eventStartTime" class="form-control eventStartTime">
+              <input type="date" name="eventStartDate" class="form-control eventStartDate">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="eventEndTime" class="form-control eventEndTime">
+              <input type="date" name="eventEndDate" class="form-control eventEndDate">
             </div>
 
             <div class="input-group mb-3">
@@ -117,8 +117,8 @@
                 <th scope="col">notiMessage</th>
                 <th scope="col">활성화 여부</th>
                 <th scope="col">팝업창 여부</th>
-                <th scope="col">eventStartTime</th>
-                <th scope="col">eventEndTime</th>
+                <th scope="col">이벤트 시작 날짜</th>
+                <th scope="col">이벤트 종료 날짜</th>
               </tr>
               </thead>
 
@@ -131,8 +131,8 @@
                 <td>[[${dto.message}]]</td>
                 <td>[[${dto.isUse}]]</td>
                 <td>[[${dto.isPopup}]]</td>
-                <td>[[${ #temporals.format(dto.eventStartTime, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-                <td>[[${ #temporals.format(dto.eventEndTime, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                <td>[[${ #temporals.format(dto.eventStartDate, 'yyyy-MM-dd')}]]</td>
+                <td>[[${ #temporals.format(dto.eventEndDate, 'yyyy-MM-dd')}]]</td>
               </tr>
               </tbody>
             </table>
@@ -195,8 +195,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const eventStartTime = document.querySelector('.eventStartTime');
-  const eventEndTime = document.querySelector('.eventEndTime');
+  const eventStartDate = document.querySelector('.eventStartDate');
+  const eventEndDate = document.querySelector('.eventEndDate');
 
   // 사용자 인증 정보 확인 begin ----------------------
   // const authlog = [[${#authentication}]]
@@ -297,7 +297,7 @@
     const target = document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
 
-    if(eventStartTime.value === '' || eventEndTime.value === ''){
+    if(eventStartDate.value === '' || eventEndDate.value === ''){
       alert("이벤트 날짜를 입력하세요..")
       return;
     }

@@ -48,8 +48,8 @@ public class NotificationRepositoryTest {
                     .notiId(Long.valueOf(i))
                     .message("eventMEssage"+i)
                     //.expiredDate(LocalDate.now())
-                    .eventStartTime(LocalDateTime.now())
-                    .eventEndTime(LocalDateTime.now())
+                    .eventStartDate(LocalDate.now())
+                    .eventEndDate(LocalDate.now())
                     .build();
 
             EventNotification result = eventNotificationRepository.save(noti);
@@ -74,7 +74,7 @@ public class NotificationRepositoryTest {
             }
             else{
                 EventNotification noti = (EventNotification)o;
-                log.error("Event-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getEventStartTime());
+                log.error("Event-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getEventStartDate());
             }
         }
 

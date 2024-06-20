@@ -155,8 +155,8 @@
     function makeHistoryData(arr, dtoData){
         arr[0] = dtoData.notiId
         arr[1] = dtoData.title
-        arr[2] = dtoData.eventStartTime === undefined ? '' : stringToDateFormat(dtoData.eventStartTime)
-        arr[3] = dtoData.eventEndTime === undefined ? '' : stringToDateFormat(dtoData.eventEndTime)
+        arr[2] = dtoData.eventStartDate === undefined ? '' : stringToDateFormat(dtoData.eventStartDate)
+        arr[3] = dtoData.eventEndDate === undefined ? '' : stringToDateFormat(dtoData.eventEndDate)
         arr[4] = dtoData.regDate
     }
     function printNotiList(dtoList, tableRef, pathName) {    // 목록 출력

@@ -15,10 +15,6 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 public class NotiEventResDTO extends NotiResDTO {
 
-    // DTO 정리 필요
-    private LocalDateTime eventStartTime;
-    private LocalDateTime eventEndTime;
-
     private LocalDate eventStartDate;
     private LocalDate eventEndDate;
 

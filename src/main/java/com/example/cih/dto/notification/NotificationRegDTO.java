@@ -15,8 +15,8 @@ public class NotificationRegDTO {
     private String name;
     private String title;
     private String message;
-    private String eventStartTime;
-    private String eventEndTime;
+    private String eventStartDate;
+    private String eventEndDate;
 
     private String target;
     private Boolean isUse;
