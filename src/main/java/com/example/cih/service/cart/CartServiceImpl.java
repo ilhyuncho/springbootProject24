@@ -1,14 +1,16 @@
 package com.example.cih.service.cart;
 
 import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.domain.notification.EventNotification;
+import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
-import com.example.cih.domain.user.UserRepository;
 import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.dto.cart.CartDetailResDTO;
+import com.example.cih.service.notification.NotificationService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,33 +27,59 @@ import java.util.stream.Collectors;
 @Transactional
 public class CartServiceImpl implements CartService {
 
-    private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final ShopItemRepository shopItemRepository;
     private final ItemOptionRepository itemOptionRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
+    public int calcDiscountPrice(User user, ShopItem shopItem, EventNotification event){
+
+        int discountPrice = 0;
+        Integer originalPrice = shopItem.getItemPrice().getOriginalPrice();
+
+        // 1. 회원 등급 별 할인율 적용
+        if(user.getMGrade() == UserGradeType.GRADE_E
+                || user.getMGrade() == UserGradeType.GRADE_S ){
+
+            if(shopItem.getItemPrice().getMembershipPercent() > 0){
+                discountPrice += (int)(originalPrice * ((double)shopItem.getItemPrice().getMembershipPercent() / 100));
+                log.error(discountPrice);
+            }
+        }
+        // 2. 이벤트 할인율 적용
+        if(event != null && event.getEventValue() > 0){
+//            log.error(originalPrice + "," + (double)eventDiscountRate / 100);
+
+            discountPrice += (int)(originalPrice * ((double)event.getEventValue() / 100));
+            log.error(discountPrice);
+        }
+
+        return discountPrice;
+    }
     @Override
     public List<CartDetailResDTO> getCartAll(String userName) {
-
         User user = userService.findUser(userName);
+        // 이벤트 체크
+        EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
-        List<Cart> result = cartRepository.findByUser(user);
-
-        List<CartDetailResDTO> cartDetailResDTOList = result.stream()
-                .filter(Cart::getIsActive)
+        List<CartDetailResDTO> listDTO =  cartRepository.findByUser(user)
+                .stream()
+                .filter(Cart::getIsActive)      // 유효한 장바구니 상품 정보만..
                 .map(cart -> CartDetailResDTO.builder()
                         .cartId(cart.getCartId())
                         .shopItemId(cart.getShopItem().getShopItemId())
                         .itemName(cart.getShopItem().getItemName())
                         .itemCount(cart.getItemCount())
                         .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
-                        .discountPrice(cart.getDiscountPrice())
+//                        .discountPrice(cart.getDiscountPrice())
+                        .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
+
                         .option1(cart.getItemOption() != null ? cart.getItemOption().getOption1() : "옵션 없음") // view에 보여줄때 Option 설명으로 변경 해야 할듯 - cih
                         .build())
                 .collect(Collectors.toList());
 
-        return cartDetailResDTOList;
+        return listDTO;
     }
 
     @Override
@@ -70,22 +98,7 @@ public class CartServiceImpl implements CartService {
     }
 
     // 할인 가격 계산
-    public int calcDiscountPrice(User user, ShopItem shopItem){
 
-        int discountPrice = 0;
-        Integer originalPrice = shopItem.getItemPrice().getOriginalPrice();
-
-        if(user.getMGrade() == UserGradeType.GRADE_E
-                || user.getMGrade() == UserGradeType.GRADE_S ){
-
-            if(shopItem.getItemPrice().getMembershipPercent() > 0){
-
-                discountPrice = (originalPrice / shopItem.getItemPrice().getMembershipPercent());
-            }
-            log.error(discountPrice);
-        }
-        return discountPrice;
-    }
 
     @Override
     public Cart addCart(CartReqDTO cartReqDTO, String userName) {
@@ -95,8 +108,11 @@ public class CartServiceImpl implements CartService {
         ShopItem shopItem = shopItemRepository.findByItemName(cartReqDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
+        // 이벤트 체크
+        EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
+
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
-        Integer discountPrice = calcDiscountPrice(user, shopItem);
+        Integer discountPrice = calcDiscountPrice(user, shopItem, event);
 
         Cart cart = Cart.builder()
                 .shopItem(shopItem)

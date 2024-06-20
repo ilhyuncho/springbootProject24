@@ -29,11 +29,10 @@ public class CartController {
     @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
     @GetMapping("/list")
     public String getCart(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
-                       Model model,
-                       Principal principal){
-
+                       Model model, Principal principal){
 
         List<CartDetailResDTO> listDto = cartService.getCartAll(principal.getName());
+
         model.addAttribute("responseDTO", listDto);
 
         return "/cart/cartListNew";

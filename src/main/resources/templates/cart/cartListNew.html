@@ -114,6 +114,7 @@
 
     const orderPrice = document.querySelector(".orderPrice")
     const expectedPrice = document.querySelector(".expectedPrice")
+    const discountPrice = document.querySelector(".discountPrice")
     const deliveryFee = document.querySelector(".deliveryFee")
 
     // 결제 금액 계산 호출
@@ -224,6 +225,8 @@
     // 결제 금액 다시 계산
     function reCalculation(){
 
+        var totalOriginalPrice = 0;
+        var totalDiscountPrice = 0;
         var totalPrice = 0;
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
@@ -238,17 +241,20 @@
                 var discountPrice = parseInt(discountPriceTag.getAttribute('value'));
                 var itemCount = parseInt(itemCountTag.getAttribute('value'));
 
-                totalPrice += (itemPrice - discountPrice) * itemCount;
+                totalOriginalPrice += itemPrice * itemCount
+                totalDiscountPrice += discountPrice * itemCount
+                totalPrice += (itemPrice - discountPrice) * itemCount
                 // console.log("reCalculation : " + item + ",  " + idx + ", totalPrice : " + totalPrice + ", selected : " + selected)
             }
         }, false)
 
-        orderPrice.value = totalPrice
+        orderPrice.value = totalOriginalPrice
 
         // 배송비 계산
         const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
         deliveryFee.value = deliveryPrice
 
+        discountPrice.value = totalDiscountPrice
         // 결제 예정 금액 다시 계산 해야 함
         expectedPrice.value = totalPrice + deliveryPrice
     }

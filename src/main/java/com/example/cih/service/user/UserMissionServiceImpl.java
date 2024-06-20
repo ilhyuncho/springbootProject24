@@ -5,7 +5,6 @@ import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.dto.user.UserMissionListResDTO;
 import com.example.cih.dto.user.UserMissionReqDTO;
 import com.example.cih.dto.user.UserMissionResDTO;

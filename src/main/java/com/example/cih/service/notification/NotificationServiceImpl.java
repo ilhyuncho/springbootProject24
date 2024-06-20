@@ -283,6 +283,21 @@ public class NotificationServiceImpl implements NotificationService {
         return null;
     }
 
+    @Override
+    public EventNotification getNowDoingEventInfo(EventType eventType) { // 현재 진행 중인 이벤트 정보 return
+
+        LocalDate now = LocalDate.now();
+        
+        List<EventNotification> result = eventNotificationRepository.findByEventType(eventType);
+
+        EventNotification eventNotification = result.stream()
+                .filter(event -> event.getEventStartDate().compareTo(now) <= 0  // 날짜 비교
+                        && event.getEventEndDate().compareTo(now) >= 0)
+                .findFirst().orElse(null);
+
+        return eventNotification;
+    }
+
     private NotiResDTO entityToNotiResDTO(Notification notification) {
 
         NotiResDTO notiResDTO;
