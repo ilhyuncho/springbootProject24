@@ -23,9 +23,7 @@ public class ShopItemViewDTO {
     private String itemOption2;
 
     private Integer membershipPercent;
-    private Integer salePercent;
-    private LocalDate saleStartDate;
-    private LocalDate saleEndDate;
+    private Boolean isEventTarget;
 
     @Builder.Default
     private List<ImageDTO> fileNames= new ArrayList<>();
@@ -33,7 +31,7 @@ public class ShopItemViewDTO {
     @Builder(builderMethodName = "writeShopItemViewDTOBuilder")
     public ShopItemViewDTO(Long shopItemId, String itemName, int originalPrice, int stockCount,
                            String itemOption1, String itemOption2, Integer membershipPercent,
-                           Integer salePercent,LocalDate saleStartDate, LocalDate saleEndDate) {
+                           Boolean isEventTarget) {
 
         this.shopItemId = shopItemId;
         this.itemName = itemName;
@@ -42,9 +40,7 @@ public class ShopItemViewDTO {
         this.itemOption1 = itemOption1;
         this.itemOption2 = itemOption2;
         this.membershipPercent = membershipPercent;
-        this.salePercent = salePercent;
-        this.saleStartDate = saleStartDate;
-        this.saleEndDate = saleEndDate;
+        this.isEventTarget = isEventTarget;
     }
 
 

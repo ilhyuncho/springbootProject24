@@ -130,9 +130,7 @@ public class ProjectSettingTest {
 
             ItemPrice itemPrice = ItemPrice.builder()
                     .originalPrice(10000 * i)
-                    .salePercent(10 * i)
-                    .saleStartDate(LocalDateTime.of(2024,6,1,0,0))
-                    .saleEndDate(LocalDateTime.of(2024,7,30,0,0))
+                    .isEventTarget(true)
                     .membershipPercent(10)
                     .build();
 

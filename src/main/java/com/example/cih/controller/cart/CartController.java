@@ -35,7 +35,7 @@ public class CartController {
 
         model.addAttribute("responseDTO", listDto);
 
-        return "/cart/cartListNew";
+        return "/cart/cartList";
     }
 
     @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")

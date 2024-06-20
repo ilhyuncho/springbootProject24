@@ -25,11 +25,7 @@ public class ShopItemReqDTO {
     @Max(value = 50, message = "멤버쉽 할인율은 최대 30 까지")
     private Integer membershipPercent;
 
-    @Min(value = 0, message = "이벤트 할인율은 최소 0 부터")
-    @Max(value = 50, message = "이벤트 할인율은 최대 30 까지")
-    private Integer salePercent;
-    private String saleStartDate;
-    private String saleEndDate;
+    Boolean isEventTarget;
 
     private List<String> fileNames= new ArrayList<>();
 

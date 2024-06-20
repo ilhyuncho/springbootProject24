@@ -25,21 +25,16 @@ public class ItemPrice {
     private Integer originalPrice;
     private Integer membershipPercent;
 
-    private Integer salePercent;
-    private LocalDateTime saleStartDate;
-    private LocalDateTime saleEndDate;
+    private Boolean isEventTarget;
 
 //    @Column(columnDefinition = "boolean default 0")
 //    @Builder.Default
 //    private Boolean isOnSale = false;
 
-    public void changePriceInfo(Integer originalPrice, Integer membershipPercent, Integer salePercent
-            ,LocalDateTime saleStartDate, LocalDateTime saleEndDate){
+    public void changePriceInfo(Integer originalPrice, Integer membershipPercent, Boolean isEventTarget ){
         this.originalPrice = originalPrice;
         this.membershipPercent = membershipPercent;
-        this.salePercent = salePercent;
-        this.saleStartDate = saleStartDate;
-        this.saleEndDate = saleEndDate;
+        this.isEventTarget = isEventTarget;
     }
 
 }

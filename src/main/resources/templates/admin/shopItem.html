@@ -58,23 +58,10 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">SalePercent</span>
+              <span class="input-group-text">이벤트 할인 적용 유무</span>
               <label>
-                <input type="text" name="salePercent" class="form-control" th:value="10">
-              </label>
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 시작 날짜</span>
-              <label>
-                <input type="date" name="saleStartDate" class="form-control saleStartDate">
-              </label>
-            </div>
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">이벤트 종료 날짜</span>
-              <label>
-                <input type="date" name="saleEndDate" class="form-control saleEndDate">
+                <input type="radio" name="isEventTarget" checked value="1">적용</input>
+                <input type="radio" name="isEventTarget" value="0">미적용</input>
               </label>
             </div>
 
@@ -102,7 +89,7 @@
 
             <div class="my-4">
               <div class="float-end">
-                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+                <button type="submit" class="btn btn-primary submitBtn">아이템 등록</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
               </div>
             </div>
@@ -200,9 +187,6 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const saleStartDate = document.querySelector('.saleStartDate');
-  const saleEndDate = document.querySelector('.saleEndDate');
-  const SalePercent = document.querySelector('.SalePercent');
   const membershipPercent = document.querySelector('.membershipPercent');
 
   // 이미지 업로드 모달
@@ -298,18 +282,8 @@
     e.preventDefault()
     e.stopPropagation()
 
-    if(isNaN(membershipPercent.value) || isNaN(SalePercent.value)){
+    if(isNaN(membershipPercent.value)){
       alert("숫자만 입력 가능합니다")
-      return;
-    }
-
-    if(saleStartDate.value === '' || saleEndDate.value === ''){
-      alert("이벤트 날짜를 입력하세요..")
-      return;
-    }
-
-    if(saleStartDate.value >= saleEndDate.value){
-      alert("이벤트 날짜 입력이 잘못 되었습니다..")
       return;
     }
 

@@ -70,9 +70,7 @@ public class ShopItemServiceImpl implements ShopItemService {
        ItemPrice itemPrice = ItemPrice.builder()
                .originalPrice(shopItemReqDTO.getOriginalPrice())
                .membershipPercent(shopItemReqDTO.getMembershipPercent())
-               .salePercent(shopItemReqDTO.getSalePercent())
-               .saleStartDate(Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleStartDate()))
-               .saleEndDate(Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleEndDate()))
+               .isEventTarget(shopItemReqDTO.getIsEventTarget())
                .build();
 
         itemPriceRepository.save(itemPrice);
@@ -93,9 +91,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         // 수정 해야 하는지, 안해야 하는지. 먼저 체크??
         ItemPrice itemPrice = shopItem.getItemPrice();
         itemPrice.changePriceInfo(shopItemReqDTO.getOriginalPrice(),
-                shopItemReqDTO.getMembershipPercent(), shopItemReqDTO.getSalePercent(),
-                Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleStartDate()),
-                Util.convertStringToLocalDateTime(shopItemReqDTO.getSaleEndDate()));
+                shopItemReqDTO.getMembershipPercent(), shopItemReqDTO.getIsEventTarget());
 
         shopItem.change(shopItemReqDTO.getItemName(), shopItemReqDTO.getOriginalPrice(), shopItemReqDTO.getStockCount());
 
@@ -147,9 +143,7 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .originalPrice(shopItem.getItemPrice().getOriginalPrice())
                 .stockCount(shopItem.getStockCount())
                 .membershipPercent(shopItem.getItemPrice().getMembershipPercent())
-                .salePercent(shopItem.getItemPrice().getSalePercent())
-                .saleStartDate(shopItem.getItemPrice().getSaleStartDate().toLocalDate())
-                .saleEndDate(shopItem.getItemPrice().getSaleEndDate().toLocalDate())
+                .isEventTarget(shopItem.getItemPrice().getIsEventTarget())
                 .build();
 
         // 임시로... cih

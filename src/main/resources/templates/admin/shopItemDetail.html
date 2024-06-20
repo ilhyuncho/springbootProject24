@@ -65,24 +65,13 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">SalePercent</span>
+            <span class="input-group-text">이벤트 할인 적용 유무</span>
             <label>
-              <input type="text" class="form-control" th:value="${responseDTO.salePercent}" readonly>
+              <input type="radio" name="isEventTarget" value="1" th:checked="${responseDTO.isEventTarget eq true}" onclick="return false;">적용</input>
+              <input type="radio" name="isEventTarget" value="0" th:checked="${responseDTO.isEventTarget eq false}" onclick="return false;">미적용</input>
             </label>
           </div>
 
-          <div class="input-group mb-3">
-            <span class="input-group-text">이벤트 시작 날짜</span>
-            <label>
-              <input type="date" name="saleStartDate" class="form-control" th:value="${responseDTO.saleStartDate}" readonly>
-            </label>
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">이벤트 종료 날짜</span>
-            <label>
-              <input type="date" name="saleEndDate" class="form-control" th:value="${responseDTO.saleEndDate}" readonly>
-            </label>
-          </div>
 
           <div class="my-4">
             <div class="float-end">
