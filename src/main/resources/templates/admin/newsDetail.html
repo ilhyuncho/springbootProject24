@@ -22,30 +22,39 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 이름</span>
-              <input type="text" name="name" class="form-control" th:value="${responseDTO.name}" readonly>
+              <label>
+               <input type="text" name="name" class="form-control" th:value="${responseDTO.name}" readonly>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 title</span>
-              <input type="text" name="title" class="form-control" th:value="${responseDTO.title}" readonly>
+              <label>
+                <input type="text" name="title" class="form-control" th:value="${responseDTO.title}" readonly>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 message</span>
-              <input type="text" name="message" class="form-control" th:value="${responseDTO.message}" readonly>
+              <label>
+               <input type="text" name="message" class="form-control" th:value="${responseDTO.message}" readonly>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 활성화</span>
-
-              <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
-              <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>
+              <label>
+                <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" onclick="return false;">활성화</input>
+                <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" onclick="return false;">비활성화</input>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 팝업창</span>
-              <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" onclick="return false;">활성화</input>
-              <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
+              <label>
+                <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" onclick="return false;">활성화</input>
+                <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" onclick="return false;">비활성화</input>
+              </label>
             </div>
 
             <div class="row mt-3">

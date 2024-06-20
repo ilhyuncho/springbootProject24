@@ -300,6 +300,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     private NotiResDTO entityToNotiResDTO(Notification notification) {
 
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+
         NotiResDTO notiResDTO;
         if( notification.getClass().equals(NewsNotification.class)){
             NewsNotification noti = (NewsNotification)notification;

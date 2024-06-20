@@ -19,51 +19,71 @@
           <form th:action="@{/myPage/carModify}" method="post" id="f1">
             <div class="input-group mb-3">
               <span class="input-group-text">ShopItemId</span>
-              <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemName</span>
-              <input type="text" class="form-control" th:value="${responseDTO.itemName}" name="itemName">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.itemName}" name="itemName">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">originalPrice</span>
-              <input type="text" class="form-control" th:value="${responseDTO.originalPrice}" name="originalPrice">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.originalPrice}" name="originalPrice">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">StockCount</span>
-              <input type="text" class="form-control" th:value="${responseDTO.stockCount}" name="stockCount">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.stockCount}" name="stockCount">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption1</span>
-              <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="itemOption1">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="itemOption1">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption2</span>
-              <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="itemOption2">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="itemOption2">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">MembershipPercent</span>
-              <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" name="membershipPercent">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" name="membershipPercent">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">SalePercent</span>
-              <input type="text" class="form-control" th:value="${responseDTO.salePercent}" name="salePercent">
+              <label>
+                <input type="text" class="form-control" th:value="${responseDTO.salePercent}" name="salePercent">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 시작 날짜</span>
-              <input type="date" class="form-control" th:value="${responseDTO.saleStartDate}" name="saleStartDate" >
+              <label>
+                <input type="date" class="form-control" th:value="${responseDTO.saleStartDate}" name="saleStartDate" >
+              </label>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" class="form-control" th:value="${responseDTO.saleEndDate}" name="saleEndDate" >
+              <label>
+                <input type="date" class="form-control" th:value="${responseDTO.saleEndDate}" name="saleEndDate" >
+              </label>
             </div>
 
             <!-- 첨부 파일 새로 등록-->

@@ -31,48 +31,65 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemName</span>
-              <input type="text" name="itemName" class="form-control" th:value="item1"
-                     value="th:value안될때">
+              <label>
+                <input type="text" name="itemName" class="form-control" th:value="item1" value="th:value안될때">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">OriginalPrice</span>
-              <input type="text" name="originalPrice" class="form-control" th:value="10000">
+              <label>
+                <input type="text" name="originalPrice" class="form-control" th:value="10000">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemStock</span>
-              <input type="text" name="stockCount" class="form-control" th:value="100">
+              <label>
+                <input type="text" name="stockCount" class="form-control" th:value="100">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">MembershipPercent</span>
-              <input type="text" name="membershipPercent" class="form-control membershipPercent" th:value="10">
+              <label>
+               <input type="text" name="membershipPercent" class="form-control membershipPercent" th:value="10">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">SalePercent</span>
-              <input type="text" name="salePercent" class="form-control" th:value="10">
+              <label>
+                <input type="text" name="salePercent" class="form-control" th:value="10">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 시작 날짜</span>
-              <input type="date" name="saleStartDate" class="form-control saleStartDate">
+              <label>
+                <input type="date" name="saleStartDate" class="form-control saleStartDate">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="saleEndDate" class="form-control saleEndDate">
+              <label>
+                <input type="date" name="saleEndDate" class="form-control saleEndDate">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption1</span>
-              <input type="text" name="itemOption1" class="form-control" th:value="option1">
+              <label>
+                <input type="text" name="itemOption1" class="form-control" th:value="option1">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption2</span>
-              <input type="text" name="itemOption2" class="form-control" th:value="option2">
+              <label>
+                <input type="text" name="itemOption2" class="form-control" th:value="option2">
+              </label>
             </div>
 
             <div class="input-group mb-3">
@@ -188,6 +205,8 @@
   const SalePercent = document.querySelector('.SalePercent');
   const membershipPercent = document.querySelector('.membershipPercent');
 
+  // 이미지 업로드 모달
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
   // 사용자 인증 정보 확인 begin ----------------------
   // const authlog = [[${#authentication}]]
@@ -213,8 +232,6 @@
   }
   // 에러 처리 부분 end ----------------------------
 
-  // 이미지 업로드 모달
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
   document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
     e.stopPropagation()

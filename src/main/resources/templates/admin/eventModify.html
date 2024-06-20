@@ -22,52 +22,70 @@
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 이름</span>
-              <input type="text" name="name" class="form-control" th:value="${responseDTO.name}">
+              <label>
+                <input type="text" name="name" class="form-control" th:value="${responseDTO.name}">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 title</span>
-              <input type="text" name="title" class="form-control" th:value="${responseDTO.title}">
+              <label>
+                <input type="text" name="title" class="form-control" th:value="${responseDTO.title}">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 message</span>
-              <input type="text" name="message" class="form-control" th:value="${responseDTO.message}">
+              <label>
+                <input type="text" name="message" class="form-control" th:value="${responseDTO.message}">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 시작 날짜</span>
-              <input type="date" name="eventStartDate" class="form-control" th:value="${responseDTO.eventStartDate}">
+              <label>
+                <input type="date" name="eventStartDate" class="form-control" th:value="${responseDTO.eventStartDate}">
+              </label>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종료 날짜</span>
-              <input type="date" name="eventEndDate" class="form-control" th:value="${responseDTO.eventEndDate}">
+              <label>
+                <input type="date" name="eventEndDate" class="form-control" th:value="${responseDTO.eventEndDate}">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 종류</span>
-              <select name="eventSelectType" id="eventTypeSelect">
-                <option th:each="i, stat: ${eventTypeList}" th:value="${i.getType()}"
-                        th:selected="${responseDTO.eventSelectType == i.getName}">[[${i.getName}]]
-               </option>
-              </select>
+              <label>
+                <select name="eventSelectType" id="eventTypeSelect">
+                  <option th:each="i, stat: ${eventTypeList}" th:value="${i.getType()}"
+                          th:selected="${responseDTO.eventSelectType == i.getName}">[[${i.getName}]]
+                 </option>
+                </select>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 설정값</span>
-              <input type="text" name="eventValue" class="form-control" th:value="${responseDTO.eventValue}">
+              <label>
+                <input type="text" name="eventValue" class="form-control" th:value="${responseDTO.eventValue}">
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 활성화</span>
-              <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" >활성화</input>
-              <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" >비활성화</input>
+              <label>
+                <input type="radio" name="isUse" value="1" th:checked="${responseDTO.isUse eq true}" >활성화</input>
+                <input type="radio" name="isUse" value="0" th:checked="${responseDTO.isUse eq false}" >비활성화</input>
+              </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 팝업창</span>
-              <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" >활성화</input>
-              <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" >비활성화</input>
+              <label>
+                <input type="radio" name="isPopup" value="1" th:checked="${responseDTO.isPopup eq true}" >활성화</input>
+                <input type="radio" name="isPopup" value="0" th:checked="${responseDTO.isPopup eq false}" >비활성화</input>
+              </label>
             </div>
 
             <!-- 첨부 파일 새로 등록-->
