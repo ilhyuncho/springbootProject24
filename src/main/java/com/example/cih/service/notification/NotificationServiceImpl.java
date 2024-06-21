@@ -204,7 +204,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         newsNotificationRepository.findByName(newsDTO.getName())
                 .ifPresent(m -> {
-                    throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
+                    throw new ItemNotFoundException("해당 뉴스 정보가 이미 존재 함");
                 });
 
         NewsNotification newsNotification = dtoToNewsEntity(newsDTO);

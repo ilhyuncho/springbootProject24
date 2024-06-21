@@ -1,6 +1,7 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.common.handler.FileHandler;
+import com.example.cih.common.util.Util;
 import com.example.cih.domain.notification.EventType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
@@ -25,7 +26,6 @@ import java.util.List;
 @Log4j2
 public class NotiManageController {
     private final NotificationService notificationService;
-
     private final FileHandler fileHandler;
 
     @ApiOperation(value = "[이벤트] 관리 페이지 접근", notes = "관리자 접근")
@@ -66,6 +66,11 @@ public class NotiManageController {
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/admin/eventList";
+        }
+
+        // 테스트용
+        if( notificationRegDTO.getName().isEmpty()){
+            notificationRegDTO.setName(Util.createRandomName("Event"));
         }
 
         Long eventId = notificationService.registerEventNotification(notificationRegDTO);
@@ -159,7 +164,12 @@ public class NotiManageController {
             return "redirect:/admin/newsList";
         }
 
-        Long NotiId = notificationService.registerNewsNotification(notificationRegDTO);
+        // 테스트용
+        if( notificationRegDTO.getName().isEmpty()){
+            notificationRegDTO.setName(Util.createRandomName("News"));
+        }
+
+        Long newsId = notificationService.registerNewsNotification(notificationRegDTO);
 
         return "redirect:/admin/newsList";
     }

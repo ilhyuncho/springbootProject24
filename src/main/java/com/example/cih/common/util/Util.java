@@ -13,6 +13,11 @@ import java.util.stream.Stream;
 @Log4j2
 public class Util {
 
+    public static String createRandomName(String preString){
+        int randomValue = (new Random().nextInt(1000000));
+
+        return preString + randomValue;
+    }
     public static Stream<UUID> createUUID(long count){
         return Stream.generate(UUID::randomUUID)
                 .limit(count);
