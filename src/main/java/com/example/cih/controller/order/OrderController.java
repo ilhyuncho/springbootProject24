@@ -1,9 +1,7 @@
 package com.example.cih.controller.order;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.order.OrderItemResDTO;
-import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
@@ -26,7 +24,6 @@ import java.util.List;
 //@PreAuthorize("hasRole('USER')")
 public class OrderController {
     private final OrderService orderService;
-    private final BuyingCarService buyingCarService;
     private final UserService userService;
 
     @ApiOperation(value = "주문내역 조회", notes = "결제 완료된 내역 조회")
@@ -39,10 +36,9 @@ public class OrderController {
 
         PageResponseDTO<OrderItemResDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
 
-        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getBuyingCarInfo(user);
-
         model.addAttribute("responseDTO", cartAll);
-        model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
+
+        log.error(cartAll);
 
         return "/order/orderList";
     }

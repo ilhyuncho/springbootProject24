@@ -3,12 +3,16 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.car.Car;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarInfoNewDTO;
 import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.user.UserDTO;
+import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.UserCarService;
+import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,8 @@ public class MyPageController {
 
     private final UserCarService userCarService;
     private final UserService userService;
+
+    private final BuyingCarService buyingCarService;
 
     private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
@@ -136,6 +142,20 @@ public class MyPageController {
         model.addAttribute("responseDTO", carInfoDTO);
 
         return "carRead";
+    }
+
+    @ApiOperation(value = "차 주문 내역 조회", notes = "")
+    @GetMapping("/carOrderList")
+    public String carOrderList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+                       Model model, Principal principal ){
+
+        User user = userService.findUser(principal.getName());
+
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getBuyingCarInfo(user);
+
+        model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
+
+        return "/myPage/carOrderList";
     }
 
 }

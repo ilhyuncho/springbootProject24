@@ -83,18 +83,23 @@ public class OrderServiceImpl implements OrderService {
         Page<Order> result = orderRepository.findByUser(user, pageable );
         List<Order> orderList = result.getContent();
 
+        log.error(result.getTotalPages());
+
+        for (Order order : orderList) {
+            log.error("getOrderId : " + order.getOrderId());
+        }
 //        List<CarInfoDTO> dtoList = result.getContent().stream()
 //                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
 
         List<OrderItemResDTO> orderDTOList = new ArrayList<>();
 
         for (Order order : orderList) {
-            log.error("OrderID-" + order.getOrderId());
+            //log.error("OrderID-" + order.getOrderId());
 
             List<OrderItem> orderItemList = order.getOrderItemList();
             for (OrderItem orderItem : orderItemList) {
-                log.error("OrderItemID-" + orderItem.getOrderItemId());
-                log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
+//                log.error("OrderItemID-" + orderItem.getOrderItemId());
+//                log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
                 OrderItemResDTO orderDTO = OrderItemResDTO.builder()
                         .orderId(order.getOrderId())
                         .orderItemId(orderItem.getOrderItemId())
