@@ -238,6 +238,15 @@
     history.replaceState({}, null, null)
     alert(errorMsg)
   }
+
+  const errorMessage = [[${errorMessage}]]
+  if(errorMessage ){
+    console.log('errorMessage : ' + errorMessage)
+
+    history.replaceState({}, null, null)
+    alert(errorMessage)
+  }
+
   // 에러 처리 부분 end ----------------------------
 
   // (테스트용) 기본 날짜 셋팅

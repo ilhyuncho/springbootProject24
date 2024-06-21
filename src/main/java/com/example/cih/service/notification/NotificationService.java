@@ -16,8 +16,8 @@ public interface NotificationService {
     NotiNewsResDTO getNewsInfo(Long notiId);
     NotiResDTO getNotiInfo(Long notiId);
 
-    Long registerEventNotification(NotificationRegDTO notificationRegDTO);
-    Long registerNewsNotification(NotificationRegDTO notificationRegDTO);
+    Long registerEventNotification(NotificationRegDTO eventDTO);
+    Long registerNewsNotification(NotificationRegDTO newsDTO);
 
     void modifyEventNotification(Long notiId, NotificationRegDTO notificationRegDTO);
     void modifyNewsNotification(Long notiId, NotificationRegDTO notificationRegDTO);

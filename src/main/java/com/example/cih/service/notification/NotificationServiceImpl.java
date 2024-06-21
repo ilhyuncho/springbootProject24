@@ -137,7 +137,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotiResDTO getNotiInfo(Long notiId) {
+    public NotiResDTO getNotiInfo(Long notiId){
 
         Optional<Notification> result = notificationRepository.findById(notiId);
 
@@ -147,38 +147,70 @@ public class NotificationServiceImpl implements NotificationService {
         return notiNewsResDTO;
     }
 
+    public Boolean isEventDuplication(EventType eventType, LocalDate regStartDate, LocalDate regEndDate){
+
+        // 이벤트 기간 곂치는지 체크
+        List<EventNotification> result = eventNotificationRepository.findByEventType(eventType);
+
+        return result.stream().anyMatch(event -> {
+
+            log.error("regStartDate : " + regStartDate + ",," + "regEndDate : " + regEndDate);
+            log.error("getEventStartDate : " + event.getEventStartDate() + ",," + "getEventEndDate : " + event.getEventEndDate());
+            // 이벤트 기간 체크
+            if (!regStartDate.isBefore(event.getEventStartDate()) && regStartDate.isBefore(event.getEventEndDate())) {
+                log.error("이벤트 시작 날짜 곂침~~~~~~~~~~~~~~~");
+                return true;
+            }
+            else if (!regEndDate.isBefore(event.getEventStartDate()) && (regEndDate.isBefore(event.getEventEndDate())
+                    || regEndDate.equals(event.getEventEndDate()))) {
+                log.error("이벤트 종료 날짜 곂침~~~~~~~~~~~~~~~");
+                return true;
+            }
+            return false;
+        });
+    }
+
     @Override
-    public Long registerEventNotification(NotificationRegDTO notificationRegDTO) {
+    public Long registerEventNotification(NotificationRegDTO eventDTO) {
 
-        log.error("notificationRegDTO : " + notificationRegDTO);
-
-        eventNotificationRepository.findByName(notificationRegDTO.getName())
+        eventNotificationRepository.findByName(eventDTO.getName())
                 .ifPresent(m -> {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
 
-        EventNotification eventNotification = dtoToEventEntity(notificationRegDTO);
+        LocalDate regStartDate = LocalDate.parse(eventDTO.getEventStartDate());
+        LocalDate regEndDate = LocalDate.parse(eventDTO.getEventEndDate());
+        EventType eventType = EventType.fromValue(eventDTO.getEventSelectType());
 
-        if(notificationRegDTO.getFileNames() != null){
-            addFileNames(notificationRegDTO, eventNotification);
+        // 이벤트 기간 곂치는지 체크
+        if(isEventDuplication(eventType, regStartDate, regEndDate)){
+            log.error("이벤트 기간 곂침~~~~~~~~~~~~~~~");
+            return 0L;
+        }
+
+        EventNotification eventNotification = dtoToEventEntity(eventDTO);
+
+        if(eventDTO.getFileNames() != null){
+            addFileNames(eventDTO, eventNotification);
         }
 
         EventNotification saveItem = eventNotificationRepository.save(eventNotification);
 
         return saveItem.getNotiId();
     }
-    @Override
-    public Long registerNewsNotification(NotificationRegDTO notificationRegDTO) {
 
-        newsNotificationRepository.findByName(notificationRegDTO.getName())
+    @Override
+    public Long registerNewsNotification(NotificationRegDTO newsDTO) {
+
+        newsNotificationRepository.findByName(newsDTO.getName())
                 .ifPresent(m -> {
                     throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
                 });
 
-        NewsNotification newsNotification = dtoToNewsEntity(notificationRegDTO);
+        NewsNotification newsNotification = dtoToNewsEntity(newsDTO);
 
-        if(notificationRegDTO.getFileNames() != null){
-            addFileNames(notificationRegDTO, newsNotification);
+        if(newsDTO.getFileNames() != null){
+            addFileNames(newsDTO, newsNotification);
         }
 
         NewsNotification saveItem = newsNotificationRepository.save(newsNotification);

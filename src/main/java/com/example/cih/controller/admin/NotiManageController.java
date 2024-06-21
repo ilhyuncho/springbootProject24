@@ -44,7 +44,7 @@ public class NotiManageController {
     @GetMapping({"/eventDetail/{notiId}", "/eventModify/{notiId}"})
     public String getEventDetailOrModify(HttpServletRequest request,
                                  @PathVariable("notiId") Long notiId,
-                                 Model model) {
+                                 Model model){
 
         NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
 
@@ -61,14 +61,18 @@ public class NotiManageController {
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes){
 
-        if(bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(log::error);
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/admin/eventList";
         }
 
-        Long NotiId = notificationService.registerEventNotification(notificationRegDTO);
+        Long eventId = notificationService.registerEventNotification(notificationRegDTO);
+        if(eventId == 0){
+            redirectAttributes.addFlashAttribute("errorMessage", "이벤트 기간 중복으로 등록 실패");
+            return "redirect:/admin/eventList";
+        }
 
         return "redirect:/admin/eventList";
     }
