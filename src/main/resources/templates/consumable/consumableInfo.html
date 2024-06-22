@@ -12,7 +12,7 @@
 
         </div>
         <div class="card-body">
-          <h5 class="card-title">Consumable info</h5>
+          <h5 class="card-title">소모품 관리</h5>
 
           <table class="table">
             <thead>
@@ -52,6 +52,14 @@
             </tr>
             </tbody>
           </table>
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/myPage/carDetail(carId=${carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">back</button>
+              </a>
+            </div>
+          </div>
 
         </div>
       </div>

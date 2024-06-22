@@ -123,7 +123,7 @@
   </div>
 
   <!-- 내차 판매를 위한 모달창-->
-  <div class="modal registerModal" tabindex="-1">
+  <div class="modal sellingCarModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -143,7 +143,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary registerBtn">Register</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+          <button type="button" class="btn btn-outline-dark closeSellingCarModalBtn">Close</button>
         </div>
       </div>
     </div>
@@ -176,12 +176,9 @@
 
         </div>
         <div class="modal-footer">
-
-<!--            <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>-->
             <button type="button" class="btn btn-primary currentSituationBtn">구매 희망 리스트</button>
             <button type="button" class="btn btn-danger sellingCancelBtn">판매 취소</button>
             <button type="button" class="btn btn-outline-dark closeShowModalBtn">Close</button>
-
         </div>
       </div>
     </div>
@@ -198,14 +195,12 @@
         </div>
         <div class="modal-body modal-body-show">
           <div class="input-group mb-3">
-            <span class="input-group-text">판매 최소가격</span>
-            <input type="text" class="form-control cancelCarName">
+            <input type="text" class="form-control cancelCarName" readonly>
           </div>
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendCancelBtn">취소</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+          <button type="button" class="btn btn-outline-dark closeCancelModalBtn">닫기</button>
         </div>
       </div>
     </div>
@@ -223,13 +218,13 @@
         <div class="modal-body modal-body-show">
           <div class="input-group mb-3">
             <span class="input-group-text">현재 km</span>
-            <input type="text" class="form-control updateKmValue" th:value="120000">
+            <input type="text" class="form-control updateKmValue">
           </div>
 
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendUpdateKmBtn">갱신</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+          <button type="button" class="btn btn-outline-dark closeUpdateKmModalBtn">Close</button>
         </div>
       </div>
     </div>
@@ -249,7 +244,7 @@
   const carNumber = [[${responseDTO.carNumber}]]
 
   // Modal
-  const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+  const sellingCarModal = new bootstrap.Modal(document.querySelector(".sellingCarModal"))
   const sellingCancelModal = new bootstrap.Modal(document.querySelector(".sellingCancelModal"))
   const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
   const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
@@ -263,6 +258,24 @@
   document.querySelector(".closeShowModalBtn").addEventListener("click", function (e){
     sellingCarShowModal.hide()
   }, false)
+
+  document.querySelector(".closeUpdateKmModalBtn").addEventListener("click", function (e){
+
+    updateKmValue.value = ''
+    updateKmModal.hide()
+  }, false)
+
+  document.querySelector(".closeSellingCarModalBtn").addEventListener("click", function (e){
+
+    updateKmValue.value = ''
+    sellingCarModal.hide()
+  }, false)
+
+  document.querySelector(".closeCancelModalBtn").addEventListener("click", function (e){
+    sellingCancelModal.hide()
+  }, false)
+
+
 
   // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
@@ -291,7 +304,7 @@
     e.stopPropagation()
     e.preventDefault()
 
-    registerModal.show()
+    sellingCarModal.show()
   }, false)
 
   // 모달창의 [차량 판매] 처리
@@ -308,7 +321,7 @@
       requiredPrice.value= ''
       owner.value=''
 
-      registerModal.hide()
+      sellingCarModal.hide()
 
       // 화면 재 갱신
       self.location = '/myPage/carDetail?carId=' + carId
@@ -323,7 +336,7 @@
         console.log(e.response.data);
         alert(e.response.data)
       }
-      registerModal.hide()
+      sellingCarModal.hide()
     })
   }, false)
 
@@ -333,7 +346,7 @@
     e.stopPropagation()
     e.preventDefault()
 
-    cancelCarName.value = carNumber + ' 판매! 정말 취소 할거야?'
+    cancelCarName.value = `"${carNumber}" 차량 판매를 정말 취소 할거야?'`
 
     sellingCarShowModal.hide()
     sellingCancelModal.show()
@@ -381,7 +394,7 @@
     e.stopPropagation()
     e.preventDefault()
 
-    updateKmValue.value = currCarKm.value
+    updateKmValue.setAttribute("placeholder",currCarKm.value )
 
     updateKmModal.show()
 
