@@ -1,6 +1,7 @@
 package com.example.cih.dto.sellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.dto.ImageDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,8 @@ public class SellingCarViewDTO {
     private SellingCarStatus sellingCarStatus;
     private int requiredPrice;
     private Long sellingCarId;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;
 
     @Builder.Default

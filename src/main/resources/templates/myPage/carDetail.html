@@ -260,13 +260,11 @@
   }, false)
 
   document.querySelector(".closeUpdateKmModalBtn").addEventListener("click", function (e){
-
     updateKmValue.value = ''
     updateKmModal.hide()
   }, false)
 
   document.querySelector(".closeSellingCarModalBtn").addEventListener("click", function (e){
-
     updateKmValue.value = ''
     sellingCarModal.hide()
   }, false)
@@ -274,8 +272,6 @@
   document.querySelector(".closeCancelModalBtn").addEventListener("click", function (e){
     sellingCancelModal.hide()
   }, false)
-
-
 
   // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
@@ -288,7 +284,7 @@
 
     getSellingCar(formObj).then(result => {
 
-      document.getElementById("modalRequiredPrice").value = result.requiredPrice;
+      document.getElementById("modalRequiredPrice").value = result.requiredPrice
       document.getElementById("modalExpiredDate").value = result.expiredDate
 
       sellingCarShowModal.show()
