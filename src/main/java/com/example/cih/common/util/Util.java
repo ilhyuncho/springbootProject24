@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class Util {
 
     public static String createRandomName(String preString){
-        int randomValue = (new Random().nextInt(1000000));
+        int randomValue = (new Random().nextInt(1000));
 
         return preString + randomValue;
     }
