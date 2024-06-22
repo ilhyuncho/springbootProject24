@@ -68,7 +68,7 @@ public class FileHandler {
 
     public void removeFiles(List<String> files){
 
-        log.error("removeFiles");
+        log.error("removeFiles() 호출");
 
         files.forEach(log::error);
 
@@ -79,13 +79,13 @@ public class FileHandler {
             try{
                 String contentType = Files.probeContentType(resource.getFile().toPath());
 
-                resource.getFile().delete();
-
+                boolean delete = resource.getFile().delete();
+                
                 // 섬네일이 존재한다면
                 if(contentType.startsWith("image")){
                     File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
 
-                    thumbnailFile.delete();
+                    boolean deleteThumbnail = thumbnailFile.delete();
                 }
             }catch(Exception e){
                 log.error(e.getMessage());

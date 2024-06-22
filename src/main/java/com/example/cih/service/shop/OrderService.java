@@ -8,7 +8,7 @@ import com.example.cih.dto.PageResponseDTO;
 
 public interface OrderService {
 
-    Long order(String userName, OrderReqDTO orderReqDTO );
+    Long createOrder(String userName, OrderReqDTO orderReqDTO );
     PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName);
     OrderViewDTO getOrderDetail(Long orderId);
     void cancelOrder(Long orderId);

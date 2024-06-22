@@ -32,7 +32,7 @@ public class OrderRestController {
         log.error(orderReqDTO.toString());
         orderReqDTO.getListOrderDetail().forEach(log::error);
 
-        Long order = orderService.order(principal.getName(), orderReqDTO);
+        Long order = orderService.createOrder(principal.getName(), orderReqDTO);
         return "/shop/main";
     }
 

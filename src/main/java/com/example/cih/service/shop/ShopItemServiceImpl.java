@@ -1,7 +1,6 @@
 package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
-import com.example.cih.common.util.Util;
 import com.example.cih.domain.shop.ItemPrice;
 import com.example.cih.domain.shop.ItemPriceRepository;
 import com.example.cih.domain.shop.ShopItem;
@@ -10,7 +9,6 @@ import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,18 +24,14 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
-    private final ModelMapper modelMapper;
 
     @Override
-    public ShopItemViewDTO findOne(Long shopItemId) {
+    public ShopItemViewDTO findItem(Long shopItemId) {
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
-        ShopItemViewDTO shopItemViewDTO = entityToDTO(shopItem);
-
-        return shopItemViewDTO;
-
+        return entityToDTO(shopItem);
     }
 
     @Override

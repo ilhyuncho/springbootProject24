@@ -28,7 +28,7 @@
                         <tbody th:with="link = ${pageRequestDto.getLink()}">
                         <tr th:each="dto:${responseDTO.dtoList}">
                             <th scope="row">
-                                <a th:href="|@{'/admin/shopItem/' + ${dto.shopItemId}}|"
+                                <a th:href="|@{'/admin/shopItemDetail/' + ${dto.shopItemId}}|"
                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
                             </th>
                             <td>[[${dto.orderCount}]]</td>

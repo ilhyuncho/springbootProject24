@@ -2,6 +2,7 @@ package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.handler.FileHandler;
+import com.example.cih.common.util.Util;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.ShopItemService;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -31,8 +33,6 @@ public class AdminShopController {
     public String getShopItem(Model model){
 
         List<ShopItemViewDTO> allItems = shopItemService.getAllItems();
-
-        allItems.forEach(log::error);
 
         model.addAttribute("itemList", allItems);
 
@@ -52,31 +52,28 @@ public class AdminShopController {
             return "redirect:/admin/shopItem";
         }
 
+        // 테스트용
+        if( shopItemReqDTO.getItemName().isEmpty()){
+            shopItemReqDTO.setItemName(Util.createRandomName("Item"));
+        }
+
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
         return "redirect:/admin/shopItem";
     }
 
-    @GetMapping("/shopItem/{shopItemId}")
-    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
+    @GetMapping({"/shopItemDetail/{shopItemId}",
+                 "/shopItemModify/{shopItemId}"})
+    public String shopItemDetailOrModify(HttpServletRequest request,
+                                 @PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
-        ShopItemViewDTO shopItem = shopItemService.findOne(shopItemId);
+        ShopItemViewDTO shopItem = shopItemService.findItem(shopItemId);
 
         model.addAttribute("responseDTO", shopItem);
 
-        return "/admin/shopItemDetail";
-    }
-
-    @GetMapping("/shopItemModify/{shopItemId}")
-    public String shopItemModify(@PathVariable("shopItemId") Long shopItemId,
-                                 Model model){
-
-        ShopItemViewDTO shopItem = shopItemService.findOne(shopItemId);
-
-        model.addAttribute("responseDTO", shopItem);
-
-        return "/admin/shopItemModify";
+        String requestURI = request.getRequestURI();
+        return request.getRequestURI().substring(0, requestURI.lastIndexOf("/"));
     }
 
     @PostMapping("/shopItemModify")
@@ -84,14 +81,13 @@ public class AdminShopController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
-        log.error("shopItem modify post...." + shopItemReqDTO);
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             redirectAttributes.addAttribute("shopItemId", shopItemReqDTO.getShopItemId());
-            return "redirect:/admin/shopItem/" + shopItemReqDTO.getShopItemId();
+            return "redirect:/admin/shopItemDetail/" + shopItemReqDTO.getShopItemId();
         }
 
         shopItemService.modifyItem(shopItemReqDTO);
@@ -100,13 +96,12 @@ public class AdminShopController {
         redirectAttributes.addAttribute("shopItemId", shopItemReqDTO.getShopItemId());
         redirectAttributes.addAttribute("userName", principal.getName());
 
-        return "redirect:/admin/shopItem/" + shopItemReqDTO.getShopItemId();
+        return "redirect:/admin/shopItemDetail/" + shopItemReqDTO.getShopItemId();
     }
 
     @PostMapping("/shopItemDelete")
     public String shopItemDelete(ShopItemReqDTO shopItemReqDTO,
                                  RedirectAttributes redirectAttributes){
-        log.error("remove......post: " + shopItemReqDTO);
 
         shopItemService.deleteItem(shopItemReqDTO.getShopItemId());
 
@@ -117,7 +112,6 @@ public class AdminShopController {
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
-       // redirectAttributes.addAttribute("userName","user1");
 
         return "redirect:/admin/shopItem";
     }

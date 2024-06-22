@@ -35,16 +35,13 @@ public class OrderServiceImpl implements OrderService {
     private final ShopItemRepository shopItemRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
-
     private final UserService userService;
-    private final ShopItemService shopItemService;
 
     @Override
-    public Long order(String userName, OrderReqDTO orderReqDTO ){
+    public Long createOrder(String userName, OrderReqDTO orderReqDTO ){
 
         // 고객 정보 get
         User user = userService.findUser(userName);
-
 
         // 배송 정보 생성
         Delivery delivery = new Delivery(user.getAddress());
