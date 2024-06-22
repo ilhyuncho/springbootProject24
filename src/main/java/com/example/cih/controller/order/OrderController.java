@@ -32,8 +32,6 @@ public class OrderController {
                        Model model,
                        Principal principal ){
 
-        User user = userService.findUser(principal.getName());
-
         PageResponseDTO<OrderItemResDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
 
         model.addAttribute("responseDTO", cartAll);

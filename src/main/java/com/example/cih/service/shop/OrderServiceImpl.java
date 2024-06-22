@@ -73,51 +73,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
-
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("orderDate");
+        Pageable pageable = pageRequestDTO.getPageable("orderItemId");
 
         User user = userService.findUser(userName);
 
-        Page<Order> result = orderRepository.findByUser(user, pageable );
-        List<Order> orderList = result.getContent();
+        List<Order> orderList = orderRepository.findByUser(user);
 
-        log.error(result.getTotalPages());
+        Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
-        for (Order order : orderList) {
-            log.error("getOrderId : " + order.getOrderId());
-        }
-//        List<CarInfoDTO> dtoList = result.getContent().stream()
-//                .map(car -> modelMapper.map(car, CarInfoDTO.class)).collect(Collectors.toList());
-
-        List<OrderItemResDTO> orderDTOList = new ArrayList<>();
-
-        for (Order order : orderList) {
-            //log.error("OrderID-" + order.getOrderId());
-
-            List<OrderItem> orderItemList = order.getOrderItemList();
-            for (OrderItem orderItem : orderItemList) {
-//                log.error("OrderItemID-" + orderItem.getOrderItemId());
-//                log.error("ShopItem Name-" + orderItem.getShopItem().getItemName());
-                OrderItemResDTO orderDTO = OrderItemResDTO.builder()
-                        .orderId(order.getOrderId())
+        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem ->
+                OrderItemResDTO.builder()
+                        .orderId(orderItem.getOrder().getOrderId())
                         .orderItemId(orderItem.getOrderItemId())
                         .orderCount(orderItem.getOrderCount())
                         .deliveryStatus(orderItem.getDeliveryStatus().getName())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
                         .orderPrice(orderItem.getOrderPrice())
-                        .build();
-
-                orderDTOList.add(orderDTO);
-            }
-        }
+                        .build()
+        ).collect(Collectors.toList());
 
         return PageResponseDTO.<OrderItemResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(orderDTOList)
-                .total((int)result.getTotalElements())
+                .dtoList(listDTO)
+                .total((int)resultOrderItem.getTotalElements())
                 .build();
     }
 

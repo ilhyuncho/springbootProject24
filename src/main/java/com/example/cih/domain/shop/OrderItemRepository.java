@@ -1,5 +1,8 @@
 package com.example.cih.domain.shop;
 
+import com.example.cih.domain.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +24,10 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     void deleteByOrderAndShopItem(Order order, ShopItem shopItem);
 
+    @Query("SELECT o FROM OrderItem o WHERE o.order IN (:orders)")
+    Page<OrderItem> findByOrders(@Param("orders") List<Order> orders, Pageable pageable);
 
+//    @Query(nativeQuery = true, value = "SELECT * FROM OrderItems as e WHERE e.employeeName IN (:orderIds)")
+//    List<Employee> findByEmployeeName(@Param("orderIds") List<Long> orderIds);
 }
 
