@@ -46,28 +46,14 @@ public class CartController {
                       Principal principal){
 
         if(bindingResult.hasErrors()){
-
             log.error("has errors........");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/shop/main";
         }
 
         cartService.addCart(cartReqDTO, principal.getName());
-        
-        return "/shop/main"; // 어디로 이동할지 정해야 함
+
+        return "redirect:/cart/list";
     }
-
-
-
-//    @ApiOperation(value = "선택상품 삭제", notes = "")
-//    @PostMapping("/cancel")
-//    public String cancel(Long cartId, Model model){
-//
-//        log.error("Cart Cancel()~~~ ");
-//
-//        cartService.deleteInCart(cartId);
-//
-//        return "redirect:/cart/list";
-//    }
 
 }
