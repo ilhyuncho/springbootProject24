@@ -67,12 +67,42 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         itemPriceRepository.save(itemPrice);
 
+        ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
+
         // 임시로
-        ItemOption itemOption1 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId1()).orElse(null);
-        ItemOption itemOption2 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId2()).orElse(null);
+        if(shopItemReqDTO.getItemOptionType1() > 0){
+           String  optionValue = shopItemReqDTO.getItemOptionValue1();
 
-        ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice, itemOption1, itemOption2);
+            String[] values = optionValue.split(",");
+            for (String value : values) {
 
+                ItemOption itemOption = ItemOption.builder()
+                                .type(ItemOptionType.fromValue(shopItemReqDTO.getItemOptionType1()))
+                                .option1(value.trim())
+                                .shopItem(shopItem)
+                                .build();
+
+                shopItem.addItemOption(itemOption);
+            }
+        }
+        if(shopItemReqDTO.getItemOptionType2() > 0){
+            String  optionValue = shopItemReqDTO.getItemOptionValue2();
+
+            String[] values = optionValue.split(",");
+            for (String value : values) {
+
+                ItemOption itemOption = ItemOption.builder()
+                        .type(ItemOptionType.fromValue(shopItemReqDTO.getItemOptionType2()))
+                        .option1(value.trim())
+                        .shopItem(shopItem)
+                        .build();
+
+                shopItem.addItemOption(itemOption);
+            }
+        }
+//        ItemOption itemOption1 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId1()).orElse(null);
+//        ItemOption itemOption2 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId2()).orElse(null);
+//
         ShopItem saveItem = shopItemRepository.save(shopItem);
 
         return saveItem.getShopItemId();
@@ -110,8 +140,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
 
-    private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice
-            , ItemOption itemOption1, ItemOption itemOption2) {
+    private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice) {
 
         ShopItem shopItem = ShopItem.builder()
                 .itemName(shopItemReqDTO.getItemName())
@@ -125,11 +154,6 @@ public class ShopItemServiceImpl implements ShopItemService {
                 shopItem.addImage(arr[0], arr[1]);
             });
         }
-
-        // 선택한 옵션 추가
-        shopItem.addItemOption(itemOption1);
-        shopItem.addItemOption(itemOption2);
-
         return shopItem;
     }
 

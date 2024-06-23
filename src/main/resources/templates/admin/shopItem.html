@@ -66,18 +66,41 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption1</span>
+              <span class="input-group-text">OptionType1</span>
               <label>
-                <input type="text" name="itemOption1" class="form-control" th:value="option1">
+                <select name="itemOptionType1" id="itemOptionTypeSelect1">
+                  <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 1}"
+                          th:value="${i.getType()}">[[${i.getName}]]</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionValue1</span>
+              <label>
+                <input type="text" name="itemOptionValue1" class="form-control" value="노랑색, 파랑색, 하늘색">
+              </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionType2</span>
+              <label>
+                <select name="itemOptionType2" id="itemOptionTypeSelect2">
+                  <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 2}"
+                          th:value="${i.getType()}">[[${i.getName}]]</option>
+                </select>
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption2</span>
               <label>
-                <input type="text" name="itemOption2" class="form-control" th:value="option2">
+                <input type="text" name="itemOptionValue2" class="form-control" value="소,중,대">
               </label>
             </div>
+
+
+
 
             <div class="input-group mb-3">
               <span class="input-group-text">Images</span>

@@ -3,6 +3,7 @@ package com.example.cih.controller.admin;
 
 import com.example.cih.common.handler.FileHandler;
 import com.example.cih.common.util.Util;
+import com.example.cih.domain.shop.ItemOptionType;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.ShopItemService;
@@ -35,6 +36,7 @@ public class AdminShopController {
         List<ShopItemViewDTO> allItems = shopItemService.getAllItems();
 
         model.addAttribute("itemList", allItems);
+        model.addAttribute("ItemOptionTypeList", ItemOptionType.getAllTypes());
 
         return "/admin/shopItem";
     }
