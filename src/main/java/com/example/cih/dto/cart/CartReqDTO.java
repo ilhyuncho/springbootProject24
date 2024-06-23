@@ -16,5 +16,8 @@ public class CartReqDTO {
     private String itemName;
     private Integer itemCount;
     private Integer itemPrice;
-    private Long itemOption;
+
+    // 임시로
+    private Long itemOptionId1;
+    private Long itemOptionId2;
 }

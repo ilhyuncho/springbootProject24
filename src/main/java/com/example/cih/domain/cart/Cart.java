@@ -47,9 +47,18 @@ public class Cart extends BaseEntity {
     private Boolean isActive;   // 장바구니에 있는 상태
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "itemOptionId")
-    private ItemOption itemOption;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "itemOptionId")
+//    private ItemOption itemOption;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "itemOptionId")  // 이걸 설정하지 않으면 중간에 조인테이블 전략을 사용함
+//    @Builder.Default
+//    private List<ItemOption> itemOptions = new ArrayList<>();
+
+    private Long itemOptionId1;
+    private Long itemOptionId2;
+
 
     @Column(name = "IMPERIAL_WEIGHT")
     @ColumnTransformer(     // db 저장,불러올때 값 변환

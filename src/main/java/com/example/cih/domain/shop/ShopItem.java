@@ -79,13 +79,21 @@ public class ShopItem {
         this.itemImageSet.clear();
     }
 
-    public void addItemOption(String option1, String option2){
-        ItemOption itemOption = ItemOption.builder()
-                .option1(option1)
-                .option2(option2)
-                .shopItem(this)
-                .build();
-        itemOptionSet.add(itemOption);
+//    public void addItemOption(ItemOptionType type, String option1, String option2){
+//        ItemOption itemOption = ItemOption.builder()
+//                .type(type)
+//                .option1(option1)
+//                .option2(option2)
+//                .shopItem(this)
+//                .build();
+//        itemOptionSet.add(itemOption);
+//    }
+
+    public void addItemOption(ItemOption itemOption){
+        if( itemOption != null ){
+            itemOptionSet.add(itemOption);
+            itemOption.changeItem(this);
+        }
     }
 
     public void clearItemOption(){

@@ -23,7 +23,8 @@
                             <th scope="col">가격</th>
                             <th scope="col">할인 가격</th>
                             <th scope="col">주문 수량</th>
-                            <th scope="col">옵션</th>
+                            <th scope="col">옵션1</th>
+                            <th scope="col">옵션2</th>
                         </tr>
                         </thead>
 
@@ -49,7 +50,9 @@
                                     <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                 </div>
                             </td>
-                            <td>[[${dto.option1}]]
+                            <td>[[${dto.optionType1 + ": " + dto.optionName1}]]
+                            </td>
+                            <td>[[${dto.optionType2 + ": " + dto.optionName2}]]
                             </td>
                             <td><input type="hidden" th:name="p_itemId+${stat.index}" th:value="${dto.shopItemId}">
                             </td>

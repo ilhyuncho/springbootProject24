@@ -15,5 +15,9 @@ public class CartDetailResDTO {
     private Integer itemCount;
     private Integer itemPrice;
     private Integer discountPrice;
-    private String option1;
+
+    private String optionType1;
+    private String optionName1;
+    private String optionType2;
+    private String optionName2;
 }

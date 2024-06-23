@@ -1,10 +1,7 @@
 package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
-import com.example.cih.domain.shop.ItemPrice;
-import com.example.cih.domain.shop.ItemPriceRepository;
-import com.example.cih.domain.shop.ShopItem;
-import com.example.cih.domain.shop.ShopItemRepository;
+import com.example.cih.domain.shop.*;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
+    private final ItemOptionRepository itemOptionRepository;
 
     @Override
     public ShopItemViewDTO findItem(Long shopItemId) {
@@ -69,7 +67,11 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         itemPriceRepository.save(itemPrice);
 
-        ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
+        // 임시로
+        ItemOption itemOption1 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId1()).orElse(null);
+        ItemOption itemOption2 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId2()).orElse(null);
+
+        ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice, itemOption1, itemOption2);
 
         ShopItem saveItem = shopItemRepository.save(shopItem);
 
@@ -108,7 +110,8 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
 
-    private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice) {
+    private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice
+            , ItemOption itemOption1, ItemOption itemOption2) {
 
         ShopItem shopItem = ShopItem.builder()
                 .itemName(shopItemReqDTO.getItemName())
@@ -123,10 +126,10 @@ public class ShopItemServiceImpl implements ShopItemService {
             });
         }
 
-        if(!shopItemReqDTO.getItemOption1().isBlank()
-                || !shopItemReqDTO.getItemOption2().isBlank() ){
-            shopItem.addItemOption(shopItemReqDTO.getItemOption1(), shopItemReqDTO.getItemOption2());
-        }
+        // 선택한 옵션 추가
+        shopItem.addItemOption(itemOption1);
+        shopItem.addItemOption(itemOption2);
+
         return shopItem;
     }
 

@@ -41,7 +41,9 @@ public class OrderItem {
                 .orderCount(orderDetailDTO.getItemCount())
                 .build();
 
+        // 해당 아이템 제고 수량 차감
         shopItem.removeStock(orderDetailDTO.getItemCount());
+
         return orderItem;
     }
 

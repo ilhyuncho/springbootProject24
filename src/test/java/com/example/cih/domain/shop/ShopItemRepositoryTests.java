@@ -36,7 +36,7 @@ public class ShopItemRepositoryTests {
             shopItem.addImage("1a1a1a", "ionic5.png");
             shopItem.addImage("2a2a2a", "ionic51.png");
 
-            shopItem.addItemOption("option1", "option2");
+           // shopItem.addItemOption("option1", "option2");
 
             shopItemRepository.save(shopItem);
         });

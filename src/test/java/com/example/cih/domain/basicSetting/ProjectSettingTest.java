@@ -1,28 +1,19 @@
 package com.example.cih.domain.basicSetting;
 
 import com.example.cih.common.util.Util;
-import com.example.cih.domain.car.Car;
-import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.*;
-import com.example.cih.domain.shop.ItemPrice;
-import com.example.cih.domain.shop.ItemPriceRepository;
-import com.example.cih.domain.shop.ShopItem;
-import com.example.cih.domain.shop.ShopItemRepository;
+import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.*;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Commit;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -145,7 +136,15 @@ public class ProjectSettingTest {
 //            shopItem.addImage("1a1a1a", "ionic5.png");
 //            shopItem.addImage("2a2a2a", "ionic51.png");
 
-            shopItem.addItemOption("option1", "option2");
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("흰색").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("파랑색").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("검은색").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("빨강색").build());
+
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("s 사이즈").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("m 사이즈").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("l 사이즈").build());
+            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("xl 사이즈").build());
 
             shopItemRepository.save(shopItem);
         });

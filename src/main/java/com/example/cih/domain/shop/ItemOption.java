@@ -21,6 +21,7 @@ public class ItemOption {
     @Column(name="itemOptionId")
     private Long itemOptionId;
 
+    private ItemOptionType type;
     private String option1;
     private String option2;
 

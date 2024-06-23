@@ -40,21 +40,30 @@ public class CartServiceImpl implements CartService {
         // 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
-        List<CartDetailResDTO> listDTO =  cartRepository.findByUser(user)
-                .stream()
-                .filter(Cart::getIsActive)      // 유효한 장바구니 상품 정보만..
-                .map(cart -> CartDetailResDTO.builder()
-                        .cartId(cart.getCartId())
-                        .shopItemId(cart.getShopItem().getShopItemId())
-                        .itemName(cart.getShopItem().getItemName())
-                        .itemCount(cart.getItemCount())
-                        .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
-//                        .discountPrice(cart.getDiscountPrice())
-                        .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
+        List<Cart> result = cartRepository.findByUser(user);
 
-                        .option1(cart.getItemOption() != null ? cart.getItemOption().getOption1() : "옵션 없음") // view에 보여줄때 Option 설명으로 변경 해야 할듯 - cih
-                        .build())
-                .collect(Collectors.toList());
+        List<CartDetailResDTO> listDTO = result.stream().map(cart -> {
+            ItemOption itemOption1 = itemOptionRepository.findById(cart.getItemOptionId1())
+                    .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
+            ItemOption itemOption2 = itemOptionRepository.findById(cart.getItemOptionId2())
+                    .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
+
+            CartDetailResDTO cartDTO = CartDetailResDTO.builder()
+                    .cartId(cart.getCartId())
+                    .shopItemId(cart.getShopItem().getShopItemId())
+                    .itemName(cart.getShopItem().getItemName())
+                    .itemCount(cart.getItemCount())
+                    .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
+                    .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
+                    // 임시로
+                    .optionType1(itemOption1.getType().getName())
+                    .optionName1(itemOption1.getOption1())
+                    .optionType2(itemOption2.getType().getName())
+                    .optionName2(itemOption2.getOption1())
+
+                    .build();
+            return cartDTO;
+        }).collect(Collectors.toList());
 
         return listDTO;
     }
@@ -73,6 +82,15 @@ public class CartServiceImpl implements CartService {
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = calcDiscountPrice(user, shopItem, event);
 
+
+        // 임시로
+        ItemOption itemOptionId1 = itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
+                .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
+
+        ItemOption itemOptionId2 = itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
+                .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
+
+
         Cart cart = Cart.builder()
                 .shopItem(shopItem)
                 .itemCount(cartReqDTO.getItemCount())
@@ -80,13 +98,10 @@ public class CartServiceImpl implements CartService {
                 .user(user)
                 .isActive(true)
                 .metricWeight(10)   // 학습용
-                .build();
 
-        if(0 != cartReqDTO.getItemOption()){
-            ItemOption itemOption = itemOptionRepository.findById(cartReqDTO.getItemOption())
-                    .orElseThrow(() -> new ItemNotFoundException("해당 상품 옵션 정보가 존재하지않습니다"));
-            // log.error(itemOption.getItemOptionId() + itemOption.getOption1());
-        }
+                .itemOptionId1(itemOptionId1.getItemOptionId())
+                .itemOptionId2(itemOptionId2.getItemOptionId())
+                .build();
 
         cartRepository.save(cart);
     }

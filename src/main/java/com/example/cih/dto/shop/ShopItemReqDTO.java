@@ -18,8 +18,11 @@ public class ShopItemReqDTO {
     private String itemName;
     private Integer originalPrice;
     private int stockCount;     // 재고수량
-    private String itemOption1;
-    private String itemOption2;
+
+    private Long itemOptionId1;
+    private Long itemOptionId2;
+//    private String itemOption1;
+//    private String itemOption2;
 
     @Min(value = 0, message = "멤버쉽 할인율은 최소 0 부터")
     @Max(value = 50, message = "멤버쉽 할인율은 최대 30 까지")
