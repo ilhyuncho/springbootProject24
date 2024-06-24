@@ -25,10 +25,7 @@ public class ShopItemReqDTO {
     @Positive    // 양수
     private int stockCount;     // 재고수량
 
-    private int itemOptionType1;
-    private String itemOptionValue1;
-    private int itemOptionType2;
-    private String itemOptionValue2;
+    private List<ItemOptionDTO> itemOptionList;
 
     @Min(value = 0, message = "멤버쉽 할인율은 최소 0 부터")
     @Max(value = 50, message = "멤버쉽 할인율은 최대 50 까지")

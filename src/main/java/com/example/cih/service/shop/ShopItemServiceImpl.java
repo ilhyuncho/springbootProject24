@@ -54,7 +54,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
-        log.error(shopItemReqDTO);
+       log.error(shopItemReqDTO);
        shopItemRepository.findByItemName(shopItemReqDTO.getItemName())
                .ifPresent(m -> {
                    throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");
@@ -70,40 +70,21 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
 
-        // 임시로
-        if(shopItemReqDTO.getItemOptionType1() > 0){
-           String  optionValue = shopItemReqDTO.getItemOptionValue1();
-
-            String[] values = optionValue.split(",");
+        // 아이템 옵션 set
+        shopItemReqDTO.getItemOptionList().forEach(itemOptionDTO -> {
+            String[] values = itemOptionDTO.getOptionValue().split(",");
             for (String value : values) {
 
                 ItemOption itemOption = ItemOption.builder()
-                                .type(ItemOptionType.fromValue(shopItemReqDTO.getItemOptionType1()))
-                                .option1(value.trim())
-                                .shopItem(shopItem)
-                                .build();
-
-                shopItem.addItemOption(itemOption);
-            }
-        }
-        if(shopItemReqDTO.getItemOptionType2() > 0){
-            String  optionValue = shopItemReqDTO.getItemOptionValue2();
-
-            String[] values = optionValue.split(",");
-            for (String value : values) {
-
-                ItemOption itemOption = ItemOption.builder()
-                        .type(ItemOptionType.fromValue(shopItemReqDTO.getItemOptionType2()))
+                        .type(ItemOptionType.fromValue(itemOptionDTO.getOptionType()))
                         .option1(value.trim())
                         .shopItem(shopItem)
                         .build();
 
                 shopItem.addItemOption(itemOption);
             }
-        }
-//        ItemOption itemOption1 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId1()).orElse(null);
-//        ItemOption itemOption2 = itemOptionRepository.findById(shopItemReqDTO.getItemOptionId2()).orElse(null);
-//
+        });
+
         ShopItem saveItem = shopItemRepository.save(shopItem);
 
         return saveItem.getShopItemId();

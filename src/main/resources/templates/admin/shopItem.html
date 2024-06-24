@@ -333,16 +333,21 @@
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
 
+    const itemOptionList = []
+    if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
+      itemOptionList.push({optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+    }
+    if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
+      itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+    }
+
     const formObj = {
       itemName:itemName.value,
       originalPrice:originalPrice.value,
       stockCount:stockCount.value,
       membershipPercent:membershipPercent.value,
       isEventTarget:eventTargetValue,
-      itemOptionType1:itemOptionType1.value,
-      itemOptionValue1:itemOptionValue1.value,
-      itemOptionType2:itemOptionType2.value,
-      itemOptionValue2:itemOptionValue2.value
+      itemOptionList:itemOptionList
     }
 
     RegisterShopItem(formObj).then(result => {
