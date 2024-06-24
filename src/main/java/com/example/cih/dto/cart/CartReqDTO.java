@@ -20,4 +20,11 @@ public class CartReqDTO {
     // 임시로
     private Long itemOptionId1;
     private Long itemOptionId2;
+
+    public Long getItemOptionId1() {
+        return itemOptionId1 == null ? 0L : itemOptionId1;
+    }
+    public Long getItemOptionId2() {
+        return itemOptionId2 == null ? 0L : itemOptionId2;
+    }
 }

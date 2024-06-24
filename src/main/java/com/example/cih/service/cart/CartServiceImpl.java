@@ -42,27 +42,32 @@ public class CartServiceImpl implements CartService {
 
         List<Cart> result = cartRepository.findByUser(user);
 
-        List<CartDetailResDTO> listDTO = result.stream().map(cart -> {
-            ItemOption itemOption1 = itemOptionRepository.findById(cart.getItemOptionId1())
-                    .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
-            ItemOption itemOption2 = itemOptionRepository.findById(cart.getItemOptionId2())
-                    .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
+        List<CartDetailResDTO> listDTO = result.stream()
+                .filter(Cart::getIsActive)  // 유효한 정보 만..
+                .map(cart -> {
+                    CartDetailResDTO cartDTO = CartDetailResDTO.builder()
+                            .cartId(cart.getCartId())
+                            .shopItemId(cart.getShopItem().getShopItemId())
+                            .itemName(cart.getShopItem().getItemName())
+                            .itemCount(cart.getItemCount())
+                            .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
+                            .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
+                            .build();
 
-            CartDetailResDTO cartDTO = CartDetailResDTO.builder()
-                    .cartId(cart.getCartId())
-                    .shopItemId(cart.getShopItem().getShopItemId())
-                    .itemName(cart.getShopItem().getItemName())
-                    .itemCount(cart.getItemCount())
-                    .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
-                    .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
-                    // 임시로
-                    .optionType1(itemOption1.getType().getName())
-                    .optionName1(itemOption1.getOption1())
-                    .optionType2(itemOption2.getType().getName())
-                    .optionName2(itemOption2.getOption1())
+                    if(cart.getItemOptionId1() > 0){
+                        ItemOption itemOption1 = itemOptionRepository.findById(cart.getItemOptionId1())
+                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
 
-                    .build();
-            return cartDTO;
+                        cartDTO.setOptionType1(itemOption1);
+                    }
+                    if(cart.getItemOptionId2() > 0){
+                        ItemOption itemOption2 = itemOptionRepository.findById(cart.getItemOptionId2())
+                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션2 정보가 존재하지않습니다"));
+
+                        cartDTO.setOptionType2(itemOption2);
+                    }
+
+                    return cartDTO;
         }).collect(Collectors.toList());
 
         return listDTO;
@@ -70,6 +75,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addCart(CartReqDTO cartReqDTO, String userName) {
+
+        log.error(cartReqDTO);
 
         User user = userService.findUser(userName);
 
@@ -82,14 +89,15 @@ public class CartServiceImpl implements CartService {
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = calcDiscountPrice(user, shopItem, event);
 
-
         // 임시로
-        ItemOption itemOptionId1 = itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
-
-        ItemOption itemOptionId2 = itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션 정보가 존재하지않습니다"));
-
+        if(cartReqDTO.getItemOptionId1()> 0){
+            itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
+                    .orElseThrow(() -> new NoSuchElementException("해당 옵션1 정보가 존재하지않습니다"));
+        }
+        if(cartReqDTO.getItemOptionId2() > 0) {
+            itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
+                    .orElseThrow(() -> new NoSuchElementException("해당 옵션2 정보가 존재하지않습니다"));
+        }
 
         Cart cart = Cart.builder()
                 .shopItem(shopItem)
@@ -99,8 +107,8 @@ public class CartServiceImpl implements CartService {
                 .isActive(true)
                 .metricWeight(10)   // 학습용
 
-                .itemOptionId1(itemOptionId1.getItemOptionId())
-                .itemOptionId2(itemOptionId2.getItemOptionId())
+                .itemOptionId1(cartReqDTO.getItemOptionId1())
+                .itemOptionId2(cartReqDTO.getItemOptionId2())
                 .build();
 
         cartRepository.save(cart);
