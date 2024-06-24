@@ -7,11 +7,12 @@ import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+//@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Getter
 public class ShopItemReqDTO {
 
     private Long shopItemId;
@@ -32,4 +33,7 @@ public class ShopItemReqDTO {
 
     private List<String> fileNames= new ArrayList<>();
 
+    public void setItemName(String itemName){
+        this.itemName = itemName;
+    }
 }

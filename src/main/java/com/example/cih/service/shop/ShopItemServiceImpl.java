@@ -54,6 +54,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
+        log.error(shopItemReqDTO);
        shopItemRepository.findByItemName(shopItemReqDTO.getItemName())
                .ifPresent(m -> {
                    throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");

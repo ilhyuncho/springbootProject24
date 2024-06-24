@@ -2,12 +2,10 @@ package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.handler.FileHandler;
-import com.example.cih.common.util.Util;
 import com.example.cih.domain.shop.ItemOptionType;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.ShopItemService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -39,29 +37,6 @@ public class AdminShopController {
         model.addAttribute("ItemOptionTypeList", ItemOptionType.getAllTypes());
 
         return "/admin/shopItem";
-    }
-
-    @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
-    @PostMapping("/shopItem")
-    public String postShopItem(@Valid ShopItemReqDTO shopItemReqDTO,
-                               BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes){
-
-        if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(log::error);
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/admin/shopItem";
-        }
-
-        // 테스트용
-        if( shopItemReqDTO.getItemName().isEmpty()){
-            shopItemReqDTO.setItemName(Util.createRandomName("Item"));
-        }
-
-        Long ItemId = shopItemService.registerItem(shopItemReqDTO);
-
-        return "redirect:/admin/shopItem";
     }
 
     @GetMapping({"/shopItemDetail/{shopItemId}",
