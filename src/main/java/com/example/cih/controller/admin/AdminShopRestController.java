@@ -7,9 +7,11 @@ import com.example.cih.service.shop.ShopItemService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -25,16 +27,12 @@ public class AdminShopRestController {
 
     @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
     @PostMapping("/shopItem")
-    public Map<String, String> postShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO
-                                        ,BindingResult bindingResult
-                                        ,RedirectAttributes redirectAttributes){
+    public ResponseEntity<Map<String, String>> postShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO
+            , BindingResult bindingResult) throws BindException {
 
         if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(log::error);
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-           // return "redirect:/admin/shopItem";
-            // 에러 리턴으로......
+            log.error("bindingResult.hasErrors()~~~");
+            throw new BindException(bindingResult);
         }
 
         // 테스트용
@@ -48,7 +46,7 @@ public class AdminShopRestController {
         resultMap.put("result", "success");
         resultMap.put("ItemId", ItemId.toString());
 
-        return resultMap;
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
     }
 
 }

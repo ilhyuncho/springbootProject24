@@ -240,7 +240,7 @@
     // param ( 1: 바뀐 주소와 함께 저장할 객체, 2: 바꿀 제목, 3: 바꿀 주소 )
     // https://www.zerocho.com/category/HTML&DOM/post/599d2fb635814200189fe1a7
     history.replaceState({}, null, null)
-    alert(errorMsg)
+    alert('에러 처리 : ' + errorMsg)
   }
   // 에러 처리 부분 end ----------------------------
 
@@ -348,13 +348,22 @@
     RegisterShopItem(formObj).then(result => {
       console.log(result.ItemId)
 
-      if(result.ItemId > 0){
-        // 화면 재 갱신
-        self.location = '/admin/shopItem'
+      if(result.result === 'success'){
+        if(result.ItemId > 0){
+          alert(result.ItemId)
+          // 화면 재 갱신
+          self.location = '/admin/shopItem'
+        }
       }
-    }).catch(e => {
-      console.log(e.response.data)
-      alert(e.response.data)
+      else if(result.result === 'fail'){
+        alert("(result.result === 'fail')  : " + result.message)
+      }
+
+    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+      console.log(e.response.data.message)
+      alert('catch: ' + e.response.data.message)
+      // 화면 재 갱신
+      self.location = '/admin/shopItem'
     })
 
   }, false)

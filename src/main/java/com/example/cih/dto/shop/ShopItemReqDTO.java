@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,11 @@ public class ShopItemReqDTO {
 
     private Long shopItemId;
     private String itemName;
+
+    @Positive   // 양수
     private Integer originalPrice;
+
+    @Positive    // 양수
     private int stockCount;     // 재고수량
 
     private int itemOptionType1;
@@ -26,7 +31,7 @@ public class ShopItemReqDTO {
     private String itemOptionValue2;
 
     @Min(value = 0, message = "멤버쉽 할인율은 최소 0 부터")
-    @Max(value = 50, message = "멤버쉽 할인율은 최대 30 까지")
+    @Max(value = 50, message = "멤버쉽 할인율은 최대 50 까지")
     private Integer membershipPercent;
 
     Boolean isEventTarget;
