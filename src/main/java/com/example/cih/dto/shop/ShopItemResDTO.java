@@ -27,7 +27,7 @@ public class ShopItemResDTO {
 
     private String itemDetail;
     private ItemSellingStatus itemSellStatus;
-    private ImageDTO image;
+//    private ImageDTO image;
 
     @Builder.Default
     private List<ImageDTO> fileNames= new ArrayList<>();
@@ -35,8 +35,7 @@ public class ShopItemResDTO {
     @Builder(builderMethodName = "writeShopItemViewDTOBuilder")
     public ShopItemResDTO(Long shopItemId, String itemName, int originalPrice, int stockCount,
                           String itemOption1, String itemOption2, Integer membershipPercent,
-                          Boolean isEventTarget, String itemDetail, ItemSellingStatus itemSellStatus,
-                          ImageDTO image) {
+                          Boolean isEventTarget, String itemDetail, ItemSellingStatus itemSellStatus) {
 
         this.shopItemId = shopItemId;
         this.itemName = itemName;
@@ -48,8 +47,6 @@ public class ShopItemResDTO {
         this.isEventTarget = isEventTarget;
         this.itemDetail = itemDetail;
         this.itemSellStatus = itemSellStatus;
-        this.image = image;
-
     }
 
     public ImageDTO getMainImage(){

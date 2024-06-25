@@ -27,7 +27,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     private final ItemOptionRepository itemOptionRepository;
 
     @Override
-    public ShopItemViewDTO findItem(Long shopItemId) {
+    public ShopItemViewDTO findItem(Long shopItemId) {      // 관리자 페이지 상세 정보
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
@@ -36,7 +36,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public ShopItemResDTO findItemTemp(Long shopItemId) {
+    public ShopItemResDTO findItemTemp(Long shopItemId) {   // 악세서리 샵 상세 정보
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
@@ -45,7 +45,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public List<ShopItemViewDTO> getAllItems() {
+    public List<ShopItemViewDTO> getAllItems() {    // 관리자 페이지 상품 리스트
 
         List<ShopItem> shopItemList = shopItemRepository.findAll();
 
@@ -64,7 +64,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public List<ShopItemSimpleDTO> getAllItemsForShop() {
+    public List<ShopItemSimpleDTO> getAllItemsForShop() {   // 악세서리 샵 상품 리스트
 
         List<ShopItem> shopItemList = shopItemRepository.findAll();
 
@@ -181,7 +181,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         return shopItem;
     }
 
-    private static ShopItemViewDTO entityToDTO(ShopItem shopItem) {
+    private static ShopItemViewDTO entityToDTO(ShopItem shopItem) { // 관리자 페이지
         ShopItemViewDTO shopItemViewDTO = ShopItemViewDTO.writeShopItemViewDTOBuilder()
                 .shopItemId(shopItem.getShopItemId())
                 .itemName(shopItem.getItemName())
@@ -204,7 +204,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         return shopItemViewDTO;
     }
 
-    private static ShopItemResDTO entityToDTOTemp(ShopItem shopItem) {
+    private static ShopItemResDTO entityToDTOTemp(ShopItem shopItem) {  // 악세서리 샵
         ShopItemResDTO shopItemResDTO = ShopItemResDTO.writeShopItemViewDTOBuilder()
                 .shopItemId(shopItem.getShopItemId())
                 .itemName(shopItem.getItemName())
@@ -213,9 +213,10 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .membershipPercent(shopItem.getItemPrice().getMembershipPercent())
                 .isEventTarget(shopItem.getItemPrice().getIsEventTarget())
 
+                .itemSellStatus(shopItem.getStockCount() <= 0 ?
+                        ItemSellingStatus.STATUS_SOLDOUT : ItemSellingStatus.STATUS_SELLING)
 
-                .itemSellStatus(ItemSellingStatus.STATUS_SOLDOUT)
-                .itemDetail("fsdfsdfsdgdfqewrwerwerwerw")
+                .itemDetail("상세 설명~~~ ")
                 .build();
 
         // 임시로... cih
@@ -225,9 +226,16 @@ public class ShopItemServiceImpl implements ShopItemService {
             shopItemResDTO.setItemOption2(itemOption.getOption2());
         });
 
-        shopItem.getItemImageSet().forEach(shopItemImage -> {
-            shopItemResDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
-        });
+        if( shopItem.getItemImageSet().size() > 0) {
+            shopItem.getItemImageSet().forEach(shopItemImage -> {
+                shopItemResDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
+            });
+        }
+        else{
+            shopItemResDTO.addImage("0000", "default.png", 0);
+        }
+
+
         return shopItemResDTO;
     }
 
