@@ -12,7 +12,7 @@
         <th:block th:each="item:${itemList}">
           <div class="col-md-4 margin">
             <div class="card">
-              <a th:href="|@{'/admin/shopItemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
+              <a th:href="|@{'/shop/itemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
                 <img th:src="|/view/s_${item.image.uuid}_${item.image.fileName}|" th:data-src="${item.image.uuid}">
 
                 <div class="card-body">
