@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -81,6 +83,9 @@ public class OrderServiceImpl implements OrderService {
 
         List<Order> orderList = orderRepository.findByUser(user);
 
+        Map<Long, Order> orderMap = orderList.stream()
+                .collect(Collectors.toMap(Order::getOrderId, Function.identity()));
+
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
         List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem -> {
@@ -93,6 +98,7 @@ public class OrderServiceImpl implements OrderService {
                             .shopItemId(orderItem.getShopItem().getShopItemId())
                             .itemName(orderItem.getShopItem().getItemName())
                             .orderPrice(orderItem.getOrderPrice())
+                            .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderDate().toLocalDate())
                             .build();
 
                     if(orderItem.getItemOptionId1() > 0){

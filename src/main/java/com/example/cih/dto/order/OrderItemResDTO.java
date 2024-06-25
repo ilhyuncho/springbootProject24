@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,6 +27,9 @@ public class OrderItemResDTO {
     private String optionName1;
     private String optionType2;
     private String optionName2;
+
+    private LocalDate orderDate;
+
 
     public void setOptionType1(ItemOption itemOption){
         this.optionType1 = itemOption.getType().getName();

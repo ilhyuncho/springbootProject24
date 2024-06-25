@@ -18,6 +18,7 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th scope="col">주문 날짜</th>
                             <th scope="col">상품 이름</th>
                             <th scope="col">옵션1</th>
                             <th scope="col">옵션2</th>
@@ -29,6 +30,7 @@
                         </thead>
                         <tbody th:with="link = ${pageRequestDto.getLink()}">
                         <tr th:each="dto:${responseDTO.dtoList}">
+                            <td>[[${dto.orderDate}]]</td>
                             <th scope="row">
                                 <a th:href="|@{'/admin/shopItemDetail/' + ${dto.shopItemId}}|"
                                    class="text-decoration-none"> [[${dto.itemName}]]</a>
