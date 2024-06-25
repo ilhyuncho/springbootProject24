@@ -20,8 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
@@ -35,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final ShopItemRepository shopItemRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ItemOptionRepository itemOptionRepository;
     private final UserService userService;
 
     @Override
@@ -57,7 +58,9 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
             // 주문 상품 생성
-            return OrderItem.createOrderItem(shopItem, item);
+            return OrderItem.createOrderItem(shopItem, item, cart);
+
+
         }).collect(Collectors.toList());
 
 
@@ -80,16 +83,33 @@ public class OrderServiceImpl implements OrderService {
 
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
-        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem ->
-                OrderItemResDTO.builder()
-                        .orderId(orderItem.getOrder().getOrderId())
-                        .orderItemId(orderItem.getOrderItemId())
-                        .orderCount(orderItem.getOrderCount())
-                        .deliveryStatus(orderItem.getDeliveryStatus().getName())
-                        .shopItemId(orderItem.getShopItem().getShopItemId())
-                        .itemName(orderItem.getShopItem().getItemName())
-                        .orderPrice(orderItem.getOrderPrice())
-                        .build()
+        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem -> {
+
+                    OrderItemResDTO itemDTO = OrderItemResDTO.builder()
+                            .orderId(orderItem.getOrder().getOrderId())
+                            .orderItemId(orderItem.getOrderItemId())
+                            .orderCount(orderItem.getOrderCount())
+                            .deliveryStatus(orderItem.getDeliveryStatus().getName())
+                            .shopItemId(orderItem.getShopItem().getShopItemId())
+                            .itemName(orderItem.getShopItem().getItemName())
+                            .orderPrice(orderItem.getOrderPrice())
+                            .build();
+
+                    if(orderItem.getItemOptionId1() > 0){
+                        ItemOption itemOption1 = itemOptionRepository.findById(orderItem.getItemOptionId1())
+                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
+
+                        itemDTO.setOptionType1(itemOption1);
+                    }
+                    if(orderItem.getItemOptionId2() > 0){
+                        ItemOption itemOption2 = itemOptionRepository.findById(orderItem.getItemOptionId2())
+                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
+
+                        itemDTO.setOptionType2(itemOption2);
+                    }
+
+                    return itemDTO;
+                }
         ).collect(Collectors.toList());
 
         return PageResponseDTO.<OrderItemResDTO>withAll()

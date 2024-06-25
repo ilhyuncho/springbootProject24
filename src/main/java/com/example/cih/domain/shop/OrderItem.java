@@ -1,6 +1,7 @@
 package com.example.cih.domain.shop;
 
 
+import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.order.OrderDetailDTO;
 import lombok.*;
 
@@ -32,13 +33,18 @@ public class OrderItem {
     private int orderPrice;                           // 실제 결제한 가격
     private int orderCount;
 
-    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO){
+    private Long itemOptionId1;
+    private Long itemOptionId2;
+
+    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO, Cart cart){
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
                 .orderCount(orderDetailDTO.getItemCount())
+                .itemOptionId1(cart.getItemOptionId1())
+                .itemOptionId2(cart.getItemOptionId2())
                 .build();
 
         // 해당 아이템 제고 수량 차감
