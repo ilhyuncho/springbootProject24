@@ -2,6 +2,7 @@ package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.shop.*;
+import com.example.cih.dto.shop.ShopItemSimpleDTO;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -50,6 +52,36 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         return shopItemDTOList;
     }
+
+    @Override
+    public List<ShopItemSimpleDTO> getAllItemsForShop() {
+
+        List<ShopItem> shopItemList = shopItemRepository.findAll();
+
+        List<ShopItemSimpleDTO> listDTO = shopItemList.stream().map(shopItem -> {
+                    ShopItemSimpleDTO shopItemSimpleDTO = ShopItemSimpleDTO.builder()
+                            .shopItemId(shopItem.getShopItemId())
+                            .itemName(shopItem.getItemName())
+                            .originalPrice(shopItem.getItemPrice().getOriginalPrice())
+                            .build();
+
+                    if( shopItem.getItemImageSet().size() > 0){
+                        ItemImage itemImage = shopItem.getItemImageSet().stream()
+                                .filter(Objects::nonNull)
+                                .filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
+                                .findFirst().get();
+                        shopItemSimpleDTO.addImage(itemImage.getUuid(), itemImage.getFileName(), itemImage.getImageOrder());
+                    }
+                    else{
+                        shopItemSimpleDTO.addImage("0000", "default.png", 0);
+                    }
+
+                    return shopItemSimpleDTO;
+                }).collect(Collectors.toList());
+
+        return listDTO;
+    }
+
 
     @Override
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {

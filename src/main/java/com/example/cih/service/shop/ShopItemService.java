@@ -1,4 +1,5 @@
 package com.example.cih.service.shop;
+import com.example.cih.dto.shop.ShopItemSimpleDTO;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
 
@@ -9,6 +10,7 @@ public interface ShopItemService {
     ShopItemViewDTO findItem(Long itemId);
 
     List<ShopItemViewDTO> getAllItems();
+    List<ShopItemSimpleDTO> getAllItemsForShop();
 
     Long registerItem(ShopItemReqDTO shopItemReqDTO);
 

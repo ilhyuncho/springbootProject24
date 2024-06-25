@@ -320,15 +320,18 @@
     console.log("uploadFiles.length" + uploadFiles.length)
     let str= ''
 
+    const fileNameList = []
     for(let i = 0 ; i < uploadFiles.length;i++){
       const uploadFile = uploadFiles[i]
       const imgLink = uploadFile.getAttribute("data-src")
 
       console.log("imgLink:" + imgLink)
 
-      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+      fileNameList.push(imgLink)
     }
-    target.innerHTML = str;
+    if(fileNameList.length === 0){
+      alert('상품의 이미지를 추가해야 합니다!!')
+    }
 
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
@@ -341,13 +344,15 @@
       itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
     }
 
+
     const formObj = {
       itemName:itemName.value,
       originalPrice:originalPrice.value,
       stockCount:stockCount.value,
       membershipPercent:membershipPercent.value,
       isEventTarget:eventTargetValue,
-      itemOptionList:itemOptionList
+      itemOptionList:itemOptionList,
+      fileNames:fileNameList
     }
 
     RegisterShopItem(formObj).then(result => {

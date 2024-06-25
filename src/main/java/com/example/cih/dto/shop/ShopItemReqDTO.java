@@ -8,22 +8,21 @@ import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Data
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Getter
 public class ShopItemReqDTO {
 
     private Long shopItemId;
     private String itemName;
 
-    @Positive   // 양수
+    @Positive   // 양수 체크
     private Integer originalPrice;
 
-    @Positive    // 양수
-    private int stockCount;     // 재고수량
+    @Positive    // 양수 체크
+    private Integer stockCount;     // 재고수량
 
     private List<ItemOptionDTO> itemOptionList;
 

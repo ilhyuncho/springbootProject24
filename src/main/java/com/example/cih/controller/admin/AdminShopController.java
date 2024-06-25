@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class AdminShopController {
     }
 
     @PostMapping("/shopItemModify")
-    public String shopItemModify(@Valid ShopItemReqDTO shopItemReqDTO,
+    public String postShopItemModify( ShopItemReqDTO shopItemReqDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
@@ -77,7 +76,7 @@ public class AdminShopController {
     }
 
     @PostMapping("/shopItemDelete")
-    public String shopItemDelete(ShopItemReqDTO shopItemReqDTO,
+    public String postShopItemDelete(ShopItemReqDTO shopItemReqDTO,
                                  RedirectAttributes redirectAttributes){
 
         shopItemService.deleteItem(shopItemReqDTO.getShopItemId());
