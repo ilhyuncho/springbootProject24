@@ -1,7 +1,7 @@
 package com.example.cih.controller.shop;
 
+import com.example.cih.dto.shop.ShopItemResDTO;
 import com.example.cih.dto.shop.ShopItemSimpleDTO;
-import com.example.cih.dto.shop.ShopItemViewDTO;
 import com.example.cih.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,10 +34,10 @@ public class ShopController {
     }
 
     @GetMapping("/itemDetail/{shopItemId}")
-    public String shopItemDetailOrModify(@PathVariable("shopItemId") Long shopItemId,
+    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
                                          Model model){
 
-        ShopItemViewDTO shopItem = shopItemService.findItem(shopItemId);
+        ShopItemResDTO shopItem = shopItemService.findItemTemp(shopItemId);
 
         model.addAttribute("responseDTO", shopItem);
 

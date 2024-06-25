@@ -2,6 +2,7 @@ package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.shop.*;
+import com.example.cih.dto.shop.ShopItemResDTO;
 import com.example.cih.dto.shop.ShopItemSimpleDTO;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.dto.shop.ShopItemViewDTO;
@@ -32,6 +33,15 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
         return entityToDTO(shopItem);
+    }
+
+    @Override
+    public ShopItemResDTO findItemTemp(Long shopItemId) {
+
+        ShopItem shopItem = shopItemRepository.findById(shopItemId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
+
+        return entityToDTOTemp(shopItem);
     }
 
     @Override
@@ -192,6 +202,33 @@ public class ShopItemServiceImpl implements ShopItemService {
             shopItemViewDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
         });
         return shopItemViewDTO;
+    }
+
+    private static ShopItemResDTO entityToDTOTemp(ShopItem shopItem) {
+        ShopItemResDTO shopItemResDTO = ShopItemResDTO.writeShopItemViewDTOBuilder()
+                .shopItemId(shopItem.getShopItemId())
+                .itemName(shopItem.getItemName())
+                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
+                .stockCount(shopItem.getStockCount())
+                .membershipPercent(shopItem.getItemPrice().getMembershipPercent())
+                .isEventTarget(shopItem.getItemPrice().getIsEventTarget())
+
+
+                .itemSellStatus(ItemSellingStatus.STATUS_SOLDOUT)
+                .itemDetail("fsdfsdfsdgdfqewrwerwerwerw")
+                .build();
+
+        // 임시로... cih
+        shopItem.getItemOptionSet().forEach(itemOption -> {
+            //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
+            shopItemResDTO.setItemOption1(itemOption.getOption1());
+            shopItemResDTO.setItemOption2(itemOption.getOption2());
+        });
+
+        shopItem.getItemImageSet().forEach(shopItemImage -> {
+            shopItemResDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
+        });
+        return shopItemResDTO;
     }
 
 }
