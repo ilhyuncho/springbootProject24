@@ -44,18 +44,29 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">ItemOption1</span>
+            <span class="input-group-text">optionType1</span>
             <label>
-              <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" readonly>
+              <input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionType}" readonly>
             </label>
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">ItemOption2</span>
+            <span class="input-group-text">optionValue1</span>
+              <input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionValue}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionType2</span>
             <label>
-              <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" readonly>
+              <input type="text" class="form-control" th:value="${responseDTO.getOptionType(1).optionType}" readonly>
             </label>
           </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">optionValue2</span>
+              <input type="text" class="form-control" th:value="${responseDTO.getOptionType(1).optionValue}" readonly>
+          </div>
+
 
           <div class="input-group mb-3">
             <span class="input-group-text">MembershipPercent</span>

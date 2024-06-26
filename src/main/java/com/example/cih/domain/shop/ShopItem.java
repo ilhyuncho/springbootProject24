@@ -2,19 +2,14 @@ package com.example.cih.domain.shop;
 
 
 import com.example.cih.common.exception.NotEnoughStockCountException;
-import com.example.cih.domain.car.CarImage;
-import com.example.cih.domain.car.CarSize;
-import com.example.cih.domain.user.User;
+import com.example.cih.dto.ImageDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import net.bytebuddy.matcher.FilterableList;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -29,6 +24,9 @@ public class ShopItem {
     private Long shopItemId;
 
     private String itemName;
+    private String itemTitle;
+    private String itemDesc;
+
     private int stockCount;     // 재고수량
 
     @OneToMany(mappedBy = "shopItem", //
@@ -108,5 +106,31 @@ public class ShopItem {
         }
         stockCount -= count;
         return stockCount;
+    }
+
+    public Map<ItemOptionType, String> getMapItemOption(){
+        Map<ItemOptionType, String> mapItemOption = new HashMap<>();
+
+        itemOptionSet.forEach(itemOption -> {
+            mapItemOption.compute(itemOption.getType(), (k, v) -> (v == null)
+                    ? itemOption.getOption1() : (v += ", " + itemOption.getOption1()));
+        });
+
+        return mapItemOption;
+    }
+    public ImageDTO getMainImageDTO(){
+        ItemImage itemImage = itemImageSet.stream()
+                .filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
+                .findFirst().orElse(null);
+
+        if(itemImage == null){
+            return null;
+        }
+
+        return ImageDTO.builder()
+                .uuid(itemImage.getUuid())
+                .fileName(itemImage.getFileName())
+                .imageOrder(itemImage.getImageOrder())
+                .build();
     }
 }

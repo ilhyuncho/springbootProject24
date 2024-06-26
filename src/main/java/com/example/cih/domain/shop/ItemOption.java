@@ -1,10 +1,10 @@
 package com.example.cih.domain.shop;
 
 
-import com.example.cih.common.exception.NotEnoughStockCountException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -15,6 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="itemOptions")
+@ToString
 public class ItemOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

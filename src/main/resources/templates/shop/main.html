@@ -8,36 +8,22 @@
 </head>
 
 <div layout:fragment="content">
+  <div class="row">
+        <th:block th:each="item:${itemList}">
+          <div class="col-md-4 margin">
+            <div class="card">
+              <a th:href="|@{'/shop/itemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
+                <img th:src="|/view/s_${item.mainImage.uuid}_${item.mainImage.fileName}|" th:data-src="${item.mainImage.uuid}">
 
-  <form action="/cart/add" method="post">
-
-    <div class="input-group mb-3">
-      <span class="input-group-text">itemName</span>
-      <input type="text" name="itemName" class="form-control" th:value="item1">
-    </div>
-
-    <div class="input-group mb-3">
-      <span class="input-group-text">itemCount</span>
-      <input type="text" name="itemCount" class="form-control" th:value="4">
-    </div>
-
-    <div class="input-group mb-3">
-      <span class="input-group-text">itemOption1</span>
-      <input type="text" name="itemOptionId1" class="form-control" th:value="1">
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text">itemOption2</span>
-      <input type="text" name="itemOptionId2" class="form-control" th:value="5">
-    </div>
-
-    <div class="my-4">
-      <div class="float-end">
-        <button type="submit" class="btn btn-primary submitBtn">장바구니 넣기</button>
-      </div>
-    </div>
-
-  </form>
-
+                <div class="card-body">
+                  <h4 class="card-title">[[${item.itemTitle}]]</h4>
+                  <h3 class="card-title text-danger">[[${item.originalPrice}]]원 </h3>
+                </div>
+              </a>
+           </div>
+          </div>
+        </th:block>
+  </div>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">

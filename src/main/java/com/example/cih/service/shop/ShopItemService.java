@@ -1,18 +1,14 @@
 package com.example.cih.service.shop;
-import com.example.cih.dto.shop.ShopItemResDTO;
-import com.example.cih.dto.shop.ShopItemSimpleDTO;
-import com.example.cih.dto.shop.ShopItemReqDTO;
-import com.example.cih.dto.shop.ShopItemViewDTO;
+import com.example.cih.dto.shop.*;
 
 import java.util.List;
 
 public interface ShopItemService {
 
-    ShopItemViewDTO findItem(Long itemId);
-    ShopItemResDTO findItemTemp(Long itemId);
+    ShopItemExtandDTO getItem(Long itemId);
 
-    List<ShopItemViewDTO> getAllItems();
-    List<ShopItemSimpleDTO> getAllItemsForShop();
+    List<ShopItemExtandDTO> getAllItems();
+    List<ShopItemDTO> getAllItemsForShop();
 
     Long registerItem(ShopItemReqDTO shopItemReqDTO);
 

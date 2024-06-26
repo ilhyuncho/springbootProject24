@@ -142,8 +142,6 @@
               <th scope="col">itemName</th>
               <th scope="col">price</th>
               <th scope="col">stockCount</th>
-              <th scope="col">itemOption1</th>
-              <th scope="col">itemOption2</th>
             </tr>
             </thead>
 
@@ -164,8 +162,6 @@
               </td>
               <td>[[${dto.originalPrice}]]</td>
               <td>[[${dto.stockCount}]]</td>
-              <td>[[${dto.itemOption1}]]</td>
-              <td>[[${dto.itemOption2}]]</td>
 
             </tr>
             </tbody>
@@ -331,6 +327,7 @@
     }
     if(fileNameList.length === 0){
       alert('상품의 이미지를 추가해야 합니다!!')
+      return;
     }
 
     ////////////////////////////////////////////////////

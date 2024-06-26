@@ -32,6 +32,9 @@ public class ProjectSettingTest {
     ItemPriceRepository itemPriceRepository;
 
     @Autowired
+    ItemImageRepository itemImageRepository;
+
+    @Autowired
     RefCarConsumableRepository refCarConsumableRepository;
 
     @Autowired
@@ -131,6 +134,8 @@ public class ProjectSettingTest {
                     .itemName("item" + i)
                     .itemPrice(itemPrice)
                     .stockCount(10000)
+                    .itemTitle("item" + i +"_title")
+                    .itemDesc("item" + i +"Desc ~~~~~~~~~~~~!@1231242343546")
                     .build();
 
 //            shopItem.addImage("1a1a1a", "ionic5.png");
@@ -147,6 +152,15 @@ public class ProjectSettingTest {
             shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("xl 사이즈").build());
 
             shopItemRepository.save(shopItem);
+
+            ItemImage itemImage = ItemImage.builder()
+                    .imageOrder(0)
+                    .fileName("item" + i + ".png")
+                    .uuid("1111")
+                    .shopItem(shopItem)
+                    .build();
+            itemImageRepository.save(itemImage);
+
         });
 
 

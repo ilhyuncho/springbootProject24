@@ -4,7 +4,7 @@ package com.example.cih.controller.admin;
 import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.shop.ItemOptionType;
 import com.example.cih.dto.shop.ShopItemReqDTO;
-import com.example.cih.dto.shop.ShopItemViewDTO;
+import com.example.cih.dto.shop.ShopItemExtandDTO;
 import com.example.cih.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,10 +30,12 @@ public class AdminShopController {
     @GetMapping("/shopItem")
     public String getShopItem(Model model){
 
-        List<ShopItemViewDTO> allItems = shopItemService.getAllItems();
+        List<ShopItemExtandDTO> listDTO = shopItemService.getAllItems();       // 관리자 페이지 메인
 
-        model.addAttribute("itemList", allItems);
+        model.addAttribute("itemList", listDTO);
         model.addAttribute("ItemOptionTypeList", ItemOptionType.getAllTypes());
+
+        listDTO.forEach(log::error);
 
         return "/admin/shopItem";
     }
@@ -44,7 +46,7 @@ public class AdminShopController {
                                  @PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
-        ShopItemViewDTO shopItem = shopItemService.findItem(shopItemId);
+        ShopItemExtandDTO shopItem = shopItemService.getItem(shopItemId);        // [관리자] 아이템 상세 페이지
 
         model.addAttribute("responseDTO", shopItem);
 

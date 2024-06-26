@@ -43,11 +43,11 @@
     </div>
     <div class="wd50">
       <span style="background-color: #0a53be" class="badge badge-primary mgb-15"
-            th:if="${responseDTO.itemSellStatus == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}">
+            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}">
         판매중
       </span>
       <span style="background-color: red"  class="badge badge-primary mgb-15"
-            th:if="${responseDTO.itemSellStatus == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SOLDOUT}">
+            th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SOLDOUT}">
         품절
       </span>
 
@@ -74,12 +74,12 @@
         <h5>결제 금액</h5>
         <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
       </div>
-      <div th:if="${responseDTO.itemSellStatus == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+      <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-light border border-primary btn-lg">장바구니 담기</button>
         <button type="button" class="btn border-primary btn-lg">주문 하기</button>
       </div>
-      <div th:unless="${responseDTO.itemSellStatus == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
+      <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-danger btn-lg">품절</button>
       </div>
@@ -90,7 +90,7 @@
   <hr class="my-4">
       <h4 class="display-5">상품 상세 설명</h4>
       <hr class="my-4">
-      <p class="lead" th:text="${responseDTO.itemDetail}"></p>
+      <p class="lead" th:text="${responseDTO.itemDesc}"></p>
   <hr class="my-4">
   <hr class="my-4">
 

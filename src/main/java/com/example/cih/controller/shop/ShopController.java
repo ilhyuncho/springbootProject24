@@ -1,7 +1,7 @@
 package com.example.cih.controller.shop;
 
-import com.example.cih.dto.shop.ShopItemResDTO;
-import com.example.cih.dto.shop.ShopItemSimpleDTO;
+import com.example.cih.dto.shop.ShopItemExtandDTO;
+import com.example.cih.dto.shop.ShopItemDTO;
 import com.example.cih.service.shop.ShopItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,22 +25,20 @@ public class ShopController {
     @GetMapping("/main")
     public String shopMain(Model model){
 
-        List<ShopItemSimpleDTO> allItems = shopItemService.getAllItemsForShop();
+        List<ShopItemDTO> listDTO = shopItemService.getAllItemsForShop();    // 악세서리 샵 메인 ( 심플 )
 
+        model.addAttribute("itemList", listDTO);
         //allItems.forEach(log::error);
-        model.addAttribute("itemList", allItems);
-
-        return "/shop/mainNew";
+        return "/shop/main";
     }
 
     @GetMapping("/itemDetail/{shopItemId}")
-    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
-                                         Model model){
+    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId, Model model){
 
-        ShopItemResDTO shopItem = shopItemService.findItemTemp(shopItemId);
+        ShopItemExtandDTO itemDTO = shopItemService.getItem(shopItemId);    // 악세서리 아이템 상세
 
-        model.addAttribute("responseDTO", shopItem);
-
+        model.addAttribute("responseDTO", itemDTO);
+        //log.error(itemDTO);
         return "/shop/itemDetail";
     }
 

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class ImageDTO {
     private String uuid;
     private String fileName;
-    private int imageOrder;
+    private Integer imageOrder;
 }

@@ -1,14 +1,14 @@
 package com.example.cih.dto.shop;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
+@Builder
 public class ItemOptionDTO {
-    private int optionType;
+    private String optionType;
     private String optionValue;
 }
