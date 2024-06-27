@@ -52,10 +52,6 @@ public class ShopItem {
     @JoinColumn(name = "ITEM_PRICE_ID")
     private ItemPrice itemPrice;
 
-//    @ManyToMany(mappedBy = "")
-//    @JoinColumn(name = "uId")
-//    private List<Category> categoryList = new ArrayList<>();
-
     public void change(String itemName, int price, int stockCount){
         this.itemName = itemName;
         //this.price = price;   // 임시로
@@ -77,16 +73,6 @@ public class ShopItem {
         itemImageSet.forEach(image -> image.changeItem(null));
         this.itemImageSet.clear();
     }
-
-//    public void addItemOption(ItemOptionType type, String option1, String option2){
-//        ItemOption itemOption = ItemOption.builder()
-//                .type(type)
-//                .option1(option1)
-//                .option2(option2)
-//                .shopItem(this)
-//                .build();
-//        itemOptionSet.add(itemOption);
-//    }
 
     public void addItemOption(ItemOption itemOption){
         if( itemOption != null ){

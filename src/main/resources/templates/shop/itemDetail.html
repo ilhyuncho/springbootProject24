@@ -80,8 +80,8 @@
           </select>
         </div>
 
-
-        <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
+        <div class="input-group mb-3" th:if="${responseDTO.listOptionType.size() == 2}"
+             th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션2</span>
             <input type="hidden" th:value="${optionDTO.getOptionType()}" class="itemOptionType2">
@@ -138,6 +138,8 @@
   const shopItemId = [[${responseDTO.shopItemId}]]
   const itemName = [[${responseDTO.itemName}]]
 
+  const optionCount = [[${responseDTO.listOptionType.size()}]]
+
   const itemCount = document.querySelector('.itemCount')
   const originalPrice = document.querySelector('.originalPrice')
 
@@ -158,7 +160,9 @@
       itemOptionList.push({optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
     // }
     // if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
-      itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+      if( optionCount > 1 ){
+        itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+      }
    // }
 
     console.log(itemOptionList)

@@ -84,9 +84,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addCart(CartReqDTO cartReqDTO, String userName) {
 
-        log.error("addCart()~~~");
-        log.error(cartReqDTO);
-
         User user = userService.findUser(userName);
 
         ShopItem shopItem = shopItemRepository.findByItemName(cartReqDTO.getItemName())
@@ -98,8 +95,6 @@ public class CartServiceImpl implements CartService {
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = calcDiscountPrice(user, shopItem, event);
 
-        // 임시로
-        // 아이템 옵션 set
         cartReqDTO.getItemOptionList().forEach(log::error);
 //        if(cartReqDTO.getItemOptionId1()> 0){
 //            itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
@@ -117,9 +112,10 @@ public class CartServiceImpl implements CartService {
                 .user(user)
                 .isActive(true)
                 .metricWeight(10)   // 학습용
-
+                // 아이템 옵션 set
                 .itemOptionId1(Long.valueOf(cartReqDTO.getItemOptionList().get(0).getOptionValue()))
-                .itemOptionId2(Long.valueOf(cartReqDTO.getItemOptionList().get(1).getOptionValue()))
+                .itemOptionId2(cartReqDTO.getItemOptionList().size() > 1 ?
+                        Long.parseLong(cartReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
                 .build();
 
         cartRepository.save(cart);
