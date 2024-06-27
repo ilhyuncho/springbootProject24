@@ -1,10 +1,13 @@
 package com.example.cih.dto.cart;
 
 
+import com.example.cih.dto.shop.ItemOptionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -18,6 +21,7 @@ public class CartReqDTO {
     private Integer itemPrice;
 
     // 임시로
+    private List<ItemOptionDTO> itemOptionList;
     private Long itemOptionId1;
     private Long itemOptionId2;
 

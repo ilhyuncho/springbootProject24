@@ -38,22 +38,22 @@ public class CartController {
         return "/cart/cartList";
     }
 
-    @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")
-    @PostMapping("/add")
-    public String postAdd(@Valid CartReqDTO cartReqDTO,
-                      BindingResult bindingResult,
-                      RedirectAttributes redirectAttributes,
-                      Principal principal){
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors........");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/shop/main";
-        }
-
-        cartService.addCart(cartReqDTO, principal.getName());
-
-        return "redirect:/cart/list";
-    }
+//    @ApiOperation(value = "장바구니 넣기", notes = "아이템 add 처리")
+//    @PostMapping("/add")
+//    public String postAdd(@Valid CartReqDTO cartReqDTO,
+//                      BindingResult bindingResult,
+//                      RedirectAttributes redirectAttributes,
+//                      Principal principal){
+//
+//        if(bindingResult.hasErrors()){
+//            log.error("has errors........");
+//            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+//            return "redirect:/shop/main";
+//        }
+//
+//        cartService.addCart(cartReqDTO, principal.getName());
+//
+//        return "redirect:/cart/list";
+//    }
 
 }

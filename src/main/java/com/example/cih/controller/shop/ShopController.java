@@ -38,7 +38,9 @@ public class ShopController {
         ShopItemExtandDTO itemDTO = shopItemService.getItem(shopItemId);    // 악세서리 아이템 상세
 
         model.addAttribute("responseDTO", itemDTO);
-        //log.error(itemDTO);
+
+        log.error(itemDTO);
+
         return "/shop/itemDetail";
     }
 

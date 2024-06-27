@@ -76,6 +76,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addCart(CartReqDTO cartReqDTO, String userName) {
 
+        log.error("addCart()~~~");
         log.error(cartReqDTO);
 
         User user = userService.findUser(userName);
@@ -90,14 +91,16 @@ public class CartServiceImpl implements CartService {
         int discountPrice = calcDiscountPrice(user, shopItem, event);
 
         // 임시로
-        if(cartReqDTO.getItemOptionId1()> 0){
-            itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
-                    .orElseThrow(() -> new NoSuchElementException("해당 옵션1 정보가 존재하지않습니다"));
-        }
-        if(cartReqDTO.getItemOptionId2() > 0) {
-            itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
-                    .orElseThrow(() -> new NoSuchElementException("해당 옵션2 정보가 존재하지않습니다"));
-        }
+        // 아이템 옵션 set
+        cartReqDTO.getItemOptionList().forEach(log::error);
+//        if(cartReqDTO.getItemOptionId1()> 0){
+//            itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
+//                    .orElseThrow(() -> new NoSuchElementException("해당 옵션1 정보가 존재하지않습니다"));
+//        }
+//        if(cartReqDTO.getItemOptionId2() > 0) {
+//            itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
+//                    .orElseThrow(() -> new NoSuchElementException("해당 옵션2 정보가 존재하지않습니다"));
+//        }
 
         Cart cart = Cart.builder()
                 .shopItem(shopItem)

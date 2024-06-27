@@ -10,6 +10,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,19 @@ import java.util.Map;
 //@PreAuthorize("hasRole('USER')")
 public class CartRestController {
     private final CartService cartService;
+
+    @ApiOperation(value = "장바구니 상품 넣기", notes = "아이템 add 처리")
+    @PostMapping("/add")
+    public Map<String,String> postAdd(@Valid @RequestBody CartReqDTO cartReqDTO,
+                          Principal principal){
+
+        cartService.addCart(cartReqDTO, principal.getName());
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
 
     @ApiOperation(value = "장바구니 상품 취소", notes = "DELETE 방식으로 특정 상품 삭제")
     @DeleteMapping("/{cartId}")

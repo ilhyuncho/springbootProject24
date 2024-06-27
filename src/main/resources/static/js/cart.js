@@ -32,3 +32,12 @@ async function removeCartItem(cartId){
 
     return result.data
 }
+
+async function addCartItem(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/cartRest/add`, formObj);
+
+    console.log(response)
+    return response.data
+}
