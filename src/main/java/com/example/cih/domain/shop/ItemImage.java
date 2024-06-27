@@ -1,10 +1,10 @@
 package com.example.cih.domain.shop;
 
 
-import com.example.cih.domain.car.Car;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -15,6 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="itemImages")
+@ToString
 public class ItemImage {
 
     @Id

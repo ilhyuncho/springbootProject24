@@ -29,12 +29,12 @@ public class SellingCarViewDTO {
     private List<ImageDTO> fileNames = new ArrayList<>();
 
     public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO carImage = ImageDTO.builder()
+        ImageDTO imageDTO = ImageDTO.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .imageOrder(imageOrder)
                 .build();
-        fileNames.add(carImage);
+        fileNames.add(imageDTO);
     }
 
 }

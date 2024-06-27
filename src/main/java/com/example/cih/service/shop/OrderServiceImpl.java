@@ -88,7 +88,8 @@ public class OrderServiceImpl implements OrderService {
 
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
-        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem -> {
+        List<OrderItemResDTO> listDTO = resultOrderItem.getContent()
+                .stream().map(orderItem -> {
 
                     OrderItemResDTO itemDTO = OrderItemResDTO.builder()
                             .orderId(orderItem.getOrder().getOrderId())
@@ -113,6 +114,15 @@ public class OrderServiceImpl implements OrderService {
 
                         itemDTO.setOptionType2(itemOption2);
                     }
+
+                    // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+                    orderItem.getShopItem().getItemImageSet()
+                            .stream().filter(image -> image.getImageOrder() == 0)
+                            .peek(log::error)
+                            .forEach(image -> {
+                                itemDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+                            });
+
 
                     return itemDTO;
                 }

@@ -17,15 +17,15 @@
 
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th scope="col">선택</th>
-                            <th scope="col">상품 이름</th>
-                            <th scope="col">가격</th>
-                            <th scope="col">할인 가격</th>
-                            <th scope="col">주문 수량</th>
-                            <th scope="col">옵션1</th>
-                            <th scope="col">옵션2</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">선택</th>
+                                <th scope="col">상품 이름</th>
+                                <th scope="col">가격</th>
+                                <th scope="col">할인 가격</th>
+                                <th scope="col">주문 수량</th>
+                                <th scope="col">옵션1</th>
+                                <th scope="col">옵션2</th>
+                            </tr>
                         </thead>
 
                         <tbody >
@@ -35,6 +35,11 @@
                             </th>
                             <td><a th:href="|@{'/admin/eventDetail/' + ${dto.cartId}}|"
                                     class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                <!-- 이미지 출력-->
+                                <div th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                                    <img style="width:100px" th:each="fileName: ${dto.fileNames}"
+                                         th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
+                                </div>
                             </td>
                             <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10"
                                        class="p_price" th:value="${dto.itemPrice}">

@@ -67,6 +67,14 @@ public class CartServiceImpl implements CartService {
                         cartDTO.setOptionType2(itemOption2);
                     }
 
+                    // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+                    cart.getShopItem().getItemImageSet()
+                            .stream().filter(image -> image.getImageOrder() == 0)
+                            .peek(log::error)
+                            .forEach(image -> {
+                                cartDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+                            });
+
                     return cartDTO;
         }).collect(Collectors.toList());
 
