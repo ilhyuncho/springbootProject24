@@ -67,6 +67,8 @@
           <input type="number" name="itemCount" class="form-control itemCount" value="1" min="1">
         </div>
 
+
+
         <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(0)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션1</span>
@@ -74,9 +76,10 @@
           </div>
           <select class= "form-control itemOptionValue1" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
-                    th:value="${i}">[[${i}]]</option>
+                    th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
         </div>
+
 
         <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
           <div class="input-group-prepend">
@@ -85,7 +88,7 @@
           </div>
           <select class= "form-control itemOptionValue2" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
-                    th:value="${i}">[[${i}]]</option>
+                    th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
         </div>
       </div>

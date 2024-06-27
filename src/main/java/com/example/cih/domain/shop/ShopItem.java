@@ -17,6 +17,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="shopItems")
+@Log4j2
 public class ShopItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,15 +109,20 @@ public class ShopItem {
         return stockCount;
     }
 
-    public Map<ItemOptionType, String> getMapItemOption(){
-        Map<ItemOptionType, String> mapItemOption = new HashMap<>();
+    public SortedMap<ItemOptionType, String> getMapItemOption(){
 
-        itemOptionSet.forEach(itemOption -> {
-            mapItemOption.compute(itemOption.getType(), (k, v) -> (v == null)
-                    ? itemOption.getOption1() : (v += ", " + itemOption.getOption1()));
-        });
+        SortedMap<ItemOptionType, String> sortedMap = new TreeMap<>(Comparator.comparing(ItemOptionType::getType));
 
-        return mapItemOption;
+        itemOptionSet.stream()
+                .sorted(Comparator.comparing(ItemOption::getTypePriority).thenComparing(ItemOption::getOptionOrder))
+                .forEach(itemOption -> {
+                    // 예) "10-흰색, 8-파랑색, 7-검은색, 11-빨강색"  형식으로 파싱
+                    sortedMap.compute(itemOption.getType(), (k, v) -> (v == null)
+                            ? itemOption.getItemOptionId() + "-" + itemOption.getOption1()
+                            : (v += ", " + itemOption.getItemOptionId() + "-" + itemOption.getOption1()));
+                });
+
+        return sortedMap;
     }
     public ImageDTO getMainImageDTO(){
         ItemImage itemImage = itemImageSet.stream()

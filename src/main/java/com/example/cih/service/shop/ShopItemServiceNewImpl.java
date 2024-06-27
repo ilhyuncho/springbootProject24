@@ -23,7 +23,7 @@ public class ShopItemServiceNewImpl implements ShopItemService {
     private final ItemPriceRepository itemPriceRepository;
 
     @Override
-    public ShopItemExtandDTO getItem(Long shopItemId) {      // 관리자 페이지 상세 정보
+    public ShopItemExtandDTO getItem(Long shopItemId) {
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
@@ -107,8 +107,6 @@ public class ShopItemServiceNewImpl implements ShopItemService {
         // 1. sample DTO 셋팅
         ShopItemDTO shopItemDTO = entityToDTO(shopItem);
 
-
-
         // 2. 확장 DTO 셋팅
         ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemDTO;
 
@@ -118,7 +116,7 @@ public class ShopItemServiceNewImpl implements ShopItemService {
 
 
         // ItemOption Map 정보 가져오기
-        Map<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
+        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
 
         for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
             shopItemExtandDTO.getListOptionType().add(ItemOptionDTO.builder()

@@ -19,16 +19,6 @@ public class CartReqDTO {
     private String itemName;
     private Integer itemCount;
     private Integer itemPrice;
-
-    // 임시로
-    private List<ItemOptionDTO> itemOptionList;
-    private Long itemOptionId1;
-    private Long itemOptionId2;
-
-    public Long getItemOptionId1() {
-        return itemOptionId1 == null ? 0L : itemOptionId1;
-    }
-    public Long getItemOptionId2() {
-        return itemOptionId2 == null ? 0L : itemOptionId2;
-    }
+    
+    private List<ItemOptionDTO> itemOptionList;  // 선택한 옵션 내용
 }

@@ -110,8 +110,8 @@ public class CartServiceImpl implements CartService {
                 .isActive(true)
                 .metricWeight(10)   // 학습용
 
-                .itemOptionId1(cartReqDTO.getItemOptionId1())
-                .itemOptionId2(cartReqDTO.getItemOptionId2())
+                .itemOptionId1(Long.valueOf(cartReqDTO.getItemOptionList().get(0).getOptionValue()))
+                .itemOptionId2(Long.valueOf(cartReqDTO.getItemOptionList().get(1).getOptionValue()))
                 .build();
 
         cartRepository.save(cart);

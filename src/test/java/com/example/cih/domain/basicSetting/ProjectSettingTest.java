@@ -141,15 +141,34 @@ public class ProjectSettingTest {
 //            shopItem.addImage("1a1a1a", "ionic5.png");
 //            shopItem.addImage("2a2a2a", "ionic51.png");
 
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("흰색").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("파랑색").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("검은색").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_COLOR).option1("빨강색").build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_COLOR).typePriority(0).option1("흰색").optionOrder(0).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_COLOR).typePriority(0).option1("파랑색").optionOrder(1).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_COLOR).typePriority(0).option1("검은색").optionOrder(2).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_COLOR).typePriority(0).option1("빨강색").optionOrder(3).build());
 
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("s 사이즈").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("m 사이즈").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("l 사이즈").build());
-            shopItem.addItemOption(ItemOption.builder().type(ItemOptionType.OPTION_SIZE).option1("xl 사이즈").build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_SIZE).typePriority(1).option1("s 사이즈").optionOrder(0).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_SIZE).typePriority(1).option1("m 사이즈").optionOrder(1).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_SIZE).typePriority(1).option1("l 사이즈").optionOrder(2).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_SIZE).typePriority(1).option1("xl 사이즈").optionOrder(3).build());
+
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_TYPE).typePriority(2).option1("타입1").optionOrder(0).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_TYPE).typePriority(2).option1("타입2").optionOrder(1).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_TYPE).typePriority(2).option1("타입3").optionOrder(2).build());
+            shopItem.addItemOption(ItemOption.builder()
+                    .type(ItemOptionType.OPTION_TYPE).typePriority(2).option1("타입4").optionOrder(3).build());
+
+
 
             shopItemRepository.save(shopItem);
 

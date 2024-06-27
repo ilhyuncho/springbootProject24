@@ -23,7 +23,11 @@ public class ItemOption {
     private Long itemOptionId;
 
     private ItemOptionType type;
+    private Integer typePriority;
+
     private String option1;
+    private Integer optionOrder;
+
     private String option2;
 
     @ManyToOne(fetch = FetchType.LAZY)
