@@ -20,8 +20,7 @@
                         <tr>
                             <th scope="col">주문 날짜</th>
                             <th scope="col">상품 이름</th>
-                            <th scope="col">옵션1</th>
-                            <th scope="col">옵션2</th>
+                            <th scope="col">옵션</th>
                             <th scope="col">주문 갯수</th>
                             <th scope="col">주문 가격</th>
                             <th scope="col">총 주문 가격</th>
@@ -42,8 +41,7 @@
                                 </div>
 
                             </th>
-                            <td>[[${dto.optionType1 + ": " + dto.optionName1}]]</td>
-                            <td>[[${dto.optionType2 + ": " + dto.optionName2}]]</td>
+                            <td>[[${dto.getOptionDesc()}]]</td>
 
                             <td>[[${dto.orderCount}]]</td>
                             <td>[[${dto.orderPrice}]]</td>

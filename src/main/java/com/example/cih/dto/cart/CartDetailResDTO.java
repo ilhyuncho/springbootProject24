@@ -48,4 +48,9 @@ public class CartDetailResDTO {
         fileNames.add(imageDTO);
     }
 
+    public String getOptionDesc(){
+        return optionType1 + ": " + optionName1 +
+                ( optionType2 != null ? ", " + optionType2 + ": " + optionName2 : "" );
+    }
+
 }
