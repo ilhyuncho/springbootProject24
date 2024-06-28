@@ -2,7 +2,6 @@ package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.shop.*;
-import com.example.cih.dto.ImageDTO;
 import com.example.cih.dto.shop.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
-public class ShopItemServiceNewImpl implements ShopItemService {
+public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
@@ -39,7 +38,7 @@ public class ShopItemServiceNewImpl implements ShopItemService {
         List<ShopItem> shopItemList = shopItemRepository.findAll();
 
         List<ShopItemExtandDTO> shopItemDTOList = shopItemList.stream().
-                map(ShopItemServiceNewImpl::convertShopItemExtandDTO).collect(Collectors.toList());
+                map(ShopItemServiceImpl::convertShopItemExtandDTO).collect(Collectors.toList());
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------begin---------------
         for (ShopItemExtandDTO car : shopItemDTOList) {
@@ -59,7 +58,7 @@ public class ShopItemServiceNewImpl implements ShopItemService {
         List<ShopItem> shopItemList = shopItemRepository.findAll();
 
         List<ShopItemDTO> listDTO = shopItemList.stream()
-                .map(ShopItemServiceNewImpl::convertShopItemDTO)
+                .map(ShopItemServiceImpl::convertShopItemDTO)
                 .collect(Collectors.toList());
 
         log.error(listDTO);
