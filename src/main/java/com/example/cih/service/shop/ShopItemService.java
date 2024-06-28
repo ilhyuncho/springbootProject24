@@ -1,11 +1,12 @@
 package com.example.cih.service.shop;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.shop.*;
 
 import java.util.List;
 
 public interface ShopItemService {
 
-    ShopItemExtandDTO getItem(Long itemId);
+    ShopItemExtandDTO getItem(Long itemId, User user);
 
     List<ShopItemExtandDTO> getAllItems();
     List<ShopItemDTO> getAllItemsForShop();

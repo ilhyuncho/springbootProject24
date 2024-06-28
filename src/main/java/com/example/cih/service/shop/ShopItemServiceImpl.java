@@ -1,8 +1,14 @@
 package com.example.cih.service.shop;
 
 import com.example.cih.common.exception.ItemNotFoundException;
+import com.example.cih.domain.notification.EventNotification;
+import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.shop.*;
+import com.example.cih.service.common.CommonUtils;
+import com.example.cih.service.notification.NotificationService;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -20,14 +26,24 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
+    private final NotificationService notificationService;
+    private final UserService userService;
 
     @Override
-    public ShopItemExtandDTO getItem(Long shopItemId) {
+    public ShopItemExtandDTO getItem(Long shopItemId, User user) {  // User는 null 이 올수 있음
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
         ShopItemExtandDTO shopItemExtandDTO = convertShopItemExtandDTO(shopItem);
+
+        // 이벤트 체크
+        EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
+
+        // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
+        int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
+
+        shopItemExtandDTO.setDiscountPrice(discountPrice);
 
         return shopItemExtandDTO;
     }
@@ -115,7 +131,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
 
         // ItemOption Map 정보 가져오기
-        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
+        Map<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
 
         for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
             shopItemExtandDTO.getListOptionType().add(ItemOptionDTO.builder()
@@ -132,9 +148,6 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         return shopItemExtandDTO;
     }
-
-
-
     @Override
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
@@ -157,10 +170,13 @@ public class ShopItemServiceImpl implements ShopItemService {
         // 아이템 옵션 set
         shopItemReqDTO.getItemOptionList().forEach(itemOptionDTO -> {
             String[] values = itemOptionDTO.getOptionValue().split(",");
+            int orderIndex = 0;
             for (String value : values) {
 
                 ItemOption itemOption = ItemOption.builder()
                         .type(ItemOptionType.fromValue(Integer.valueOf(itemOptionDTO.getOptionType())))
+                        .optionOrder(orderIndex++)
+                        .typePriority(itemOptionDTO.getTypePriority())
                         .option1(value.trim())
                         .shopItem(shopItem)
                         .build();

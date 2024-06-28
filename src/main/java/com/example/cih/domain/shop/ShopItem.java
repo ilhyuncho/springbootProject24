@@ -95,20 +95,22 @@ public class ShopItem {
         return stockCount;
     }
 
-    public SortedMap<ItemOptionType, String> getMapItemOption(){
+    public Map<ItemOptionType, String> getMapItemOption(){
 
-        SortedMap<ItemOptionType, String> sortedMap = new TreeMap<>(Comparator.comparing(ItemOptionType::getType));
+       // SortedMap<ItemOptionType, String> sortedMap = new TreeMap<>(Comparator.comparing(ItemOptionType::getType));
+        Map<ItemOptionType, String> map = new HashMap<>();
 
         itemOptionSet.stream()
-                .sorted(Comparator.comparing(ItemOption::getTypePriority).thenComparing(ItemOption::getOptionOrder))
+                .sorted(Comparator.comparing(ItemOption::getTypePriority).reversed().thenComparing(ItemOption::getOptionOrder))
                 .forEach(itemOption -> {
                     // 예) "10-흰색, 8-파랑색, 7-검은색, 11-빨강색"  형식으로 파싱
-                    sortedMap.compute(itemOption.getType(), (k, v) -> (v == null)
+                    map.compute(itemOption.getType(), (k, v) -> (v == null)
                             ? itemOption.getItemOptionId() + "-" + itemOption.getOption1()
                             : (v += ", " + itemOption.getItemOptionId() + "-" + itemOption.getOption1()));
                 });
 
-        return sortedMap;
+
+        return map;
     }
     public ImageDTO getMainImageDTO(){
         ItemImage itemImage = itemImageSet.stream()

@@ -20,6 +20,8 @@ public class ShopItemReqDTO {
 
     @Positive   // 양수 체크
     private Integer originalPrice;
+    @Positive   // 양수 체크
+    private Integer discountPrice;
 
     @Positive    // 양수 체크
     private Integer stockCount;     // 재고수량

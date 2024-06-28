@@ -37,7 +37,7 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">OriginalPrice</span>
+              <span class="input-group-text">원가 금액</span>
               <label>
                 <input type="text" name="originalPrice" class="form-control originalPrice" th:value="10000">
               </label>
@@ -140,7 +140,7 @@
             <tr>
               <th scope="col">shopItemId</th>
               <th scope="col">itemName</th>
-              <th scope="col">price</th>
+              <th scope="col">originalPrice</th>
               <th scope="col">stockCount</th>
             </tr>
             </thead>
@@ -335,10 +335,10 @@
 
     const itemOptionList = []
     if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
-      itemOptionList.push({optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+      itemOptionList.push({typePriority:1, optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
     }
     if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
-      itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+      itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
     }
 
 

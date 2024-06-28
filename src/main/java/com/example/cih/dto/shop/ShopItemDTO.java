@@ -16,5 +16,6 @@ public class ShopItemDTO {
     private String itemTitle;
     private String itemDesc;
     private Integer originalPrice;
+    private Integer discountPrice;
     private ImageDTO mainImage;
 }

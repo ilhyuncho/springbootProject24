@@ -56,15 +56,21 @@
 
       <div class="text-right">
         <div class="h4 text-danger text-left">
-          <input type="hidden" th:value="${responseDTO.originalPrice}" class="originalPrice" id="price" name="price">
+          <input type="hidden" th:value="${responseDTO.originalPrice}" class="pOriginalPrice">
           <span th:text="${responseDTO.originalPrice}"></span>원
+        </div>
+
+        <div class="h4 text-danger text-left">
+          <span th:text="|할인 금액 : |"></span>
+          <input type="hidden" th:value="${responseDTO.discountPrice}" class="pDiscountPrice">
+          <span th:text="${responseDTO.discountPrice}"></span>원
         </div>
 
         <div class="input-group w-50 mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text">수량</span>
           </div>
-          <input type="number" name="itemCount" class="form-control itemCount" value="1" min="1">
+          <input type="number" class="form-control pItemCount" value="0" min="1">
         </div>
 
 
@@ -72,9 +78,9 @@
         <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(0)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션1</span>
-            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="itemOptionType1">
+            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType1">
           </div>
-          <select class= "form-control itemOptionValue1" >
+          <select class= "form-control pItemOptionValue1" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
                     th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
@@ -84,9 +90,9 @@
              th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션2</span>
-            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="itemOptionType2">
+            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType2">
           </div>
-          <select class= "form-control itemOptionValue2" >
+          <select class= "form-control pItemOptionValue2" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
                     th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
@@ -99,10 +105,41 @@
         <h5>결제 금액</h5>
         <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
       </div>
+
+      <div class="my-4">
+        <div class="float-end">
+          <div class="input-group mb-3">
+            <span class="input-group-text">상품 금액</span>
+            <label>
+              <input type="text" class="form-control pOrderPrice"  readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">배송비</span>
+            <label>
+              <input type="text" class="form-control pDeliveryFee" readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상품 할인</span>
+            <label>
+              <input type="text" class="form-control pTotalDiscountPrice" readonly>
+            </label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">결제 예정 금액</span>
+            <label>
+              <input type="text" class="form-control pExpectedPrice" readonly>
+            </label>
+          </div>
+        </div>
+      </div>
+
+
       <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-primary addCartBtn">장바구니 담기</button>
-        <button type="button" class="btn border-primary btn-lg">주문 하기</button>
+        <button type="button" class="btn border-primary">주문 하기</button>
       </div>
       <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
@@ -113,12 +150,11 @@
 
   <hr class="my-4">
   <hr class="my-4">
-      <h4 class="display-5">상품 상세 설명</h4>
-      <hr class="my-4">
-      <p class="lead" th:text="${responseDTO.itemDesc}"></p>
+  <h4 class="display-5">상품 상세 설명</h4>
+  <hr class="my-4">
+  <p class="lead" th:text="${responseDTO.itemDesc}"></p>
   <hr class="my-4">
   <hr class="my-4">
-
 
   <div th:each="fileName : ${responseDTO.fileNames}" class="text-center">
     <img th:if="${not #strings.isEmpty(fileName.fileName)}"
@@ -140,28 +176,68 @@
 
   const optionCount = [[${responseDTO.listOptionType.size()}]]
 
-  const itemCount = document.querySelector('.itemCount')
-  const originalPrice = document.querySelector('.originalPrice')
+  const pItemCount = document.querySelector('.pItemCount')
+  const pOriginalPrice = document.querySelector('.pOriginalPrice')
+  const pDiscountPrice = document.querySelector('.pDiscountPrice')
 
-  const itemOptionType1 = document.querySelector('.itemOptionType1');
-  const itemOptionValue1 = document.querySelector('.itemOptionValue1');
-  const itemOptionType2 = document.querySelector('.itemOptionType2');
-  const itemOptionValue2 = document.querySelector('.itemOptionValue2');
+  const pItemOptionType1 = document.querySelector('.pItemOptionType1');
+  const pItemOptionValue1 = document.querySelector('.pItemOptionValue1');
+  const pItemOptionType2 = document.querySelector('.pItemOptionType2');
+  const pItemOptionValue2 = document.querySelector('.pItemOptionValue2');
+
+  const pOrderPrice = document.querySelector(".pOrderPrice")
+  const pExpectedPrice = document.querySelector(".pExpectedPrice")
+  const pTotalDiscountPrice = document.querySelector(".pTotalDiscountPrice")
+  const pDeliveryFee = document.querySelector(".pDeliveryFee")
+
+  // 수량 변경
+  document.querySelector(".pItemCount").addEventListener("change", function (e){
+    reCalculation()
+  }, false)
+
+  // 옵션1 변경
+  document.querySelector(".pItemOptionValue1").addEventListener("change", function (e){
+    console.log('itemOptionValue1~~ : ' + itemOptionValue1.value)
+  }, false)
+
+  // 옵션2 변경
+  document.querySelector(".pItemOptionValue2").addEventListener("change", function (e){
+    console.log('itemOptionValue2~~ : ' + itemOptionValue2.value)
+  }, false)
+
+  function reCalculation(){
+
+    var itemPrice = pOriginalPrice.value
+    var discountPrice = pDiscountPrice.value
+    var itemCount = pItemCount.value
+
+    var totalOriginalPrice = itemPrice * itemCount
+    var totalDiscountPrice = discountPrice * itemCount
+    var totalPrice = (itemPrice - discountPrice) * itemCount
+
+    pOrderPrice.value = totalOriginalPrice
+    // 배송비 계산
+    const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
+    pDeliveryFee.value = deliveryPrice
+
+    pTotalDiscountPrice.value = totalDiscountPrice
+    // 결제 예정 금액
+    pExpectedPrice.value = totalPrice + deliveryPrice
+  }
 
 
-  // 장바구니 담기
+  // [장바구니 담기] 버튼 클릭
   document.querySelector(".addCartBtn").addEventListener("click", function(e){
     e.preventDefault()
     e.stopPropagation()
 
-
     const itemOptionList = []
     // if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
-      itemOptionList.push({optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+      itemOptionList.push({optionType:pItemOptionType1.value, optionValue:pItemOptionValue1.value})
     // }
     // if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
       if( optionCount > 1 ){
-        itemOptionList.push({optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+        itemOptionList.push({optionType:pItemOptionType2.value, optionValue:pItemOptionValue2.value})
       }
    // }
 
@@ -170,8 +246,8 @@
     let formObj = {
       shopItemId: shopItemId,
       itemName: itemName,
-      itemCount: itemCount.value,
-      itemPrice: originalPrice.value,
+      itemCount: pItemCount.value,
+      itemPrice: pOriginalPrice.value,
       itemOptionList:itemOptionList,
     }
 

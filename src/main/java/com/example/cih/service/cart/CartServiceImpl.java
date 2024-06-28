@@ -5,11 +5,11 @@ import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.dto.cart.CartDetailResDTO;
+import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class CartServiceImpl implements CartService {
                             .itemName(cart.getShopItem().getItemName())
                             .itemCount(cart.getItemCount())
                             .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
-                            .discountPrice(calcDiscountPrice(user, cart.getShopItem(), event))
+                            .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
                             .build();
 
                     if(cart.getItemOptionId1() > 0){
@@ -93,7 +93,7 @@ public class CartServiceImpl implements CartService {
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
-        int discountPrice = calcDiscountPrice(user, shopItem, event);
+        int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
 
         cartReqDTO.getItemOptionList().forEach(log::error);
 //        if(cartReqDTO.getItemOptionId1()> 0){
@@ -147,34 +147,4 @@ public class CartServiceImpl implements CartService {
         cartRepository.delete(cart);
         return cart;
     }
-
-    // 할인 가격 계산
-    public int calcDiscountPrice(User user, ShopItem shopItem, EventNotification event){
-
-        int discountPrice = 0;
-        Integer originalPrice = shopItem.getItemPrice().getOriginalPrice();
-
-        // 1. 회원 등급 별 할인율 적용
-        if(user.getMGrade() == UserGradeType.GRADE_E
-                || user.getMGrade() == UserGradeType.GRADE_S ){
-
-            if(shopItem.getItemPrice().getMembershipPercent() > 0){
-                discountPrice += (int)(originalPrice * ((double)shopItem.getItemPrice().getMembershipPercent() / 100));
-                log.error("등급 할인 : " + discountPrice);
-            }
-        }
-        // 2. 이벤트 할인율 적용
-        if(shopItem.getItemPrice().getIsEventTarget()
-                && event != null
-                && event.getEventValue() > 0){
-//            log.error(originalPrice + "," + (double)eventDiscountRate / 100);
-
-            discountPrice += (int)(originalPrice * ((double)event.getEventValue() / 100));
-            log.error("이벤트 할인 : " + discountPrice);
-        }
-
-        return discountPrice;
-    }
-
-
 }

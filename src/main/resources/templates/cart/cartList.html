@@ -40,10 +40,10 @@
                                          th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
                                 </div>
                             </td>
-                            <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10"
+                            <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10" readonly
                                        class="p_price" th:value="${dto.itemPrice}">
                             </td>
-                            <td><input type="text" th:name="p_discountPrice+${stat.index}"  id="p_discountPrice" size="8" maxlength="10"
+                            <td><input type="text" th:name="p_discountPrice+${stat.index}"  id="p_discountPrice" size="8" maxlength="10" readonly
                                        class="p_discountPrice" th:value="${dto.discountPrice}">
                             </td>
 

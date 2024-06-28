@@ -46,7 +46,9 @@ public class AdminShopController {
                                  @PathVariable("shopItemId") Long shopItemId,
                                  Model model){
 
-        ShopItemExtandDTO shopItem = shopItemService.getItem(shopItemId);        // [관리자] 아이템 상세 페이지
+
+        // shopItemService.getItem 는 유저, 관리자 용 따로 구분해야 할듯
+        ShopItemExtandDTO shopItem = shopItemService.getItem(shopItemId, null);        // [관리자] 아이템 상세 페이지
 
         model.addAttribute("responseDTO", shopItem);
 
