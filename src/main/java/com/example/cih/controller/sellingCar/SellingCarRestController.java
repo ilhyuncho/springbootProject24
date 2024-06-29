@@ -1,15 +1,17 @@
 package com.example.cih.controller.sellingCar;
 
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -72,5 +74,19 @@ public class SellingCarRestController {
 
         return resultMap;
     }
+
+    @ApiOperation(value = "메인 화면, 추천 차량 정보 전달", notes = "")
+    @GetMapping("/recommend")
+    public PageResponseDTO<SellingCarViewDTO> getRecommendSellingCar(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+                                                    Model model){
+
+        PageResponseDTO<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
+
+        log.error(listSellingCar);
+
+        return listSellingCar;
+    }
+
+
 
 }

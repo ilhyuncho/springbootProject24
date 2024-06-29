@@ -22,10 +22,10 @@
 
                     <div class="row mt-3 text-info" >
                         <hr class="my-4">
-                        <span th:text="|차량 구매 희망 내역|"></span>
-                        <ul class="list-group tempList">
-                            <!-- 리스트 영역-->
-                        </ul>
+                        <h3>추천 차량</h3>
+                        <div class="row RecommendCarList">
+
+                        </div>
                     </div>
 
                 </div><!-- <div class="card-body">-->
@@ -64,7 +64,7 @@
 
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/js/buyingCar.js"></script>
+    <script src="/js/sellingCar.js"></script>
     <script src="/js/event.js"></script>
     <script src="/js/util.js"></script>
 
@@ -73,7 +73,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
    const eventModal = new bootstrap.Modal(document.querySelector(".eventModal"))
-   const tempList = document.querySelector('.tempList')          // 구매 희망 목록 DOM
+   const RecommendCarList = document.querySelector('.RecommendCarList')          // 추천 차량 목록 DOM
    const eventTitle = document.querySelector(".eventTitle")
 
    const sellingCarId = 1
@@ -96,7 +96,7 @@
 
     function printMainView(page,size){
 
-        getList({sellingCarId, page, size}).then(data=> {
+        getRecommendSellingCar({page, size}).then(data=> {
             printList(data.dtoList) // 목록 처리
 
         }).catch(e=>{
@@ -105,27 +105,28 @@
     }
 
     function printList(dtoList){
+
         let str = '';
-
         if(dtoList && dtoList.length > 0){
+
+            console.log(dtoList)
+
             for(const dto of dtoList){
-
-                let proposalPrice = makePriceCurrency(dto.proposalPrice)
-                let registerDate = stringToDateFormat(dto.registerDate)
-
-                str += `<li class="list-group-item d-flex carItem">
-                    <span class="col-1">${dto.userName}</span>
-                    <span class="col-1">${maskingName(dto.userName)}</span>
-                    <span class="col-2">${proposalPrice}</span>
-                    <span class="col-2">${dto.carNumber}</span>
-                    <span class="col-1">${dto.carModel}</span>
-                    <span class="col-2">${dto.buyResult}</span>
-                    <span class="col-4" data-rno="${dto.userName}">${registerDate}</span>
-               </li>`
+                str += `<div class="col-md-4 margin">
+                            <div class="card">
+                                <a href="/buyingCar/${dto.carId}" class="text-decoration-none">
+                                    <img src="/view/s_${dto.fileNames.at(0).uuid}_${dto.fileNames.at(0).fileName}">
+                                     <div class="card-body">
+                                      <h4 class="card-title">${dto.carModel}</h4>
+                                      <h3 class="card-title text-danger">${dto.requiredPrice}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>`
             }
         }
 
-        tempList.innerHTML = str
+        RecommendCarList.innerHTML = str
     }
 
 

@@ -14,6 +14,13 @@ async function getSellingCar({sellingCarId}){
     return result.data
 }
 
+async function getRecommendSellingCar({page, size}){
+    const result = await axios.get(`/sellingCar/recommend`, {params: {page}})
+
+    console.log(result.data)
+    return result.data
+}
+
 async function cancelSellingCar(formObj) {
     console.log(formObj)
 
