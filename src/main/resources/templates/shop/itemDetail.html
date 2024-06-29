@@ -195,16 +195,6 @@
     reCalculation()
   }, false)
 
-  // 옵션1 변경
-  document.querySelector(".pItemOptionValue1").addEventListener("change", function (e){
-    console.log('itemOptionValue1~~ : ' + itemOptionValue1.value)
-  }, false)
-
-  // 옵션2 변경
-  document.querySelector(".pItemOptionValue2").addEventListener("change", function (e){
-    console.log('itemOptionValue2~~ : ' + itemOptionValue2.value)
-  }, false)
-
   function reCalculation(){
 
     var itemPrice = pOriginalPrice.value
@@ -231,15 +221,26 @@
     e.preventDefault()
     e.stopPropagation()
 
+    if( pItemCount.value === '0'){
+      alert('수량을 선택 하세요!')
+      return
+    }
+    if(pItemOptionValue1.value === '0'){
+      alert('옵션1을 선택 하세요!')
+      return
+    }
+    if( optionCount > 1 && pItemOptionValue2.value === '0' ){
+      alert('옵션2을 선택 하세요!')
+      return
+    }
+
+
     const itemOptionList = []
-    // if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
-      itemOptionList.push({optionType:pItemOptionType1.value, optionValue:pItemOptionValue1.value})
-    // }
-    // if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
-      if( optionCount > 1 ){
+    itemOptionList.push({optionType:pItemOptionType1.value, optionValue:pItemOptionValue1.value})
+
+    if( optionCount > 1 && pItemOptionValue2.value.length > 0 ){
         itemOptionList.push({optionType:pItemOptionType2.value, optionValue:pItemOptionValue2.value})
-      }
-   // }
+    }
 
     console.log(itemOptionList)
 

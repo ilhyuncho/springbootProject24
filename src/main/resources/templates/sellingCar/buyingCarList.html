@@ -220,7 +220,7 @@
 
     console.log('printBuyingCarList call~~~')
 
-    getList({currentUser, sellingCarId, page, size}).then(data=> {
+    getList({sellingCarId, page, size}).then(data=> {
         printList(data.dtoList) // 목록 처리
         printPages(data)        // 페이지 처리
 

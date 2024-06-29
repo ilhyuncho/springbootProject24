@@ -20,12 +20,13 @@
                 <div class="card-body">
                     <span class="col-2">[[${session.greeting}]]</span>
 
-                    <div class="row mt-3">
+                    <div class="row mt-3 text-info" >
+                        <hr class="my-4">
+                        <span th:text="|차량 구매 희망 내역|"></span>
                         <ul class="list-group tempList">
                             <!-- 리스트 영역-->
                         </ul>
                     </div>
-
 
                 </div><!-- <div class="card-body">-->
             </div>
@@ -75,7 +76,6 @@
    const tempList = document.querySelector('.tempList')          // 구매 희망 목록 DOM
    const eventTitle = document.querySelector(".eventTitle")
 
-   const currentUser = [[${#authentication.principal.username}]]
    const sellingCarId = 1
    // 페이지 번호 클릭
    let page = 1
@@ -85,7 +85,7 @@
    console.log("session.greeting : " +  greeting)
 
 
-    printMainView()
+   printMainView()
 
    const eventDTO = [[${eventDTO}]]
    if(eventDTO != null && eventDTO.notiId > 0){
@@ -96,7 +96,7 @@
 
     function printMainView(page,size){
 
-        getList({currentUser, sellingCarId, page, size}).then(data=> {
+        getList({sellingCarId, page, size}).then(data=> {
             printList(data.dtoList) // 목록 처리
 
         }).catch(e=>{
