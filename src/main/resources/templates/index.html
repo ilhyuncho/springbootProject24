@@ -23,6 +23,10 @@
                     <div class="row mt-3 text-info" >
                         <hr class="my-4">
                         <h3>추천 차량</h3>
+
+                        <div class="my-4">
+                            <button type="submit" class="btn btn-primary submitBtn">갱신</button>
+                        </div>
                         <div class="row RecommendCarList">
 
                         </div>
@@ -97,7 +101,7 @@
     function printMainView(page,size){
 
         getRecommendSellingCar({page, size}).then(data=> {
-            printList(data.dtoList) // 목록 처리
+            printList(data) // 목록 처리
 
         }).catch(e=>{
             console.error(e)
@@ -125,9 +129,17 @@
                         </div>`
             }
         }
-
         RecommendCarList.innerHTML = str
     }
+
+   // 갱신 버튼 클릭
+   document.querySelector(".submitBtn").addEventListener("click", function(e){
+       e.preventDefault()
+       e.stopPropagation()
+
+       printMainView()
+
+   }, false)
 
 
 </script>

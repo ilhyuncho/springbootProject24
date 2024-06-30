@@ -5,10 +5,7 @@ import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.common.BaseEntity;
 import com.example.cih.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="sellingCars")
+@ToString(exclude = {"car", "user", "buyingCarSet"})
 public class SellingCar extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +44,12 @@ public class SellingCar extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="uId")
     private User user;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)   // 근데 default 0이 적용이 안된다
+    private Integer likeCount;          // 좋아요 횟수
+
+    private Integer viewCount;          // 조회 횟수
+
 
     @OneToMany(mappedBy = "sellingCar", //
             cascade = {CascadeType.ALL}, // SellingCar 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용

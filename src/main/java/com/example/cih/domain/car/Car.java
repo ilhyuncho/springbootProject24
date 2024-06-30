@@ -72,20 +72,20 @@ public class Car extends BaseEntity {
     private SellingCar sellingCar;          // 경매 정보
 
 
-
     public void setUser(User user) {
         this.user = user;
     }
 
     public void registerSellingCar(int RequiredPrice){
-        SellingCar sellingCar = SellingCar.builder()
+
+        this.sellingCar = SellingCar.builder()
                 .car(this)
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
                 .RequiredPrice(RequiredPrice)
+                .likeCount(0)
+                .viewCount(0)
                 .user(this.user)
                 .build();
-
-        this.sellingCar = sellingCar;
     }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------

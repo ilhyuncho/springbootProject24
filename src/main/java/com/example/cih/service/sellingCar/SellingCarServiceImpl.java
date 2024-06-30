@@ -90,6 +90,17 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
+    public List<SellingCarViewDTO> getRecommendList(){
+
+        List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4);
+        for (SellingCar sellingCar : recommendSellingCar) {
+            log.error(sellingCar);
+        }
+
+        return recommendSellingCar.stream().map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public void cancelSellingCar(String userName, Long carId) {
         User user = userService.findUser(userName);
 

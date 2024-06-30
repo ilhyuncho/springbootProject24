@@ -11,6 +11,7 @@ public interface SellingCarService {
     void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO);
     SellingCarViewDTO getSellingCar(Long sellingCarId);
     PageResponseDTO<SellingCarViewDTO> getListSellingCar(PageRequestDTO pageRequestDTO);
+    List<SellingCarViewDTO> getRecommendList();
 
     void cancelSellingCar(String userName, Long carId);
 }

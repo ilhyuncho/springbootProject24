@@ -80,7 +80,8 @@
             <input type="text" class="form-control highProposalPrice" readonly>
           </div>
 
-          <div class="row mt-3" th:with="user=${#authentication.principal}">
+          <div class="row mt-3" th:if="${#authentication.principal != null}"
+               th:with="user=${#authentication.principal}">
             <div class="float-end">
               <a th:if="${user != null && user.username == carViewDTO.userName}">
                  <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
@@ -178,7 +179,10 @@
   const carId = [[${carViewDTO.carId}]]
   const carOwner = [[${carViewDTO.userName}]]
   const sellingCarId = [[${carViewDTO.sellingCarId}]]
+
+  // 삭제 할지 정하자..
   const currentUser = [[${#authentication.principal.username}]]
+
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
   const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))
@@ -279,7 +283,7 @@
 
     initOfferBtn(btnType)
 
-    buyingCarList.innerHTML = str
+    sellingCarInfo.innerHTML = str
   }
 
   // 목록 페이지 출력
@@ -318,6 +322,8 @@
 
     const target = e.target
     const offerType = target.getAttribute("btn-type")
+
+
 
     if(offerType === "new"){
       purchaseOfferModal.show()
