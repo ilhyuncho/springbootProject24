@@ -63,6 +63,9 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
         List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
 
+        log.error("sellingCarId : " + sellingCarId);
+        listBuyingCarViewDTO.forEach(log::error);
+
         int maxProposalPrice = 0;
         if( listBuyingCarViewDTO.size() > 0){
             // stream max, Comparator 활용

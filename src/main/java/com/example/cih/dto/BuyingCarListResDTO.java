@@ -6,7 +6,7 @@ import lombok.ToString;
 import java.util.List;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 public class BuyingCarListResDTO<E> extends PageResponseDTO<E> {
 
     int highProposalPrice;

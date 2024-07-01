@@ -92,6 +92,8 @@ public class BuyingCarRestController {
         BuyingCarListResDTO<BuyingCarViewDTO> buyingCarListResDTO =
                 buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
 
+        log.error(buyingCarListResDTO);
+
         return buyingCarListResDTO;
     }
     @ApiOperation(value = "구매 희망 최고 가격", notes = "")

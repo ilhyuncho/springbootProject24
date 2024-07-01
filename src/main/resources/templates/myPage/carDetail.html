@@ -242,6 +242,7 @@
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
   const carNumber = [[${responseDTO.carNumber}]]
+  const listFileNames = [[${responseDTO.fileNames}]]
 
   // Modal
   const sellingCarModal = new bootstrap.Modal(document.querySelector(".sellingCarModal"))
@@ -305,6 +306,12 @@
 
   // 모달창의 [차량 판매] 처리
   document.querySelector(".registerBtn").addEventListener("click", function(e){
+
+    if( listFileNames.length === 0 ){
+      alert('차량 판매시 최소 한장의 대표 사진을 등록해야 합니다')
+      return
+    }
+
     const formObj = {
       carId:carId,
       requiredPrice:requiredPrice.value
@@ -327,10 +334,11 @@
       if (e.response && e.response.status === 400) {
 
         alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
+        console.log(e.response.data.message);
       } else {
+        alert('잘못된 요청(else). 전달값 확인!!')
         console.log(e.response.data);
-        alert(e.response.data)
+        alert(e.response.data.message)
       }
       sellingCarModal.hide()
     })

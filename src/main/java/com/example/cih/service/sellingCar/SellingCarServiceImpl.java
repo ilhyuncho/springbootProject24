@@ -46,6 +46,10 @@ public class SellingCarServiceImpl implements SellingCarService {
         Car car = carRepository.findById(sellingCarRegDTO.getCarId())
                 .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
 
+        if(car.getImageSet().size() == 0){
+            throw new OwnerCarNotFoundException("차량 판매시 최소 한장의 대표 사진을 등록해야 합니다!!");
+        }
+
         car.registerSellingCar(sellingCarRegDTO.getRequiredPrice());
 
         userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
@@ -112,6 +116,8 @@ public class SellingCarServiceImpl implements SellingCarService {
                     return sellingCarViewDTO;
                 })
                 .collect(Collectors.toList());
+
+        log.error(listDTO);
 
         return listDTO;
     }
