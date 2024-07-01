@@ -112,13 +112,18 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     @Override
     public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
+        // BuyResult 명칭 변경???
+        BuyResult buyResult = BuyResult.fromValue(buyingCarRegDTO.getOfferType());
+
+        // 구매하려는 차량 정보
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
         BuyingCar buyingCar = BuyingCar.builder()
                 .proposalPrice(buyingCarRegDTO.getRequestPrice())
+                .phoneNumber(buyingCarRegDTO.getPhoneNumber())
                 .user(user)
                 .sellingCar(sellingCar)
-                .buyResult(BuyResult.PROPOSE)
+                .buyResult(buyResult)
                 .build();
         buyingCarRepository.save(buyingCar);
     }

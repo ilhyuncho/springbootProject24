@@ -113,16 +113,15 @@
         let str = '';
         if(dtoList && dtoList.length > 0){
 
-            console.log(dtoList)
-
             for(const dto of dtoList){
+                const requiredPrice = makePriceCurrency(dto.requiredPrice)
                 str += `<div class="col-md-4 margin">
                             <div class="card">
                                 <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
                                     <img src="/view/s_${dto.fileNames.at(0).uuid}_${dto.fileNames.at(0).fileName}">
                                      <div class="card-body">
                                       <h4 class="card-title">${dto.carModel}</h4>
-                                      <h3 class="card-title text-danger">${dto.requiredPrice}</h3>
+                                      <h3 class="card-title text-danger">${requiredPrice}</h3>
                                     </div>
                                 </a>
                             </div>

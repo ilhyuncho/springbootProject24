@@ -404,7 +404,7 @@
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
 
     const formObj = {
-      offerType:'new',
+      offerType:'propose',
       carId:carId,
       requestPrice: requestPrice.value.replaceAll(",","")
     }
@@ -422,7 +422,7 @@
     }
 
     const formObj = {
-      offerType:'modify',
+      // offerType:'modify',
       carId:carId,
       requestPrice: modifyPrice.value.replaceAll(",","")
     }
@@ -433,7 +433,7 @@
   document.querySelector(".cancelBtn").addEventListener("click", function(e){
 
     const formObj = {
-      offerType:'cancel',
+      // offerType:'cancel',
       carId:carId,
       requestPrice:0
     }

@@ -34,6 +34,11 @@
       <div class="h3 text-primary" > <!-- h3 글자 크기-->
         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
       </div>
+
+      <div class="my-4">
+        <button type="submit" class="btn btn-primary requestConsultBtn">상담 요청</button>
+      </div>
+
     </div>
   </div><!-- <div class="d-flex">-->
 
@@ -53,15 +58,81 @@
 
 
 
+  <!-- 상담 요청 모달창-->
+  <div class="modal requestConsultModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">상담 신청</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-show">
+          <div class="input-group mb-3">
+            <span class="input-group-text">휴대 전화</span>
+            <input type="text" class="form-control phoneNumber" placeholder="010-0000-0000" value="01012345678">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendRequestBtn">신청</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!-- 상담 요청 모달창-->
+
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+  <script src="/js/buyingCar.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const carId = [[${responseDTO.carId}]]
+
+  const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
+  const phoneNumber = document.querySelector(".phoneNumber")
+
+
+
+  // 상담 요청 -버튼 클릭
+  document.querySelector(".requestConsultBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    requestConsultModal.show()
+  }, false)
+
+  // 상담 요청 - 서버로 전송
+  document.querySelector(".sendRequestBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    const formObj = {
+      offerType:'requestConsult',
+      carId:carId,
+      phoneNumber:phoneNumber.value
+    }
+
+    sendRequestConsult(formObj).then(result => {
+
+      requestConsultModal.hide()
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+    })
+
+  }, false)
 
 
 </script>

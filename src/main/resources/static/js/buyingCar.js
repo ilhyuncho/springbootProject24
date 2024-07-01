@@ -29,6 +29,16 @@ async function getList({sellingCarId, page, size}){
     return result.data
 }
 
+async function sendRequestConsult(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/buyingCar/requestConsult`, formObj)
+
+    console.log(response)
+    return response.data
+}
+
+
 // async function getHighProposalPrice(sellingCarId){
 //
 //     const result = await axios.get(`/buyingCar/highProposalPrice`, {params: {sellingCarId}})

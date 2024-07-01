@@ -24,6 +24,7 @@ public class BuyingCar {
     private Long buyingCarId;
 
     private int proposalPrice;
+    private String phoneNumber;
 
     @CreationTimestamp
     private LocalDateTime registerDate;

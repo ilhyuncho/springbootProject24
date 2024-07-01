@@ -8,6 +8,16 @@ async function findMyCar(formObj) {
     return response.data
 }
 
+async function updateCarKm(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/myPage/updateCarKm`, formObj)
+
+    console.log(response)
+    return response.data
+}
+
+
 async function RegisterMyCar(formObj) {
      //console.log(formObj)
 

@@ -1,13 +1,8 @@
 package com.example.cih.controller.buyingCar;
 
-import com.example.cih.domain.buyingCar.BuyingCar;
-import com.example.cih.domain.buyingCar.BuyingCarRepository;
-import com.example.cih.domain.sellingCar.SellingCar;
-import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
@@ -32,7 +27,6 @@ public class BuyingCarRestController {
 
     private final BuyingCarService buyingCarService;
     private final UserService userService;
-    private final BuyingCarRepository buyingCarRepository;
 
     @ApiOperation(value = "차량 구매 제안(&가격 수정)", notes = "희망 가격 전달")
     @PostMapping("/offer")
@@ -105,5 +99,24 @@ public class BuyingCarRestController {
         return highProposalBuyingCar;
     }
 
+    @ApiOperation(value = "차량 구매 상담 요청", notes = "")
+    @PostMapping("/requestConsult")
+    public Map<String,String> postRequestConsult(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
+                                                 BindingResult bindingResult,
+                                                 Principal principal ) throws BindException {
 
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        User user = userService.findUser(principal.getName());
+        buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
+
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
 }

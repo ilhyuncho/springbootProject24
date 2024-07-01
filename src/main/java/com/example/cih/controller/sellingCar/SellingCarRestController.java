@@ -79,7 +79,4 @@ public class SellingCarRestController {
 
         return sellingCarService.getRecommendList();
     }
-
-
-
 }
