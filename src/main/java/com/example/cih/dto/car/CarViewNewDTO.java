@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarViewNewDTO{
+public class CarViewNewDTO{        // 내차 정보 로딩 시
 
     private Long carId;
 

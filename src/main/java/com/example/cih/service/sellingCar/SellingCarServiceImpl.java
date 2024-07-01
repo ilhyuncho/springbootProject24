@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -54,13 +55,9 @@ public class SellingCarServiceImpl implements SellingCarService {
     public SellingCarViewDTO getSellingCar(Long sellingCarId) {
 
         SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
-                .orElseThrow(() -> new NoSuchElementException("해당 경매 정보가 존재하지않습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 차량 정보가 존재하지않습니다"));
 
-        SellingCarViewDTO sellingCarViewDTO = SellingCarViewDTO.builder()
-                .carId(sellingCar.getCar().getCarId())
-                .requiredPrice(sellingCar.getRequiredPrice())
-                .expiredDate(sellingCar.getExpiredDate())
-                .build();
+        SellingCarViewDTO sellingCarViewDTO = entityToDTO(sellingCar);
 
         return sellingCarViewDTO;
     }
@@ -79,8 +76,16 @@ public class SellingCarServiceImpl implements SellingCarService {
         // 검색 기능 추가 버전 ( querydsl
         Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, pageable);
 
-        List<SellingCarViewDTO> listSellingCarViewDTO = sellingCars.getContent().stream().
-                map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+        List<SellingCarViewDTO> listSellingCarViewDTO = sellingCars.getContent().stream()
+                .map(SellingCarServiceImpl::entityToDTO)
+                .map(sellingCarViewDTO -> {  // 대표 이미지만 필터링 ( ImageOrder = 0 )
+                    sellingCarViewDTO.getFileNames().stream()
+                            .filter(carImage -> carImage.getImageOrder() != 0)
+                            .collect(Collectors.toList())
+                            .forEach(x -> sellingCarViewDTO.getFileNames().remove(x));
+                    return sellingCarViewDTO;
+                })
+                .collect(Collectors.toList());
 
         return PageResponseDTO.<SellingCarViewDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -97,7 +102,18 @@ public class SellingCarServiceImpl implements SellingCarService {
             log.error(sellingCar);
         }
 
-        return recommendSellingCar.stream().map(SellingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+        List<SellingCarViewDTO> listDTO = recommendSellingCar.stream()
+                .map(SellingCarServiceImpl::entityToDTO)
+                .map(sellingCarViewDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
+                    sellingCarViewDTO.getFileNames().stream()
+                            .filter(carImage -> carImage.getImageOrder() != 0)
+                            .collect(Collectors.toList())
+                            .forEach(x -> sellingCarViewDTO.getFileNames().remove(x));
+                    return sellingCarViewDTO;
+                })
+                .collect(Collectors.toList());
+
+        return listDTO;
     }
 
     @Override
@@ -129,12 +145,11 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .sellingCarId(sellingCar.getSellingCarId())
                 .build();
 
-        // 차 대표 이미지 매핑
-        Optional<CarImage> carImage = sellingCar.getCar().getImageSet().stream()
-                .filter(image -> image.getImageOrder() == 0)
-                .findFirst();
-
-        carImage.ifPresent(image -> sellingCarViewDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder()));
+        sellingCar.getCar().getImageSet()
+                        .stream().sorted(Comparator.comparing(CarImage::getImageOrder))
+                        .forEach(image -> {
+            sellingCarViewDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+        });
 
         return sellingCarViewDTO;
     }

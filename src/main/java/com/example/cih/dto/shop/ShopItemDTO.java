@@ -17,5 +17,6 @@ public class ShopItemDTO {
     private String itemDesc;
     private Integer originalPrice;
     private Integer discountPrice;
-    private ImageDTO mainImage;
+
+    private ImageDTO mainImage; // html에서 responseDTO.getMainImage() 로 참조 함
 }

@@ -34,10 +34,7 @@ public class ShopItemExtandDTO extends ShopItemDTO {
                 .build();
         fileNames.add(shopImageDTO);
     }
-//    public ImageDTO getMainImage(){
-//        return getFileNames().stream().filter(image1 -> image1.getImageOrder() == 0)
-//                .findFirst().orElse(null);
-//    }
+
     public ItemOptionDTO getOptionType(Integer index){
         return listOptionType.get(index);
     }

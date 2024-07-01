@@ -63,8 +63,8 @@ public class SellingCarController {
         return "/sellingCar/sellingCarInfo";
     }
     @ApiOperation(value = "[판매 차량 정보 요청]", notes = "판매 차량 정보만 전달")
-    @GetMapping("/view/{carId}")
-    public String getCarView(@PathVariable(name="carId") Long carId
+    @GetMapping("/view/{sellingCarId}")
+    public String getCarView(@PathVariable(name="sellingCarId") Long sellingCarId
             ,Model model, Principal principal){
 
         if(principal != null){
@@ -74,10 +74,9 @@ public class SellingCarController {
             log.error("principal is null!!!!!!!!");
         }
 
-        //CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
-        CarViewDTO carViewDTO = carService.readOne(carId);
+        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCar(sellingCarId);
 
-        model.addAttribute("carViewDTO", carViewDTO);
+        model.addAttribute("responseDTO", sellingCarViewDTO);
 
         return "/sellingCar/sellingCarView";
     }
