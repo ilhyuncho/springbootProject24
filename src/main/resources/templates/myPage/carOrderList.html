@@ -31,7 +31,7 @@
                             <td>[[${dto.proposalPrice}]]</td>
                             <td>[[${dto.buyResult}]]</td>
                             <td>
-                                <a th:href="|@{'/buyingCar/' + ${dto.carId}}|" class="text-decoration-none">조회</a>
+                                <a th:href="|@{'/sellingCar/' + ${dto.carId}}|" class="text-decoration-none">조회</a>
                             </td>
                             <td>
                                 <a th:onclick="javascript:sendCancelOffer([[${dto.carId}]])" style="cursor:pointer ">신청 취소</a>
