@@ -1,6 +1,7 @@
 package com.example.cih.service.sellingCar;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
+import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.car.CarImage;
 import com.example.cih.domain.car.CarRepository;
@@ -13,6 +14,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +36,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     private final CarRepository carRepository;
     private final UserService userService;
     private final UserMissionService userMissionService;
+    private final BuyingCarService buyingCarService;
 
 
     @Override
@@ -56,12 +56,28 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public SellingCarViewDTO getSellingCar(Long sellingCarId) {
+    public SellingCarViewDTO getSellingCarInfo(Long sellingCarId, User user) {
 
+        // 판매 차량 정보 get
         SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
                 .orElseThrow(() -> new NoSuchElementException("해당 차량 정보가 존재하지않습니다"));
 
         SellingCarViewDTO sellingCarViewDTO = entityToDTO(sellingCar);
+
+        // 해당 고객이 구매 요청을 했었는지 확인
+        if( user != null ){
+            log.error(user.toString());
+
+            if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
+
+                BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(sellingCar, user);
+                if(buyingCarInfo != null){
+                    sellingCarViewDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
+                }
+
+                log.error(buyingCarInfo);
+            }
+        }
 
         return sellingCarViewDTO;
     }

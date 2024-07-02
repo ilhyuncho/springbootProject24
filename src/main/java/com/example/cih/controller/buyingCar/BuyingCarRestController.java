@@ -119,4 +119,30 @@ public class BuyingCarRestController {
 
         return resultMap;
     }
+
+    @ApiOperation(value = "차량 구매 상담 요청 취소", notes = "")
+    @PostMapping("/requestCancel")
+    public Map<String,String> postRequestCancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
+                                                 BindingResult bindingResult,
+                                                 Principal principal ) throws BindException {
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        User user = userService.findUser(principal.getName());
+
+        // 삭제 가 아닌, 상태 값 변경?
+        // 내가 올린 차량은 상담 요청 버튼이 아닌, 다른 내용으로
+        buyingCarService.deleteBuyingCar(user, buyingCarRegDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
+
+
+
 }

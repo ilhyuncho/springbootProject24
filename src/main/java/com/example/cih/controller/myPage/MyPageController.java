@@ -151,7 +151,7 @@ public class MyPageController {
 
         User user = userService.findUser(principal.getName());
 
-        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getBuyingCarInfo(user);
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getListBuyingCarInfo(user);
 
         model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
 

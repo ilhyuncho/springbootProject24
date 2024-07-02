@@ -1,4 +1,5 @@
 package com.example.cih.dto.sellingCar;
+import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.dto.ImageDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,6 +20,7 @@ public class SellingCarViewDTO {
     private String carModel;
     private int carYears;
     private SellingCarStatus sellingCarStatus;
+    private BuyCarStatus buyCarStatus;
     private int requiredPrice;
     private Long sellingCarId;
 

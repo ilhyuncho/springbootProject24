@@ -35,9 +35,17 @@
         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
       </div>
 
-      <div class="my-4">
-        <button type="submit" class="btn btn-primary requestConsultBtn">상담 요청</button>
+      <div class="my-4" th:with="buyCarStatus = ${responseDTO.buyCarStatus ==
+                                T(com.example.cih.domain.buyingCar.BuyCarStatus).REQUEST_CONSULT ? 'REQUEST_CONSULT' : ''}">
+
+        <button type="submit" th:if="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary requestConsultBtn"
+                th:text="|상담 요청 취소|" data-bs-target="requestCancel"></button>
+        <button type="submit" th:unless="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary requestConsultBtn"
+                th:text="|상담 요청|" data-bs-target="requestConsult"></button>
       </div>
+
+      <div class="h4" th:text="${responseDTO.buyCarStatus}"></div>
+      <hr class="my-4">
 
     </div>
   </div><!-- <div class="d-flex">-->
@@ -92,7 +100,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
   const carId = [[${responseDTO.carId}]]
-
+  const sellingCarId = [[${responseDTO.sellingCarId}]]
   const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
   const phoneNumber = document.querySelector(".phoneNumber")
 
@@ -103,8 +111,48 @@
     e.stopPropagation()
     e.preventDefault()
 
-    requestConsultModal.show()
+    const target = e.target
+    const offerType = target.getAttribute("data-bs-target")
+    console.log("offerType" + offerType)
+
+    if( offerType === 'requestConsult'){
+      requestConsultModal.show()
+    }
+    else{
+      if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
+        return
+      }
+      requestCancel()
+    }
+
+
   }, false)
+
+  function requestCancel(){
+
+    const formObj = {
+      offerType:'requestCancel',
+      carId:carId,
+    }
+
+    sendRequestCancel(formObj).then(result => {
+
+      alert('상담 요청이 취소 되었습니다')
+
+      // 화면 재 갱신
+      self.location = '/sellingCar/view/' +  sellingCarId
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+    }, false)
+  }
 
   // 상담 요청 - 서버로 전송
   document.querySelector(".sendRequestBtn").addEventListener("click", function (e){
@@ -112,7 +160,7 @@
     e.preventDefault()
 
     const formObj = {
-      offerType:'requestConsult',
+      offerType:"requestConsult",
       carId:carId,
       phoneNumber:phoneNumber.value
     }
@@ -120,6 +168,9 @@
     sendRequestConsult(formObj).then(result => {
 
       requestConsultModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/sellingCar/view/' +  sellingCarId
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -133,6 +184,8 @@
     })
 
   }, false)
+
+
 
 
 </script>

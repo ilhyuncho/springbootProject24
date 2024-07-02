@@ -1,5 +1,6 @@
 package com.example.cih.service.sellingCar;
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface SellingCarService {
     void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO);
-    SellingCarViewDTO getSellingCar(Long sellingCarId);
+    SellingCarViewDTO getSellingCarInfo(Long sellingCarId, User user);
     PageResponseDTO<SellingCarViewDTO> getListSellingCar(PageRequestDTO pageRequestDTO);
     List<SellingCarViewDTO> getRecommendList();
 

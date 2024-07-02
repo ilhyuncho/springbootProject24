@@ -2,12 +2,14 @@ package com.example.cih.controller.sellingCar;
 
 
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarViewDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.sellingCar.SellingCarService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +31,7 @@ public class SellingCarController {
 
     private final SellingCarService sellingCarService;
     private final CarService carService;
+    private final UserService userService;
 
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
@@ -67,16 +70,21 @@ public class SellingCarController {
     public String getCarView(@PathVariable(name="sellingCarId") Long sellingCarId
             ,Model model, Principal principal){
 
+        User user = null;
         if(principal != null){
             log.error(principal.getName());
+            user = userService.findUser(principal.getName());
         }
         else{
             log.error("principal is null!!!!!!!!");
         }
 
-        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCar(sellingCarId);
+        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
 
         model.addAttribute("responseDTO", sellingCarViewDTO);
+
+        log.error(sellingCarViewDTO);
+
 
         return "/sellingCar/sellingCarView";
     }

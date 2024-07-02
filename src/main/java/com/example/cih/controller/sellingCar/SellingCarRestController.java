@@ -1,8 +1,10 @@
 package com.example.cih.controller.sellingCar;
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +26,7 @@ import java.util.Map;
 public class SellingCarRestController {
 
     private final SellingCarService sellingCarService;
+    private final UserService userService;
 
     @ApiOperation(value = "판매 차량 등록", notes = "차 소유주가 차량 등록")
     @PostMapping("/register")
@@ -48,7 +51,9 @@ public class SellingCarRestController {
     @GetMapping("/get")
     public SellingCarViewDTO getSellingCar(Long sellingCarId, Principal principal){
 
-        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCar(sellingCarId);
+        User user = userService.findUser(principal.getName());
+
+        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
 
         return sellingCarViewDTO;
     }

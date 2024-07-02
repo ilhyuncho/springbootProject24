@@ -38,6 +38,14 @@ async function sendRequestConsult(formObj) {
     return response.data
 }
 
+async function sendRequestCancel(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/buyingCar/requestCancel`, formObj)
+
+    console.log(response)
+    return response.data
+}
 
 // async function getHighProposalPrice(sellingCarId){
 //
