@@ -34,6 +34,7 @@ public class ShopItemReqDTO {
 
     Boolean isEventTarget;
 
+    @Builder.Default
     private List<String> fileNames= new ArrayList<>();
 
     public void setItemName(String itemName){

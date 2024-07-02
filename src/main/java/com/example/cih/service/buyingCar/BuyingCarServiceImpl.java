@@ -1,7 +1,7 @@
 package com.example.cih.service.buyingCar;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
-import com.example.cih.domain.buyingCar.BuyResult;
+import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.buyingCar.BuyingCarRepository;
 import com.example.cih.domain.car.Car;
@@ -112,8 +112,8 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     @Override
     public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
-        // BuyResult 명칭 변경???
-        BuyResult buyResult = BuyResult.fromValue(buyingCarRegDTO.getOfferType());
+        // BuyCarStatus 명칭 변경???
+        BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
         // 구매하려는 차량 정보
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
@@ -123,7 +123,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .phoneNumber(buyingCarRegDTO.getPhoneNumber())
                 .user(user)
                 .sellingCar(sellingCar)
-                .buyResult(buyResult)
+                .buyCarStatus(buyCarStatus)
                 .build();
         buyingCarRepository.save(buyingCar);
     }
@@ -156,7 +156,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 판매 정보가 존재하지않습니다"));
     }
 
-    public BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user){
+    public BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user){    // 판매 차량을 사려고 하는 고객의 구매 정보 get
 
         return buyingCarRepository.findBySellingCarAndUser(sellingCar, user)
                 .orElseThrow(() -> new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다"));
@@ -167,7 +167,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .proposalPrice(buyingCar.getProposalPrice())
                 .registerDate(buyingCar.getRegisterDate())
                 .userName(buyingCar.getUser().getUserName())
-                .buyResult(buyingCar.getBuyResult())
+                .buyCarStatus(buyingCar.getBuyCarStatus())
                 .carNumber(buyingCar.getSellingCar().getCar().getCarNumber())   // 너무 긴가???
                 .carModel(buyingCar.getSellingCar().getCar().getCarModel())
                 .carId(buyingCar.getSellingCar().getCar().getCarId())

@@ -30,7 +30,7 @@ public class BuyingCar {
     private LocalDateTime registerDate;
 
     @Enumerated(EnumType.STRING)
-    private BuyResult buyResult;              // 구매 제안 결과
+    private BuyCarStatus buyCarStatus;              // 구매 제안 결과
 
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="SELLINGCAR_ID")

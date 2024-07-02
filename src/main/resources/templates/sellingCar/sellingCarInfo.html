@@ -275,7 +275,7 @@
                     <span class="col-2">${proposalPrice}</span>
                     <span class="col-2">${dto.carNumber}</span>
                     <span class="col-1">${dto.carModel}</span>
-                    <span class="col-2">${dto.buyResult}</span>
+                    <span class="col-2">${dto.buyCarStatus}</span>
                     <span class="col-4" data-rno="${dto.userName}">${registerDate}</span>
                </li>`
       }
@@ -422,7 +422,7 @@
     }
 
     const formObj = {
-      // offerType:'modify',
+      offerType:'propose',
       carId:carId,
       requestPrice: modifyPrice.value.replaceAll(",","")
     }
@@ -433,7 +433,7 @@
   document.querySelector(".cancelBtn").addEventListener("click", function(e){
 
     const formObj = {
-      // offerType:'cancel',
+      offerType:'proposeCancel',
       carId:carId,
       requestPrice:0
     }

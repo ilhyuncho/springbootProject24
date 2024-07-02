@@ -1,5 +1,5 @@
 package com.example.cih.dto.buyingCar;
-import com.example.cih.domain.buyingCar.BuyResult;
+import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.dto.PageRequestDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -16,7 +16,7 @@ public class BuyingCarViewDTO {
 
     private String userName;
     private int proposalPrice;
-    private BuyResult buyResult;
+    private BuyCarStatus buyCarStatus;
     private String carNumber;
     private String carModel;
     private Long carId;
