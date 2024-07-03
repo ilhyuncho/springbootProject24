@@ -129,8 +129,9 @@ public class ShopItemServiceImpl implements ShopItemService {
         shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
         shopItemExtandDTO.setIsEventTarget(shopItem.getItemPrice().getIsEventTarget());
 
+        ////////////////////////////////////////////////////////////
         // ItemOption Map 정보 가져오기
-        Map<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
+        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
 
         for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
             shopItemExtandDTO.getListOptionType().add(ItemOptionDTO.builder()

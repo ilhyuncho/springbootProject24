@@ -6,6 +6,7 @@ import com.example.cih.dto.order.OrderDetailDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,15 +37,15 @@ public class OrderItem {
     private Long itemOptionId1;
     private Long itemOptionId2;
 
-    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO, Cart cart){
+    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO, List<Long> listItemOption){
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
                 .orderCount(orderDetailDTO.getItemCount())
-                .itemOptionId1(cart.getItemOptionId1())
-                .itemOptionId2(cart.getItemOptionId2())
+                .itemOptionId1(listItemOption.get(0))
+                .itemOptionId2(listItemOption.size() > 1 ? listItemOption.get(1) : 0L)
                 .build();
 
         // 해당 아이템 제고 수량 차감

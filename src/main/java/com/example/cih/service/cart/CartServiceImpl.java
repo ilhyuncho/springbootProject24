@@ -9,6 +9,7 @@ import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.dto.cart.CartDetailResDTO;
+import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
 import com.example.cih.service.user.UserService;
@@ -55,16 +56,10 @@ public class CartServiceImpl implements CartService {
                             .build();
 
                     if(cart.getItemOptionId1() > 0){
-                        ItemOption itemOption1 = itemOptionRepository.findById(cart.getItemOptionId1())
-                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
-
-                        cartDTO.setOptionType1(itemOption1);
+                        cartDTO.getListItemOption().add(getItemOptionInfo(cart.getItemOptionId1()));
                     }
                     if(cart.getItemOptionId2() > 0){
-                        ItemOption itemOption2 = itemOptionRepository.findById(cart.getItemOptionId2())
-                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션2 정보가 존재하지않습니다"));
-
-                        cartDTO.setOptionType2(itemOption2);
+                        cartDTO.getListItemOption().add(getItemOptionInfo(cart.getItemOptionId2()));
                     }
 
                     // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
@@ -80,7 +75,6 @@ public class CartServiceImpl implements CartService {
 
         return listDTO;
     }
-
     @Override
     public void addCart(CartReqDTO cartReqDTO, String userName) {
 
@@ -94,16 +88,6 @@ public class CartServiceImpl implements CartService {
 
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
-
-        cartReqDTO.getItemOptionList().forEach(log::error);
-//        if(cartReqDTO.getItemOptionId1()> 0){
-//            itemOptionRepository.findById(cartReqDTO.getItemOptionId1())
-//                    .orElseThrow(() -> new NoSuchElementException("해당 옵션1 정보가 존재하지않습니다"));
-//        }
-//        if(cartReqDTO.getItemOptionId2() > 0) {
-//            itemOptionRepository.findById(cartReqDTO.getItemOptionId2())
-//                    .orElseThrow(() -> new NoSuchElementException("해당 옵션2 정보가 존재하지않습니다"));
-//        }
 
         Cart cart = Cart.builder()
                 .shopItem(shopItem)
@@ -146,5 +130,16 @@ public class CartServiceImpl implements CartService {
 
         cartRepository.delete(cart);
         return cart;
+    }
+
+    public ItemOptionResDTO getItemOptionInfo(Long itemOptionId){
+        ItemOption itemOption = itemOptionRepository.findById(itemOptionId)
+                .orElseThrow(() -> new NoSuchElementException("아이템 옵션 정보가 존재하지않습니다"));
+
+        return ItemOptionResDTO.builder()
+                .itemOptionId(itemOption.getItemOptionId())
+                .optionName(itemOption.getOption1())
+                .optionType(itemOption.getType().getName())
+                .build();
     }
 }

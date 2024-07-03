@@ -12,6 +12,7 @@ import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
+import com.example.cih.dto.shop.ItemOptionDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -52,22 +53,27 @@ public class OrderServiceImpl implements OrderService {
         // 상세 구매 아이템 정보 생성
         List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(item -> {
 
-            Cart cart = cartRepository.findById(item.getCartId())
-                    .orElseThrow(() -> new ItemNotFoundException("해당 장바구니 정보가 존재하지않습니다"));
-            cart.changeIsActive(false);
+            if( item.getCartId() != null){
+                Cart cart = cartRepository.findById(item.getCartId())
+                        .orElseThrow(() -> new ItemNotFoundException("장바구니 정보가 존재하지않습니다"));
+                // 장바구니 정보 비활성화
+                cart.changeIsActive(false);
+            }
 
             ShopItem shopItem = shopItemRepository.findById(item.getItemId())
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
-            // 주문 상품 생성
-            return OrderItem.createOrderItem(shopItem, item, cart);
+            List<Long> listItemOption = item.getItemOptionList().stream()
+                    .map(ItemOptionDTO::getOptionValue)
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
 
+            // 주문 상품 생성
+            return OrderItem.createOrderItem(shopItem, item, listItemOption);
 
         }).collect(Collectors.toList());
 
-
         Order order = Order.createOrder(user, delivery, listOrderItem);
-
         Order save = orderRepository.save(order);
 
         return save.getOrderId();

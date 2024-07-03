@@ -18,12 +18,6 @@ async function getList({page, size, userName, goLast}){
 
     return result.data
 }
-
-async function modifyCartItem(itemObj){
-    const response = await axios.put(`/cartRest/${itemObj.cartId}`, itemObj)
-    return response.data
-}
-
 async function removeCartItem(cartId){
     console.log(cartId)
     const result = await axios.delete(`/cartRest/${cartId}`)
@@ -32,7 +26,6 @@ async function removeCartItem(cartId){
 
     return result.data
 }
-
 async function addCartItem(formObj) {
     console.log(formObj)
 

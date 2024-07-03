@@ -24,7 +24,7 @@ public class OrderRestController {
     private final BuyingCarService buyingCarService;
     private final UserService userService;
 
-    @ApiOperation(value = "상품 결제 처리", notes = "테스트 용")
+    @ApiOperation(value = "상품 결제 처리", notes = "")
     @PostMapping("/add")
     public String add(@RequestBody OrderReqDTO orderReqDTO,
                       Principal principal) throws ParseException {

@@ -1,9 +1,10 @@
 package com.example.cih.dto.order;
 
 
+import com.example.cih.dto.shop.ItemOptionDTO;
 import lombok.*;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -16,4 +17,5 @@ public class OrderDetailDTO{
     private Integer itemCount;
     private Integer itemPrice;
     private Integer discountPrice;
+    private List<ItemOptionDTO> itemOptionList;  // 선택한 옵션 내용
 }

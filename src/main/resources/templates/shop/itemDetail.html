@@ -70,10 +70,8 @@
           <div class="input-group-prepend">
             <span class="input-group-text">수량</span>
           </div>
-          <input type="number" class="form-control pItemCount" value="0" min="1">
+          <input type="number" class="form-control pItemCount" value="1" min="1">
         </div>
-
-
 
         <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(0)}">
           <div class="input-group-prepend">
@@ -81,7 +79,7 @@
             <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType1">
           </div>
           <select class= "form-control pItemOptionValue1" >
-            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
+            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
                     th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
         </div>
@@ -93,7 +91,7 @@
             <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType2">
           </div>
           <select class= "form-control pItemOptionValue2" >
-            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}"
+            <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
                     th:value="${i.split('-')[0].trim()}">[[${i.split('-')[1].trim()}]]</option>
           </select>
         </div>
@@ -139,7 +137,7 @@
       <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-primary addCartBtn">장바구니 담기</button>
-        <button type="button" class="btn border-primary">바로 주문</button>
+        <button type="button" class="btn border-primary orderBtn">바로 주문</button>
       </div>
       <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
@@ -166,6 +164,7 @@
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/cart.js"></script>
+  <script src="/js/order.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -173,7 +172,6 @@
 
   const shopItemId = [[${responseDTO.shopItemId}]]
   const itemName = [[${responseDTO.itemName}]]
-
   const optionCount = [[${responseDTO.listOptionType.size()}]]
 
   const pItemCount = document.querySelector('.pItemCount')
@@ -190,6 +188,9 @@
   const pTotalDiscountPrice = document.querySelector(".pTotalDiscountPrice")
   const pDeliveryFee = document.querySelector(".pDeliveryFee")
 
+
+  reCalculation()
+
   // 수량 변경
   document.querySelector(".pItemCount").addEventListener("change", function (e){
     reCalculation()
@@ -197,52 +198,55 @@
 
   function reCalculation(){
 
-    var itemPrice = pOriginalPrice.value
-    var discountPrice = pDiscountPrice.value
-    var itemCount = pItemCount.value
+    const itemPrice = pOriginalPrice.value
+    const discountPrice = pDiscountPrice.value
+    const itemCount = pItemCount.value
 
-    var totalOriginalPrice = itemPrice * itemCount
-    var totalDiscountPrice = discountPrice * itemCount
-    var totalPrice = (itemPrice - discountPrice) * itemCount
+    const totalOriginalPrice = itemPrice * itemCount
+    const totalDiscountPrice = discountPrice * itemCount
+    const totalPrice = (itemPrice - discountPrice) * itemCount
 
-    pOrderPrice.value = totalOriginalPrice
     // 배송비 계산
     const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
-    pDeliveryFee.value = deliveryPrice
 
+    pOrderPrice.value = totalOriginalPrice
+    pDeliveryFee.value = deliveryPrice
     pTotalDiscountPrice.value = totalDiscountPrice
-    // 결제 예정 금액
-    pExpectedPrice.value = totalPrice + deliveryPrice
+    pExpectedPrice.value = totalPrice + deliveryPrice   // 결제 예정 금액
   }
 
+  function checkItemSelect(){
+    if( pItemCount.value === '0'){
+      alert('수량을 선택 하세요!')
+      return false
+    }
+    if(pItemOptionValue1.value === '0'){
+      alert('옵션1을 선택 하세요!')
+      return false
+    }
+    if( optionCount > 1 && pItemOptionValue2.value === '0' ){
+      alert('옵션2을 선택 하세요!')
+      return false
+    }
+    return true
+  }
 
   // [장바구니 담기] 버튼 클릭
   document.querySelector(".addCartBtn").addEventListener("click", function(e){
     e.preventDefault()
     e.stopPropagation()
 
-    if( pItemCount.value === '0'){
-      alert('수량을 선택 하세요!')
+    // 상품 선택 했는지 체크
+    if(checkItemSelect() === false){
       return
     }
-    if(pItemOptionValue1.value === '0'){
-      alert('옵션1을 선택 하세요!')
-      return
-    }
-    if( optionCount > 1 && pItemOptionValue2.value === '0' ){
-      alert('옵션2을 선택 하세요!')
-      return
-    }
-
 
     const itemOptionList = []
-    itemOptionList.push({optionType:pItemOptionType1.value, optionValue:pItemOptionValue1.value})
+    itemOptionList.push({optionValue:pItemOptionValue1.value})
 
     if( optionCount > 1 && pItemOptionValue2.value.length > 0 ){
-        itemOptionList.push({optionType:pItemOptionType2.value, optionValue:pItemOptionValue2.value})
+        itemOptionList.push({optionValue:pItemOptionValue2.value})
     }
-
-    console.log(itemOptionList)
 
     let formObj = {
       shopItemId: shopItemId,
@@ -255,7 +259,6 @@
     ////////////////////////////////////////////////////
     addCartItem(formObj).then(result => {
       //console.log(result)
-
       alert("정상적으로 장바구니에 담겼습니다")
 
       // 장바구니 페이지 로 이동
@@ -266,7 +269,51 @@
     })
   }, false)
 
+  // [바로 주문] 클릭
+  document.querySelector(".orderBtn").addEventListener("click", function(e) {
+    e.preventDefault()
+    e.stopPropagation()
 
+    // 상품 선택 했는지 체크
+    if(checkItemSelect() === false){
+      return
+    }
 
+    const itemOptionList = []
+    itemOptionList.push({optionValue:pItemOptionValue1.value})
+
+    if( optionCount > 1 && pItemOptionValue2.value.length > 0 ){
+      itemOptionList.push({optionValue:pItemOptionValue2.value})
+    }
+
+    let arrayItemInfo = [];
+    const itemInfo = {
+      itemId: shopItemId,
+      itemCount: pItemCount.value,
+      itemPrice: pOriginalPrice.value,
+      itemOptionList: itemOptionList,
+      discountPrice: pTotalDiscountPrice.value
+    };
+    arrayItemInfo.push(itemInfo);
+
+    let formObj = {
+      deliveryFee: pDeliveryFee.value,
+      totalPrice: pExpectedPrice.value,
+      listOrderDetail: arrayItemInfo
+    }
+
+    //////////////////////////////////////////////////
+    addOrderItem(formObj).then(result => {
+      //console.log(result)
+      alert("정상적으로 장바구니에 담겼습니다")
+
+      // 장바구니 페이지 로 이동
+      self.location = '/cart/list'
+
+    }).catch(e => {
+      console.log(e)
+    })
+
+  }, false)
 
 </script>
