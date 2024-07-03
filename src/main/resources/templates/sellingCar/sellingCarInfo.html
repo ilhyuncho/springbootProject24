@@ -158,8 +158,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendModifyBtn">Modify</button>
-          <button type="button" class="btn btn-danger cancelBtn">Cancel</button>
+          <button type="button" class="btn btn-primary sendModifyBtn">가격 수정</button>
+          <button type="button" class="btn btn-danger cancelBtn">구매 취소</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
         </div>
       </div>
@@ -339,7 +339,7 @@
 
   function sendPurchaseOffer(formObj) {
 
-    purchaseOffer(formObj).then(result => {
+    createOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
 
@@ -358,9 +358,9 @@
       initModalDisplay(formObj)
     })
   }
-  function sendCancelOffer(formObj) {
+  function sendUpdateOffer(formObj) {
 
-    cancelOffer(formObj).then(result => {
+    updateOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
 
@@ -382,11 +382,11 @@
 
   function initModalDisplay(formObj) {
 
-    if(formObj.offerType === 'new'){
+    if(formObj.offerType === 'propose'){
       requestPrice.value= ''
       purchaseOfferModal.hide()
     }
-    else if(formObj.offerType === 'modify'){
+    else if(formObj.offerType === 'proposeChangePrice'){
       modifyPrice.value= ''
       modifyOfferModal.hide()
     }
@@ -422,11 +422,11 @@
     }
 
     const formObj = {
-      offerType:'propose',
+      offerType:'proposeChangePrice',
       carId:carId,
       requestPrice: modifyPrice.value.replaceAll(",","")
     }
-    sendPurchaseOffer(formObj)
+    sendUpdateOffer(formObj)
   }, false)
 
   // 모달창의 구매 제안 취소 처리
@@ -437,7 +437,7 @@
       carId:carId,
       requestPrice:0
     }
-    sendCancelOffer(formObj)
+    sendUpdateOffer(formObj)
   }, false)
 
   buyingCarListPaging.addEventListener("click", function(e){

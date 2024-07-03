@@ -28,13 +28,11 @@ public class BuyingCarRestController {
     private final BuyingCarService buyingCarService;
     private final UserService userService;
 
-    @ApiOperation(value = "차량 구매 제안(&가격 수정)", notes = "희망 가격 전달")
+    @ApiOperation(value = "차량 구매 제안 or 차량 구매 상담 요청", notes = "")
     @PostMapping("/offer")
     public Map<String,String> postOffer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                                  BindingResult bindingResult,
                                                  Principal principal ) throws BindException {
-        log.error("buyingCar offer post...." + buyingCarRegDTO);
-
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
@@ -42,27 +40,19 @@ public class BuyingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        if(buyingCarRegDTO.getOfferType().equals("new")){
-            buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
-        }
-        else{
-            buyingCarService.modifyBuyingCar(user, buyingCarRegDTO);
-        }
+        buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 
-    @ApiOperation(value = "차량 구매 취소", notes = "데이터 삭제 요청")
-    @PostMapping("/cancel")
+    @ApiOperation(value = "차량 구매( or 상담 요청 ) 취소", notes = "")
+    @PostMapping("/update")
     public Map<String,String> postCancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                     BindingResult bindingResult,
                                     Principal principal ) throws BindException {
 
-        log.error("buyingCar cancel Delete...." + buyingCarRegDTO);
-
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
@@ -70,11 +60,10 @@ public class BuyingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        buyingCarService.deleteBuyingCar(user, buyingCarRegDTO);
+        buyingCarService.updateBuyingCar(user, buyingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 
@@ -83,66 +72,13 @@ public class BuyingCarRestController {
     public BuyingCarListResDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO,
                                                           Long sellingCarId){
 
-        BuyingCarListResDTO<BuyingCarViewDTO> buyingCarListResDTO =
-                buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
-
-        log.error(buyingCarListResDTO);
-
-        return buyingCarListResDTO;
+        return buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
     }
     @ApiOperation(value = "구매 희망 최고 가격", notes = "")
     @GetMapping("/highProposalPrice")
     public BuyingCarViewDTO getHighProposalPrice(Long sellingCarId){
 
-        BuyingCarViewDTO highProposalBuyingCar = buyingCarService.getHighProposalBuyingCar(sellingCarId);
-
-        return highProposalBuyingCar;
+        return buyingCarService.getHighProposalBuyingCar(sellingCarId);
     }
-
-    @ApiOperation(value = "차량 구매 상담 요청", notes = "")
-    @PostMapping("/requestConsult")
-    public Map<String,String> postRequestConsult(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
-                                                 BindingResult bindingResult,
-                                                 Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
-
-        User user = userService.findUser(principal.getName());
-        buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
-
-
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
-    }
-
-    @ApiOperation(value = "차량 구매 상담 요청 취소", notes = "")
-    @PostMapping("/requestCancel")
-    public Map<String,String> postRequestCancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
-                                                 BindingResult bindingResult,
-                                                 Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
-
-        User user = userService.findUser(principal.getName());
-
-        // 삭제 가 아닌, 상태 값 변경?
-        // 내가 올린 차량은 상담 요청 버튼이 아닌, 다른 내용으로
-        buyingCarService.deleteBuyingCar(user, buyingCarRegDTO);
-
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
-    }
-
-
 
 }

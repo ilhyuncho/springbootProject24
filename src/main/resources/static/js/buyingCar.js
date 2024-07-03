@@ -1,6 +1,6 @@
-async function purchaseOffer(formObj) {
+async function createOffer(formObj) {
 
-    console.log("purchaseOffer....................")
+    console.log("createOffer....................")
     console.log(formObj)
 
     const response = await axios.post(`/buyingCar/offer`, formObj)
@@ -9,17 +9,16 @@ async function purchaseOffer(formObj) {
     return response.data
 }
 
-async function cancelOffer(formObj) {
+async function updateOffer(formObj) {
 
-    console.log("cancelOffer....................")
+    console.log("updateOffer....................")
     console.log(formObj)
 
-    const response = await axios.post(`/buyingCar/cancel`, formObj)
+    const response = await axios.post(`/buyingCar/update`, formObj)
 
     //console.log(response)
     return response.data
 }
-
 
 async function getList({sellingCarId, page, size}){
 
@@ -28,30 +27,4 @@ async function getList({sellingCarId, page, size}){
     //console.log(result.data)
     return result.data
 }
-
-async function sendRequestConsult(formObj) {
-    console.log(formObj)
-
-    const response = await axios.post(`/buyingCar/requestConsult`, formObj)
-
-    console.log(response)
-    return response.data
-}
-
-async function sendRequestCancel(formObj) {
-    console.log(formObj)
-
-    const response = await axios.post(`/buyingCar/requestCancel`, formObj)
-
-    console.log(response)
-    return response.data
-}
-
-// async function getHighProposalPrice(sellingCarId){
-//
-//     const result = await axios.get(`/buyingCar/highProposalPrice`, {params: {sellingCarId}})
-//
-//     //console.log(result.data)
-//     return result.data
-// }
 

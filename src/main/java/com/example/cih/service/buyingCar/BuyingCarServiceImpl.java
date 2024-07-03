@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,24 +35,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     private final SellingCarRepository sellingCarRepository;
     private final BuyingCarRepository buyingCarRepository;
 
-    private final UserService userService;
     private final CarRepository carRepository;
-
-//    @Override
-//    public List<BuyingCarViewDTO> getListBuyingCar(Long sellingCarId) {
-//
-//        SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
-//                .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
-//
-//        List<BuyingCar> ListBuyingCar = buyingCarRepository.findBySellingCar(sellingCar);
-//
-//        List<BuyingCarViewDTO> ListBuyingCarViewDTO = ListBuyingCar.stream()
-//                .map(BuyingCarServiceImpl::entityToDTO)
-//                .sorted(Comparator.comparing(BuyingCarViewDTO::getProposalPrice).reversed())   // 제안 가격 내림차순으로 정렬
-//                .collect(Collectors.toList());
-//
-//        return ListBuyingCarViewDTO;
-//    }
 
     @Override
     public BuyingCarListResDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId) {
@@ -117,42 +101,36 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         // 구매하려는 차량 정보
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
+        if(getBuyingCarInfo(sellingCar, user) != null){
+            throw new OwnerCarNotFoundException("이미 구매 신청 정보가 존재합니다");
+        }
+
         BuyingCar buyingCar = BuyingCar.builder()
                 .proposalPrice(buyingCarRegDTO.getRequestPrice())
                 .phoneNumber(buyingCarRegDTO.getPhoneNumber())
                 .user(user)
                 .sellingCar(sellingCar)
                 .buyCarStatus(buyCarStatus)
+                .isActive(true)
                 .build();
         buyingCarRepository.save(buyingCar);
     }
     @Override
-    public void modifyBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
+    public void updateBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
         BuyingCar buyingCar = getBuyingCarInfo(sellingCar, user);
+        if(buyingCar == null){
+            throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다");
+        }
 
-        if(buyingCar != null){
+        BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
+
+        buyingCar.changeBuyCarStatus(buyCarStatus);
+
+        if(buyCarStatus == BuyCarStatus.PROPOSE_CHANGE_PRICE){
             buyingCar.changePrice(buyingCarRegDTO.getRequestPrice());
-        }
-        else{
-            throw new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다");
-        }
-    }
-
-    @Override
-    public void deleteBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
-
-        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
-
-        BuyingCar buyingCar = getBuyingCarInfo(sellingCar, user);
-
-        if(buyingCar != null){
-            buyingCarRepository.delete(buyingCar);
-        }
-        else{
-            throw new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다");
         }
     }
 
@@ -167,16 +145,15 @@ public class BuyingCarServiceImpl implements BuyingCarService {
 
     public BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user){    // 판매 차량을 사려고 하는 고객의 구매 정보 get
 
-        return buyingCarRepository.findBySellingCarAndUser(sellingCar, user)
+        return buyingCarRepository.findBySellingCarAndUserAndIsActive(sellingCar, user, true)
                 .orElse(null);
                 //.orElseThrow(() -> new OwnerCarNotFoundException("가격 제안 정보가 존재하지않습니다"));
-
     }
 
     private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
         BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder( )
                 .proposalPrice(buyingCar.getProposalPrice())
-                .registerDate(buyingCar.getRegisterDate())
+                .registerTime(buyingCar.getRegisterTime())
                 .userName(buyingCar.getUser().getUserName())
                 .buyCarStatus(buyingCar.getBuyCarStatus())
                 .carNumber(buyingCar.getSellingCar().getCar().getCarNumber())   // 너무 긴가???

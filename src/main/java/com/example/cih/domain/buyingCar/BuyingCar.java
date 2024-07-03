@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,7 +28,10 @@ public class BuyingCar {
     private String phoneNumber;
 
     @CreationTimestamp
-    private LocalDateTime registerDate;
+    private LocalDateTime registerTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
 
     @Enumerated(EnumType.STRING)
     private BuyCarStatus buyCarStatus;              // 구매 제안 결과
@@ -40,7 +44,18 @@ public class BuyingCar {
     @JoinColumn(name="uId")
     private User user;
 
+    private Boolean isActive;
+
     public void changePrice(int proposalPrice){
         this.proposalPrice = proposalPrice;
+    }
+
+    public void changeBuyCarStatus(BuyCarStatus buyCarStatus){
+
+        if(buyCarStatus == BuyCarStatus.PROPOSE_CANCEL || buyCarStatus == BuyCarStatus.REQUEST_CANCEL)
+        {
+            isActive = false;
+        }
+        this.buyCarStatus = buyCarStatus;
     }
 }

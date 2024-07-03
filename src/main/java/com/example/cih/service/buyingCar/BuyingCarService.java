@@ -12,14 +12,11 @@ import java.util.List;
 
 public interface BuyingCarService {
     void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
-    void modifyBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
-    void deleteBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
-    //List<BuyingCarViewDTO> getListBuyingCar(Long sellingCarId);
+    void updateBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
     List<BuyingCarViewDTO> getListBuyingCarInfo(User user);
 
     BuyingCarListResDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId);
     BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId);
-
 
     BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user);
 }

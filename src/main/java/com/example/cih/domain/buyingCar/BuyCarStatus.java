@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 
 public enum BuyCarStatus {
     PROPOSE("propose", 1), // 구매 희망 신청
-    PROPOSE_CANCEL("proposeCancel", 2),    // 구매 희망 취소
-    GET_CAR("getCar",3), // 구매 성공
-    FAIL_CAR("failCar", 4), // 구매 실패
+    PROPOSE_CHANGE_PRICE("proposeChangePrice", 2), // 구매 희망 가격 수정 요청
+    PROPOSE_CANCEL("proposeCancel", 3),    // 구매 희망 취소
+    GET_CAR("getCar",4), // 구매 성공
+    FAIL_CAR("failCar", 5), // 구매 실패
 
-    REQUEST_CONSULT("requestConsult",5 ), // 상담 신청
-    REQUEST_CANCEL("requestCancel",6 ); // 상담 신청 취소
+    REQUEST_CONSULT("requestConsult",6), // 상담 신청
+    REQUEST_CANCEL("requestCancel",7); // 상담 신청 취소
 
     private final static Map<String, BuyCarStatus> valueMap = Arrays.stream(BuyCarStatus.values())
             .collect(Collectors.toMap(BuyCarStatus::getName, Function.identity()));

@@ -29,9 +29,9 @@ import java.security.Principal;
 
 public class SellingCarController {
 
-    private final SellingCarService sellingCarService;
     private final CarService carService;
     private final UserService userService;
+    private final SellingCarService sellingCarService;
 
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
@@ -46,7 +46,7 @@ public class SellingCarController {
         return "/sellingCar/sellingCarList";
     }
 
-    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "판매 차량 정보만 전달")
+    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출]")
     @GetMapping("/{carId}")
     public String getCarInfo(@PathVariable(name="carId") Long carId
             ,Model model, Principal principal){
@@ -72,25 +72,14 @@ public class SellingCarController {
 
         User user = null;
         if(principal != null){
-            log.error(principal.getName());
             user = userService.findUser(principal.getName());
-        }
-        else{
-            log.error("principal is null!!!!!!!!");
         }
 
         SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
 
         model.addAttribute("responseDTO", sellingCarViewDTO);
 
-        log.error(sellingCarViewDTO);
-
-
         return "/sellingCar/sellingCarView";
     }
-
-
-
-
 
 }

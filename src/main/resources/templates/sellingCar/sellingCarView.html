@@ -135,7 +135,7 @@
       carId:carId,
     }
 
-    sendRequestCancel(formObj).then(result => {
+    updateOffer(formObj).then(result => {
 
       alert('상담 요청이 취소 되었습니다')
 
@@ -165,7 +165,7 @@
       phoneNumber:phoneNumber.value
     }
 
-    sendRequestConsult(formObj).then(result => {
+    createOffer(formObj).then(result => {
 
       requestConsultModal.hide()
 

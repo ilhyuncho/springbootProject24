@@ -68,15 +68,15 @@ public class SellingCarServiceImpl implements SellingCarService {
         if( user != null ){
             log.error(user.toString());
 
-            if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
-
+            // 임시로
+           // if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
                 BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(sellingCar, user);
                 if(buyingCarInfo != null){
                     sellingCarViewDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
                 }
 
                 log.error(buyingCarInfo);
-            }
+           // }
         }
 
         return sellingCarViewDTO;
