@@ -4,7 +4,10 @@ import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
+import com.example.cih.dto.shop.ItemOptionResDTO;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.List;
 
 @Log4j2
 public class CommonUtils {
@@ -35,5 +38,17 @@ public class CommonUtils {
         }
 
         return discountPrice;
+    }
+
+    // 상품 옵션 설명 String 반환
+    public static String getItemOptionDesc(List<ItemOptionResDTO> listItemOption) {
+        ItemOptionResDTO itemOption1 = listItemOption.get(0);
+        String desc = itemOption1.getOptionType() + ": " + itemOption1.getOptionName();
+
+        if(listItemOption.size() > 1){
+            ItemOptionResDTO itemOption2 = listItemOption.get(1);
+            desc += ", " + itemOption2.getOptionType() + ": " + itemOption2.getOptionName();
+        }
+        return desc;
     }
 }

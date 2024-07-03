@@ -40,10 +40,9 @@
                                     <img style="width:100px" th:each="fileName: ${dto.fileNames}"
                                          th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|">
                                 </div>
-
                             </th>
-                            <td>[[${dto.getOptionDesc()}]]</td>
 
+                            <td>[[${dto.getOptionDesc()}]]</td>
                             <td>[[${dto.orderCount}]]</td>
                             <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.orderPrice * dto.orderCount}]]</td>
@@ -101,7 +100,7 @@
         }
 
         cancelOrderItem(orderItemId).then(result=>{
-            alert('정상적으로 삭제 되었습니다.' + result.result)
+            alert('정상적으로 삭제 되었습니다.')
 
             self.location = '/order/list' // 자바스크립트로 다른 url 호출
 

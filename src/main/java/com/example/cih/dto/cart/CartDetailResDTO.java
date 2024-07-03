@@ -1,9 +1,9 @@
 package com.example.cih.dto.cart;
 
 
-import com.example.cih.domain.shop.ItemOption;
 import com.example.cih.dto.ImageDTO;
 import com.example.cih.dto.shop.ItemOptionResDTO;
+import com.example.cih.service.common.CommonUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -38,15 +38,7 @@ public class CartDetailResDTO {
     }
 
     public String getOptionDesc(){
-
-        ItemOptionResDTO itemOption1 = listItemOption.get(0);
-        String desc = itemOption1.getOptionType() + ": " + itemOption1.getOptionName();
-
-        if(listItemOption.size() > 1){
-            ItemOptionResDTO itemOption2 = listItemOption.get(1);
-            desc += ", " + itemOption2.getOptionType() + ": " + itemOption2.getOptionName();
-        }
-        return desc;
+        return CommonUtils.getItemOptionDesc(listItemOption);
     }
 
 }

@@ -13,6 +13,7 @@ import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.dto.shop.ItemOptionDTO;
+import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -81,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
-        String[] types = pageRequestDTO.getTypes();
-        String keyword = pageRequestDTO.getKeyword();
+//        String[] types = pageRequestDTO.getTypes();
+//        String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("orderItemId");
 
         User user = userService.findUser(userName);
@@ -109,16 +110,11 @@ public class OrderServiceImpl implements OrderService {
                             .build();
 
                     if(orderItem.getItemOptionId1() > 0){
-                        ItemOption itemOption1 = itemOptionRepository.findById(orderItem.getItemOptionId1())
-                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
+                        itemDTO.getListItemOption().add(getItemOptionInfo(orderItem.getItemOptionId1()));
 
-                        itemDTO.setOptionType1(itemOption1);
                     }
                     if(orderItem.getItemOptionId2() > 0){
-                        ItemOption itemOption2 = itemOptionRepository.findById(orderItem.getItemOptionId2())
-                                .orElseThrow(() -> new NoSuchElementException("getCartAll() 해당 옵션1 정보가 존재하지않습니다"));
-
-                        itemDTO.setOptionType2(itemOption2);
+                        itemDTO.getListItemOption().add(getItemOptionInfo(orderItem.getItemOptionId2()));
                     }
 
                     // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
@@ -171,6 +167,17 @@ public class OrderServiceImpl implements OrderService {
         log.error("cancelOrder" + orderItem.getOrderItemId());
 
         orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    }
+
+    public ItemOptionResDTO getItemOptionInfo(Long itemOptionId){
+        ItemOption itemOption = itemOptionRepository.findById(itemOptionId)
+                .orElseThrow(() -> new NoSuchElementException("아이템 옵션 정보가 존재하지않습니다"));
+
+        return ItemOptionResDTO.builder()
+                .itemOptionId(itemOption.getItemOptionId())
+                .optionName(itemOption.getOption1())
+                .optionType(itemOption.getType().getName())
+                .build();
     }
 
 }

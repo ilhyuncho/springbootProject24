@@ -1,8 +1,9 @@
 package com.example.cih.dto.order;
 
 
-import com.example.cih.domain.shop.ItemOption;
 import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.shop.ItemOptionResDTO;
+import com.example.cih.service.common.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,25 +26,13 @@ public class OrderItemResDTO {
     private String itemName;
     private int orderPrice;
     private int discountPrice;
-
-    private String optionType1;
-    private String optionName1;
-    private String optionType2;
-    private String optionName2;
-
     private LocalDate orderDate;
 
     @Builder.Default
-    private List<ImageDTO> fileNames = new ArrayList<>();
+    private List<ItemOptionResDTO> listItemOption = new ArrayList<>();
 
-    public void setOptionType1(ItemOption itemOption){
-        this.optionType1 = itemOption.getType().getName();
-        this.optionName1 = itemOption.getOption1();
-    }
-    public void setOptionType2(ItemOption itemOption){
-        this.optionType2 = itemOption.getType().getName();
-        this.optionName2 = itemOption.getOption1();
-    }
+    @Builder.Default
+    private List<ImageDTO> fileNames = new ArrayList<>();
 
     public void addImage(String uuid, String fileName, int imageOrder){
         ImageDTO imageDTO = ImageDTO.builder()
@@ -55,7 +44,8 @@ public class OrderItemResDTO {
     }
 
     public String getOptionDesc(){
-        return optionType1 + ": " + optionName1 +
-                ( optionType2 != null ? ", " + optionType2 + ": " + optionName2 : "" );
+        return CommonUtils.getItemOptionDesc(listItemOption);
     }
+
+
 }
