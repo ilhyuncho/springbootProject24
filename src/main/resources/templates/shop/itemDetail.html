@@ -139,7 +139,7 @@
       <div th:if="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">
         <button type="button" class="btn btn-primary addCartBtn">장바구니 담기</button>
-        <button type="button" class="btn border-primary">주문 하기</button>
+        <button type="button" class="btn border-primary">바로 주문</button>
       </div>
       <div th:unless="${responseDTO.getSellingStatus() == T(com.example.cih.domain.shop.ItemSellingStatus).STATUS_SELLING}"
            class="text-right">

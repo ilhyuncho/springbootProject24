@@ -12,13 +12,13 @@ import java.util.List;
 public class OrderReqDTO {
     private Integer deliveryFee;
     private Integer totalPrice;
-    private List<OrderDetailDTO> listOrderDetail = new ArrayList<>();
+    private final List<OrderDetailDTO> listOrderDetail = new ArrayList<>();
 
-    @Builder
-    public OrderReqDTO(Integer deliveryFee, Integer totalPrice, List<OrderDetailDTO> listOrderDetail) {
-        this.deliveryFee = deliveryFee;
-        this.totalPrice = totalPrice;
-        this.listOrderDetail = listOrderDetail;
-    }
+//    @Builder
+//    public OrderReqDTO(Integer deliveryFee, Integer totalPrice, List<OrderDetailDTO> listOrderDetail) {
+//        this.deliveryFee = deliveryFee;
+//        this.totalPrice = totalPrice;
+//        this.listOrderDetail = listOrderDetail;
+//    }
 
 }
