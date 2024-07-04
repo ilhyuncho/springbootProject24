@@ -9,9 +9,9 @@ import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.dto.cart.CartDetailResDTO;
-import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
+import com.example.cih.service.shop.ItemOptionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,7 +30,7 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final ShopItemRepository shopItemRepository;
-    private final ItemOptionRepository itemOptionRepository;
+    private final ItemOptionService itemOptionService;
     private final UserService userService;
     private final NotificationService notificationService;
 
@@ -55,12 +55,8 @@ public class CartServiceImpl implements CartService {
                             .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
                             .build();
 
-                    if(cart.getItemOptionId1() > 0){
-                        cartDTO.getListItemOption().add(getItemOptionInfo(cart.getItemOptionId1()));
-                    }
-                    if(cart.getItemOptionId2() > 0){
-                        cartDTO.getListItemOption().add(getItemOptionInfo(cart.getItemOptionId2()));
-                    }
+                    // 아이템 옵션 set
+                    cartDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(cart.getListOptionId()));
 
                     // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
                     cart.getShopItem().getItemImageSet()
@@ -130,16 +126,5 @@ public class CartServiceImpl implements CartService {
 
         cartRepository.delete(cart);
         return cart;
-    }
-
-    public ItemOptionResDTO getItemOptionInfo(Long itemOptionId){
-        ItemOption itemOption = itemOptionRepository.findById(itemOptionId)
-                .orElseThrow(() -> new NoSuchElementException("아이템 옵션 정보가 존재하지않습니다"));
-
-        return ItemOptionResDTO.builder()
-                .itemOptionId(itemOption.getItemOptionId())
-                .optionName(itemOption.getOption1())
-                .optionType(itemOption.getType().getName())
-                .build();
     }
 }

@@ -1,11 +1,11 @@
 package com.example.cih.domain.shop;
 
 
-import com.example.cih.domain.cart.Cart;
 import com.example.cih.dto.order.OrderDetailDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -62,4 +62,7 @@ public class OrderItem {
         this.deliveryStatus = deliveryStatus;
     }
 
+    public List<Long> getListOptionId(){
+        return Arrays.asList(itemOptionId1, itemOptionId2);
+    }
 }

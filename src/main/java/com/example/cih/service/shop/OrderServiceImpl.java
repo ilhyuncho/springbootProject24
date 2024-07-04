@@ -13,7 +13,6 @@ import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.dto.shop.ItemOptionDTO;
-import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,8 +37,8 @@ public class OrderServiceImpl implements OrderService {
     private final ShopItemRepository shopItemRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ItemOptionRepository itemOptionRepository;
     private final UserService userService;
+    private final ItemOptionService itemOptionService;
 
     @Override
     public Long createOrder(String userName, OrderReqDTO orderReqDTO ){
@@ -95,38 +93,32 @@ public class OrderServiceImpl implements OrderService {
 
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
-        List<OrderItemResDTO> listDTO = resultOrderItem.getContent()
-                .stream().map(orderItem -> {
+        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem -> {
 
-                    OrderItemResDTO itemDTO = OrderItemResDTO.builder()
-                            .orderId(orderItem.getOrder().getOrderId())
-                            .orderItemId(orderItem.getOrderItemId())
-                            .orderCount(orderItem.getOrderCount())
-                            .deliveryStatus(orderItem.getDeliveryStatus().getName())
-                            .shopItemId(orderItem.getShopItem().getShopItemId())
-                            .itemName(orderItem.getShopItem().getItemName())
-                            .orderPrice(orderItem.getOrderPrice())
-                            .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderDate().toLocalDate())
-                            .build();
+                OrderItemResDTO itemDTO = OrderItemResDTO.builder()
+                        .orderId(orderItem.getOrder().getOrderId())
+                        .orderItemId(orderItem.getOrderItemId())
+                        .orderCount(orderItem.getOrderCount())
+                        .deliveryStatus(orderItem.getDeliveryStatus().getName())
+                        .shopItemId(orderItem.getShopItem().getShopItemId())
+                        .itemName(orderItem.getShopItem().getItemName())
+                        .orderPrice(orderItem.getOrderPrice())
+                        .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderDate().toLocalDate())
+                        .build();
 
-                    if(orderItem.getItemOptionId1() > 0){
-                        itemDTO.getListItemOption().add(getItemOptionInfo(orderItem.getItemOptionId1()));
+                // 아이템 옵션 set
+                itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
 
-                    }
-                    if(orderItem.getItemOptionId2() > 0){
-                        itemDTO.getListItemOption().add(getItemOptionInfo(orderItem.getItemOptionId2()));
-                    }
-
-                    // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-                    orderItem.getShopItem().getItemImageSet()
-                            .stream().filter(image -> image.getImageOrder() == 0)
-                            .peek(log::error)
-                            .forEach(image -> {
-                                itemDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
-                            });
+                // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+                orderItem.getShopItem().getItemImageSet()
+                        .stream().filter(image -> image.getImageOrder() == 0)
+                        .peek(log::error)
+                        .forEach(image -> {
+                            itemDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+                        });
 
 
-                    return itemDTO;
+                return itemDTO;
                 }
         ).collect(Collectors.toList());
 
@@ -155,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(Long orderItemId){
+    public void cancelOrder(Long orderItemId) {
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> {
@@ -168,16 +160,4 @@ public class OrderServiceImpl implements OrderService {
 
         orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
     }
-
-    public ItemOptionResDTO getItemOptionInfo(Long itemOptionId){
-        ItemOption itemOption = itemOptionRepository.findById(itemOptionId)
-                .orElseThrow(() -> new NoSuchElementException("아이템 옵션 정보가 존재하지않습니다"));
-
-        return ItemOptionResDTO.builder()
-                .itemOptionId(itemOption.getItemOptionId())
-                .optionName(itemOption.getOption1())
-                .optionType(itemOption.getType().getName())
-                .build();
-    }
-
 }

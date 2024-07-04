@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,24 +48,8 @@ public class Cart extends BaseEntity {
     private Boolean isActive;   // 장바구니에 있는 상태
 
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "itemOptionId")
-//    private ItemOption itemOption;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "itemOptionId")  // 이걸 설정하지 않으면 중간에 조인테이블 전략을 사용함
-//    @Builder.Default
-//    private List<ItemOption> itemOptions = new ArrayList<>();
-
     private Long itemOptionId1;
     private Long itemOptionId2;
-
-    public Long getItemOptionId1() {
-        return itemOptionId1 == null ? 0L : itemOptionId1;
-    }
-    public Long getItemOptionId2() {
-        return itemOptionId2 == null ? 0L : itemOptionId2;
-    }
 
 
     @Column(name = "IMPERIAL_WEIGHT")
@@ -88,4 +74,9 @@ public class Cart extends BaseEntity {
     public void changeIsActive(Boolean isActive){
         this.isActive = isActive;
     }
+
+    public List<Long> getListOptionId(){
+        return Arrays.asList(itemOptionId1, itemOptionId2);
+    }
+
 }
