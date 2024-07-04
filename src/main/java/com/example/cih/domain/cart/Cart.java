@@ -1,26 +1,25 @@
 package com.example.cih.domain.cart;
 
 
-import com.example.cih.domain.common.BaseEntity;
+import com.example.cih.domain.common.ItemOptionEntity;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.user.User;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Table(name="carts")
-public class Cart extends BaseEntity {
+public class Cart extends ItemOptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="cartId")
@@ -47,11 +46,6 @@ public class Cart extends BaseEntity {
 
     private Boolean isActive;   // 장바구니에 있는 상태
 
-
-    private Long itemOptionId1;
-    private Long itemOptionId2;
-
-
     @Column(name = "IMPERIAL_WEIGHT")
     @ColumnTransformer(     // db 저장,불러올때 값 변환
             read = "IMPERIAL_WEIGHT / 2",
@@ -73,10 +67,6 @@ public class Cart extends BaseEntity {
     }
     public void changeIsActive(Boolean isActive){
         this.isActive = isActive;
-    }
-
-    public List<Long> getListOptionId(){
-        return Arrays.asList(itemOptionId1, itemOptionId2);
     }
 
 }

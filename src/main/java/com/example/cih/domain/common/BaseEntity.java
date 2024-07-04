@@ -1,6 +1,8 @@
 package com.example.cih.domain.common;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 // AuditingEntityListener 를 활성화 시키기 위해서는 프로젝트 설정에 @EnableJpaAuditing을 추가해야 함
 // 이 프로젝트는 JpaAuditingConfiguration class를 추가함
 @Getter
+@SuperBuilder
+@NoArgsConstructor
 public abstract class BaseEntity {
     @CreatedDate
     @Column(name = "regdate", updatable = false)

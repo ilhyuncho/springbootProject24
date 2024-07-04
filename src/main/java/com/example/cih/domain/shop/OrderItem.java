@@ -1,21 +1,22 @@
 package com.example.cih.domain.shop;
 
 
+import com.example.cih.domain.common.ItemOptionEntity;
 import com.example.cih.dto.order.OrderDetailDTO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"shopItem","order"})
 @Table(name="OrderItems")
-public class OrderItem {
+public class OrderItem extends ItemOptionEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ORDER_ITEM_ID")
@@ -33,9 +34,6 @@ public class OrderItem {
 
     private int orderPrice;                           // 실제 결제한 가격
     private int orderCount;
-
-    private Long itemOptionId1;
-    private Long itemOptionId2;
 
     public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO, List<Long> listItemOption){
 
@@ -60,9 +58,5 @@ public class OrderItem {
 
     public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
         this.deliveryStatus = deliveryStatus;
-    }
-
-    public List<Long> getListOptionId(){
-        return Arrays.asList(itemOptionId1, itemOptionId2);
     }
 }
