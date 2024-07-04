@@ -57,6 +57,7 @@ public class Cart extends ItemOptionEntity {
     @ColumnTransformer(     // db 저장,불러올때 값 변환
             write = "date_add(?, interval 5 DAY)"   // db 함수를 지정
     )
+    @Column(updatable = false)  // @CreationTimestamp 이지만 update될때 시간이 추가로 5일 늘어나서 지정함
     private LocalDateTime expiredDate;    // 장바구니에 넣고 자동 취소 되는 시간
 
     @Version
