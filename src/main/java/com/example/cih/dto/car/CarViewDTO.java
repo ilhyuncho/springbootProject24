@@ -38,7 +38,6 @@ public class CarViewDTO extends CarSpecDTO {
         this.userName = userName;
         this.regDate = regDate;
         this.modDate = modDate;
-       // this.fileNames = fileNames; // 확인 필요
     }
 
     public void addImage(String uuid, String fileName, int imageOrder){

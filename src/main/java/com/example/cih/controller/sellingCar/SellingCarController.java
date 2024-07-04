@@ -46,7 +46,7 @@ public class SellingCarController {
         return "/sellingCar/sellingCarList";
     }
 
-    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출]")
+    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출")
     @GetMapping("/{carId}")
     public String getCarInfo(@PathVariable(name="carId") Long carId
             ,Model model, Principal principal){

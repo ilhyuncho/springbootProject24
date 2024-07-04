@@ -26,6 +26,6 @@ public class CarInfoNewDTO {
     @NotNull
     private Long    carKm;
 
-    private List<String> fileNames= new ArrayList<>();
+    private List<String> fileNames = new ArrayList<>();
 
 }

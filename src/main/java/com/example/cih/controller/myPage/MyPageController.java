@@ -6,13 +6,11 @@ import com.example.cih.domain.car.Car;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
-import com.example.cih.dto.car.CarInfoDTO;
 import com.example.cih.dto.car.CarInfoNewDTO;
 import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.UserCarService;
-import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -138,8 +136,8 @@ public class MyPageController {
         // 그리고 이기능은 많이 쓰이지 않는다
         //CarInfoDTO carInfoDTO = carService.readOne(car.getCarId());
 
-        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
-        model.addAttribute("responseDTO", carInfoDTO);
+//        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
+//        model.addAttribute("responseDTO", carInfoDTO);
 
         return "carRead";
     }
