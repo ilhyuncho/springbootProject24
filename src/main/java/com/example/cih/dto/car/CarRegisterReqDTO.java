@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CarRegDTO {
+public class CarRegisterReqDTO {
     private String carNumber;
 }

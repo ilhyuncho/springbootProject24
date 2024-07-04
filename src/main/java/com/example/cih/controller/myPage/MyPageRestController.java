@@ -2,16 +2,10 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.reference.RefCarSample;
-import com.example.cih.domain.user.User;
-import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.CarKmUpdateDTO;
-import com.example.cih.dto.car.CarRegDTO;
-import com.example.cih.dto.user.UserMissionListResDTO;
-import com.example.cih.dto.user.UserMissionReqDTO;
-import com.example.cih.dto.user.UserMissionResDTO;
+import com.example.cih.dto.car.CarRegisterReqDTO;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.reference.RefCarSampleService;
-import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -67,12 +60,12 @@ public class MyPageRestController {
 
     @ApiOperation(value = "차 등록 (post)", notes = "")
     @PostMapping(value="/carRegister")
-    public Map<String,String> postCarRegister(@RequestBody CarRegDTO carRegDTO,
+    public Map<String,String> postCarRegister(@RequestBody CarRegisterReqDTO carRegisterReqDTO,
                                      Principal principal ){
 
-        log.error("carRegDTO : " + carRegDTO);
+        log.error("carRegisterReqDTO : " + carRegisterReqDTO);
 
-        Long carId = userCarService.register(principal.getName(), carRegDTO.getCarNumber());
+        Long carId = userCarService.register(principal.getName(), carRegisterReqDTO.getCarNumber());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

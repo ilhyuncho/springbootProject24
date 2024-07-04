@@ -18,6 +18,7 @@ import java.util.List;
 public class CarViewNewDTO{        // 내차 정보 로딩 시
 
     private Long carId;
+    private String userName;
 
     @Pattern(regexp = "[0-9]{2,3}[가-힣][0-9]{4}$")
     private String  carNumber;
@@ -42,9 +43,10 @@ public class CarViewNewDTO{        // 내차 정보 로딩 시
     private SellingCarStatus sellingCarStatus;
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
-    public CarViewNewDTO(Long carId, String carNumber, String carGrade, String carModel, int carYears,
+    public CarViewNewDTO(Long carId, String userName, String carNumber, String carGrade, String carModel, int carYears,
                          String carColors, Long carKm) {
         this.carId = carId;
+        this.userName = userName;
         this.carNumber = carNumber;
         this.carGrade = carGrade;
         this.carModel = carModel;

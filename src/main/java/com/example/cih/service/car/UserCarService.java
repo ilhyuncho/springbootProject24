@@ -13,7 +13,7 @@ public interface UserCarService {
 
     Long register(String userName, String carNumber);
 
-    void modifyMyCar(CarInfoNewDTO carInfoDTO);
+    void modifyMyCar(CarInfoReqDTO carInfoReqDTO);
     void modifyMyCarKm(CarKmUpdateDTO carKmUpdateDTO);
     void deleteMyCar(Long carId);
 }

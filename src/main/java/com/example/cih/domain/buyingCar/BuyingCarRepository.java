@@ -29,11 +29,11 @@ public interface BuyingCarRepository extends JpaRepository<BuyingCar, Long>, Buy
 //    Iterable<BuyingCarViewDTO> getBuyingCarInfo1(Long sellingCarId);
 
     @Query(value="select new com.example.cih.dto.buyingCar.BuyingCarViewDTO(u.userName, b.proposalPrice, b.buyCarStatus, c.carNumber, c.carModel, c.carId, b.registerTime) " +
-                 "from BuyingCar b, User u, Car c " +
-                 "where b.user.userId = u.userId and b.sellingCar.car.carId = c.carId and b.sellingCar.sellingCarId=?1 and b.isActive = true",
+                 "from BuyingCar b, User u, Car c where b.user.userId = u.userId " +
+            "and b.sellingCar.car.carId = c.carId and b.sellingCar.sellingCarId=?1 and b.isActive = true and b.sellingCar.sellType = 1",
 
             countQuery = "select count(b) from BuyingCar b, User u where b.user.userId = u.userId " +
-                    "and b.sellingCar.sellingCarId=?1 and b.isActive = true")
+                    "and b.sellingCar.sellingCarId=?1 and b.isActive = true and b.sellingCar.sellType = 1")
     Page<BuyingCarViewDTO> getBuyingCarInfo(Long sellingCarId, Pageable pageable);
 
     List<BuyingCar> findByUser(User user);

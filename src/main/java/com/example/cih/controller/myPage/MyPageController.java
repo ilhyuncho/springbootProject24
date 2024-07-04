@@ -6,7 +6,7 @@ import com.example.cih.domain.car.Car;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
-import com.example.cih.dto.car.CarInfoNewDTO;
+import com.example.cih.dto.car.CarInfoReqDTO;
 import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
@@ -83,24 +83,24 @@ public class MyPageController {
 
     @ApiOperation(value = "차 세부 변경 (post)", notes = "")
     @PostMapping("/carModify")
-    public String postCarModify(@Valid CarInfoNewDTO carInfoDTO,
+    public String postCarModify(@Valid CarInfoReqDTO carInfoReqDTO,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
-        log.error("car modify post...." + carInfoDTO);
+        log.error("car modify post...." + carInfoReqDTO);
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+            redirectAttributes.addAttribute("carId", carInfoReqDTO.getCarId());
             return "redirect:/myPage/carDetail";
         }
 
-        userCarService.modifyMyCar(carInfoDTO);
+        userCarService.modifyMyCar(carInfoReqDTO);
 
         redirectAttributes.addFlashAttribute("result", "modified");
-        redirectAttributes.addAttribute("carId", carInfoDTO.getCarId());
+        redirectAttributes.addAttribute("carId", carInfoReqDTO.getCarId());
         redirectAttributes.addAttribute("userName", principal.getName());
 
         return "redirect:/myPage/carDetail";
@@ -108,15 +108,15 @@ public class MyPageController {
 
     @ApiOperation(value = "차 정보 삭제", notes = "")
     @PostMapping("/deleteCar")
-    public String postDeleteCar(CarInfoNewDTO carInfoDTO,
+    public String postDeleteCar(CarInfoReqDTO carInfoReqDTO,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
-        log.error("remove......post: " + carInfoDTO);
+        log.error("remove......post: " + carInfoReqDTO);
 
-        userCarService.deleteMyCar(carInfoDTO.getCarId());
+        userCarService.deleteMyCar(carInfoReqDTO.getCarId());
 
         // car정보가 db에서 삭제되었다면 첨부파일 삭제
-        List<String> fileNames = carInfoDTO.getFileNames();
+        List<String> fileNames = carInfoReqDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
             fileHandler.removeFiles(fileNames);
         }

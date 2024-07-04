@@ -107,18 +107,18 @@ public class UserCarServiceImpl implements UserCarService {
         return carRepository.save(car).getCarId();
     }
     @Override
-    public void modifyMyCar(CarInfoNewDTO carInfoDTO) {
+    public void modifyMyCar(CarInfoReqDTO carInfoReqDTO) {
 
-        Optional<Car> byId = carRepository.findById(carInfoDTO.getCarId());
+        Optional<Car> byId = carRepository.findById(carInfoReqDTO.getCarId());
         Car car = byId.orElseThrow();
 
-        car.change(carInfoDTO.getCarKm(), carInfoDTO.getCarYears(), carInfoDTO.getCarColors());
+        car.change(carInfoReqDTO.getCarKm(), carInfoReqDTO.getCarYears(), carInfoReqDTO.getCarColors());
 
         // 첨부파일 처리
         car.clearImages();
 
-        if(carInfoDTO.getFileNames() != null){
-            for (String fileName : carInfoDTO.getFileNames() ) {
+        if(carInfoReqDTO.getFileNames() != null){
+            for (String fileName : carInfoReqDTO.getFileNames() ) {
                 String[] index = fileName.split("_");
                 car.addImage(index[0], index[1]);
             }
@@ -143,6 +143,7 @@ public class UserCarServiceImpl implements UserCarService {
     private static CarViewNewDTO entityToDTO(Car car) {
         CarViewNewDTO carViewDTO = CarViewNewDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())
+                .userName(car.getUser().getUserName())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())

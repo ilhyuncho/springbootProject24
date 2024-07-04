@@ -3,6 +3,7 @@ package com.example.cih.domain.car;
 
 import com.example.cih.common.CarSizeConverter;
 import com.example.cih.domain.common.BaseEntity;
+import com.example.cih.domain.sellingCar.SellType;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
@@ -69,7 +70,7 @@ public class Car extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "SELLINGCAR_ID")   // 주 테이블(Car)에 외래 키 양방향
-    private SellingCar sellingCar;          // 경매 정보
+    private SellingCar sellingCar;          // 판매 정보
 
 
     public void setUser(User user) {
@@ -81,6 +82,7 @@ public class Car extends BaseEntity {
         this.sellingCar = SellingCar.builder()
                 .car(this)
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
+                .sellType(SellType.SELL_AUCTION) // 임시로
                 .RequiredPrice(RequiredPrice)
                 .likeCount(0)
                 .viewCount(0)

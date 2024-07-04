@@ -28,6 +28,7 @@ public class SellingCar extends BaseEntity {
     @Column(name="SELLINGCAR_ID")
     private Long sellingCarId;
 
+    private SellType sellType;
     private SellingCarStatus sellingCarStatus;
 
     private int RequiredPrice;

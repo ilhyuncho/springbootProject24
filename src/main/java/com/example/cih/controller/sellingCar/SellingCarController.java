@@ -5,7 +5,7 @@ package com.example.cih.controller.sellingCar;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.dto.car.CarViewNewDTO;
 import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.sellingCar.SellingCarService;
@@ -46,7 +46,7 @@ public class SellingCarController {
         return "/sellingCar/sellingCarList";
     }
 
-    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출")
+    @ApiOperation(value = "[판매 차량 정보 요청]", notes = "[차량 주문]-[조회] 시 호출, 내 차가 아님")
     @GetMapping("/{carId}")
     public String getCarInfo(@PathVariable(name="carId") Long carId
             ,Model model, Principal principal){
@@ -58,8 +58,8 @@ public class SellingCarController {
             log.error("principal is null!!!!!!!!");
         }
 
-        //CarViewDTO carViewDTO = userCarService.readMyCarDetailInfo( principal.getName(), carId);
-        CarViewDTO carViewDTO = carService.readOne(carId);
+       // userCarService.readMyCarDetailInfo( principal.getName(), carId);
+        CarViewNewDTO carViewDTO = carService.readOne(carId);
 
         model.addAttribute("carViewDTO", carViewDTO);
 

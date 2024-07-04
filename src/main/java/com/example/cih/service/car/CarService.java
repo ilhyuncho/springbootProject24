@@ -1,7 +1,7 @@
 package com.example.cih.service.car;
 
-import com.example.cih.dto.car.CarViewDTO;
+import com.example.cih.dto.car.CarViewNewDTO;
 
 public interface CarService {
-    CarViewDTO readOne(Long carId);
+    CarViewNewDTO readOne(Long carId);
 }

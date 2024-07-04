@@ -13,16 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarInfoNewDTO {
+public class CarInfoReqDTO {
 
     private Long    carId;
     private Long   userId;
     @NotNull
     private int     carYears;
-
     @NotEmpty
     private String  carColors;
-
     @NotNull
     private Long    carKm;
 
