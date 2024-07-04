@@ -72,6 +72,9 @@ public class OrderServiceImpl implements OrderService {
 
         }).collect(Collectors.toList());
 
+        // 이거 저장 안함............. 임시로
+        //     private Integer deliveryFee;
+        //    private Integer totalPrice;
         Order order = Order.createOrder(user, delivery, listOrderItem);
         Order save = orderRepository.save(order);
 

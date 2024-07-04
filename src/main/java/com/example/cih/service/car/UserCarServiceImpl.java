@@ -34,47 +34,47 @@ public class UserCarServiceImpl implements UserCarService {
     private final RefCarSampleService refCarSampleService;
 
     @Override
-    public List<CarViewNewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
+    public List<CarViewResDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
         // 고객 정보 get
         User user = userService.findUser(userName);
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
 
-        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
+        List<CarViewResDTO> listCarViewDTO = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )
-        for (CarViewNewDTO car : carViewDTOList) {
+        for (CarViewResDTO car : listCarViewDTO) {
             car.getFileNames().stream()
                     .filter(carImage -> carImage.getImageOrder() != 0)
                     .collect(Collectors.toList())
                     .forEach(x-> car.getFileNames().remove(x));
         }
 
-        return carViewDTOList;
+        return listCarViewDTO;
     }
 
     @Override
-    public CarViewNewDTO readMyCarDetailInfo(String userName, Long carId) {
+    public CarViewResDTO readMyCarDetailInfo(String userName, Long carId) {
         // 고객 정보 get
         User user = userService.findUser(userName);
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
 
-        List<CarViewNewDTO> carViewDTOList = ownCarList.stream().
+        List<CarViewResDTO> listCarViewDTO = ownCarList.stream().
                 map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
 
         // 요청된 carId 정보만 필터
-        CarViewNewDTO carViewDTO = carViewDTOList.stream()
+        CarViewResDTO carViewResDTO = listCarViewDTO.stream()
                 .filter(car -> Objects.equals(car.getCarId(), carId))
                 .findFirst()
                 .orElse(null);
 
-        log.error("carViewDTO : " + carViewDTO);
+        log.error("carViewResDTO : " + carViewResDTO);
 
-        return carViewDTO;
+        return carViewResDTO;
     }
 
     @Override
@@ -128,11 +128,11 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public void modifyMyCarKm(CarKmUpdateDTO carKmUpdateDTO) {
-        Optional<Car> byId = carRepository.findById(carKmUpdateDTO.getCarId());
+    public void modifyMyCarKm(CarKmUpdateReqDTO carKmUpdateReqDTO) {
+        Optional<Car> byId = carRepository.findById(carKmUpdateReqDTO.getCarId());
         Car car = byId.orElseThrow();
 
-        car.changeKm(carKmUpdateDTO.getUpdateKmValue());
+        car.changeKm(carKmUpdateReqDTO.getUpdateKmValue());
     }
 
     @Override
@@ -140,8 +140,8 @@ public class UserCarServiceImpl implements UserCarService {
         carRepository.deleteById(carId);
     }
 
-    private static CarViewNewDTO entityToDTO(Car car) {
-        CarViewNewDTO carViewDTO = CarViewNewDTO.writeCarViewNewDTOBuilder()
+    private static CarViewResDTO entityToDTO(Car car) {
+        CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())
                 .userName(car.getUser().getUserName())
                 .carNumber(car.getCarNumber())
@@ -152,19 +152,19 @@ public class UserCarServiceImpl implements UserCarService {
                 .carYears(car.getCarYears())
                 .build();
 
-        // 경매 정보 매핑
+        // 판매 진행 정보 매핑
         if(!Objects.isNull(car.getSellingCar())){
-            carViewDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
-            carViewDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
+            carViewResDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
+            carViewResDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
         }
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
           //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
-            carViewDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
+            carViewResDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
         });
 
-        return carViewDTO;
+        return carViewResDTO;
     }
 
 }

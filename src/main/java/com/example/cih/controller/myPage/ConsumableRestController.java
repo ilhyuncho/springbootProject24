@@ -1,7 +1,7 @@
 package com.example.cih.controller.myPage;
 
 import com.example.cih.common.exception.OwnerCarNotFoundException;
-import com.example.cih.dto.consumable.ConsumableRegDTO;
+import com.example.cih.dto.car.CarConsumableRegDTO;
 import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class ConsumableRestController {
 
     @ApiOperation(value = "소모품 교환 날짜 등록", notes = "차 소유주가 등록")
     @PostMapping("/register")
-    public Map<String,String> postRegisterSellingCar(@Valid @RequestBody ConsumableRegDTO consumableRegDTO,
+    public Map<String,String> postRegisterSellingCar(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
 
@@ -40,7 +40,7 @@ public class ConsumableRestController {
         Map<String, String> resultMap = new HashMap<>();
 
         try{
-            carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
+            carConsumableService.registerConsumable(principal.getName(), carConsumableRegDTO);
             resultMap.put("result", "success");
         }catch(Exception e){
             if (e.getClass() == OwnerCarNotFoundException.class) {

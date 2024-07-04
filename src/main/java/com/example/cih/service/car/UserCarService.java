@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface UserCarService {
 
-    List<CarViewNewDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
-    CarViewNewDTO readMyCarDetailInfo(String userName, Long carId);
+    List<CarViewResDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
+    CarViewResDTO readMyCarDetailInfo(String userName, Long carId);
 
     Long register(String userName, String carNumber);
 
     void modifyMyCar(CarInfoReqDTO carInfoReqDTO);
-    void modifyMyCarKm(CarKmUpdateDTO carKmUpdateDTO);
+    void modifyMyCarKm(CarKmUpdateReqDTO carKmUpdateReqDTO);
     void deleteMyCar(Long carId);
 }

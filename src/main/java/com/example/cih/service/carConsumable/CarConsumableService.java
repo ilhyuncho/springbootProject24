@@ -1,19 +1,19 @@
 package com.example.cih.service.carConsumable;
 
-import com.example.cih.dto.car.CarConsumableDTO;
-import com.example.cih.dto.car.CarConsumableInfoDTO;
-import com.example.cih.dto.consumable.ConsumableRegDTO;
-import com.example.cih.dto.history.HistoryCarDTO;
+import com.example.cih.dto.car.CarConsumableResDTO;
+import com.example.cih.dto.car.CarConsumableDetailResDTO;
+import com.example.cih.dto.car.CarConsumableRegDTO;
+import com.example.cih.dto.history.HistoryCarResDTO;
 
 import java.util.List;
 
 public interface CarConsumableService {
-    List<CarConsumableDTO> getConsumableInfo(Long carId);
-    List<CarConsumableInfoDTO> getConsumableDetail(Long carId, Long consumableId);
-    List<HistoryCarDTO> getAllHistoryList(Long carId);
-    List<HistoryCarDTO> getGasHistoryList(Long carId);
-    List<HistoryCarDTO> getRepairHistoryList(Long carId);
+    List<CarConsumableResDTO> getConsumableInfo(Long carId);
+    List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long consumableId);
+    List<HistoryCarResDTO> getAllHistoryList(Long carId);
+    List<HistoryCarResDTO> getGasHistoryList(Long carId);
+    List<HistoryCarResDTO> getRepairHistoryList(Long carId);
 
-    void registerConsumable(String userName, ConsumableRegDTO consumableRegDTO);
+    void registerConsumable(String userName, CarConsumableRegDTO carConsumableRegDTO);
 
 }

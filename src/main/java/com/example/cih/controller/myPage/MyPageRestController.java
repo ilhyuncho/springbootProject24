@@ -2,7 +2,7 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.reference.RefCarSample;
-import com.example.cih.dto.car.CarKmUpdateDTO;
+import com.example.cih.dto.car.CarKmUpdateReqDTO;
 import com.example.cih.dto.car.CarRegisterReqDTO;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.reference.RefCarSampleService;
@@ -31,7 +31,7 @@ public class MyPageRestController {
 
     @ApiOperation(value = "내차 누적 주행거리 갱신", notes = "차 소유주가 등록")
     @PostMapping("/updateCarKm")
-    public Map<String,String> postUpdateCarKm(@Valid @RequestBody CarKmUpdateDTO carKmUpdateDTO,
+    public Map<String,String> postUpdateCarKm(@Valid @RequestBody CarKmUpdateReqDTO carKmUpdateReqDTO,
                                           BindingResult bindingResult,
                                           Principal principal ) throws BindException {
 
@@ -40,7 +40,7 @@ public class MyPageRestController {
             throw new BindException(bindingResult);
         }
 
-        userCarService.modifyMyCarKm(carKmUpdateDTO);
+        userCarService.modifyMyCarKm(carKmUpdateReqDTO);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
 

@@ -1,12 +1,8 @@
 package com.example.cih.domain.sellingCar.search;
 
-import com.example.cih.domain.buyingCar.BuyingCar;
-import com.example.cih.domain.buyingCar.QBuyingCar;
-import com.example.cih.domain.buyingCar.search.BuyingCarSearch;
 import com.example.cih.domain.sellingCar.QSellingCar;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
-import com.example.cih.dto.sellingCar.SellingCarViewDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;

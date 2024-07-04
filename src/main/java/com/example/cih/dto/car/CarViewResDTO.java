@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarViewNewDTO{        // 내차 정보 로딩 시
+public class CarViewResDTO {        // 내차 정보 로딩 시
 
     private Long carId;
     private String userName;
@@ -43,7 +43,7 @@ public class CarViewNewDTO{        // 내차 정보 로딩 시
     private SellingCarStatus sellingCarStatus;
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
-    public CarViewNewDTO(Long carId, String userName, String carNumber, String carGrade, String carModel, int carYears,
+    public CarViewResDTO(Long carId, String userName, String carNumber, String carGrade, String carModel, int carYears,
                          String carColors, Long carKm) {
         this.carId = carId;
         this.userName = userName;

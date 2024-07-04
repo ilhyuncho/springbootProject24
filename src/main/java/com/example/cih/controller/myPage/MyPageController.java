@@ -7,7 +7,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.car.CarInfoReqDTO;
-import com.example.cih.dto.car.CarViewNewDTO;
+import com.example.cih.dto.car.CarViewResDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.UserCarService;
@@ -52,7 +52,7 @@ public class MyPageController {
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        List<CarViewNewDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
+        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
 
         model.addAttribute("list", listCarDTO);
 
@@ -73,9 +73,9 @@ public class MyPageController {
 
         UserDTO userDTO = userService.findUserDTO(userName);
 
-        CarViewNewDTO carViewDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
+        CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
 
-        model.addAttribute("responseDTO", carViewDTO);
+        model.addAttribute("responseDTO", carViewResDTO);
         model.addAttribute("userName", userName);
 
         return request.getRequestURI();

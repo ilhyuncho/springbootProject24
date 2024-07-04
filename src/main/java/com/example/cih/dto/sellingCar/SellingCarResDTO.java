@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class SellingCarViewDTO {
+public class SellingCarResDTO {
     private Long carId;
     private String carNumber;
     private String carModel;

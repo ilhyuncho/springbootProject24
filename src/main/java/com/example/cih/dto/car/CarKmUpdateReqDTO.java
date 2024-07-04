@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarKmUpdateDTO {
+public class CarKmUpdateReqDTO {
     private Long carId;
     private Long updateKmValue;
 }

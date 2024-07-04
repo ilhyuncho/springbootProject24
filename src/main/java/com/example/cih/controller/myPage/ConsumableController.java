@@ -1,8 +1,8 @@
 package com.example.cih.controller.myPage;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.car.CarConsumableDTO;
-import com.example.cih.dto.car.CarConsumableInfoDTO;
+import com.example.cih.dto.car.CarConsumableResDTO;
+import com.example.cih.dto.car.CarConsumableDetailResDTO;
 import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -30,9 +30,9 @@ public class ConsumableController {
     public String get(@ModelAttribute("carId") Long carId,
                       String userName, Model model){
 
-        List<CarConsumableDTO> listCarConsumableDTO = carConsumableService.getConsumableInfo(carId);
+        List<CarConsumableResDTO> listCarConsumableResDTO = carConsumableService.getConsumableInfo(carId);
 
-        model.addAttribute("listDTO", listCarConsumableDTO);
+        model.addAttribute("listDTO", listCarConsumableResDTO);
 
         return "/consumable/consumableInfo";
     }
@@ -44,7 +44,7 @@ public class ConsumableController {
 
         User user = userService.findUser(userName);
 
-        List<CarConsumableInfoDTO> listDTO = carConsumableService.getConsumableDetail(carId, consumableId);
+        List<CarConsumableDetailResDTO> listDTO = carConsumableService.getConsumableDetail(carId, consumableId);
 
         model.addAttribute("listDTO", listDTO);
 

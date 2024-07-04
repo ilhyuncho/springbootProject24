@@ -1,7 +1,7 @@
 package com.example.cih.controller.buyingCar;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.BuyingCarListResDTO;
+import com.example.cih.dto.buyingCar.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;

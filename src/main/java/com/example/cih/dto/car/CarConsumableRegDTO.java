@@ -1,7 +1,9 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.carConsumable.ConsumableType;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -9,11 +11,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarConsumableInfoDTO {
+public class CarConsumableRegDTO {
+
     private Long consumableId;
-    private String repairType;
+    private ConsumableType consumableType;
+    private Long carId;
     private int replacePrice;
     private int accumKm;
+    private int gasLitter;
     private String replaceShop;
+
+    @NotNull
     private LocalDate replaceDate;
 }

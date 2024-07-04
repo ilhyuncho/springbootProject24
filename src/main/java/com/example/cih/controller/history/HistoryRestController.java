@@ -2,8 +2,8 @@ package com.example.cih.controller.history;
 
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.consumable.ConsumableRegDTO;
-import com.example.cih.dto.history.HistoryCarDTO;
+import com.example.cih.dto.car.CarConsumableRegDTO;
+import com.example.cih.dto.history.HistoryCarResDTO;
 import com.example.cih.service.carConsumable.CarConsumableService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -32,30 +32,30 @@ public class HistoryRestController {
 
     @ApiOperation(value = "내차 전체 기록 화면", notes = "")
     @GetMapping("/{carId}")
-    public List<HistoryCarDTO> get(@PathVariable(name="carId") Long carId,
-                                   Principal principal){
+    public List<HistoryCarResDTO> get(@PathVariable(name="carId") Long carId,
+                                      Principal principal){
 
         log.error("history-get : " + carId);
         User user = userService.findUser(principal.getName());
 
-        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getAllHistoryList(carId);
+        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getAllHistoryList(carId);
 
-        return listHistoryCarDTO;
+        return listHistoryCarResDTO;
     }
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
-    public List<HistoryCarDTO> getGasList(@PathVariable(name="carId") Long carId,
-                                          Principal principal){
+    public List<HistoryCarResDTO> getGasList(@PathVariable(name="carId") Long carId,
+                                             Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getGasHistoryList(carId);
+        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getGasHistoryList(carId);
 
-        return listHistoryCarDTO;
+        return listHistoryCarResDTO;
     }
 
     @ApiOperation(value = "내차 주유 기록 추가", notes = "차 소유주가 등록")
     @PostMapping("/addGasHistory")
-    public Map<String,String> postAddGasHistory(@Valid @RequestBody ConsumableRegDTO consumableRegDTO,
+    public Map<String,String> postAddGasHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                               BindingResult bindingResult,
                                               Principal principal ) throws BindException {
 
@@ -64,7 +64,7 @@ public class HistoryRestController {
             throw new BindException(bindingResult);
         }
 
-        carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
+        carConsumableService.registerConsumable(principal.getName(), carConsumableRegDTO);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
 
@@ -73,18 +73,18 @@ public class HistoryRestController {
 
     @ApiOperation(value = "내차 정비 기록 화면", notes = "")
     @GetMapping("/repairList/{carId}")
-    public List<HistoryCarDTO> getRepairList(@PathVariable(name="carId") Long carId,
-                                             Principal principal){
+    public List<HistoryCarResDTO> getRepairList(@PathVariable(name="carId") Long carId,
+                                                Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryCarDTO> listHistoryCarDTO = carConsumableService.getRepairHistoryList(carId);
+        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getRepairHistoryList(carId);
 
-        return listHistoryCarDTO;
+        return listHistoryCarResDTO;
     }
 
     @ApiOperation(value = "내차 정비 기록 추가", notes = "차 소유주가 등록")
     @PostMapping("/addRepairHistory")
-    public Map<String,String> postAddRepairHistory(@Valid @RequestBody ConsumableRegDTO consumableRegDTO,
+    public Map<String,String> postAddRepairHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                 BindingResult bindingResult,
                                                 Principal principal ) throws BindException {
 
@@ -93,7 +93,7 @@ public class HistoryRestController {
             throw new BindException(bindingResult);
         }
 
-        carConsumableService.registerConsumable(principal.getName(), consumableRegDTO);
+        carConsumableService.registerConsumable(principal.getName(), carConsumableRegDTO);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
 

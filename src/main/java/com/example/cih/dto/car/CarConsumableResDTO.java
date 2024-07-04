@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarConsumableDTO {
+public class CarConsumableResDTO {
     private Long consumableId;
     private String name;
     private String repairType;

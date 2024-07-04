@@ -2,7 +2,7 @@ package com.example.cih.controller.sellingCar;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
-import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -49,13 +49,13 @@ public class SellingCarRestController {
 
     @ApiOperation(value = "판매 현황", notes = "차 소유주가 [판매 현황] 버튼 클릭")
     @GetMapping("/get")
-    public SellingCarViewDTO getSellingCar(Long sellingCarId, Principal principal){
+    public SellingCarResDTO getSellingCar(Long sellingCarId, Principal principal){
 
         User user = userService.findUser(principal.getName());
 
-        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
+        SellingCarResDTO sellingCarResDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
 
-        return sellingCarViewDTO;
+        return sellingCarResDTO;
     }
 
     @ApiOperation(value = "판매 취소", notes = "판매 중이던 차량 판매 취소")
@@ -80,7 +80,7 @@ public class SellingCarRestController {
 
     @ApiOperation(value = "메인 화면, 추천 차량 정보 전달", notes = "")
     @GetMapping("/recommend")
-    public List<SellingCarViewDTO> getRecommendSellingCar(){
+    public List<SellingCarResDTO> getRecommendSellingCar(){
 
         return sellingCarService.getRecommendList();
     }

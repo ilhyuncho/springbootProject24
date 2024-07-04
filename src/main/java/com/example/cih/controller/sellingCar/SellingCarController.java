@@ -5,8 +5,8 @@ package com.example.cih.controller.sellingCar;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarViewNewDTO;
-import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.dto.car.CarViewResDTO;
+import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.sellingCar.SellingCarService;
 import com.example.cih.service.user.UserService;
@@ -39,7 +39,7 @@ public class SellingCarController {
     public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                               Model model){
 
-        PageResponseDTO<SellingCarViewDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
+        PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
 
         model.addAttribute("responseDTO", listSellingCar);
 
@@ -59,9 +59,9 @@ public class SellingCarController {
         }
 
        // userCarService.readMyCarDetailInfo( principal.getName(), carId);
-        CarViewNewDTO carViewDTO = carService.readOne(carId);
+        CarViewResDTO carViewResDTO = carService.readOne(carId);
 
-        model.addAttribute("carViewDTO", carViewDTO);
+        model.addAttribute("carViewDTO", carViewResDTO);
 
         return "/sellingCar/sellingCarInfo";
     }
@@ -75,9 +75,9 @@ public class SellingCarController {
             user = userService.findUser(principal.getName());
         }
 
-        SellingCarViewDTO sellingCarViewDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
+        SellingCarResDTO sellingCarResDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
 
-        model.addAttribute("responseDTO", sellingCarViewDTO);
+        model.addAttribute("responseDTO", sellingCarResDTO);
 
         return "/sellingCar/sellingCarView";
     }

@@ -14,11 +14,6 @@ public class OrderReqDTO {
     private Integer totalPrice;
     private final List<OrderDetailDTO> listOrderDetail = new ArrayList<>();
 
-//    @Builder
-//    public OrderReqDTO(Integer deliveryFee, Integer totalPrice, List<OrderDetailDTO> listOrderDetail) {
-//        this.deliveryFee = deliveryFee;
-//        this.totalPrice = totalPrice;
-//        this.listOrderDetail = listOrderDetail;
-//    }
+
 
 }

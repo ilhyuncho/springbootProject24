@@ -1,5 +1,7 @@
-package com.example.cih.dto;
+package com.example.cih.dto.buyingCar;
 
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
 import lombok.Getter;
 import lombok.ToString;
 

@@ -13,7 +13,7 @@ import com.example.cih.domain.user.UserActionType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
-import com.example.cih.dto.sellingCar.SellingCarViewDTO;
+import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
@@ -56,13 +56,13 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public SellingCarViewDTO getSellingCarInfo(Long sellingCarId, User user) {
+    public SellingCarResDTO getSellingCarInfo(Long sellingCarId, User user) {
 
         // 판매 차량 정보 get
         SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
                 .orElseThrow(() -> new NoSuchElementException("해당 차량 정보가 존재하지않습니다"));
 
-        SellingCarViewDTO sellingCarViewDTO = entityToDTO(sellingCar);
+        SellingCarResDTO sellingCarResDTO = entityToDTO(sellingCar);
 
         // 해당 고객이 구매 요청을 했었는지 확인
         if( user != null ){
@@ -72,18 +72,18 @@ public class SellingCarServiceImpl implements SellingCarService {
            // if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
                 BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(sellingCar, user);
                 if(buyingCarInfo != null){
-                    sellingCarViewDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
+                    sellingCarResDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
                 }
 
                 log.error(buyingCarInfo);
            // }
         }
 
-        return sellingCarViewDTO;
+        return sellingCarResDTO;
     }
 
     @Override
-    public PageResponseDTO<SellingCarViewDTO> getListSellingCar(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestDTO pageRequestDTO) {
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -96,7 +96,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         // 검색 기능 추가 버전 ( querydsl
         Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, pageable);
 
-        List<SellingCarViewDTO> listSellingCarViewDTO = sellingCars.getContent().stream()
+        List<SellingCarResDTO> listSellingCarResDTO = sellingCars.getContent().stream()
                 .map(SellingCarServiceImpl::entityToDTO)
                 .map(sellingCarViewDTO -> {  // 대표 이미지만 필터링 ( ImageOrder = 0 )
                     sellingCarViewDTO.getFileNames().stream()
@@ -107,22 +107,22 @@ public class SellingCarServiceImpl implements SellingCarService {
                 })
                 .collect(Collectors.toList());
 
-        return PageResponseDTO.<SellingCarViewDTO>withAll()
+        return PageResponseDTO.<SellingCarResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(listSellingCarViewDTO)
+                .dtoList(listSellingCarResDTO)
                 .total((int)sellingCars.getTotalElements())
                 .build();
     }
 
     @Override
-    public List<SellingCarViewDTO> getRecommendList(){
+    public List<SellingCarResDTO> getRecommendList(){
 
         List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4);
         for (SellingCar sellingCar : recommendSellingCar) {
             log.error(sellingCar);
         }
 
-        List<SellingCarViewDTO> listDTO = recommendSellingCar.stream()
+        List<SellingCarResDTO> listDTO = recommendSellingCar.stream()
                 .map(SellingCarServiceImpl::entityToDTO)
                 .map(sellingCarViewDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
                     sellingCarViewDTO.getFileNames().stream()
@@ -155,8 +155,8 @@ public class SellingCarServiceImpl implements SellingCarService {
         }
     }
 
-    private static SellingCarViewDTO entityToDTO(SellingCar sellingCar) {
-        SellingCarViewDTO sellingCarViewDTO = SellingCarViewDTO.builder()
+    private static SellingCarResDTO entityToDTO(SellingCar sellingCar) {
+        SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
                 .requiredPrice(sellingCar.getRequiredPrice())
                 .sellingCarStatus(sellingCar.getSellingCarStatus())
@@ -170,10 +170,10 @@ public class SellingCarServiceImpl implements SellingCarService {
         sellingCar.getCar().getImageSet()
                         .stream().sorted(Comparator.comparing(CarImage::getImageOrder))
                         .forEach(image -> {
-            sellingCarViewDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+            sellingCarResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
         });
 
-        return sellingCarViewDTO;
+        return sellingCarResDTO;
     }
 
 }
