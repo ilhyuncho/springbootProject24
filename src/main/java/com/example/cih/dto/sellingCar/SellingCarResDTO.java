@@ -18,11 +18,13 @@ public class SellingCarResDTO {
     private Long carId;
     private String carNumber;
     private String carModel;
-    private int carYears;
+    private Integer carYears;
     private SellingCarStatus sellingCarStatus;
     private BuyCarStatus buyCarStatus;
-    private int requiredPrice;
+    private Integer requiredPrice;
     private Long sellingCarId;
+    private Boolean isLike;
+    private Integer viewCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;

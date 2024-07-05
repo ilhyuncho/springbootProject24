@@ -84,4 +84,26 @@ public class SellingCarRestController {
 
         return sellingCarService.getRecommendList();
     }
+
+    @ApiOperation(value = "판매 차량 좋아요", notes = "")
+    @PostMapping("/like")
+    public Map<String,String> postlike(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
+                                                   BindingResult bindingResult,
+                                                   Principal principal ) throws BindException {
+        log.error("postlike post...." + sellingCarRegDTO);
+
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        User user = userService.findUser(principal.getName());
+
+        sellingCarService.likeSellingCar(user, sellingCarRegDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+
+        return resultMap;
+    }
 }

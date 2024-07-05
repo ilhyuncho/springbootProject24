@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/basic.html}">
 
 <head>
@@ -30,6 +30,17 @@
 
       <div class="h4" th:text="|(${responseDTO.carNumber}) ${responseDTO.carModel}|"></div>
       <hr class="my-4">
+
+
+      <div class="my-4">
+        <!--       뷰 횟수-->
+        <span><i class="fa-solid fa-eye"></i> [[${responseDTO.viewCount}]]</span>
+        <!--      하트 표시-->
+        <span><i th:if="${responseDTO.isLike == true}" class="fa-solid fa-heart" style="cursor:pointer"
+                 th:onclick="javascript:sellingCarLike(false)" th:data-num="${responseDTO.carModel}"></i></span>
+        <span><i th:if="${responseDTO.isLike == false}" class="fa-regular fa-heart" style="cursor:pointer"
+                 th:onclick="javascript:sellingCarLike(true)" th:data-num="${responseDTO.sellingCarId}"></i></span>
+      </div>
 
       <div class="h3 text-primary" > <!-- h3 글자 크기-->
         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
@@ -92,7 +103,7 @@
 
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/buyingCar.js"></script>
+  <script src="/js/sellingCar.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -127,6 +138,29 @@
 
 
   }, false)
+
+  function sellingCarLike(isLike){
+
+    const formObj = {
+      carId:carId,
+      isLike:isLike,
+    }
+
+    sendLike(formObj).then(result => {
+
+      console.log('성공')
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+    }, false)
+  }
 
   function requestCancel(){
 

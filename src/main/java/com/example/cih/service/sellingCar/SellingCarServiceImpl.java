@@ -10,6 +10,8 @@ import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
+import com.example.cih.domain.user.UserLike;
+import com.example.cih.domain.user.UserLikeRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
@@ -34,6 +36,8 @@ import java.util.stream.Collectors;
 public class SellingCarServiceImpl implements SellingCarService {
     private final SellingCarRepository sellingCarRepository;
     private final CarRepository carRepository;
+    private final UserLikeRepository userLikeRepository;
+
     private final UserService userService;
     private final UserMissionService userMissionService;
     private final BuyingCarService buyingCarService;
@@ -64,10 +68,11 @@ public class SellingCarServiceImpl implements SellingCarService {
 
         SellingCarResDTO sellingCarResDTO = entityToDTO(sellingCar);
 
-        // 해당 고객이 구매 요청을 했었는지 확인
+       // 로그인 고객일 경우
         if( user != null ){
-            log.error(user.toString());
+           // log.error(user.toString());
 
+            // 해당 고객이 구매 요청을 했었는지 확인
             // 임시로
            // if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
                 BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(sellingCar, user);
@@ -77,6 +82,17 @@ public class SellingCarServiceImpl implements SellingCarService {
 
                 log.error(buyingCarInfo);
            // }
+
+            // 좋아요 상태 전송
+            userLikeRepository.findByUserAndSellingCar(user, sellingCar)
+                    .ifPresent(userLike -> sellingCarResDTO.setIsLike(userLike.getIsLike()));
+
+        }
+
+        // 소유자 외의 고객이 검색 했을때
+        if( user == null ||
+                (user != null && !Objects.equals(user.getUserId(), sellingCar.getUser().getUserId())) ){
+            sellingCar.changeViewCount();
         }
 
         return sellingCarResDTO;
@@ -155,6 +171,30 @@ public class SellingCarServiceImpl implements SellingCarService {
         }
     }
 
+    @Override
+    public void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {
+
+        Car car = carRepository.findById(sellingCarRegDTO.getCarId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+
+        if(car.getSellingCar() != null){
+            Optional<UserLike> userLike = userLikeRepository.findByUserAndSellingCar(user, car.getSellingCar());
+
+            if(userLike.isPresent()){
+                userLike.get().changeLike(sellingCarRegDTO.getIsLike());
+            }
+            else{
+                userLikeRepository.save(UserLike.builder()
+                        .user(user)
+                        .sellingCar(car.getSellingCar())
+                        .isLike(sellingCarRegDTO.getIsLike())
+                        .build());
+            }
+
+            car.getSellingCar().changeLikeCount(sellingCarRegDTO.getIsLike());
+        }
+    }
+
     private static SellingCarResDTO entityToDTO(SellingCar sellingCar) {
         SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
@@ -165,6 +205,8 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carModel(sellingCar.getCar().getCarModel())
                 .carYears(sellingCar.getCar().getCarYears())
                 .sellingCarId(sellingCar.getSellingCarId())
+                .viewCount(sellingCar.getViewCount())
+                .isLike(false)
                 .build();
 
         sellingCar.getCar().getImageSet()

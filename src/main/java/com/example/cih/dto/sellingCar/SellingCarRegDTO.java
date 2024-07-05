@@ -11,4 +11,5 @@ public class SellingCarRegDTO {
 
     private Long carId;
     private int requiredPrice;
+    private Boolean isLike;
 }

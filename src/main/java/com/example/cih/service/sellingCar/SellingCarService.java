@@ -13,6 +13,6 @@ public interface SellingCarService {
     SellingCarResDTO getSellingCarInfo(Long sellingCarId, User user);
     PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestDTO pageRequestDTO);
     List<SellingCarResDTO> getRecommendList();
-
     void cancelSellingCar(String userName, Long carId);
+    void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);
 }

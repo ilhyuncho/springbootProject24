@@ -65,5 +65,16 @@ public class SellingCar extends BaseEntity {
         this.sellingCarStatus = sellingCarStatus;
     }
 
+    public void changeLikeCount(Boolean isLike){
+        if(isLike){
+            likeCount +=1;
+        }
+        else{
+            likeCount = likeCount > 0 ? likeCount - 1 : 0;
+        }
+    }
+    public void changeViewCount(){
+        viewCount +=1;
+    }
 
 }

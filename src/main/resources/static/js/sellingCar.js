@@ -29,3 +29,10 @@ async function cancelSellingCar(formObj) {
     return response.data
 }
 
+async function sendLike(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/sellingCar/like`, formObj)
+
+    return response.data
+}
