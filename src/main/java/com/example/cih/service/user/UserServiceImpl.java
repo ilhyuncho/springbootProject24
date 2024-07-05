@@ -20,27 +20,24 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     public UserDTO findUserDTO(String userName){
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
-        UserDTO userDTO = entityToDTO(user);
-        return userDTO;
+        return entityToDTO(user);
     }
 
     @Override
     public User findUser(String userName) {
-        User user = userRepository.findByUserName(userName)
+        return userRepository.findByUserName(userName)
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
-
-        return user;
     }
 
     private static UserDTO entityToDTO(User user) {
-        UserDTO userDTO = UserDTO.builder()
+
+        return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
                 .address(user.getAddress().fullAddress())
@@ -48,8 +45,6 @@ public class UserServiceImpl implements UserService{
                 .mPoint(user.getMPoint())
                 .mGrade(user.getMGrade())
                 .build();
-
-        return userDTO;
     }
 
 }

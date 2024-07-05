@@ -35,15 +35,15 @@ public class OrderItem extends ItemOptionEntity{
     private int orderPrice;                           // 실제 결제한 가격
     private int orderCount;
 
-    public static OrderItem createOrderItem(ShopItem shopItem, OrderDetailDTO orderDetailDTO, List<Long> listItemOption){
+    public static OrderItem createOrderItem(OrderDetailDTO orderDetailDTO, ShopItem shopItem){
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
                 .orderCount(orderDetailDTO.getItemCount())
-                .itemOptionId1(listItemOption.get(0))
-                .itemOptionId2(listItemOption.size() > 1 ? listItemOption.get(1) : 0L)
+                .itemOptionId1(orderDetailDTO.getListOptionValue().get(0))
+                .itemOptionId2(orderDetailDTO.getListOptionValue().size() > 1 ? orderDetailDTO.getListOptionValue().get(1) : 0L)
                 .build();
 
         // 해당 아이템 제고 수량 차감

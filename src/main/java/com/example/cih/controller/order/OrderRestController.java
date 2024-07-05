@@ -1,5 +1,6 @@
 package com.example.cih.controller.order;
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.shop.OrderService;
@@ -29,10 +30,9 @@ public class OrderRestController {
     public String add(@RequestBody OrderReqDTO orderReqDTO,
                       Principal principal) throws ParseException {
 
-        log.error(orderReqDTO.toString());
-        orderReqDTO.getListOrderDetail().forEach(log::error);
+        User user = userService.findUser(principal.getName());
 
-        Long order = orderService.createOrder(principal.getName(), orderReqDTO);
+        orderService.createOrder(user, orderReqDTO);
         return "/shop/main";
     }
 

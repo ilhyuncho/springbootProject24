@@ -41,41 +41,29 @@ public class OrderServiceImpl implements OrderService {
     private final ItemOptionService itemOptionService;
 
     @Override
-    public Long createOrder(String userName, OrderReqDTO orderReqDTO ){
-
-        // 고객 정보 get
-        User user = userService.findUser(userName);
-
+    public Long createOrder(User user, OrderReqDTO orderReqDTO){
         // 배송 정보 생성
         Delivery delivery = new Delivery(user.getAddress());
 
         // 상세 구매 아이템 정보 생성
-        List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(item -> {
+        List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
 
-            if( item.getCartId() != null){
-                Cart cart = cartRepository.findById(item.getCartId())
+            if( orderDetailDTO.getCartId() != null){  // 장바구니를 통해서 주문시
+                Cart cart = cartRepository.findById(orderDetailDTO.getCartId())
                         .orElseThrow(() -> new ItemNotFoundException("장바구니 정보가 존재하지않습니다"));
                 // 장바구니 정보 비활성화
                 cart.changeIsActive(false);
             }
 
-            ShopItem shopItem = shopItemRepository.findById(item.getItemId())
+            ShopItem shopItem = shopItemRepository.findById(orderDetailDTO.getItemId())
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
-            List<Long> listItemOption = item.getItemOptionList().stream()
-                    .map(ItemOptionDTO::getOptionValue)
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
-
             // 주문 상품 생성
-            return OrderItem.createOrderItem(shopItem, item, listItemOption);
+            return OrderItem.createOrderItem(orderDetailDTO, shopItem);
 
         }).collect(Collectors.toList());
 
-        // 이거 저장 안함............. 임시로
-        //     private Integer deliveryFee;
-        //    private Integer totalPrice;
-        Order order = Order.createOrder(user, delivery, listOrderItem);
+        Order order = Order.createOrder(user, delivery, orderReqDTO, listOrderItem);
         Order save = orderRepository.save(order);
 
         return save.getOrderId();
@@ -106,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
                         .orderPrice(orderItem.getOrderPrice())
-                        .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderDate().toLocalDate())
+                        .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderTime().toLocalDate())
                         .build();
 
                 // 아이템 옵션 set

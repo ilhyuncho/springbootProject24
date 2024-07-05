@@ -87,18 +87,17 @@ public class ShopItem {
     }
     //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  end---------------
 
-    public int removeStock(int count) {
-        if( stockCount < count){
+    public void removeStock(int count) {
+        if(stockCount < count){
             throw new NotEnoughStockCountException("need more Stock");
         }
         stockCount -= count;
-        return stockCount;
     }
 
     public SortedMap<ItemOptionType, String> getMapItemOption(){
 
         SortedMap<ItemOptionType, String> sortedMap = new TreeMap<>(Comparator.comparing(ItemOptionType::getType));
-        Map<ItemOptionType, String> map = new HashMap<>();
+        //Map<ItemOptionType, String> map = new HashMap<>();
 
         itemOptionSet.stream()
                 .sorted(Comparator.comparing(ItemOption::getTypePriority).thenComparing(ItemOption::getOptionOrder))
@@ -108,8 +107,6 @@ public class ShopItem {
                             ? itemOption.getItemOptionId() + "-" + itemOption.getOption1()
                             : (v += ", " + itemOption.getItemOptionId() + "-" + itemOption.getOption1()));
                 });
-
-
 
         return sortedMap;
     }

@@ -53,7 +53,7 @@ class OrderRepositoryTest {
 
         Order order = Order.builder()
                 .user(user)
-                .orderDate(LocalDateTime.now())
+                .orderTime(LocalDateTime.now())
                 .delivery(new Delivery(user.getAddress()))
                 .orderItemList(new ArrayList<>())
                 .build();
@@ -66,12 +66,10 @@ class OrderRepositoryTest {
 
         Order order1 = orderRepository.findById(save.getOrderId()).get();
 
-
         // OrderSequence 컬럼 출력 여부 확인
         Set<String> orderItemNative1 = orderItemRepository.findOrderItemNative(order1.getOrderId());
         for (String s : orderItemNative1) {
             log.error(s.toString());
-
         }
     }
     @Test

@@ -186,6 +186,7 @@
         e.stopPropagation()
 
         let totalPrice = 0;
+        let totalDiscountPrice = 0;
         let arrayItemInfo = [];
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
@@ -208,6 +209,7 @@
                 const cartId = parseInt(cartIdTag.getAttribute('value'));
 
                 totalPrice += itemPrice * itemCount;
+                totalDiscountPrice += discountPrice * itemCount;
                 console.log(idx + "-> itemId : " + itemId + ", ItemOptionId1 : " + ItemOptionId1 + ", ItemOptionId2 : " + ItemOptionId2)
 
                 const itemOptionList = []
@@ -238,6 +240,7 @@
         let formObj = {
             deliveryFee: deliveryFee.value,
             totalPrice: totalPrice,
+            totalDiscountPrice: totalDiscountPrice,
             listOrderDetail: arrayItemInfo
         }
 
