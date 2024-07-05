@@ -30,6 +30,12 @@ public class CarServiceImpl implements CarService {
         return carViewDTO;
     }
 
+    @Override
+    public Car getCarInfo(Long carId) {
+        return carRepository.findById(carId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+    }
+
     private static CarViewResDTO entityToDTO(Car car) {
         CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())

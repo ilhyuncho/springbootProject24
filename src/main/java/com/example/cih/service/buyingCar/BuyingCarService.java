@@ -15,8 +15,8 @@ public interface BuyingCarService {
     void updateBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO);
     List<BuyingCarViewDTO> getListBuyingCarInfo(User user);
 
-    BuyingCarListResDTO<BuyingCarViewDTO> getListBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId);
+    BuyingCarListResDTO<BuyingCarViewDTO> getPageBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId);
     BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId);
 
-    BuyingCar getBuyingCarInfo(SellingCar sellingCar, User user);
+    BuyingCar getBuyingCarInfo(User user, SellingCar sellingCar);
 }

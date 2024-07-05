@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserCarServiceImpl implements UserCarService {
 
-    private final CarRepository carRepository;
-
     private final UserService userService;
+    private final CarService carService;
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
+    private final CarRepository carRepository;
 
     @Override
     public List<CarViewResDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName){
@@ -109,8 +109,7 @@ public class UserCarServiceImpl implements UserCarService {
     @Override
     public void modifyMyCar(CarInfoReqDTO carInfoReqDTO) {
 
-        Optional<Car> byId = carRepository.findById(carInfoReqDTO.getCarId());
-        Car car = byId.orElseThrow();
+        Car car = carService.getCarInfo(carInfoReqDTO.getCarId());
 
         car.change(carInfoReqDTO.getCarKm(), carInfoReqDTO.getCarYears(), carInfoReqDTO.getCarColors());
 
@@ -129,8 +128,8 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public void modifyMyCarKm(CarKmUpdateReqDTO carKmUpdateReqDTO) {
-        Optional<Car> byId = carRepository.findById(carKmUpdateReqDTO.getCarId());
-        Car car = byId.orElseThrow();
+
+        Car car = carService.getCarInfo(carKmUpdateReqDTO.getCarId());
 
         car.changeKm(carKmUpdateReqDTO.getUpdateKmValue());
     }

@@ -35,12 +35,7 @@ public class HistoryRestController {
     public List<HistoryCarResDTO> get(@PathVariable(name="carId") Long carId,
                                       Principal principal){
 
-        log.error("history-get : " + carId);
-        User user = userService.findUser(principal.getName());
-
-        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getAllHistoryList(carId);
-
-        return listHistoryCarResDTO;
+        return carConsumableService.getAllHistoryList(carId);
     }
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
@@ -51,24 +46,6 @@ public class HistoryRestController {
         List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getGasHistoryList(carId);
 
         return listHistoryCarResDTO;
-    }
-
-    @ApiOperation(value = "내차 주유 기록 추가", notes = "차 소유주가 등록")
-    @PostMapping("/addGasHistory")
-    public Map<String,String> postAddGasHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
-                                              BindingResult bindingResult,
-                                              Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
-        }
-
-        carConsumableService.registerConsumable(principal.getName(), carConsumableRegDTO);
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-
-        return resultMap;
     }
 
     @ApiOperation(value = "내차 정비 기록 화면", notes = "")
@@ -82,11 +59,11 @@ public class HistoryRestController {
         return listHistoryCarResDTO;
     }
 
-    @ApiOperation(value = "내차 정비 기록 추가", notes = "차 소유주가 등록")
-    @PostMapping("/addRepairHistory")
-    public Map<String,String> postAddRepairHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
-                                                BindingResult bindingResult,
-                                                Principal principal ) throws BindException {
+    @ApiOperation(value = "내차 주유 or 정비 기록 추가", notes = "차 소유주가 등록")
+    @PostMapping("/addHistory")
+    public Map<String,String> postAddGasHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
+                                              BindingResult bindingResult,
+                                              Principal principal ) throws BindException {
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");

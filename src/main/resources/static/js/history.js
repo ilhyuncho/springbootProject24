@@ -14,10 +14,10 @@ async function getGasHistory({page,size,carId}){
    // console.log(response)
     return response.data
 }
-async function addGasHistory(formObj) {
+async function addHistory(formObj) {
    // console.log(formObj)
 
-    const response = await axios.post(`/history/addGasHistory`, formObj)
+    const response = await axios.post(`/history/addHistory`, formObj)
 
    // console.log(response)
     return response.data
@@ -31,16 +31,6 @@ async function getRepairHistory({page,size,carId}){
    // console.log(response)
     return response.data
 }
-
-async function addRepairHistory(formObj) {
-   // console.log(formObj)
-
-    const response = await axios.post(`/history/addRepairHistory`, formObj)
-
-  //  console.log(response)
-    return response.data
-}
-
 // 정비 기록------------------end-------------------------------------
 
 // 통계------------------begin-------------------------------------

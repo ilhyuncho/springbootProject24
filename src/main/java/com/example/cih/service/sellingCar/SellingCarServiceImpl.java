@@ -17,6 +17,7 @@ import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
+import com.example.cih.service.car.CarService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +35,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class SellingCarServiceImpl implements SellingCarService {
-    private final SellingCarRepository sellingCarRepository;
-    private final CarRepository carRepository;
-    private final UserLikeRepository userLikeRepository;
 
     private final UserService userService;
+    private final CarService carService;
+
+    private final CarRepository carRepository;
+    private final SellingCarRepository sellingCarRepository;
+    private final UserLikeRepository userLikeRepository;
     private final UserMissionService userMissionService;
     private final BuyingCarService buyingCarService;
 
@@ -47,8 +50,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     public void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
         User user = userService.findUser(userName);
 
-        Car car = carRepository.findById(sellingCarRegDTO.getCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+        Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 
         if(car.getImageSet().size() == 0){
             throw new OwnerCarNotFoundException("차량 판매시 최소 한장의 대표 사진을 등록해야 합니다!!");
@@ -75,7 +77,7 @@ public class SellingCarServiceImpl implements SellingCarService {
             // 해당 고객이 구매 요청을 했었는지 확인
             // 임시로
            // if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
-                BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(sellingCar, user);
+                BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(user, sellingCar);
                 if(buyingCarInfo != null){
                     sellingCarResDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
                 }
@@ -158,8 +160,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     public void cancelSellingCar(String userName, Long carId) {
         User user = userService.findUser(userName);
 
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+        Car car = carService.getCarInfo(carId);
 
         SellingCar sellingCar = car.getSellingCar();
         if(SellingCarStatus.PROCESSING == sellingCar.getSellingCarStatus())
@@ -174,8 +175,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     @Override
     public void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {
 
-        Car car = carRepository.findById(sellingCarRegDTO.getCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+        Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 
         if(car.getSellingCar() != null){
             Optional<UserLike> userLike = userLikeRepository.findByUserAndSellingCar(user, car.getSellingCar());

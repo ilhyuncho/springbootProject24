@@ -69,10 +69,9 @@ public class BuyingCarRestController {
 
     @ApiOperation(value = "구매 제안 리스트 전달", notes = "list 전달")
     @GetMapping("/list")
-    public BuyingCarListResDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO,
-                                                          Long sellingCarId){
+    public BuyingCarListResDTO<BuyingCarViewDTO> getBuyingCarList(PageRequestDTO pageRequestDTO, Long sellingCarId){
 
-        return buyingCarService.getListBuyingCarInfo(pageRequestDTO, sellingCarId);
+        return buyingCarService.getPageBuyingCarInfo(pageRequestDTO, sellingCarId);
     }
     @ApiOperation(value = "구매 희망 최고 가격", notes = "")
     @GetMapping("/highProposalPrice")

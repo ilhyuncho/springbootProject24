@@ -10,6 +10,7 @@ import com.example.cih.dto.car.CarConsumableResDTO;
 import com.example.cih.dto.car.CarConsumableDetailResDTO;
 import com.example.cih.dto.car.CarConsumableRegDTO;
 import com.example.cih.dto.history.HistoryCarResDTO;
+import com.example.cih.service.car.CarService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,24 +29,27 @@ import java.util.stream.Collectors;
 public class CarConsumableServiceImpl implements CarConsumableService {
 
     private final UserService userService;
+    private final CarService carService;
     private final CarRepository carRepository;
     private final CarConsumableRepository carConsumableRepository;
     private final RefCarConsumableRepository refCarConsumableRepository;
 
+
+
     @Override
     public List<CarConsumableResDTO> getConsumableInfo(Long carId){
 
-        List<RefCarConsumable> refListCarConsumable = refCarConsumableRepository.findAll()
-                .stream().sorted(Comparator.comparing(RefCarConsumable::getViewOrder)).collect(Collectors.toList());
-
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+        Car car = carService.getCarInfo(carId);
 
         // 1. RefConsumableId 별로 그룹핑
         // 2. 그룹별 ReplaceDate 가 가장 최신인 값 추출
-        Map<RefCarConsumable, Optional<CarConsumable>> mapCarConsumable = carConsumableRepository.findByCar(car).stream()
-                .collect(Collectors.groupingBy(CarConsumable::getRefCarConsumable,
+        Map<RefCarConsumable, Optional<CarConsumable>> mapCarConsumable =
+                carConsumableRepository.findByCar(car).stream()
+                        .collect(Collectors.groupingBy(CarConsumable::getRefCarConsumable,
                         Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
+
+        List<RefCarConsumable> refListCarConsumable = refCarConsumableRepository.findAll()
+                .stream().sorted(Comparator.comparing(RefCarConsumable::getViewOrder)).collect(Collectors.toList());
 
         List<CarConsumableResDTO> listCarConsumableResDTO = new ArrayList<>();
         for (RefCarConsumable refCarConsumable : refListCarConsumable) {
@@ -82,11 +86,10 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     @Override
     public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long consumableId){
 
+        Car car = carService.getCarInfo(carId);
+
         RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(consumableId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
-
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable);
 
@@ -109,8 +112,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
     @Override
     public List<HistoryCarResDTO> getAllHistoryList(Long carId) {
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        Car car = carService.getCarInfo(carId);
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCar(car);
 
@@ -125,8 +128,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
     @Override
     public List<HistoryCarResDTO> getGasHistoryList(Long carId) {
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        Car car = carService.getCarInfo(carId);
 
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndConsumableType(car, ConsumableType.GAS));
@@ -147,8 +150,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
     @Override
     public List<HistoryCarResDTO> getRepairHistoryList(Long carId) {
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+
+        Car car = carService.getCarInfo(carId);
 
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndConsumableType(car, ConsumableType.REPAIR));
@@ -164,18 +167,17 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
     @Override
     public void registerConsumable(String userName, CarConsumableRegDTO carConsumableRegDTO){
+
+        Car car = carService.getCarInfo(carConsumableRegDTO.getCarId());
+
         User user = userService.findUser(userName);
-
-
-        log.error("consumableRegDTO !!: " + carConsumableRegDTO);
 
         RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(carConsumableRegDTO.getConsumableId())
                 .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
 
         log.error("refCarConsumable : " + refCarConsumable.toString());
 
-        Car car = carRepository.findById(carConsumableRegDTO.getCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("소유 차 정보가 존재하지않습니다"));
+
 
         // insert or update 처리를 동시에
 //        CarConsumable carConsumable1 = carConsumableRepository.
