@@ -13,6 +13,6 @@ public interface CarConsumableService {
     List<HistoryCarResDTO> getAllHistoryList(Long carId);
     List<HistoryCarResDTO> getGasHistoryList(Long carId);
     List<HistoryCarResDTO> getRepairHistoryList(Long carId);
-    void registerConsumable(String userName, CarConsumableRegDTO carConsumableRegDTO);
+    void registerConsumable(CarConsumableRegDTO carConsumableRegDTO);
 
 }

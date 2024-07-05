@@ -20,9 +20,7 @@ import java.util.List;
 @Transactional
 public class CarStatisticsServiceImpl implements CarStatisticsService {
 
-    private final UserService userService;
     private final CarService carService;
-    private final CarRepository carRepository;
     private final CarConsumableRepository carConsumableRepository;
 
 
@@ -31,9 +29,7 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
         Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
-        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsConsume(statisticsReqDTO);
-
-        return listDto;
+        return carConsumableRepository.statisticsConsume(statisticsReqDTO);
     }
 
     @Override
@@ -41,9 +37,7 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
         Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
-        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsFuelAmount(statisticsReqDTO);
-
-        return listDto;
+        return carConsumableRepository.statisticsFuelAmount(statisticsReqDTO);
     }
 
     @Override
@@ -51,9 +45,7 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
         Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
-        List<StatisticsResDTO> listDto = carConsumableRepository.statisticsDistance(statisticsReqDTO);
-
-        return listDto;
+        return carConsumableRepository.statisticsDistance(statisticsReqDTO);
     }
 
     @Override
@@ -61,9 +53,7 @@ public class CarStatisticsServiceImpl implements CarStatisticsService {
 
         Car car = carService.getCarInfo(statisticsReqDTO.getCarId());
 
-        StatisticsTotalResDTO totalDTO = carConsumableRepository.statisticsTotal(statisticsReqDTO);
-
-        return totalDTO;
+        return carConsumableRepository.statisticsTotal(statisticsReqDTO);
     }
 
 }

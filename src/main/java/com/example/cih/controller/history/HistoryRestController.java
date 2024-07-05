@@ -70,10 +70,10 @@ public class HistoryRestController {
             throw new BindException(bindingResult);
         }
 
-        carConsumableService.registerConsumable(principal.getName(), carConsumableRegDTO);
+        carConsumableService.registerConsumable(carConsumableRegDTO);
+
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 }

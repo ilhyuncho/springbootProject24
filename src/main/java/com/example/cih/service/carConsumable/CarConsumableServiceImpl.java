@@ -93,21 +93,13 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable);
 
-        List<CarConsumableDetailResDTO> listCarConsumableDTO = new ArrayList<>();
-        for (CarConsumable carConsumable : listCarConsumable) {
-
-            CarConsumableDetailResDTO dto = CarConsumableDetailResDTO.builder()
-                    .repairType(refCarConsumable.getRepairType())
-                    .replaceDate(carConsumable.getReplaceDate())
-                    .accumKm(carConsumable.getAccumKm())
-                    .replacePrice(carConsumable.getReplacePrice())
-                    .replaceShop(carConsumable.getReplaceShop())
-                    .build();
-
-            listCarConsumableDTO.add(dto);
-        }
-
-        return listCarConsumableDTO;
+        return listCarConsumable.stream().map(carConsumable -> CarConsumableDetailResDTO.builder()
+                .repairType(refCarConsumable.getRepairType())
+                .replaceDate(carConsumable.getReplaceDate())
+                .accumKm(carConsumable.getAccumKm())
+                .replacePrice(carConsumable.getReplacePrice())
+                .replaceShop(carConsumable.getReplaceShop())
+                .build()).collect(Collectors.toList());
     }
 
     @Override
@@ -117,14 +109,10 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCar(car);
 
-        List<HistoryCarResDTO> listHistoryCarResDTO = listCarConsumable.stream()
-                .map(CarConsumableServiceImpl::entityToDTO).collect(Collectors.toList());
-
-        // List의 sort 기능 적용 ( stream 에 처리 하기 전 방식 )
-        listHistoryCarResDTO.sort(Comparator.comparing(HistoryCarResDTO::getReplaceDate));
-
-
-        return listHistoryCarResDTO;
+        return listCarConsumable.stream()
+                .map(CarConsumableServiceImpl::entityToDTO)
+                .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
+                .collect(Collectors.toList());
     }
     @Override
     public List<HistoryCarResDTO> getGasHistoryList(Long carId) {
@@ -134,7 +122,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndConsumableType(car, ConsumableType.GAS));
 
-        List<HistoryCarResDTO> listHistoryCarResDTO = listCarConsumable.stream()
+        return listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO)
 
 //                .map(HistoryCarDTO::twice)
@@ -144,8 +132,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
                 .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
                 .collect(Collectors.toList());
-
-        return listHistoryCarResDTO;
     }
 
     @Override
@@ -156,21 +142,18 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         List<CarConsumable> listCarConsumable = new ArrayList<>(carConsumableRepository
                 .findByCarAndConsumableType(car, ConsumableType.REPAIR));
 
-        List<HistoryCarResDTO> listHistoryCarResDTO = listCarConsumable.stream()
+        return listCarConsumable.stream()
                 .map(CarConsumableServiceImpl::entityToDTO)
                 .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
                 .collect(Collectors.toList());
-
-        listCarConsumable.forEach(log::error);
-        return listHistoryCarResDTO;
     }
 
     @Override
-    public void registerConsumable(String userName, CarConsumableRegDTO carConsumableRegDTO){
+    public void registerConsumable(CarConsumableRegDTO carConsumableRegDTO){
 
         Car car = carService.getCarInfo(carConsumableRegDTO.getCarId());
 
-        User user = userService.findUser(userName);
+
 
         RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(carConsumableRegDTO.getConsumableId())
                 .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
@@ -188,11 +171,11 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 //                consumableRegDTO.getReplaceShop(), consumableRegDTO.getReplaceDate());
 
         // 같은 날짜로 등록된 내역이 있는지 체크
-        boolean present = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable)
+        boolean isPresent = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable)
                 .stream().anyMatch(carConsumable -> carConsumable.getReplaceDate()
                         .equals(carConsumableRegDTO.getReplaceDate()));
 
-        if(present){
+        if(isPresent){
             log.error("같은 날짜로 이미 등록 됨");
             throw new OwnerCarNotFoundException("같은 날짜로 이미 등록 됨.");
         }
@@ -206,25 +189,21 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .gasLitter(carConsumableRegDTO.getGasLitter())
                 .replaceShop(carConsumableRegDTO.getReplaceShop())
                 .consumableType(carConsumableRegDTO.getConsumableType())
-                //.repairType(RepairType.AIR_FILTER)
-
                 .car(car)
                 .build();
         carConsumableRepository.save(carConsumable);
     }
 
     private static HistoryCarResDTO entityToDTO(CarConsumable carConsumable) {
-        HistoryCarResDTO historyCarResDTO = HistoryCarResDTO.builder()
+
+        return HistoryCarResDTO.builder()
                 .replacePrice(carConsumable.getReplacePrice())
                 .gasLitter(carConsumable.getGasLitter())
                 .accumKm(carConsumable.getAccumKm())
                 .replaceShop(carConsumable.getReplaceShop())
-
                 .repairType(carConsumable.getRefCarConsumable().getName())
                 .replaceDate(carConsumable.getReplaceDate())
                 .build();
-
-        return historyCarResDTO;
     }
     private ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
 
@@ -232,7 +211,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         int cycleMonth = refCarConsumable.getReplaceCycleMonth();
 
         // 1. 개월 마다 체크
-        if( cycleMonth > 0){
+        if(cycleMonth > 0){
             LocalDate lastReplaceDate = carConsumable.getReplaceDate();
             LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
 
