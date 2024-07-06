@@ -1,6 +1,7 @@
 package com.example.cih.controller.history;
 
 
+import com.example.cih.domain.carConsumable.ConsumableType;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableRegDTO;
 import com.example.cih.dto.history.HistoryCarResDTO;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/history")
@@ -35,24 +34,17 @@ public class HistoryRestController {
     public List<HistoryCarResDTO> get(@PathVariable(name="carId") Long carId,
                                       Principal principal){
 
-        return carConsumableService.getListAllHistory(carId);
+        return carConsumableService.getListHistory(carId, ConsumableType.getListConsumableType());
     }
-    @ApiOperation(value = "내차 주유 기록 화면", notes = "")
-    @GetMapping("/gasList/{carId}")
-    public List<HistoryCarResDTO> getGasList(@PathVariable(name="carId") Long carId,
-                                             Principal principal){
+    @ApiOperation(value = "내차 주유 or 소모품 정비 화면", notes = "")
+    @GetMapping("/historyList/{targetId}/{carId}")
+    public List<HistoryCarResDTO> getListHistory( @PathVariable(name="targetId") String targetId,
+                                                  @PathVariable(name="carId") Long carId,
+                                                  Principal principal){
+
         User user = userService.findUser(principal.getName());
 
-        return carConsumableService.getListGasHistory(carId);
-    }
-
-    @ApiOperation(value = "내차 정비 기록 화면", notes = "")
-    @GetMapping("/repairList/{carId}")
-    public List<HistoryCarResDTO> getRepairList(@PathVariable(name="carId") Long carId,
-                                                Principal principal){
-        User user = userService.findUser(principal.getName());
-
-        return carConsumableService.getListRepairHistory(carId);
+        return carConsumableService.getListHistory(carId, Collections.singletonList(ConsumableType.fromValue(targetId)));
     }
 
     @ApiOperation(value = "내차 주유 or 정비 기록 추가", notes = "차 소유주가 등록")

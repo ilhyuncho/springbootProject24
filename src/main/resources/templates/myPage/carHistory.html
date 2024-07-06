@@ -350,10 +350,10 @@
         getAllList()
       }
       else if(targetId === "#gas" ){
-        getGasList()
+        getGasList(targetId.substring(1))
       }
       else if(targetId === "#repair"){
-        getRepairList()
+        getRepairList(targetId.substring(1))
       }
 
       tabTrigger.show()
@@ -369,8 +369,8 @@
       console.error(e)
     })
   }
-  function getGasList(){
-    getGasHistory({page,size,carId}).then(data => {
+  function getGasList(targetId){
+    getHistory({page,size,carId,targetId}).then(data => {
 
       printGasList(data, tableGas) // 목록 처리
 
@@ -378,8 +378,8 @@
       console.error(e)
     })
   }
-  function getRepairList(){
-    getRepairHistory({page,size,carId}).then(data => {
+  function getRepairList(targetId){
+    getHistory({page,size,carId,targetId}).then(data => {
 
       printRepairList(data, tableRepair) // 목록 처리
 
