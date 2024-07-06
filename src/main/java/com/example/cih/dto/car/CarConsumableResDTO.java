@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class CarConsumableResDTO {
-    private Long consumableId;
+
+    private Long refConsumableId;
     private String name;
     private String repairType;
     private int replaceCycleKm;

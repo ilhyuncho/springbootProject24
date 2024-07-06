@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<div layout:fragment="content">
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">소모품 내역 수정</h5>
+
+          <hr class="my-4">
+
+          <div class="h4 text-info text-left">
+            <span th:text="${responseDTO.repairName}"></span>
+          </div>
+            <form th:action="@{/myPage/carModify}" method="post" id="f1">
+                <input type="hidden" class="consumableId" name="consumableId" th:value="${responseDTO.consumableId}">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">ReplaceDate</span>
+                    <label>
+                        <input type="date" class="form-control replaceDate" th:value="${responseDTO.replaceDate}" name="replaceDate">
+                    </label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">ReplaceShop</span>
+                    <label>
+                        <input type="text" class="form-control replaceShop" th:value="${responseDTO.replaceShop}" name="replaceShop">
+                    </label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">ReplacePrice</span>
+                    <label>
+                        <input type="text" class="form-control replacePrice" th:value="${responseDTO.replacePrice}" name="replacePrice">
+                    </label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">AccumKm</span>
+                    <label>
+                        <input type="text" class="form-control accumKm" th:value="${responseDTO.accumKm}" name="accumKm">
+                    </label>
+                </div>
+
+                <div class="my-4">
+                    <div class="float-end">
+                        <a th:href="|@{/consumable/history(carId=${responseDTO.carId},refConsumableId=${responseDTO.refConsumableId}, userName=${#authentication.principal.username} )}|"
+                           class="text-decoration-none">
+                            <button type="button" class="btn btn-primary">List</button>
+                        </a>
+                        <button type="button" class="btn btn-secondary modifyBtn">정보 수정</button>
+                        <button type="button" class="btn btn-danger removeBtn">삭제</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/consumable.js"></script>
+
+</div>
+
+
+<script layout:fragment="script" th:inline="javascript">
+  console.log("modify.html()~~~~")
+
+  const carId = [[${responseDTO.carId}]]
+  const refConsumableId = [[${responseDTO.refConsumableId}]]
+
+  const replaceDate = document.querySelector(".replaceDate")
+  const replaceShop = document.querySelector(".replaceShop")
+  const replacePrice = document.querySelector(".replacePrice")
+  const accumKm = document.querySelector(".accumKm")
+  const consumableId = document.querySelector(".consumableId")
+
+  // 수정 요청
+  document.querySelector(".modifyBtn").addEventListener("click", function(e){
+      const formObj = {
+          carId:carId,
+          consumableId:consumableId.value,
+          refConsumableId:refConsumableId,
+          replacePrice:replacePrice.value,
+          replaceShop:replaceShop.value,
+          accumKm:accumKm.value,
+          replaceDate: new Date(replaceDate.value),
+          consumableType:'REPAIR',
+      }
+
+      modifyConsumable(formObj).then(result => {
+
+        alert('소모품 내역 수정이 완료 되었습니다')
+
+          // 화면 재 갱신
+           self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
+               + '&userName=' + [[${#authentication.principal.username}]]
+
+      }).catch(e => {
+          if (e.response && e.response.status === 400) {
+
+              alert('잘못된 요청입니다.. 전달값 확인!!')
+              console.log(e.response.data);
+          } else {
+              console.log(e.response.data);
+              alert(e.response.data)
+          }
+      })
+  }, false)
+
+</script>

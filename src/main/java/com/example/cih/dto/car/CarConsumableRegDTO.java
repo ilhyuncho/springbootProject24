@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @ToString
 public class CarConsumableRegDTO {
 
+    private Long refConsumableId;
     private Long consumableId;
     private ConsumableType consumableType;
     private Long carId;

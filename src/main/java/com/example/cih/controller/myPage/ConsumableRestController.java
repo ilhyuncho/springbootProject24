@@ -30,10 +30,9 @@ public class ConsumableRestController {
 
     @ApiOperation(value = "소모품 교환 날짜 등록", notes = "차 소유주가 등록")
     @PostMapping("/register")
-    public Map<String,String> postRegisterSellingCar(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
+    public Map<String,String> postRegisterConsumable(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
-
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
@@ -55,5 +54,22 @@ public class ConsumableRestController {
         return resultMap;
     }
 
+    @ApiOperation(value = "소모품 교환 정보 수정", notes = "차 소유주가 등록")
+    @PostMapping("/modify")
+    public Map<String,String> postModifyConsumable(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
+                                                     BindingResult bindingResult,
+                                                     Principal principal ) throws BindException {
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+        User user = userService.findUser(principal.getName());
+
+        carConsumableService.modifyConsumable(carConsumableRegDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return resultMap;
+    }
 
 }

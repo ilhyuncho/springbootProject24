@@ -28,16 +28,12 @@ import java.util.stream.Collectors;
 @Transactional
 public class CarConsumableServiceImpl implements CarConsumableService {
 
-    private final UserService userService;
     private final CarService carService;
-    private final CarRepository carRepository;
     private final CarConsumableRepository carConsumableRepository;
     private final RefCarConsumableRepository refCarConsumableRepository;
 
-
-
     @Override
-    public List<CarConsumableResDTO> getConsumableInfo(Long carId){
+    public List<CarConsumableResDTO> getListConsumableInfo(Long carId){
 
         Car car = carService.getCarInfo(carId);
 
@@ -58,7 +54,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 continue;
             }
             CarConsumableResDTO dto = CarConsumableResDTO.builder()
-                    .consumableId(refCarConsumable.getRefConsumableId())
+                    .refConsumableId(refCarConsumable.getRefConsumableId())
                     .name(refCarConsumable.getName())
                     .repairType(refCarConsumable.getRepairType())
                     .replaceCycleKm(refCarConsumable.getReplaceCycleKm())
@@ -84,17 +80,17 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long consumableId){
+    public List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId){   // 소모품 히스토리 리스트
 
         Car car = carService.getCarInfo(carId);
 
-        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(consumableId)
+        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(refConsumableId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable);
 
         return listCarConsumable.stream().map(carConsumable -> CarConsumableDetailResDTO.builder()
-                .repairType(refCarConsumable.getRepairType())
+                .consumableId(carConsumable.getConsumableId())
                 .replaceDate(carConsumable.getReplaceDate())
                 .accumKm(carConsumable.getAccumKm())
                 .replacePrice(carConsumable.getReplacePrice())
@@ -103,7 +99,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public List<HistoryCarResDTO> getAllHistoryList(Long carId) {
+    public List<HistoryCarResDTO> getListAllHistory(Long carId) {
 
         Car car = carService.getCarInfo(carId);
 
@@ -115,7 +111,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<HistoryCarResDTO> getGasHistoryList(Long carId) {
+    public List<HistoryCarResDTO> getListGasHistory(Long carId) {
 
         Car car = carService.getCarInfo(carId);
 
@@ -135,7 +131,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
-    public List<HistoryCarResDTO> getRepairHistoryList(Long carId) {
+    public List<HistoryCarResDTO> getListRepairHistory(Long carId) {
 
         Car car = carService.getCarInfo(carId);
 
@@ -154,9 +150,8 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         Car car = carService.getCarInfo(carConsumableRegDTO.getCarId());
 
 
-
-        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(carConsumableRegDTO.getConsumableId())
-                .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
+        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(carConsumableRegDTO.getRefConsumableId())
+                        .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));
 
         log.error("refCarConsumable : " + refCarConsumable.toString());
 
@@ -175,10 +170,10 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .stream().anyMatch(carConsumable -> carConsumable.getReplaceDate()
                         .equals(carConsumableRegDTO.getReplaceDate()));
 
-        if(isPresent){
-            log.error("같은 날짜로 이미 등록 됨");
-            throw new OwnerCarNotFoundException("같은 날짜로 이미 등록 됨.");
-        }
+//        if(isPresent){
+//            log.error("같은 날짜로 이미 등록 됨");
+//            throw new OwnerCarNotFoundException("같은 날짜로 이미 등록 됨.");
+//        }
 
         // 기존 내역 갱신이 아니라 새로 추가로 변경
         CarConsumable carConsumable = CarConsumable.builder()
@@ -192,6 +187,45 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .car(car)
                 .build();
         carConsumableRepository.save(carConsumable);
+    }
+
+    @Override
+    public void modifyConsumable(CarConsumableRegDTO carConsumableRegDTO) {
+
+        CarConsumable carConsumable = carConsumableRepository.findById(carConsumableRegDTO.getConsumableId())
+                .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
+
+        carConsumable.setConsumableInfo(carConsumableRegDTO);
+
+    }
+
+    @Override
+    public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
+
+        CarConsumable carConsumable = carConsumableRepository.findById(consumableId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
+
+
+//        private ConsumableType consumableType;
+//        private RefCarConsumable refCarConsumable;
+//        private LocalDate replaceDate;      // 점검 날짜
+//        private int replacePrice;
+//        private int accumKm;                // 누적 거리
+//        private String replaceShop;         // 점검 장소
+//        private int gasLitter;
+
+        CarConsumableDetailResDTO consumableDTO = CarConsumableDetailResDTO.builder()
+                .consumableId(carConsumable.getConsumableId())
+                .refConsumableId(carConsumable.getRefCarConsumable().getRefConsumableId())
+                .carId(carConsumable.getCar().getCarId())
+                .replaceDate(carConsumable.getReplaceDate())
+                .replacePrice(carConsumable.getReplacePrice())
+                .replaceShop(carConsumable.getReplaceShop())
+                .accumKm(carConsumable.getAccumKm())
+                .repairName(carConsumable.getRefCarConsumable().getName())
+                .build();
+
+        return consumableDTO;
     }
 
     private static HistoryCarResDTO entityToDTO(CarConsumable carConsumable) {

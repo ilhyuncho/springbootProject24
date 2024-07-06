@@ -10,10 +10,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class CarConsumableDetailResDTO {
+    private Long carId;
+    private Long refConsumableId;
     private Long consumableId;
-    private String repairType;
     private int replacePrice;
     private int accumKm;
     private String replaceShop;
     private LocalDate replaceDate;
+    private String repairName;
 }

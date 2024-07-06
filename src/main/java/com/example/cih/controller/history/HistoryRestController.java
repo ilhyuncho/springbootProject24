@@ -35,7 +35,7 @@ public class HistoryRestController {
     public List<HistoryCarResDTO> get(@PathVariable(name="carId") Long carId,
                                       Principal principal){
 
-        return carConsumableService.getAllHistoryList(carId);
+        return carConsumableService.getListAllHistory(carId);
     }
     @ApiOperation(value = "내차 주유 기록 화면", notes = "")
     @GetMapping("/gasList/{carId}")
@@ -43,9 +43,7 @@ public class HistoryRestController {
                                              Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getGasHistoryList(carId);
-
-        return listHistoryCarResDTO;
+        return carConsumableService.getListGasHistory(carId);
     }
 
     @ApiOperation(value = "내차 정비 기록 화면", notes = "")
@@ -54,9 +52,7 @@ public class HistoryRestController {
                                                 Principal principal){
         User user = userService.findUser(principal.getName());
 
-        List<HistoryCarResDTO> listHistoryCarResDTO = carConsumableService.getRepairHistoryList(carId);
-
-        return listHistoryCarResDTO;
+        return carConsumableService.getListRepairHistory(carId);
     }
 
     @ApiOperation(value = "내차 주유 or 정비 기록 추가", notes = "차 소유주가 등록")
@@ -64,7 +60,6 @@ public class HistoryRestController {
     public Map<String,String> postAddGasHistory(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                               BindingResult bindingResult,
                                               Principal principal ) throws BindException {
-
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);

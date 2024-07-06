@@ -33,7 +33,7 @@
             <tr th:each="dto:${listDTO}">
 
               <th scope="row">
-                <a th:href="|@{/consumable/history(carId=${carId},consumableId=${dto.consumableId}, userName=${#authentication.principal.username} )}|"
+                <a th:href="|@{/consumable/history(carId=${carId},refConsumableId=${dto.refConsumableId}, userName=${#authentication.principal.username} )}|"
                    class="text-decoration-none"> [[${dto.name}]]</a>
               </th>
 
@@ -47,7 +47,7 @@
               <td>[[${dto.replaceShop}]]</td>
               <td>[[${dto.accumKm == 0 ? '' : dto.accumKm + ' km' }]]</td>
               <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
-              <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.consumableId}');|" >기록</button></td>
+              <td><button type="button" class="btn btn-primary" th:onclick="|modifyBtnClick('${dto.refConsumableId}');|" >기록</button></td>
 
             </tr>
             </tbody>
@@ -80,7 +80,7 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">소모품 ID</span>
-            <input type="text" id="modalConsumableId" readonly>
+            <input type="text" id="modalRefConsumableId" readonly>
           </div>
 
           <div class="input-group mb-3">
@@ -125,18 +125,17 @@
 
   const modifyConsumableModal = new bootstrap.Modal(document.querySelector(".modifyConsumableModal"))
   const modalReplaceDate = document.querySelector('#modalReplaceDate');
-  const modalConsumableId = document.querySelector("#modalConsumableId")
+  const modalRefConsumableId = document.querySelector("#modalRefConsumableId")
   const modalReplacePrice = document.querySelector("#modalReplacePrice")
   const modalAccumKm = document.querySelector("#modalAccumKm")
   const modalReplaceShop = document.querySelector("#modalReplaceShop")
 
-  function modifyBtnClick(consumableId){
+  function modifyBtnClick(refConsumableId){
 
-    console.log("consumableId : " + consumableId)
+    console.log("refConsumableId : " + refConsumableId)
     console.log("modifyBtnClick()~~~~")
 
-    modalConsumableId.value = consumableId;
-    modalConsumableId.value = consumableId;
+    modalRefConsumableId.value = refConsumableId;
 
     // 현재 날짜로 셋팅
     modalReplaceDate.value = new Date().toISOString().substring(0, 10);
@@ -148,7 +147,7 @@
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
     const formObj = {
       carId:carId,
-      consumableId:modalConsumableId.value,
+      refConsumableId:modalRefConsumableId.value,
       replacePrice:modalReplacePrice.value,
       replaceShop:modalReplaceShop.value,
       accumKm:modalAccumKm.value,
@@ -156,7 +155,7 @@
       consumableType:'REPAIR',
     }
 
-    console.log(modalConsumableId.value)
+    console.log(modalRefConsumableId.value)
     console.log(modalReplaceDate.value)
 
     registerConsumable(formObj).then(result => {
@@ -165,7 +164,7 @@
         alert(result.message)
       }
 
-      modalConsumableId.value= ''
+      modalRefConsumableId.value= ''
       modalReplaceDate.value= ''
 
       modifyConsumableModal.hide()

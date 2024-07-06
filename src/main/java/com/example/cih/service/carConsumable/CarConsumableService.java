@@ -8,11 +8,16 @@ import com.example.cih.dto.history.HistoryCarResDTO;
 import java.util.List;
 
 public interface CarConsumableService {
-    List<CarConsumableResDTO> getConsumableInfo(Long carId);
-    List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long consumableId);
-    List<HistoryCarResDTO> getAllHistoryList(Long carId);
-    List<HistoryCarResDTO> getGasHistoryList(Long carId);
-    List<HistoryCarResDTO> getRepairHistoryList(Long carId);
+    CarConsumableDetailResDTO getConsumableInfo(Long consumableId);
+    List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId);
     void registerConsumable(CarConsumableRegDTO carConsumableRegDTO);
+    void modifyConsumable(CarConsumableRegDTO carConsumableRegDTO);
+
+    List<CarConsumableResDTO> getListConsumableInfo(Long carId);
+    List<HistoryCarResDTO> getListAllHistory(Long carId);
+    List<HistoryCarResDTO> getListGasHistory(Long carId);
+    List<HistoryCarResDTO> getListRepairHistory(Long carId);
+
+
 
 }

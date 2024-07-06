@@ -12,25 +12,31 @@
 
         </div>
         <div class="card-body">
-          <h5 class="card-title">Consumable history</h5>
+          <h5 class="card-title">수리 내역</h5>
+
+          <div class="h4 text-info text-left">
+            <span th:text="${RepairName}"></span>
+          </div>
 
           <table class="table">
             <thead>
             <tr>
-              <th scope="col">수리 타입</th>
+              <th scope="col">점검 일자</th>
               <th scope="col">수리 가격</th>
               <th scope="col">누적 km</th>
               <th scope="col">점검 정비소</th>
-              <th scope="col">점검 일</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="dto:${listDTO}">
-              <th scope="row">[[${dto.repairType}]]</th>
-              <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice )}"></td>
+
+              <th scope="row">
+                <a th:href="|@{/consumable/modify(consumableId=${dto.consumableId})}|"
+                   class="text-decoration-none">[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</a>
+              </th>
+              <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice)}"></td>
               <td>[[${dto.accumKm == 0 ? '' : dto.accumKm + ' km' }]]</td>
               <td>[[${dto.replaceShop}]]</td>
-              <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
             </tr>
             </tbody>
           </table>

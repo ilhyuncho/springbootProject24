@@ -3,6 +3,7 @@ package com.example.cih.domain.carConsumable;
 
 import com.example.cih.domain.car.Car;
 import com.example.cih.domain.reference.RefCarConsumable;
+import com.example.cih.dto.car.CarConsumableRegDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,4 +39,13 @@ public class CarConsumable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carId")
     private Car car;
+
+    // 소모품 내역 수정
+    public void setConsumableInfo(CarConsumableRegDTO carConsumableRegDTO){
+
+        this.replaceDate = carConsumableRegDTO.getReplaceDate();
+        this.replacePrice = carConsumableRegDTO.getReplacePrice();
+        this.replaceShop = carConsumableRegDTO.getReplaceShop();
+        this.accumKm = carConsumableRegDTO.getAccumKm();
+    }
 }
