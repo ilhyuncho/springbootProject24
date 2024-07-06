@@ -49,8 +49,12 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                         .collect(Collectors.groupingBy(CarConsumable::getRefCarConsumable,
                         Collectors.maxBy(Comparator.comparing(CarConsumable::getReplaceDate))));
 
+
+
         List<RefCarConsumable> refListCarConsumable = refCarConsumableRepository.findAll()
                 .stream().sorted(Comparator.comparing(RefCarConsumable::getViewOrder)).collect(Collectors.toList());
+
+
 
         List<CarConsumableResDTO> listCarConsumableResDTO = new ArrayList<>();
         for (RefCarConsumable refCarConsumable : refListCarConsumable) {
@@ -94,16 +98,18 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByCarAndRefCarConsumable(car, refCarConsumable);
 
-        return listCarConsumable.stream().map(carConsumable -> CarConsumableDetailResDTO.builder()
-                .consumableId(carConsumable.getConsumableId())
-                .replaceDate(carConsumable.getReplaceDate())
-                .accumKm(carConsumable.getAccumKm())
-                .replacePrice(carConsumable.getReplacePrice())
-                .replaceShop(carConsumable.getReplaceShop())
-                .build()).collect(Collectors.toList());
+        return listCarConsumable.stream()
+                .map(CarConsumableServiceImpl::entityToDTO)
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
 
+        CarConsumable carConsumable = getCarConsumableInfo(consumableId);
+
+        return entityToDTO(carConsumable);
+    }
 
     @Override
     public void registerConsumable(CarConsumableRegDTO carConsumableRegDTO){
@@ -152,24 +158,6 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         carConsumable.setConsumableInfo(carConsumableRegDTO);
     }
 
-    @Override
-    public CarConsumableDetailResDTO getConsumableInfo(Long consumableId) {
-
-        CarConsumable carConsumable = getCarConsumableInfo(consumableId);
-
-        CarConsumableDetailResDTO consumableDTO = CarConsumableDetailResDTO.builder()
-                .consumableId(carConsumable.getConsumableId())
-                .refConsumableId(carConsumable.getRefCarConsumable().getRefConsumableId())
-                .carId(carConsumable.getCar().getCarId())
-                .replaceDate(carConsumable.getReplaceDate())
-                .replacePrice(carConsumable.getReplacePrice())
-                .replaceShop(carConsumable.getReplaceShop())
-                .accumKm(carConsumable.getAccumKm())
-                .repairName(carConsumable.getRefCarConsumable().getName())
-                .build();
-
-        return consumableDTO;
-    }
 
     @Override
     public List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType) {
@@ -179,12 +167,25 @@ public class CarConsumableServiceImpl implements CarConsumableService {
         List<CarConsumable> listCarConsumable = carConsumableRepository.findByConsumableTypes(car, listConsumableType);
 
         return listCarConsumable.stream()
-                .map(CarConsumableServiceImpl::entityToDTO)
+                .map(CarConsumableServiceImpl::entityToHistoryDTO)
                 .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
                 .collect(Collectors.toList());
     }
 
-    private static HistoryCarResDTO entityToDTO(CarConsumable carConsumable) {
+    private static CarConsumableDetailResDTO entityToDTO(CarConsumable carConsumable) {
+        return CarConsumableDetailResDTO.builder()
+                .consumableId(carConsumable.getConsumableId())
+                .refConsumableId(carConsumable.getRefCarConsumable().getRefConsumableId())
+                .carId(carConsumable.getCar().getCarId())
+                .replaceDate(carConsumable.getReplaceDate())
+                .replacePrice(carConsumable.getReplacePrice())
+                .replaceShop(carConsumable.getReplaceShop())
+                .accumKm(carConsumable.getAccumKm())
+                .repairName(carConsumable.getRefCarConsumable().getName())
+                .build();
+    }
+
+    private static HistoryCarResDTO entityToHistoryDTO(CarConsumable carConsumable) {
 
         return HistoryCarResDTO.builder()
                 .replacePrice(carConsumable.getReplacePrice())
@@ -236,7 +237,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
 //                .findByCarAndConsumableType(car, consumableType));
 //
 //        return listCarConsumable.stream()
-//                .map(CarConsumableServiceImpl::entityToDTO)
+//                .map(CarConsumableServiceImpl::entityToHistoryDTO)
 //                .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
 //                .collect(Collectors.toList());
 //    }
