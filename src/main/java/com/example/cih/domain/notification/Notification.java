@@ -1,8 +1,8 @@
 package com.example.cih.domain.notification;
+import com.example.cih.dto.notification.NotificationRegDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -58,6 +58,18 @@ public abstract class Notification {
     public void clearImages(){
         notificationImageSet.forEach(image -> image.changeNotification(null));
         this.notificationImageSet.clear();
+    }
+
+    public void updateImages(NotificationRegDTO notificationRegDTO){
+
+        clearImages();
+
+        if(notificationRegDTO.getFileNames() != null){
+            for (String fileName : notificationRegDTO.getFileNames() ) {
+                String[] index = fileName.split("_");
+                addImage(index[0], index[1]);
+            }
+        }
     }
     //Notification 엔티티 에서 NotificationImage 엔티티 객체들을 모두 관리  end---------------
 

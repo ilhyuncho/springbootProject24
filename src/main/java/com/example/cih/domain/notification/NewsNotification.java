@@ -19,9 +19,9 @@ import javax.persistence.*;
 public class NewsNotification extends Notification{
 
     @Column(name="target", length = 30, nullable = false)
-    private String target;
+    private String newsTarget;
 
-    public void changeTarget(String target){
-        this.target = target;
+    public void changeTarget(String newsTarget){
+        this.newsTarget = newsTarget;
     }
 }

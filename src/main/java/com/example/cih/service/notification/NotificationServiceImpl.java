@@ -45,27 +45,22 @@ public class NotificationServiceImpl implements NotificationService {
         List<EventNotification> eventNotification = result.getContent();
 
 
-        List<NotiEventResDTO> dtoList = eventNotification
-                .stream()
-                .map(noti -> {
-
-                    return NotiEventResDTO.builder()
-                            .notiId(noti.getNotiId())
-                            .name(noti.getName())
-                            .title(noti.getTitle())
-                            .message(noti.getMessage())
-                            .regDate(Util.convertLocalDate(noti.getRegDate()))
-                            .eventStartDate(noti.getEventStartDate())
-                            .eventEndDate(noti.getEventEndDate())
-                            .isUse(noti.getIsUse())
-                            .isPopup(noti.getIsPopup())
-                            .build();
-                })
-                .collect(Collectors.toList());
+        List<NotiEventResDTO> dtoList = eventNotification.stream()
+                            .map(notification -> NotiEventResDTO.builder()
+                                        .notiId(notification.getNotiId())
+                                        .name(notification.getName())
+                                        .title(notification.getTitle())
+                                        .message(notification.getMessage())
+                                        .regDate(Util.convertLocalDate(notification.getRegDate()))
+                                        .eventStartDate(notification.getEventStartDate())
+                                        .eventEndDate(notification.getEventEndDate())
+                                        .isUse(notification.getIsUse())
+                                        .isPopup(notification.getIsPopup())
+                                        .build()
+                            )
+                            .collect(Collectors.toList());
 
         dtoList.forEach(list -> log.error("getListEventInfo: " + list));
-
-
 
         return PageResponseDTO.<NotiEventResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -81,23 +76,20 @@ public class NotificationServiceImpl implements NotificationService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
 
-       // Page<NewsNotification> result = newsNotificationRepository.findAll();
         Page<NewsNotification> result = newsNotificationRepository.searchAll(types, keyword, pageable);
-        List<NotiNewsResDTO> dtoList = result
-                .stream().map(noti -> {
-
-                    return NotiNewsResDTO.builder()
-                            .notiId(noti.getNotiId())
-                            .name(noti.getName())
-                            .title(noti.getTitle())
-                            .message(noti.getMessage())
-                            .regDate(Util.convertLocalDate(noti.getRegDate()))
-                            .target(noti.getTarget())
-                            .isUse(noti.getIsUse())
-                            .isPopup(noti.getIsPopup())
-                            .build();
-                })
-                .collect(Collectors.toList());
+        List<NotiNewsResDTO> dtoList = result.stream()
+                            .map(notification -> NotiNewsResDTO.builder()
+                                        .notiId(notification.getNotiId())
+                                        .name(notification.getName())
+                                        .title(notification.getTitle())
+                                        .message(notification.getMessage())
+                                        .regDate(Util.convertLocalDate(notification.getRegDate()))
+                                        .target(notification.getNewsTarget())
+                                        .isUse(notification.getIsUse())
+                                        .isPopup(notification.getIsPopup())
+                                        .build()
+                            )
+                            .collect(Collectors.toList());
 
         dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
 
@@ -111,40 +103,33 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public NotiEventResDTO getEventInfo(Long notiId) {
 
-        Optional<EventNotification> result = eventNotificationRepository.findById(notiId);
+        EventNotification eventNotification = eventNotificationRepository.findById(notiId)
+                .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
 
-       if( result.isPresent()){
-           EventNotification eventNotification = result.get();
-
-           return (NotiEventResDTO)entityToNotiResDTO(eventNotification);
-       }
-       log.error("getEventInfo() EventNotification is null!!!");
-        return null;
+        return (NotiEventResDTO)entityToNotiResDTO(eventNotification);
     }
 
     @Override
     public NotiNewsResDTO getNewsInfo(Long notiId) {
 
-        Optional<NewsNotification> result = newsNotificationRepository.findById(notiId);
+        NewsNotification newsNotification = newsNotificationRepository.findById(notiId)
+            .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
 
-        if( result.isPresent()){
-            NewsNotification newsNotification = result.get();
-
-            return (NotiNewsResDTO)entityToNotiResDTO(newsNotification);
-        }
-        log.error("getNewsInfo() NewsNotification is null!!!");
-        return null;
+        return (NotiNewsResDTO)entityToNotiResDTO(newsNotification);
     }
 
     @Override
-    public NotiResDTO getNotiInfo(Long notiId){
+    public NotiResDTO getNotiInfo(Long notiId){ // 뉴스&이벤트 상세 페이지로 이동-고객이 접근
 
         Optional<Notification> result = notificationRepository.findById(notiId);
 
-        NotiResDTO notiNewsResDTO = entityToNotiResDTO(result.get());
+        if(result.isPresent()){
+            NotiResDTO notiNewsResDTO = entityToNotiResDTO(result.get());
 
-        log.error("notiNewsResDTO : " + notiNewsResDTO);
-        return notiNewsResDTO;
+            //log.error("notiNewsResDTO : " + notiNewsResDTO);
+            return notiNewsResDTO;
+        }
+        return null;
     }
 
     public Boolean isEventDuplication(EventType eventType, LocalDate regStartDate, LocalDate regEndDate){
@@ -153,30 +138,25 @@ public class NotificationServiceImpl implements NotificationService {
         List<EventNotification> result = eventNotificationRepository.findByEventType(eventType);
 
         return result.stream().anyMatch(event -> {
-
-            log.error("regStartDate : " + regStartDate + ",," + "regEndDate : " + regEndDate);
-            log.error("getEventStartDate : " + event.getEventStartDate() + ",," + "getEventEndDate : " + event.getEventEndDate());
-            // 이벤트 기간 체크
-            if (!regStartDate.isBefore(event.getEventStartDate()) && regStartDate.isBefore(event.getEventEndDate())) {
-                log.error("이벤트 시작 날짜 곂침~~~~~~~~~~~~~~~");
-                return true;
-            }
-            else if (!regEndDate.isBefore(event.getEventStartDate()) && (regEndDate.isBefore(event.getEventEndDate())
-                    || regEndDate.equals(event.getEventEndDate()))) {
-                log.error("이벤트 종료 날짜 곂침~~~~~~~~~~~~~~~");
-                return true;
-            }
-            return false;
-        });
+                    // 이벤트 기간 체크
+                    if (!regStartDate.isBefore(event.getEventStartDate()) && regStartDate.isBefore(event.getEventEndDate())) {
+                        log.error("이벤트 시작 날짜 곂침~~~~~~~~~~~~~~~");
+                        return true;
+                    }
+                    else if (!regEndDate.isBefore(event.getEventStartDate()) && (regEndDate.isBefore(event.getEventEndDate())
+                            || regEndDate.equals(event.getEventEndDate()))) {
+                        log.error("이벤트 종료 날짜 곂침~~~~~~~~~~~~~~~");
+                        return true;
+                    }
+                    return false;
+                });
     }
 
     @Override
     public Long registerEventNotification(NotificationRegDTO eventDTO) {
 
         eventNotificationRepository.findByName(eventDTO.getName())
-                .ifPresent(m -> {
-                    throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");
-                });
+                .ifPresent(m -> {throw new ItemNotFoundException("해당 이벤트 정보가 이미 존재 함");});
 
         LocalDate regStartDate = LocalDate.parse(eventDTO.getEventStartDate());
         LocalDate regEndDate = LocalDate.parse(eventDTO.getEventEndDate());
@@ -184,15 +164,10 @@ public class NotificationServiceImpl implements NotificationService {
 
         // 이벤트 기간 곂치는지 체크
         if(isEventDuplication(eventType, regStartDate, regEndDate)){
-            log.error("이벤트 기간 곂침~~~~~~~~~~~~~~~");
             return 0L;
         }
 
         EventNotification eventNotification = dtoToEventEntity(eventDTO);
-
-        if(eventDTO.getFileNames() != null){
-            addFileNames(eventDTO, eventNotification);
-        }
 
         EventNotification saveItem = eventNotificationRepository.save(eventNotification);
 
@@ -203,15 +178,9 @@ public class NotificationServiceImpl implements NotificationService {
     public Long registerNewsNotification(NotificationRegDTO newsDTO) {
 
         newsNotificationRepository.findByName(newsDTO.getName())
-                .ifPresent(m -> {
-                    throw new ItemNotFoundException("해당 뉴스 정보가 이미 존재 함");
-                });
+                .ifPresent(m -> {throw new ItemNotFoundException("해당 뉴스 정보가 이미 존재 함");});
 
         NewsNotification newsNotification = dtoToNewsEntity(newsDTO);
-
-        if(newsDTO.getFileNames() != null){
-            addFileNames(newsDTO, newsNotification);
-        }
 
         NewsNotification saveItem = newsNotificationRepository.save(newsNotification);
 
@@ -235,18 +204,8 @@ public class NotificationServiceImpl implements NotificationService {
                                         ,EventType.fromValue(dto.getEventSelectType())
                                         ,dto.getEventValue());
 
-        // 첨부파일 처리
-        eventNotification.clearImages();
-
-        if(dto.getFileNames() != null){
-            for (String fileName : dto.getFileNames() ) {
-                String[] index = fileName.split("_");
-                eventNotification.addImage(index[0], index[1]);
-            }
-        }
-
-        log.error("modifyEventNotification() eventNotification : " + eventNotification);
-        EventNotification save = eventNotificationRepository.save(eventNotification);
+        // 첨부 파일 갱신
+        eventNotification.updateImages(dto);
     }
 
     @Override
@@ -256,25 +215,15 @@ public class NotificationServiceImpl implements NotificationService {
                 .orElseThrow(() -> new NoSuchElementException("해당 뉴스 정보가 존재하지않습니다"));
 
         newsNotification.changeInfo(dto.getName()
-                , dto.getTitle()
-                , dto.getMessage()
-                , dto.getIsUse()
-                , dto.getIsPopup());
+                                   ,dto.getTitle()
+                                   ,dto.getMessage()
+                                   ,dto.getIsUse()
+                                   ,dto.getIsPopup());
 
        // newsNotification.changeTarget(dto.getTarget());
 
-        // 첨부파일 처리
-        newsNotification.clearImages();
-
-        if(dto.getFileNames() != null){
-            for (String fileName : dto.getFileNames() ) {
-                String[] index = fileName.split("_");
-                newsNotification.addImage(index[0], index[1]);
-            }
-        }
-
-        log.error("modifyNewsNotification() newsNotification : " + newsNotification);
-        NewsNotification save = newsNotificationRepository.save(newsNotification);
+        // 첨부 파일 갱신
+        newsNotification.updateImages(dto);
     }
 
     @Override
@@ -322,12 +271,10 @@ public class NotificationServiceImpl implements NotificationService {
         
         List<EventNotification> result = eventNotificationRepository.findByEventType(eventType);
 
-        EventNotification eventNotification = result.stream()
+        return result.stream()
                 .filter(event -> event.getEventStartDate().compareTo(now) <= 0  // 날짜 비교
                         && event.getEventEndDate().compareTo(now) >= 0)
                 .findFirst().orElse(null);
-
-        return eventNotification;
     }
 
     private NotiResDTO entityToNotiResDTO(Notification notification) {
@@ -358,11 +305,11 @@ public class NotificationServiceImpl implements NotificationService {
         notification.getNotificationImageSet().forEach(image -> {
             notiResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
         });
-        log.error("entityToNotiResDTO(), notiResDTO : " + notiResDTO);
+
         return notiResDTO;
     }
 
-    public void addFileNames(NotificationRegDTO notificationRegDTO, Notification notification){
+    public static void addFileNames(NotificationRegDTO notificationRegDTO, Notification notification){
 
         notificationRegDTO.getFileNames().forEach(fileName ->{
             String[] arr = fileName.split("_");
@@ -371,7 +318,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
     private static EventNotification dtoToEventEntity(NotificationRegDTO dto) {
 
-        return EventNotification.builder()
+        EventNotification eventNotification = EventNotification.builder()
                 .name(dto.getName())
                 .title(dto.getTitle())
                 .message(dto.getMessage())
@@ -383,17 +330,29 @@ public class NotificationServiceImpl implements NotificationService {
                 .eventType(EventType.fromValue(dto.getEventSelectType()))
                 .eventValue(dto.getEventValue())
                 .build();
+
+        if(dto.getFileNames() != null){
+            addFileNames(dto, eventNotification);
+        }
+
+        return eventNotification;
     }
     private static NewsNotification dtoToNewsEntity(NotificationRegDTO dto) {
 
-        return NewsNotification.builder()
+        NewsNotification newsNotification = NewsNotification.builder()
                 .name(dto.getName())
                 .title(dto.getTitle())
                 .message(dto.getMessage())
                 .regDate(LocalDateTime.now())
                 .isUse(dto.getIsUse())
                 .isPopup(dto.getIsPopup())
-                .target("targetTemp")
+                .newsTarget("targetTemp")
                 .build();
+
+        if(dto.getFileNames() != null){
+            addFileNames(dto, newsNotification);
+        }
+        
+        return newsNotification;
     }
 }

@@ -32,7 +32,7 @@ public class NotificationRepositoryTest {
             NewsNotification noti = NewsNotification.builder()
                             .notiId(Long.valueOf(i))
                             .message("MEssage"+i)
-                            .target("target"+i)
+                            .newsTarget("target"+i)
                             .build();
 
             NewsNotification result = newsNotificationRepository.save(noti);
@@ -70,7 +70,7 @@ public class NotificationRepositoryTest {
         for (Object o : all) {
             if( o.getClass().equals(NewsNotification.class)){
                 NewsNotification noti = (NewsNotification)o;
-                log.error("news-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getTarget());
+                log.error("news-" + noti.getNotiId() + "_" + noti.getMessage() + "_" +noti.getNewsTarget());
             }
             else{
                 EventNotification noti = (EventNotification)o;
