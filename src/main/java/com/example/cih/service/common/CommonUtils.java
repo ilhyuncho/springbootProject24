@@ -1,12 +1,17 @@
 package com.example.cih.service.common;
 
+import com.example.cih.domain.carConsumable.CarConsumable;
+import com.example.cih.domain.carConsumable.ReplaceAlarm;
 import com.example.cih.domain.notification.EventNotification;
+import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.dto.shop.ItemOptionResDTO;
 import lombok.extern.log4j.Log4j2;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j2
@@ -50,5 +55,37 @@ public class CommonUtils {
             desc += ", " + itemOption2.getOptionType() + ": " + itemOption2.getOptionName();
         }
         return desc;
+    }
+
+    public static ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
+
+        int cycleKm = refCarConsumable.getReplaceCycleKm();
+        int cycleMonth = refCarConsumable.getReplaceCycleMonth();
+
+        // 1. 개월 마다 체크
+        if(cycleMonth > 0){
+            LocalDate lastReplaceDate = carConsumable.getReplaceDate();
+            LocalDate nextReplaceDay = lastReplaceDate.plusMonths(cycleMonth);  // 계산된 다음 점검 날짜
+
+            log.error("lastReplaceDate : " + lastReplaceDate + ",  nextReplaceDay : " + nextReplaceDay);
+
+            // 두 날짜 차이 계산
+            long diffDays = Duration.between(LocalDate.now().atStartOfDay(), nextReplaceDay.atStartOfDay()).toDays();
+            log.error(diffDays);
+
+            if(diffDays <= 0 || (diffDays - 30) < 0){
+                log.error("nextReplaceDay.READY_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
+                return ReplaceAlarm.READY_CYCLE;
+            }
+            log.error("nextReplaceDay.NOT_CYCLE(): " + nextReplaceDay + ", Diff: " + diffDays);
+        }
+        else if( cycleKm > 0){   // 2. 주행 km 마다 체크
+            int accumKm = carConsumable.getAccumKm();
+            int nextReplaceKm = cycleKm + accumKm;
+
+            // 주행 km를 비교하여 체크
+        }
+
+        return ReplaceAlarm.NOT_CYCLE;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.carConsumable.CarConsumable;
 import com.example.cih.domain.carConsumable.ReplaceAlarm;
+import com.example.cih.domain.reference.RefCarConsumable;
+import com.example.cih.service.common.CommonUtils;
 import lombok.*;
 
 import javax.persistence.EnumType;
@@ -28,6 +31,15 @@ public class CarConsumableResDTO {
     @Enumerated(EnumType.STRING)
     private ReplaceAlarm replaceAlarm;
 
+    // 최근 정비 내역 set
+    public void setRecentReplaceInfo(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
+
+        this.setReplaceAlarm(CommonUtils.checkNextReplaceDay(refCarConsumable, carConsumable));
+
+        this.setReplaceInfo(carConsumable.getReplacePrice(), carConsumable.getAccumKm(),
+                carConsumable.getReplaceShop(), carConsumable.getReplaceDate() );
+    }
+
     public void setReplaceInfo(int replacePrice, int accumKm, String replaceShop, LocalDate replaceDate){
         this.replacePrice = replacePrice;
         this.replaceShop = replaceShop;
@@ -38,5 +50,4 @@ public class CarConsumableResDTO {
     public void setReplaceAlarm(ReplaceAlarm replaceAlarm){
         this.replaceAlarm = replaceAlarm;
     }
-
 }
