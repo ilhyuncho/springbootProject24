@@ -24,6 +24,7 @@ import java.util.Map;
 public class AdminShopRestController {
 
     private final ShopItemService shopItemService;
+    private final AdmnShopControllerValidator admnShopControllerValidator;
 
     @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
     @PostMapping("/shopItem")
@@ -35,10 +36,8 @@ public class AdminShopRestController {
             throw new BindException(bindingResult);
         }
 
-        // 테스트용
-        if(shopItemReqDTO.getItemName().isEmpty()){
-            shopItemReqDTO.setItemName(Util.createRandomName("Item"));
-        }
+        admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
+
 
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 

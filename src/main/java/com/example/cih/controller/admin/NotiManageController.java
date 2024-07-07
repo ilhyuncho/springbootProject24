@@ -27,6 +27,7 @@ import java.util.List;
 public class NotiManageController {
     private final NotificationService notificationService;
     private final FileHandler fileHandler;
+    private final NotiControllerValidator notiControllerValidator;
 
     @ApiOperation(value = "[이벤트] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/eventList")
@@ -68,10 +69,7 @@ public class NotiManageController {
             return "redirect:/admin/eventList";
         }
 
-        // 테스트용
-        if( notificationRegDTO.getName().isEmpty()){
-            notificationRegDTO.setName(Util.createRandomName("Event"));
-        }
+        notiControllerValidator.validate(notificationRegDTO, bindingResult);
 
         Long eventId = notificationService.registerEventNotification(notificationRegDTO);
         if(eventId == 0){
@@ -164,10 +162,7 @@ public class NotiManageController {
             return "redirect:/admin/newsList";
         }
 
-        // 테스트용
-        if( notificationRegDTO.getName().isEmpty()){
-            notificationRegDTO.setName(Util.createRandomName("News"));
-        }
+        notiControllerValidator.validate(notificationRegDTO, bindingResult);
 
         Long newsId = notificationService.registerNewsNotification(notificationRegDTO);
 

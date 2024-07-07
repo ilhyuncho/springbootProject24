@@ -19,6 +19,9 @@
         <div class="card-body">
 
           <form action="/admin/newsRegister" method="post" id="myForm">
+
+            <input type="hidden" name="target" class="form-control" th:value="news">
+
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 이름</span>
               <label>

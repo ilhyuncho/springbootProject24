@@ -20,6 +20,8 @@
 
           <form action="/admin/eventRegister" method="post" id="myForm">
 
+            <input type="hidden" name="target" class="form-control" th:value="event">
+
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 이름</span>
               <label>
