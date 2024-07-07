@@ -146,6 +146,13 @@ public class CarConsumableServiceImpl implements CarConsumableService {
     }
 
     @Override
+    public void removeConsumable(Long consumableId) {
+        CarConsumable carConsumable = getCarConsumableInfo(consumableId);
+
+        carConsumableRepository.delete(carConsumable);
+    }
+
+    @Override
     public List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType) {
 
        Car car = carService.getCarInfo(carId);

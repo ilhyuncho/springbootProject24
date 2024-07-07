@@ -13,6 +13,7 @@ public interface CarConsumableService {
     List<CarConsumableDetailResDTO> getConsumableDetail(Long carId, Long refConsumableId);
     void registerConsumable(CarConsumableRegDTO carConsumableRegDTO);
     void modifyConsumable(CarConsumableRegDTO carConsumableRegDTO);
+    void removeConsumable(Long consumableId);
 
     List<CarConsumableResDTO> getListConsumableInfo(Long carId);
     List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType);

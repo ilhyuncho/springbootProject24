@@ -120,4 +120,27 @@
       })
   }, false)
 
+  // 삭제 요청
+  document.querySelector(".removeBtn").addEventListener("click", function(e){
+
+      removeConsumable(consumableId.value).then(result => {
+
+          alert('소모품 내역 삭제가 완료 되었습니다')
+
+          // 화면 재 갱신
+          self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
+              + '&userName=' + [[${#authentication.principal.username}]]
+
+      }).catch(e => {
+          if (e.response && e.response.status === 400) {
+
+              alert('잘못된 요청입니다.. 전달값 확인!!')
+              console.log(e.response.data);
+          } else {
+              console.log(e.response.data);
+              alert(e.response.data)
+          }
+      })
+  }, false)
+
 </script>

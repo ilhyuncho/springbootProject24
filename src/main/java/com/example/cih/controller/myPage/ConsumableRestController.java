@@ -54,7 +54,7 @@ public class ConsumableRestController {
         return resultMap;
     }
 
-    @ApiOperation(value = "소모품 교환 정보 수정", notes = "차 소유주가 등록")
+    @ApiOperation(value = "소모품 내역 정보 수정", notes = "차 소유주가 등록")
     @PostMapping("/modify")
     public Map<String,String> postModifyConsumable(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                      BindingResult bindingResult,
@@ -71,5 +71,20 @@ public class ConsumableRestController {
         resultMap.put("result", "success");
         return resultMap;
     }
+
+    @ApiOperation(value = "소모품 내역 정보 삭제", notes = "차 소유주가 등록")
+    @PostMapping("/remove/{consumableId}")
+    public Map<String,String> postRemoveConsumable(@PathVariable Long consumableId,
+                                                   Principal principal ) {
+
+        User user = userService.findUser(principal.getName());
+
+        carConsumableService.removeConsumable(consumableId);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return resultMap;
+    }
+
 
 }
