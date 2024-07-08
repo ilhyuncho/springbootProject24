@@ -7,11 +7,19 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 @Aspect
 @Component
 @Log4j2
 @Order(1)
 public class ExceptionLoggingAspect {
+
+    @PostConstruct     // 스프링이 @Component 를 사용하여 빈 생성 직후 호출 됨
+    public void init(){
+        log.error("ExceptionLoggingAspect init~~~~~~~~~~~~~~~");
+    }
+
     @AfterThrowing(pointcut = "execution(* com.example.cih.service..*.*(..))", throwing = "ex")
     public void printExceptionLogging(JoinPoint joinPoint, Exception ex) {
         // service 에서 발생하는 에러 내용 출력

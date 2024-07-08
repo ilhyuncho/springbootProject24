@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Log4j2
 @AllArgsConstructor
-@Component
+@Component      // 스테레오 타입 애너테이션
 public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 
     private final UserMissionService userMissionService;
