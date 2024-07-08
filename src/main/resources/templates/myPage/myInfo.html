@@ -19,16 +19,6 @@
         <div class="card-body">
 
           <div class="input-group mb-3">
-            <span class="input-group-text">주소</span>
-            <input type="text" class="form-control" th:value="${userDTO.address}" readonly>
-          </div>
-
-          <div class="input-group mb-3">
-            <span class="input-group-text">결제 주소</span>
-            <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
-          </div>
-
-          <div class="input-group mb-3">
             <span class="input-group-text">고객 이름</span>
             <label>
               <input type="text" class="form-control" th:value="${userDTO.userName}" readonly>
@@ -43,10 +33,25 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">포인트<a th:href="|@{/myPage/myPointInfo(userName=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
+            <span class="input-group-text">포인트<a th:href="|@{/myPage/myPoint(userName=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
             <label>
               <input type="text" class="form-control" th:value="${userDTO.mPoint}" readonly>
             </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">주소</span>
+            <input type="text" class="form-control" th:value="${userDTO.address}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">결제 주소</span>
+            <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">배송 주소<a th:href="|@{/myPage/deliveryAddress(userName=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
+              <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
           </div>
 
         </div><!-- <div class="card-body">-->

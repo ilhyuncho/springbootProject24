@@ -44,7 +44,10 @@ public class ProjectSettingTest {
     RefMissionRepository refMissionRepository;
 
     @Autowired
-    private RefCarSampleRepository refCarSampleRepository;
+    RefCarSampleRepository refCarSampleRepository;
+
+    @Autowired
+    UserAddressBookRepository userAddressBookRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -65,6 +68,7 @@ public class ProjectSettingTest {
     @Test
     public void InsertUserData(){
 
+        // member 생성
         IntStream.rangeClosed(1, 10).forEach(i -> {
 
             Member member = Member.builder()
@@ -91,14 +95,14 @@ public class ProjectSettingTest {
         .peek(log::error)
         .collect(Collectors.toList());
 
-
+        // User 생성
         IntStream.rangeClosed(1, 10).forEach(i -> {
 
-            City city = new City(listZipcode.get(0), "buchoen", "korea");
+            City city = new City(listZipcode.get(0), "부천시", "대한민국");
             Address address = Address.builder()
                     .city(city)
-                    .street("sudoro257")
-                    .detailAddress("2dong404ho")
+                    .street("수도로257번길55")
+                    .detailAddress("2동 404호")
                     .build();
 
             City city1 = new City(listZipcode.get(1), "buchoen", "korea");
@@ -117,9 +121,22 @@ public class ProjectSettingTest {
                     .build();
 
             Long userId = userRepository.save(user).getUserId();
+
+            UserAddressBook userAddressBook = UserAddressBook.builder()
+                    .user(user)
+                    .address(address)
+                    .deliveryName("마이홈")
+                    .RecipientName("김민수")
+                    .deliveryRequest("문앞에 놓아주세요")
+                    .RecipientPhoneNumber("01012349482")
+                    .build();
+            userAddressBookRepository.save(userAddressBook);
         });
+        
+        // 배송 주소록 생성
 
 
+        // ShopItem 생성
         IntStream.rangeClosed(1,2).forEach(i -> {
 
             ItemPrice itemPrice = ItemPrice.builder()
@@ -181,10 +198,9 @@ public class ProjectSettingTest {
                     .shopItem(shopItem)
                     .build();
             itemImageRepository.save(itemImage);
-
         });
 
-
+        // refCarConsumable 생성
         RefCarConsumable refCarConsumable1 = RefCarConsumable.builder()
                 .name("주유")
                 .repairType("상시")
@@ -196,6 +212,7 @@ public class ProjectSettingTest {
         refCarConsumableRepository.save(refCarConsumable1);
         /////////////////////////////////
 
+        // refMission 생성
         List<RefMission> listRefMission = new ArrayList<>();
         RefMission refMission = RefMission.builder()
                 .missionName("첫로그인")
@@ -237,6 +254,7 @@ public class ProjectSettingTest {
 
 
         /////////////////////////////////
+        // refCarConsumable 생성
         List<String> listName = new ArrayList<>();
         listName.add("엔진오일 및 오일 필터");
         listName.add("에어컨 필터");

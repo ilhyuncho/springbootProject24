@@ -1,8 +1,8 @@
 package com.example.cih.controller.myPage;
 
 
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.user.UserDTO;
-import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class myInfoController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "나의 정보 조회", notes = "")
+    @ApiOperation(value = "[나의 정보] 조회", notes = "")
     @GetMapping("/myInfo")
     //@PreAuthorize("principal.username != #userName")
     public String getMyInfo(String userName,
@@ -35,15 +35,24 @@ public class myInfoController {
         return "/myPage/myInfo";
     }
 
-    @ApiOperation(value = "나의 포인트정보 페이지 이동", notes = "")
-    @GetMapping("/myPointInfo")
+    @ApiOperation(value = "[나의 포인트정보] 페이지 이동", notes = "")
+    @GetMapping("/myPoint")
     //@PreAuthorize("principal.username != #userName")
-    public String getMyPointInfo(String userName,
-                            Model model){
+    public String getMyPoint(String userName, Model model){
 
-       // UserDTO userDTO = userService.findUserDTO(userName);
+        User user = userService.findUser(userName);
 
-        return "/myPage/myPointInfo";
+        return "/myPage/myPoint";
+    }
+
+    @ApiOperation(value = "[배송 주소록 관리] 페이지 이동", notes = "")
+    @GetMapping("/deliveryAddress")
+    //@PreAuthorize("principal.username != #userName")
+    public String getMyPointInfo(String userName, Model model){
+
+        User user = userService.findUser(userName);
+
+        return "/myPage/deliveryAddress";
     }
 
 
