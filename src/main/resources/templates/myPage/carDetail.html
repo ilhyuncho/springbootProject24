@@ -38,17 +38,17 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarYears</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carYears}" name="carYears">
+            <input type="text" class="form-control" th:value="${responseDTO.carYears}" name="carYears" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarColors</span>
-            <input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors">
+            <input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors" readonly>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarKm</span>
-            <input type="text" class="form-control currCarKm" th:value="${responseDTO.carKm +' km'} " name="carKm" >
+            <input type="text" class="form-control currCarKm" th:value="${responseDTO.carKm +' km'} " name="carKm" readonly>
           </div>
 
           <div class="input-group mb-3">

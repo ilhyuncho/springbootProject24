@@ -2,7 +2,9 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.user.User;
+import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.dto.user.UserDTO;
+import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/myPage")
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class myInfoController {
 
     private final UserService userService;
+    private final UserAddressBookService userAddressBookService;
 
     @ApiOperation(value = "[나의 정보] 조회", notes = "")
     @GetMapping("/myInfo")
@@ -51,6 +56,12 @@ public class myInfoController {
     public String getMyPointInfo(String userName, Model model){
 
         User user = userService.findUser(userName);
+
+        List<UserAddressBook> listUserAddressBook = userAddressBookService.getUserAddressBookInfo(user);
+
+        //listUserAddressBook.forEach(log::error);
+
+        model.addAttribute("responseDTO", listUserAddressBook);
 
         return "/myPage/deliveryAddress";
     }

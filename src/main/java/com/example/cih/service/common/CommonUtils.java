@@ -88,4 +88,16 @@ public class CommonUtils {
 
         return ReplaceAlarm.NOT_CYCLE;
     }
+
+    public static String phoneFormat(String str) {
+        if (str == null) {
+            return "";
+        }
+        if (str.length() == 8) {
+            return str.replaceFirst("^([0-9]{4})([0-9]{4})$", "$1-$2");
+        } else if (str.length() == 12) {
+            return str.replaceFirst("(^[0-9]{4})([0-9]{4})([0-9]{4})$", "$1-$2-$3");
+        }
+        return str.replaceFirst("(^02|[0-9]{3})([0-9]{3,4})([0-9]{4})$", "$1-$2-$3");
+    }
 }

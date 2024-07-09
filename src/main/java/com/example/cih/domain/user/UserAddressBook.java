@@ -24,6 +24,7 @@ public class UserAddressBook {
 
     private String deliveryName;            // 배송지 명
     private String RecipientName;           // 받는 사람 이름
+
     private String RecipientPhoneNumber;    // 받는 사람 전화번호
     private String deliveryRequest;         // 배송시 요청 사한
 
