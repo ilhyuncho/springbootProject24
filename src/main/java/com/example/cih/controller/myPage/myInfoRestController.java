@@ -1,15 +1,8 @@
 package com.example.cih.controller.myPage;
 
-import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.car.CarConsumableRegDTO;
-import com.example.cih.dto.user.UserAddressBookReqDTO;
-import com.example.cih.dto.user.UserMissionListResDTO;
-import com.example.cih.dto.user.UserMissionReqDTO;
-import com.example.cih.dto.user.UserMissionResDTO;
+import com.example.cih.dto.user.*;
 import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
@@ -24,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,9 +45,24 @@ public class myInfoRestController {
         return listUserMission;
     }
 
+
+    @ApiOperation(value = "배송 주소 정보 get", notes = "")
+    @GetMapping("/addressInfo")
+    //@PreAuthorize("principal.username != #userName")
+    public UserAddressBookResDTO addressInfo(Long userAddressBookId){
+
+        //User user = userService.findUser(userName);
+
+        UserAddressBookResDTO userAddressBookResDTO = userAddressBookService.getUserAddressBookInfo(userAddressBookId);
+
+        log.error(userAddressBookResDTO);
+
+        return userAddressBookResDTO;
+    }
+
     @ApiOperation(value = "배송지 추가 등록", notes = "")
-    @PostMapping("/deliveryAddress")
-    public Map<String,String> postDeliveryAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
+    @PostMapping("/registerAddress")
+    public Map<String,String> postRegisterAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
         if(bindingResult.hasErrors()){
@@ -64,28 +71,27 @@ public class myInfoRestController {
         }
         User user = userService.findUser(principal.getName());
 
-        Map<String, String> resultMap = new HashMap<>();
-
-        List<UserAddressBook> userAddressBookInfo = userAddressBookService.getUserAddressBookInfo(user);
-        if(userAddressBookInfo.size() > 7){
-            resultMap.put("result", "fail");
-            resultMap.put("message", "배송 주소록을 더 이상 만들수 없습니다");
-            return resultMap;
-        }
-        else{
-
-            boolean isSameDeliveryName = userAddressBookInfo.stream()
-                    .anyMatch(userAddressBook -> userAddressBook.getDeliveryName().equals(userAddressBookReqDTO.getDeliveryName()));
-            if(isSameDeliveryName)
-            {
-                resultMap.put("result", "fail");
-                resultMap.put("message", "이미 같은 배송지명이 존재 합니다");
-                return resultMap;
-            }
-        }
-
         userAddressBookService.registerAddressBook(user, userAddressBookReqDTO);
 
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return resultMap;
+    }
+
+    @ApiOperation(value = "배송지 수정", notes = "")
+    @PostMapping("/modifyAddress")
+    public Map<String,String> postModifyAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
+                                                  BindingResult bindingResult,
+                                                  Principal principal ) throws BindException {
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+        User user = userService.findUser(principal.getName());
+
+        userAddressBookService.modifyAddressBook(user, userAddressBookReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
         return resultMap;
     }

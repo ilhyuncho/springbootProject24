@@ -34,10 +34,10 @@
           <div class="card-body">
             <h5 class="card-title" style="color: red">[[${addressBook.deliveryName}]]</h5>
             <h4 class="card-title">[[${addressBook.RecipientName}]]</h4>
-            <p class="card-text">[[${addressBook.getAddress().fullAddress()}]]</p>
+            <p class="card-text">[[${addressBook.fullAddress}]]</p>
             <p class="card-text">[[${addressBook.RecipientPhoneNumber}]]</p>
-            <a href="#" class="btn btn-primary">수정</a>
-            <a href="#" class="btn btn-primary">삭제</a>
+            <a href="#" class="btn btn-primary" th:onclick="modifyAddress([[${addressBook.userAddressBookId}]])">수정</a>
+            <a href="#" class="btn btn-primary deleteBtn">삭제</a>
           </div>
         </div>
       </th:block>
@@ -46,12 +46,14 @@
 
 
   <!-- 주소록 등록을 위한 모달창-->
-  <div class="modal registerModal" tabindex="-1">
+  <div class="modal updateModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">배송지 추가하기</h5>
+          <input type="hidden" class="form-control modalType">
+          <input type="hidden" class="form-control modalUserAddressBookId">
+          <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -114,7 +116,7 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+  const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
 
   const modalDeliveryName = document.querySelector('#modalDeliveryName');
   const modalRecipientName = document.querySelector('#modalRecipientName');
@@ -125,7 +127,9 @@
   const modalStreet = document.querySelector('#modalStreet');
   const modalDetailAddress = document.querySelector('#modalDetailAddress');
   const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
-
+  const modalTitle = document.querySelector('.modalTitle');
+  const modalType = document.querySelector('.modalType');
+  const modalUserAddressBookId = document.querySelector('.modalUserAddressBookId');
 
   const currentUser = [[${#authentication.principal.username}]]
 
@@ -133,10 +137,12 @@
     e.stopPropagation()
     e.preventDefault()
 
-    registerModal.show()
+    modalTitle.innerHTML = '배송지 추가'
+    modalType.value = 'register'
+    updateModal.show()
   }, false)
 
-  // 모달창의 [소모품 점검 날짜 register] 처리
+  // [배송지 추가 or 수정] 요청 처리
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
 
     const formObj = {
@@ -148,14 +154,16 @@
       cityName:modalCityName.value,
       street:modalStreet.value,
       detailAddress:modalDetailAddress.value,
-      deliveryRequest: modalDeliveryRequest.value
+      deliveryRequest:modalDeliveryRequest.value,
+      userAddressBookId:modalUserAddressBookId.value,
+      callType:modalType.value
     }
 
-    console.log(modalRecipientPhoneNumber.value)
+    console.log(modalType.value)
 
     sendDeliveryAddress(formObj).then(result => {
 
-      registerModal.hide()
+      updateModal.hide()
 
       if(result.result === 'fail'){
         alert(result.message)
@@ -173,11 +181,81 @@
         console.log(e.response.data);
       } else {
         console.log(e.response.data);
-        alert(e.response.data)
+        alert(e.response.data.message)
       }
-      modifyConsumableModal.hide()
+      updateModal.hide()
     })
   }, false)
+
+  function modifyAddress(userAddressBookId){
+
+    const formObj = {
+      userAddressBookId:userAddressBookId,
+    }
+
+    getDeliveryAddress(formObj).then(result => {
+
+      console.log(result)
+
+      modalTitle.innerHTML = '배송지 수정'
+      modalType.value = 'modify'
+      modalUserAddressBookId.value = userAddressBookId
+
+      modalDeliveryName.value = result.deliveryName
+      modalRecipientName.value = result.recipientName
+      modalRecipientPhoneNumber.value = result.recipientPhoneNumber
+      modalZipcode.value = result.zipcode
+      modalCountry.value = result.country
+      modalCityName.value = result.cityName
+      modalStreet.value = result.street
+      modalDetailAddress.value = result.detailAddress
+      modalDeliveryRequest.value = result.deliveryRequest
+
+      updateModal.show()
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      updateModal.hide()
+    })
+  }
+
+  function deleteAddress(userAddressBookId){
+    if(!confirm("정말로 삭제 하겠습니까?")){
+      return
+    }
+
+    console.log(userAddressBookId)
+
+    const formObj = {
+      userAddressBookId:userAddressBookId,
+    }
+
+    getDeliveryAddress(formObj).then(result => {
+
+      console.log(result)
+
+
+    }).catch(e => {
+      if (e.response && e.response.status === 400) {
+
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+      } else {
+        console.log(e.response.data);
+        alert(e.response.data)
+      }
+      updateModal.hide()
+    })
+
+  }
+
 
   function initModalForm(){
       modalDeliveryName.value =''

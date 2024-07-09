@@ -5,11 +5,23 @@ async function getMyPoint(formObj){
     return response.data
 }
 
+async function getDeliveryAddress(formObj){
+    const response = await axios.get(`/myInfo/addressInfo`, {params: formObj})
+    //  console.log(response)
+    return response.data
+}
+
 async function sendDeliveryAddress(formObj) {
     console.log(formObj)
 
-    const response = await axios.post(`/myInfo/deliveryAddress`, formObj)
-
-    console.log(response)
-    return response.data
+    if(formObj.callType === 'register'){
+        const response = await axios.post(`/myInfo/registerAddress`, formObj)
+        console.log(response)
+        return response.data
+    }
+    else if(formObj.callType === 'modify'){
+        const response = await axios.post(`/myInfo/modifyAddress`, formObj)
+        console.log(response)
+        return response.data
+    }
 }

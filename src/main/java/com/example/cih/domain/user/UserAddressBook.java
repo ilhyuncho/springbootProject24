@@ -1,6 +1,7 @@
 package com.example.cih.domain.user;
 
 
+import com.example.cih.dto.user.UserAddressBookReqDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,4 +32,14 @@ public class UserAddressBook {
     @Embedded   // 임베디드 타입 (복합값)
     private Address address;
 
+
+    public void setAddressBookInfo(UserAddressBookReqDTO userAddressBookReqDTO){
+        deliveryName = userAddressBookReqDTO.getDeliveryName();
+        RecipientName = userAddressBookReqDTO.getRecipientName();
+        RecipientPhoneNumber = userAddressBookReqDTO.getRecipientPhoneNumber();
+        deliveryRequest = userAddressBookReqDTO.getDeliveryRequest();
+    }
+    public void setAddress(Address address){
+        this.address = address;
+    }
 }

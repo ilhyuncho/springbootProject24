@@ -2,7 +2,7 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.user.UserAddressBook;
+import com.example.cih.dto.user.UserAddressBookResDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserService;
@@ -57,7 +57,7 @@ public class myInfoController {
 
         User user = userService.findUser(userName);
 
-        List<UserAddressBook> listUserAddressBook = userAddressBookService.getUserAddressBookInfo(user);
+        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getListUserAddressBook(user);
 
         //listUserAddressBook.forEach(log::error);
 
