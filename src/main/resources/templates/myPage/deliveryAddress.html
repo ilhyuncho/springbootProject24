@@ -37,7 +37,7 @@
             <p class="card-text">[[${addressBook.fullAddress}]]</p>
             <p class="card-text">[[${addressBook.RecipientPhoneNumber}]]</p>
             <a href="#" class="btn btn-primary" th:onclick="modifyAddress([[${addressBook.userAddressBookId}]])">수정</a>
-            <a href="#" class="btn btn-primary deleteBtn">삭제</a>
+            <a href="#" class="btn btn-primary" th:onclick="deleteAddress([[${addressBook.userAddressBookId}]])">삭제</a>
           </div>
         </div>
       </th:block>
@@ -227,20 +227,23 @@
   }
 
   function deleteAddress(userAddressBookId){
+
     if(!confirm("정말로 삭제 하겠습니까?")){
       return
     }
 
-    console.log(userAddressBookId)
+    deleteDeliveryAddress(userAddressBookId).then(result => {
 
-    const formObj = {
-      userAddressBookId:userAddressBookId,
-    }
+      updateModal.hide()
 
-    getDeliveryAddress(formObj).then(result => {
+      if(result.result === 'fail'){
+        alert(result.message)
+        //initModalForm()
+        return
+      }
 
-      console.log(result)
-
+      // 화면 재 갱신
+      self.location = '/myPage/deliveryAddress?userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       if (e.response && e.response.status === 400) {
@@ -253,9 +256,7 @@
       }
       updateModal.hide()
     })
-
   }
-
 
   function initModalForm(){
       modalDeliveryName.value =''

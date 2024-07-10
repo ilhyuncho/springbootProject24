@@ -25,3 +25,12 @@ async function sendDeliveryAddress(formObj) {
         return response.data
     }
 }
+
+async function deleteDeliveryAddress(userAddressBookId){
+
+    const result = await axios.post(`/myInfo/deleteAddress/${userAddressBookId}`)
+
+    console.log(result)
+
+    return result.data
+}

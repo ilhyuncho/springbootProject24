@@ -96,6 +96,22 @@ public class myInfoRestController {
         return resultMap;
     }
 
+    @ApiOperation(value = "배송지 주소 삭제", notes = "")
+    @PostMapping("/deleteAddress/{userAddressBookId}")
+    public Map<String,String> postDeleteAddress(@PathVariable(name="userAddressBookId") Long userAddressBookId,
+                                                Principal principal) {
+
+        User user = userService.findUser(principal.getName());
+
+        log.error(userAddressBookId);
+
+        userAddressBookService.deleteAddressBook(user, userAddressBookId);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return resultMap;
+    }
+
 
 
 }

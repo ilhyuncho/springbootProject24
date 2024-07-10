@@ -12,5 +12,6 @@ public interface UserAddressBookService {
     UserAddressBookResDTO getUserAddressBookInfo(Long userAddressBookId);
     void registerAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO);
     void modifyAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO);
+    void deleteAddressBook(User user, Long userAddressBookId);
 
 }

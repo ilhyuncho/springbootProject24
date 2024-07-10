@@ -82,6 +82,15 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
         userAddressBook.setAddressBookInfo(userAddressBookReqDTO);
     }
 
+    @Override
+    public void deleteAddressBook(User user, Long userAddressBookId) {
+
+        UserAddressBook userAddressBook = userAddressBookRepository.findById(userAddressBookId)
+                .orElseThrow(() -> new NoSuchElementException("해당 배송 주소 정보가 존재하지않습니다"));
+
+        userAddressBookRepository.delete(userAddressBook);
+    }
+
     public static Boolean isSameDeliveryName(List<UserAddressBookResDTO> listUserAddressBook,
                                              UserAddressBookReqDTO userAddressBookReqDTO){
 
