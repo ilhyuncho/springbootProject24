@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -44,8 +45,6 @@ public class myInfoRestController {
 
         return listUserMission;
     }
-
-
     @ApiOperation(value = "배송 주소 정보 get", notes = "")
     @GetMapping("/addressInfo")
     //@PreAuthorize("principal.username != #userName")
@@ -58,6 +57,17 @@ public class myInfoRestController {
         log.error(userAddressBookResDTO);
 
         return userAddressBookResDTO;
+    }
+    @ApiOperation(value = "모든 배송 주소 정보 get", notes = "")
+    @GetMapping("/allAddressInfo")
+    //@PreAuthorize("principal.username != #userName")
+    public List<UserAddressBookResDTO> allAddressInfo(String userName){
+
+        User user = userService.findUser(userName);
+
+        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getListUserAddressBook(user);
+
+        return listUserAddressBook;
     }
 
     @ApiOperation(value = "배송지 추가 등록", notes = "")

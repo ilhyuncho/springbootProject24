@@ -10,6 +10,7 @@ public interface UserAddressBookService {
 
     List<UserAddressBookResDTO> getListUserAddressBook(User user);
     UserAddressBookResDTO getUserAddressBookInfo(Long userAddressBookId);
+    UserAddressBookResDTO getMainAddressInfo(User user);
     void registerAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO);
     void modifyAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO);
     void deleteAddressBook(User user, Long userAddressBookId);

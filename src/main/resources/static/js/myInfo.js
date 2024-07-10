@@ -11,6 +11,12 @@ async function getDeliveryAddress(formObj){
     return response.data
 }
 
+async function getAllDeliveryAddress(formObj){
+    const response = await axios.get(`/myInfo/allAddressInfo`, {params: formObj})
+    //  console.log(response)
+    return response.data
+}
+
 async function sendDeliveryAddress(formObj) {
     console.log(formObj)
 

@@ -42,6 +42,15 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     }
 
     @Override
+    public UserAddressBookResDTO getMainAddressInfo(User user) {
+
+        return userAddressBookRepository.findByUser(user).stream()
+                .filter(UserAddressBook::getIsMainAddress)
+                .map(UserAddressBookServiceImpl::entityToDTO)
+                .findFirst().orElse(null);
+    }
+
+    @Override
     public void registerAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO) {
 
         List<UserAddressBookResDTO> listUserAddressBook = getListUserAddressBook(user);
