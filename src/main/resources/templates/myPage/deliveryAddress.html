@@ -32,7 +32,9 @@
       <th:block th:each="addressBook:${responseDTO}">
         <div class="card" style="width: 25rem;">
           <div class="card-body">
-            <h5 class="card-title" style="color: red">[[${addressBook.deliveryName}]]</h5>
+            <h5 class="card-title" style="color: red">[[${addressBook.deliveryName}]]
+              <i th:if="${addressBook.mainAddressCheck == true}" class="fa-solid fa-circle" style="color: blueviolet"></i>
+            </h5>
             <h4 class="card-title">[[${addressBook.RecipientName}]]</h4>
             <p class="card-text">[[${addressBook.fullAddress}]]</p>
             <p class="card-text">[[${addressBook.RecipientPhoneNumber}]]</p>
@@ -99,6 +101,18 @@
             <input type="text" id="modalDeliveryRequest" size=40 maxlength=38 th:value="|배송 요청사항!!|">
           </div>
 
+          <div class="input-group mb-3">
+            <input type="hidden" id="modalMainAddressCheck" class="form-control">
+            <!-- 체크 표시-->
+            <span id="checkSolid" style="display: inline">
+              <i class="fa-solid fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(false)"></i>
+            </span>
+            <span id="checkRegular" style="display: none">
+              <i class="fa-regular fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(true)"></i>
+            </span>
+            <span th:text="| 기본 배송지로 설정|"></span>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
@@ -126,12 +140,38 @@
   const modalCityName = document.querySelector('#modalCityName');
   const modalStreet = document.querySelector('#modalStreet');
   const modalDetailAddress = document.querySelector('#modalDetailAddress');
+
   const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
+  const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
+
+
   const modalTitle = document.querySelector('.modalTitle');
   const modalType = document.querySelector('.modalType');
   const modalUserAddressBookId = document.querySelector('.modalUserAddressBookId');
 
+  const checkSolid = document.getElementById("checkSolid");
+  const checkRegular = document.getElementById("checkRegular");
+
   const currentUser = [[${#authentication.principal.username}]]
+
+
+  // 모달창의 [기본 배송지 설정] 체크 박스 클릭시
+  function checkMain(isCheck){
+
+    console.log(isCheck)
+
+    if(isCheck === true){
+      checkSolid.style.display = 'inline'
+      checkRegular.style.display = 'none'
+      modalMainAddressCheck.value = 'true'
+    }
+    else if(isCheck === false){
+      checkSolid.style.display = 'none'
+      checkRegular.style.display = 'inline'
+      modalMainAddressCheck.value = 'false'
+    }
+
+  }
 
   document.querySelector(".registerBtn").addEventListener("click", function (e){
     e.stopPropagation()
@@ -139,6 +179,13 @@
 
     modalTitle.innerHTML = '배송지 추가'
     modalType.value = 'register'
+
+    checkSolid.style.display='none'
+    checkRegular.style.display='inline'
+    modalMainAddressCheck.value='false'
+
+
+
     updateModal.show()
   }, false)
 
@@ -156,6 +203,7 @@
       detailAddress:modalDetailAddress.value,
       deliveryRequest:modalDeliveryRequest.value,
       userAddressBookId:modalUserAddressBookId.value,
+      mainAddressCheck:JSON.parse(modalMainAddressCheck.value),
       callType:modalType.value
     }
 
@@ -210,6 +258,9 @@
       modalStreet.value = result.street
       modalDetailAddress.value = result.detailAddress
       modalDeliveryRequest.value = result.deliveryRequest
+
+      // 기본 배송지 설정
+      checkMain(result.mainAddressCheck)
 
       updateModal.show()
 

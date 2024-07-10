@@ -22,7 +22,7 @@ public class UserAddressBook {
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="uId")
     private User user;
-
+    private Boolean isMainAddress;          // 기본 배송지 유무
     private String deliveryName;            // 배송지 명
     private String RecipientName;           // 받는 사람 이름
 
@@ -38,6 +38,7 @@ public class UserAddressBook {
         RecipientName = userAddressBookReqDTO.getRecipientName();
         RecipientPhoneNumber = userAddressBookReqDTO.getRecipientPhoneNumber();
         deliveryRequest = userAddressBookReqDTO.getDeliveryRequest();
+        isMainAddress = userAddressBookReqDTO.getMainAddressCheck();
     }
     public void setAddress(Address address){
         this.address = address;

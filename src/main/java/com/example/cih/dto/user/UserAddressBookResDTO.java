@@ -17,6 +17,7 @@ public class UserAddressBookResDTO {
     private String recipientName;
     private String recipientPhoneNumber;
     private String deliveryRequest;
+    private Boolean mainAddressCheck;
 
     private String zipcode;
     private String cityName;

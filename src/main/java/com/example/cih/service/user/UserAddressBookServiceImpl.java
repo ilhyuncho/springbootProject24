@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     public List<UserAddressBookResDTO> getListUserAddressBook(User user) {
 
         return userAddressBookRepository.findByUser(user).stream()
+                .sorted(Comparator.comparing(UserAddressBook::getIsMainAddress).reversed()) // 기본 배송지 맨 위로
                 .map(UserAddressBookServiceImpl::entityToDTO).collect(Collectors.toList());
     }
 
@@ -52,6 +54,12 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
             throw new OwnerCarNotFoundException("배송 주소록을 더 이상 만들수 없습니다");
         }
 
+        // 기본 배송지 체크
+        boolean isMainAddress = false;
+        if(userAddressBookReqDTO.getMainAddressCheck() || listUserAddressBook.size() == 0){
+            isMainAddress = true;
+        }
+
         UserAddressBook userAddressBook = UserAddressBook.builder()
                 .user(user)
                 .deliveryName(userAddressBookReqDTO.getDeliveryName())
@@ -59,6 +67,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
                 .RecipientPhoneNumber(userAddressBookReqDTO.getRecipientPhoneNumber())
                 .deliveryRequest(userAddressBookReqDTO.getDeliveryRequest())
                 .address(userAddressBookReqDTO.generateAddress())
+                .isMainAddress(isMainAddress) // 등록된 배송지 정보가 없으면 기본 배송지로 셋팅
                 .build();
 
         userAddressBookRepository.save(userAddressBook);
@@ -112,6 +121,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
                 .detailAddress(userAddressBook.getAddress().getDetailAddress())
                 .fullAddress(userAddressBook.getAddress().fullAddress())
                 .userAddressBookId(userAddressBook.getUserAddressBookId())
+                .mainAddressCheck(userAddressBook.getIsMainAddress())
                 .build();
     }
 
