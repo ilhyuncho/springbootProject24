@@ -95,16 +95,16 @@
                                     </div>
                                     <div class="input-group mb-3">
                                         <div class="h4 text-danger">
-                                            <span th:text="${mainAddressInfo.deliveryName}"></span>
+                                            <span id="deliveryName" th:text="${mainAddressInfo.deliveryName}"></span>
                                             &nbsp;
                                             <button type="button" class="btn btn-success btn-sm selectAddressBtn">변경</button>
                                         </div>
                                     </div>
                                     <div class="input-group mb-3">
-                                            <div class="h6" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></div>
+                                            <span id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></span>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <div class="h6" th:text="|${mainAddressInfo.fullAddress}|"></div>
+                                        <span id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></span>
                                     </div>
 
                                 </div><!-- <div class="card-body">-->
@@ -170,21 +170,20 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">배송지명</span>
-                        <input type="text" id="modalDeliveryName" th:value="회사1">
+                    <div class="row mt-3">
+                        <table>
+                            <thead>
+                            <tr>
+                            </tr>
+                            </thead>
+                            <tbody id="tableAddressList">
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">받는 분</span>
-                        <input type="text" id="modalRecipientName" th:value="홍길동">
-                    </div>
-
-
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+                    <button type="button" class="btn btn-primary modalSelectBtn">선택</button>
                     <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
                 </div>
             </div>
@@ -203,10 +202,16 @@
 
     const addressListModal = new bootstrap.Modal(document.querySelector(".addressListModal"))
 
+    const tableAddressList = document.getElementById("tableAddressList");
+
     const orderPrice = document.querySelector(".orderPrice")
     const expectedPrice = document.querySelector(".expectedPrice")
     const discountPrice = document.querySelector(".discountPrice")
     const deliveryFee = document.querySelector(".deliveryFee")
+    const deliveryName = document.querySelector("#deliveryName")
+    const recipientName = document.querySelector("#recipientName")
+    const fullAddress = document.querySelector("#fullAddress")
+
 
     const currentUser = [[${#authentication.principal.username}]]
 
@@ -401,18 +406,92 @@
         e.stopPropagation()
         e.preventDefault()
 
-        const formObj = {
-            userName:currentUser,
-        }
+        const formObj = {userName:currentUser}
 
         getAllDeliveryAddress(formObj).then(result => {
+            // 기존 행 삭제
+            while (tableAddressList.firstChild) {
+                tableAddressList.removeChild(tableAddressList.firstChild);
+            }
 
-            console.log(result)
+            let _html = `<div class="dialog">`
+
+            if(result && result.length > 0) {
+                result.forEach(function (e, i) {
+                    _html += `<div class="dialog">
+                        <div class="dialog_inner">
+                             <input type="hidden" name="modalSelectIndex">
+                             <div class="input-group mb-3">
+                                <input type="checkbox" class="checkboxModal" data-bs-target=${e.userAddressBookId} name="checkboxModal"
+                                    onchange="addressSelect( ${i}, this )"/>
+                                <h5>${e.deliveryName}</h5>
+                             </div>
+                             <div class="input-group mb-3">
+                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
+                               <p>${e.fullAddress}</p>
+                             </div>
+                             <hr class="my-4">
+                        </div>`
+                })
+            }
+            _html += '</div>'
+
+            const dom = new DOMParser().parseFromString(_html, 'text/html');
+            const dialog = dom.querySelector(".dialog");
+
+            let newRow = tableAddressList.insertRow(-1);
+            let newCell = newRow.insertCell(0);
+            newCell.appendChild(dialog);
+
             addressListModal.show()
 
         }).catch(e => {
             if (e.response && e.response.status === 400) {
+                alert('잘못된 요청입니다.. 전달값 확인!!')
+                console.log(e.response.data);
+            } else {
+                console.log(e.response.data);
+                alert(e.response.data)
+            }
+            addressListModal.hide()
+        })
 
+    }, false)
+
+    // [모달창] 에서 배송지 선택
+    document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
+
+        const checkboxes = document.getElementsByName("checkboxModal");
+        checkboxes.forEach((cb) => {
+            if(cb.checked === true){
+                getAddressInfo(cb.getAttribute("data-bs-target"))
+            }
+        })
+
+        addressListModal.hide()
+    }, false)
+
+    // [배송지 선택 모달창] 체크박스 선택시
+    function addressSelect(index, obj){
+        const checkboxes = document.getElementsByName("checkboxModal");
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        obj.checked = true;
+    }
+
+    // 전달된 주소록 정보 요청
+    function getAddressInfo(userAddressBookId) {
+        const formObj = {
+            userAddressBookId:userAddressBookId,
+        }
+
+        getDeliveryAddress(formObj).then(result => {
+            deliveryName.innerHTML = result.deliveryName
+            recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
+            fullAddress.innerHTML = result.fullAddress
+        }).catch(e => {
+            if (e.response && e.response.status === 400) {
                 alert('잘못된 요청입니다.. 전달값 확인!!')
                 console.log(e.response.data);
             } else {
@@ -421,8 +500,6 @@
             }
             updateModal.hide()
         })
-
-    }, false)
-
+    }
 
 </script>
