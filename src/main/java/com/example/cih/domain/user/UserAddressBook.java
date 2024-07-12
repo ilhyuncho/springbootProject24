@@ -31,6 +31,7 @@ public class UserAddressBook {
 
     @Embedded   // 임베디드 타입 (복합값)
     private Address address;
+    private Boolean isActive;               // 활성화 여부
 
 
     public void setAddressBookInfo(UserAddressBookReqDTO userAddressBookReqDTO){
@@ -42,5 +43,9 @@ public class UserAddressBook {
     }
     public void setAddress(Address address){
         this.address = address;
+    }
+
+    public void setIsActive(Boolean isActive){
+        this.isActive = isActive;
     }
 }

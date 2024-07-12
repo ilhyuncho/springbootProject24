@@ -130,6 +130,7 @@ public class ProjectSettingTest {
                     .deliveryRequest("문앞에 놓아주세요")
                     .RecipientPhoneNumber("01012349482")
                     .isMainAddress(true)
+                    .isActive(true)
                     .build();
             userAddressBookRepository.save(userAddressBook);
         });

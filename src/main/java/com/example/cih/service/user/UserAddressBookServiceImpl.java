@@ -28,6 +28,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     public List<UserAddressBookResDTO> getListUserAddressBook(User user) {
 
         return userAddressBookRepository.findByUser(user).stream()
+                .filter(UserAddressBook::getIsActive)
                 .sorted(Comparator.comparing(UserAddressBook::getIsMainAddress).reversed()) // 기본 배송지 맨 위로
                 .map(UserAddressBookServiceImpl::entityToDTO).collect(Collectors.toList());
     }
@@ -44,10 +45,12 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     @Override
     public UserAddressBookResDTO getMainAddressInfo(User user) {
 
-        return userAddressBookRepository.findByUser(user).stream()
-                .filter(UserAddressBook::getIsMainAddress)
+        UserAddressBookResDTO userAddressBookResDTO = userAddressBookRepository.findByUser(user).stream()
+                .filter(userAddressBook -> userAddressBook.getIsMainAddress() && userAddressBook.getIsActive())
                 .map(UserAddressBookServiceImpl::entityToDTO)
                 .findFirst().orElse(null);
+
+        return userAddressBookResDTO;
     }
 
     @Override
@@ -77,6 +80,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
                 .deliveryRequest(userAddressBookReqDTO.getDeliveryRequest())
                 .address(userAddressBookReqDTO.generateAddress())
                 .isMainAddress(isMainAddress) // 등록된 배송지 정보가 없으면 기본 배송지로 셋팅
+                .isActive(true)
                 .build();
 
         userAddressBookRepository.save(userAddressBook);
@@ -106,7 +110,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
         UserAddressBook userAddressBook = userAddressBookRepository.findById(userAddressBookId)
                 .orElseThrow(() -> new NoSuchElementException("해당 배송 주소 정보가 존재하지않습니다"));
 
-        userAddressBookRepository.delete(userAddressBook);
+        userAddressBook.setIsActive(false);
     }
 
     public static Boolean isSameDeliveryName(List<UserAddressBookResDTO> listUserAddressBook,
