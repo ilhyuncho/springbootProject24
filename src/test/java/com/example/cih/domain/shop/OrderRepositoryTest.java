@@ -1,6 +1,5 @@
 package com.example.cih.domain.shop;
 
-import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserRepository;
@@ -8,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
@@ -45,22 +43,11 @@ class OrderRepositoryTest {
         ShopItem shopItem1 = shopItemRepository.getById(1L);
         ShopItem shopItem2 = shopItemRepository.getById(2L);
 
-
-        // 주문 상품 생성
-//        OrderItem orderItem1 = OrderItem.createOrderItem(shopItem1, 2 );
-//        OrderItem orderItem2 = OrderItem.createOrderItem(shopItem2, 5 );
-//        OrderItem orderItem3 = OrderItem.createOrderItem(shopItem2, 8 );
-
         Order order = Order.builder()
                 .user(user)
                 .orderTime(LocalDateTime.now())
-                .delivery(new Delivery(user.getAddress()))
                 .orderItemList(new ArrayList<>())
                 .build();
-
-//        order.addOrderItem(orderItem1);
-//        order.addOrderItem(orderItem2);
-//        order.addOrderItem(orderItem3);
 
         Order save = orderRepository.save(order);
 

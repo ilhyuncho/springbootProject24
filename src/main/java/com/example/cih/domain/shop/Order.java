@@ -2,7 +2,6 @@ package com.example.cih.domain.shop;
 
 
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.dto.order.OrderReqDTO;
 import lombok.*;
@@ -44,10 +43,6 @@ public class Order {
 
     private DeliveryStatus deliveryStatus;            // 배송 상태
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DELIVERY_ID")   // 주 테이블(Order)에 외래 키 양방향
-    private Delivery delivery;          // 배송 정보
-
     @Column(name = "orderTime")
     private LocalDateTime orderTime;    // 주문 시간
 
@@ -60,7 +55,6 @@ public class Order {
                 .userAddressBook(userAddressBook)
                 .orderTime(LocalDateTime.now())
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
-               //.delivery(delivery)
                 .orderItemList(new ArrayList<>())
                 .build();
 

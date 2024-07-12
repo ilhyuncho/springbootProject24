@@ -6,7 +6,6 @@ import com.example.cih.domain.cart.Cart;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
-import com.example.cih.domain.delivery.Delivery;
 import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
@@ -45,8 +44,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long createOrder(User user, OrderReqDTO orderReqDTO){
-        // 배송 정보 생성
-        Delivery delivery = new Delivery(user.getAddress());
 
         UserAddressBook userAddressBook = userAddressBookRepository.findById(orderReqDTO.getUserAddressBookId())
                 .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
@@ -155,7 +152,6 @@ public class OrderServiceImpl implements OrderService {
 
         log.error("cancelOrder" + orderItem.getOrderItemId());
         orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
-       // orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
     }
 
     @Override
