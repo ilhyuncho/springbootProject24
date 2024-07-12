@@ -30,7 +30,7 @@ public class OrderItem extends ItemOptionEntity{
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 
-    private DeliveryStatus deliveryStatus;            // 배송 상태
+   // private DeliveryStatus deliveryStatus;            // 배송 상태
 
     private int orderPrice;                           // 실제 결제한 가격
     private int orderCount;
@@ -39,7 +39,7 @@ public class OrderItem extends ItemOptionEntity{
 
         OrderItem orderItem = OrderItem.builder()
                 .shopItem(shopItem)
-                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
+                //.deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
                 .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
                 .orderCount(orderDetailDTO.getItemCount())
                 .itemOptionId1(orderDetailDTO.getListOptionValue().get(0))
@@ -56,7 +56,7 @@ public class OrderItem extends ItemOptionEntity{
         this.order = order;
     }
 
-    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
-        this.deliveryStatus = deliveryStatus;
-    }
+//    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
+//        this.deliveryStatus = deliveryStatus;
+//    }
 }

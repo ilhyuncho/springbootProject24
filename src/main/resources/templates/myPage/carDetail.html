@@ -158,7 +158,7 @@
           <h5 class="modal-title">판매 현황</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body modal-body-show">
+        <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">판매 최소가격</span>
             <input type="text" class="form-control requiredPrice" id="modalRequiredPrice">
@@ -193,7 +193,7 @@
           <h5 class="modal-title">판매 취소</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body modal-body-show">
+        <div class="modal-body">
           <div class="input-group mb-3">
             <input type="text" class="form-control cancelCarName" readonly>
           </div>
@@ -215,12 +215,11 @@
           <h5 class="modal-title">누적 주행거리 갱신</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body modal-body-show">
+        <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">현재 km</span>
             <input type="text" class="form-control updateKmValue">
           </div>
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendUpdateKmBtn">갱신</button>
@@ -320,8 +319,6 @@
 
     registerSellingCar(formObj).then(result => {
 
-      alert(result.result)
-
       requiredPrice.value= ''
       owner.value=''
 
@@ -415,8 +412,6 @@
     console.log(formObj)
 
     updateCarKm(formObj).then(result => {
-
-      alert(result.result)
 
       updateKmModal.hide()
 

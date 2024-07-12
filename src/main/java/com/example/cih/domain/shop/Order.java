@@ -3,6 +3,7 @@ package com.example.cih.domain.shop;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.delivery.Delivery;
+import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.dto.order.OrderReqDTO;
 import lombok.*;
 
@@ -38,20 +39,28 @@ public class Order {
     private List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAddressBookId")   // 주 테이블(Order)에 외래 키 양방향
+    private UserAddressBook userAddressBook;
+
+    private DeliveryStatus deliveryStatus;            // 배송 상태
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVERY_ID")   // 주 테이블(Order)에 외래 키 양방향
     private Delivery delivery;          // 배송 정보
 
     @Column(name = "orderTime")
     private LocalDateTime orderTime;    // 주문 시간
 
-    public static Order createOrder(User userInfo, Delivery delivery, OrderReqDTO orderReqDTO, List<OrderItem> listOrderItem){
+    public static Order createOrder(User userInfo, UserAddressBook userAddressBook, OrderReqDTO orderReqDTO, List<OrderItem> listOrderItem){
         Order order = Order.builder()
                 .user(userInfo)
                 .totalPrice(orderReqDTO.getTotalPrice())
                 .totalDiscountPrice(orderReqDTO.getTotalDiscountPrice())
                 .deliveryFee(orderReqDTO.getDeliveryFee())
+                .userAddressBook(userAddressBook)
                 .orderTime(LocalDateTime.now())
-                .delivery(delivery)
+                .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
+               //.delivery(delivery)
                 .orderItemList(new ArrayList<>())
                 .build();
 
@@ -65,5 +74,9 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         orderItemList.add(orderItem);
         orderItem.setOrder(this);
+    }
+
+    public void changeDeliveryStatus(DeliveryStatus deliveryStatus){
+        this.deliveryStatus = deliveryStatus;
     }
 }

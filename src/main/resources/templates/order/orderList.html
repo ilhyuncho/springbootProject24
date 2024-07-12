@@ -46,7 +46,10 @@
                             <td>[[${dto.orderCount}]]</td>
                             <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.orderPrice * dto.orderCount}]]</td>
-                            <td>[[${dto.deliveryStatus}]]</td>
+
+                            <td><a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
+                               class="text-decoration-none"> [[${dto.deliveryStatus}]]</a></td>
+
                             <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
                                     <button type="button" class="btn btn-primary "
                                             th:onclick="cancelOrder([[${dto.orderItemId}]], this)">구매 취소</button>
@@ -83,14 +86,60 @@
         </div>
     </div>
 
+    <!-- 배송 현황 모달창-->
+    <div class="modal deliveryProcessModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">배송 현황</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">진행 상태</span>
+                        <input type="text" class="form-control modalDeliveryStatus">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">받는 사람</span>
+                        <input type="text" class="form-control modalRecipientName">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">연락처</span>
+                        <input type="text" class="form-control modalRecipientPhoneNumber">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">받는 주소</span>
+                        <input type="text" class="form-control modalFullAddress">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 배송 현황 모달창-->
+
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/order.js"></script>
+    <script src="/js/myInfo.js"></script>
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
 
+    const deliveryProcessModal = new bootstrap.Modal(document.querySelector(".deliveryProcessModal"))
+
+    const modalDeliveryStatus = document.querySelector(".modalDeliveryStatus")
+    const modalRecipientName = document.querySelector(".modalRecipientName")
+    const modalRecipientPhoneNumber = document.querySelector(".modalRecipientPhoneNumber")
+    const modalFullAddress = document.querySelector(".modalFullAddress")
 
 
     function cancelOrder(orderItemId, object){
@@ -107,6 +156,31 @@
         }).catch(e=>{
             if (e.response && e.response.status === 400) {
 
+                alert('잘못된 요청입니다.. 전달값 확인!!')
+                console.log(e.response.data);
+            } else {
+                console.log(e.response.data);
+                alert(e.response.data)
+            }
+        })
+    }
+
+    // 배송 현황 팝업창 보기
+    function showDeliveryStatus(orderId, object){
+
+        const formObj = {
+            orderId:orderId,
+        }
+        getOrderDeliveryProcess(formObj).then(result=>{
+
+            modalDeliveryStatus.value = result.deliveryStatus
+            modalRecipientName.value = result.recipientName
+            modalRecipientPhoneNumber.value = result.recipientPhoneNumber
+            modalFullAddress.value = result.fullAddress
+
+            deliveryProcessModal.show()
+        }).catch(e=>{
+            if (e.response && e.response.status === 400) {
                 alert('잘못된 요청입니다.. 전달값 확인!!')
                 console.log(e.response.data);
             } else {

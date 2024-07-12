@@ -93,6 +93,8 @@
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">배송지 정보</span>
                                     </div>
+                                    <input type="hidden" id="userAddressBookId" class="form-control" th:value="${mainAddressInfo.userAddressBookId}">
+
                                     <div class="input-group mb-3">
                                         <div class="h4 text-danger">
                                             <span id="deliveryName" th:text="${mainAddressInfo.deliveryName}"></span>
@@ -211,6 +213,7 @@
     const deliveryName = document.querySelector("#deliveryName")
     const recipientName = document.querySelector("#recipientName")
     const fullAddress = document.querySelector("#fullAddress")
+    const userAddressBookId = document.querySelector("#userAddressBookId")
 
 
     const currentUser = [[${#authentication.principal.username}]]
@@ -333,6 +336,7 @@
 
         let formObj = {
             deliveryFee: deliveryFee.value,
+            userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
             totalDiscountPrice: totalDiscountPrice,
             listOrderDetail: arrayItemInfo

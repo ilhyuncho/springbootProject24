@@ -2,7 +2,9 @@ package com.example.cih.controller.myPage;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.order.OrderDeliveryResDTO;
 import com.example.cih.dto.user.*;
+import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserMissionService;
 import com.example.cih.service.user.UserService;
@@ -30,6 +32,7 @@ public class myInfoRestController {
     private final UserMissionService userMissionService;
     private final UserAddressBookService userAddressBookService;
     private final UserService userService;
+    private final OrderService orderService;
 
     @ApiOperation(value = "나의 포인트 정보 조회", notes = "")
     @GetMapping("/myPoint")
@@ -53,8 +56,6 @@ public class myInfoRestController {
         //User user = userService.findUser(userName);
 
         UserAddressBookResDTO userAddressBookResDTO = userAddressBookService.getUserAddressBookInfo(userAddressBookId);
-
-        log.error(userAddressBookResDTO);
 
         return userAddressBookResDTO;
     }
@@ -120,6 +121,18 @@ public class myInfoRestController {
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
         return resultMap;
+    }
+
+    @ApiOperation(value = "배송 진행 상황 get", notes = "")
+    @GetMapping("/orderDeliveryProcess")
+    //@PreAuthorize("principal.username != #userName")
+    public OrderDeliveryResDTO orderDeliveryProcess(Long orderId){
+
+        //User user = userService.findUser(userName);
+
+        OrderDeliveryResDTO orderDeliveryProcess = orderService.getOrderDeliveryProcess(orderId);
+
+        return orderDeliveryProcess;
     }
 
 

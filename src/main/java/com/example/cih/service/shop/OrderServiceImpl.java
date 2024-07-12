@@ -7,12 +7,14 @@ import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.delivery.Delivery;
+import com.example.cih.domain.user.UserAddressBook;
+import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.order.OrderDeliveryResDTO;
 import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
-import com.example.cih.dto.shop.ItemOptionDTO;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,11 +41,15 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final UserService userService;
     private final ItemOptionService itemOptionService;
+    private final UserAddressBookRepository userAddressBookRepository;
 
     @Override
     public Long createOrder(User user, OrderReqDTO orderReqDTO){
         // 배송 정보 생성
         Delivery delivery = new Delivery(user.getAddress());
+
+        UserAddressBook userAddressBook = userAddressBookRepository.findById(orderReqDTO.getUserAddressBookId())
+                .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
 
         // 상세 구매 아이템 정보 생성
         List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
@@ -63,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
 
         }).collect(Collectors.toList());
 
-        Order order = Order.createOrder(user, delivery, orderReqDTO, listOrderItem);
+        Order order = Order.createOrder(user, userAddressBook, orderReqDTO, listOrderItem);
         Order save = orderRepository.save(order);
 
         return save.getOrderId();
@@ -90,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
                         .orderId(orderItem.getOrder().getOrderId())
                         .orderItemId(orderItem.getOrderItemId())
                         .orderCount(orderItem.getOrderCount())
-                        .deliveryStatus(orderItem.getDeliveryStatus().getName())
+                        .deliveryStatus(orderMap.get(orderItem.getOrder().getOrderId()).getDeliveryStatus().getName())
                         .shopItemId(orderItem.getShopItem().getShopItemId())
                         .itemName(orderItem.getShopItem().getItemName())
                         .orderPrice(orderItem.getOrderPrice())
@@ -148,7 +154,30 @@ public class OrderServiceImpl implements OrderService {
                 });
 
         log.error("cancelOrder" + orderItem.getOrderItemId());
+        orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+       // orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    }
 
-        orderItem.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    @Override
+    public OrderDeliveryResDTO getOrderDeliveryProcess(Long OrderId) {
+
+        Order order = orderRepository.findById(OrderId)
+                .orElseThrow(() -> new ItemNotFoundException("주문 정보가 존재하지않습니다"));
+
+        UserAddressBook userAddressBook = order.getUserAddressBook();
+
+        OrderDeliveryResDTO orderDeliveryResDTO = OrderDeliveryResDTO.builder()
+                        .orderId(order.getOrderId())
+                        .deliveryStatus(order.getDeliveryStatus().getName())
+                        .deliveryName(userAddressBook.getDeliveryName())
+                        .recipientName(userAddressBook.getRecipientName())
+                        .deliveryRequest(userAddressBook.getDeliveryRequest())
+                        .fullAddress(userAddressBook.getAddress().fullAddress())
+                        .recipientPhoneNumber(userAddressBook.getRecipientPhoneNumber())
+                        .build();
+
+        log.error(orderDeliveryResDTO);
+
+        return orderDeliveryResDTO;
     }
 }
