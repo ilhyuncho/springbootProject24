@@ -642,16 +642,19 @@
         obj.checked = true;
     }
 
-    // 전달된 주소록 정보 요청
-    function getAddressInfo(userAddressBookId) {
+    // 전달된 주소록 정보 요청 [배송지 선택]
+    function getAddressInfo(addressBookId) {
         const formObj = {
-            userAddressBookId:userAddressBookId,
+            userAddressBookId:addressBookId,
         }
 
+        console.log('getAddressInfo()  : ' + addressBookId)
         getDeliveryAddress(formObj).then(result => {
             deliveryName.innerHTML = result.deliveryName
             recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
             fullAddress.innerHTML = result.fullAddress
+            userAddressBookId.value = addressBookId
+
         }).catch(e => {
             if (e.response && e.response.status === 400) {
                 alert('잘못된 요청입니다.. 전달값 확인!!')

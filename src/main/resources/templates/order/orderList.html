@@ -47,13 +47,19 @@
                             <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.orderPrice * dto.orderCount}]]</td>
 
-                            <td><a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
-                               class="text-decoration-none"> [[${dto.deliveryStatus}]]</a></td>
+                            <td>
+                                <div th:if="${dto.deliveryStatus != '주문 취소'}">
+                                    <a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
+                                       class="text-decoration-none"> [[${dto.deliveryStatus}]]</a>
+                                </div>
+                                <div th:unless="${dto.deliveryStatus != '주문 취소'}">
+                                      [[${dto.deliveryStatus}]]
+                                </div>
+                            </td>
 
                             <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
                                     <button type="button" class="btn btn-primary "
-                                            th:onclick="cancelOrder([[${dto.orderItemId}]], this)">구매 취소</button>
-                                </a>
+                                            th:onclick="cancelOrder([[${dto.orderItemId}]], this)">구매 취소</button></a>
                             </td>
                         </tr>
                         </tbody>
