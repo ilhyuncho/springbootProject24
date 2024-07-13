@@ -57,9 +57,7 @@ public class myInfoController {
 
         User user = userService.findUser(userName);
 
-        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getListUserAddressBook(user);
-
-        //listUserAddressBook.forEach(log::error);
+        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getAllUserAddressBookInfo(user);
 
         model.addAttribute("responseDTO", listUserAddressBook);
 

@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/myInfo")
@@ -66,9 +67,7 @@ public class myInfoRestController {
 
         User user = userService.findUser(userName);
 
-        List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getListUserAddressBook(user);
-
-        return listUserAddressBook;
+        return userAddressBookService.getAllUserAddressBookInfo(user);
     }
 
     @ApiOperation(value = "배송지 추가 등록", notes = "")

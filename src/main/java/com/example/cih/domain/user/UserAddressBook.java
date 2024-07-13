@@ -45,7 +45,12 @@ public class UserAddressBook {
         this.address = address;
     }
 
-    public void setIsActive(Boolean isActive){
+    public void setActive(Boolean isActive){
         this.isActive = isActive;
     }
+    public void setMainAddress(Boolean isMainAddress){
+        this.isMainAddress = isMainAddress;
+    }
+
+
 }
