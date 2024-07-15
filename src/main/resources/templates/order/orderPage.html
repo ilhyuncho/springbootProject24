@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<th:block layout:fragment="css">
+    <style>
+        /*.my_btn {*/
+        /*    background-color: blue;*/
+        /*    color: white;*/
+        /*    border: none;*/
+        /*    width: 70px;*/
+        /*    height: 35px;*/
+        /*    padding: 10px 30px;*/
+        /*}*/
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">주문 결제</h5>
+
+
+<!--                    ////////////////////////////////////////////////////////////////////////-->
+                    <div class="card mb-3" style="max-width: 1040px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="card-body">
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">배송지 정보</span>
+                                    </div>
+
+                                    <input type="hidden" id="userAddressBookId" class="form-control"
+                                           th:value="${mainAddressInfo != null ? mainAddressInfo.userAddressBookId : 0}">
+
+                                    <div th:if="${mainAddressInfo == null}">
+                                        <div class="input-group mb-3">
+                                            <button type="button" class="btn btn-primary"
+                                                    th:onclick="registerAddress()">배송지 추가하기</button>
+                                        </div>
+                                    </div>
+                                    <div th:unless="${mainAddressInfo == null}">
+                                        <div class="input-group mb-3">
+                                            <div class="h4 text-danger">
+                                                <span id="deliveryName" th:text="${mainAddressInfo.deliveryName}"></span>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-success btn-sm"
+                                                 th:onclick="selectAddress()" >변경</button>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                                <span id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></span>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></span>
+                                        </div>
+                                    </div>
+                                </div><!-- <div class="card-body">-->
+
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="card-body">
+
+                                    <div class="my-4">
+                                        <div class="float-end">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">상품 금액</span>
+                                                <label>
+                                                    <input type="text" class="form-control orderPrice"  readonly>
+                                                </label>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">배송비</span>
+                                                <label>
+                                                    <input type="text" class="form-control deliveryFee" readonly>
+                                                </label>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">상품 할인</span>
+                                                <label>
+                                                    <input type="text" class="form-control discountPrice" readonly>
+                                                </label>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">결제 예정 금액</span>
+                                                <label>
+                                                    <input type="text" class="form-control expectedPrice" readonly>
+                                                </label>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary submitBtn">주문 하기</button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<!--                    //////////////////////////////////////////-->
+
+
+
+                </div><!-- <div class="card-body">-->
+            </div>
+        </div>
+    </div>
+
+    <!-- 배송지 리스트 모달창-->
+    <div class="modal addressListModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">배송지 변경</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row mt-3">
+                        <table>
+                            <thead>
+                            <tr>
+                            </tr>
+                            </thead>
+                            <tbody id="tableAddressList">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary modalSelectBtn">선택</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 배송지 리스트 모달창-->
+
+
+    <!-- 주소록 등록을 위한 모달창-->
+    <div class="modal registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <input type="hidden" class="form-control modalType">
+                    <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">배송지명</span>
+                        <input type="text" id="modalDeliveryName" th:value="회사1">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">받는 분</span>
+                        <input type="text" id="modalRecipientName" th:value="홍길동">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">연락처</span>
+                        <input type="tel" id="modalRecipientPhoneNumber" th:value="010-1223-9384">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">우편번호</span>
+                        <input type="text" id="modalZipcode" th:value="|123-345|">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">국가</span>
+                        <input type="text" id="modalCountry" size=40 maxlength=38 th:value="|대한민국|">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">도시명</span>
+                        <input type="text" id="modalCityName" size=40 maxlength=38 th:value="|부천시|">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">주소</span>
+                        <input type="text" id="modalStreet" size=40 maxlength=38 th:value="|수도로123번길44|">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상세주소</span>
+                        <input type="text" id="modalDetailAddress" size=40 maxlength=38 th:value="|101동405호|">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">배송 요청사항</span>
+                        <input type="text" id="modalDeliveryRequest" size=40 maxlength=38 th:value="|배송 요청사항!!|">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="hidden" id="modalMainAddressCheck" class="form-control">
+                        <!-- 체크 표시-->
+                        <span id="checkSolid" style="display: inline">
+                          <i class="fa-solid fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(false)"></i>
+                        </span>
+                        <span id="checkRegular" style="display: none">
+                          <i class="fa-regular fa-circle-check"  style="cursor:pointer" th:onclick="javascript:checkMain(true)"></i>
+                        </span>
+                        <span th:text="| 기본 배송지로 설정|"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 주소록 등록을 위한 모달창-->
+
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/order.js"></script>
+    <script src="/js/myInfo.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const addressListModal = new bootstrap.Modal(document.querySelector(".addressListModal"))
+    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+
+    const tableAddressList = document.getElementById("tableAddressList");
+
+    const orderPrice = document.querySelector(".orderPrice")
+    const expectedPrice = document.querySelector(".expectedPrice")
+    const discountPrice = document.querySelector(".discountPrice")
+    const deliveryFee = document.querySelector(".deliveryFee")
+    const deliveryName = document.querySelector("#deliveryName")
+    const recipientName = document.querySelector("#recipientName")
+    const fullAddress = document.querySelector("#fullAddress")
+    const userAddressBookId = document.querySelector("#userAddressBookId")
+
+    const modalDeliveryName = document.querySelector('#modalDeliveryName');
+    const modalRecipientName = document.querySelector('#modalRecipientName');
+    const modalRecipientPhoneNumber = document.querySelector('#modalRecipientPhoneNumber');
+    const modalZipcode = document.querySelector('#modalZipcode');
+    const modalCountry = document.querySelector('#modalCountry');
+    const modalCityName = document.querySelector('#modalCityName');
+    const modalStreet = document.querySelector('#modalStreet');
+    const modalDetailAddress = document.querySelector('#modalDetailAddress');
+    const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
+    const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
+    const modalTitle = document.querySelector('.modalTitle');
+    const modalType = document.querySelector('.modalType');
+
+
+    const currentUser = [[${#authentication.principal.username}]]
+
+    // 결제 금액 계산 호출
+    reCalculation()
+
+    // 상품 선택 변경 ( checkbox )
+    document.querySelectorAll(".checkbox").forEach(function (item){
+        item.addEventListener('change', function(){
+            // 결제 금액 재 계산
+            reCalculation()
+        });
+    }, false)
+
+    // 상품 갯수 수동 변경
+    document.querySelectorAll(".itemCount").forEach(function (item,idx){
+        item.addEventListener('change', function(){
+
+            const inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            const p_count = inputTag.value;
+
+            if(p_count >= 0){
+                inputTag.setAttribute('value', p_count )
+                inputTag.value = p_count
+            }
+            else{
+                inputTag.setAttribute('value', 0 )
+                inputTag.value = 0
+            }
+            // 결제 금액 재 계산
+            reCalculation()
+        });
+    }, false)
+
+    // 주문 수량 갯수 변경 ( up, down button )
+    document.querySelectorAll(".updownCount").forEach(function (item,idx){
+        // 갯수 차감
+        item.children[0].addEventListener('click', function(){
+            changeItemCount(idx, -1);
+        });
+        // 갯수 증가
+        item.children[2].addEventListener('click', function(){
+            changeItemCount(idx, 1);
+        });
+
+    }, false)
+
+    // 주문 수량 변경
+    function changeItemCount(idx, value){
+
+        const inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
+        const p_count = parseInt(inputTag.getAttribute('value'));
+
+        const changeCount = p_count + value
+        if( changeCount >= 0 ){
+            inputTag.setAttribute('value', changeCount )
+            inputTag.value = changeCount
+
+            // 결제 금액 재 계산
+            reCalculation()
+        }
+    }
+
+    // 주문 하기
+    document.querySelector(".submitBtn").addEventListener("click", function(e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        let totalPrice = 0;
+        let totalDiscountPrice = 0;
+        let arrayItemInfo = [];
+        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
+
+            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
+            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
+            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
+            const ItemOptionId1Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+0+']');
+            const ItemOptionId2Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+1+']');
+            const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
+
+            if( selectedTag.checked === true){
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
+                const itemCount = parseInt(itemCountTag.getAttribute('value'));
+                const itemId = parseInt(itemIdTag.getAttribute('value'));
+                const ItemOptionId1 = parseInt(ItemOptionId1Tag.getAttribute('value'));
+                const ItemOptionId2 = ItemOptionId2Tag != null ? parseInt(ItemOptionId2Tag.getAttribute('value')) : 0;
+                const cartId = parseInt(cartIdTag.getAttribute('value'));
+
+                totalPrice += itemPrice * itemCount;
+                totalDiscountPrice += discountPrice * itemCount;
+                console.log(idx + "-> itemId : " + itemId + ", ItemOptionId1 : " + ItemOptionId1 + ", ItemOptionId2 : " + ItemOptionId2)
+
+                const itemOptionList = []
+                itemOptionList.push({optionValue:ItemOptionId1})
+                if( ItemOptionId2 > 0 ){
+                    itemOptionList.push({optionValue:ItemOptionId2})
+                }
+
+                console.log(ItemOptionId2)
+
+                const itemInfo = {
+                    itemId: itemId,
+                    cartId: cartId,
+                    itemCount: itemCount,
+                    itemPrice: itemPrice,
+                    discountPrice: discountPrice,
+                    itemOptionList:itemOptionList,
+                };
+                arrayItemInfo.push(itemInfo);
+            }
+        }, false)
+
+        if(arrayItemInfo.length === 0){
+            alert("상품을 선택하세요~!!!")
+            return;
+        }
+
+        if(userAddressBookId.value === '0' ){
+            alert("배송지를 입력하세요~!!!")
+            return;
+        }
+
+        let formObj = {
+            deliveryFee: deliveryFee.value,
+            userAddressBookId: userAddressBookId.value,
+            totalPrice: totalPrice,
+            totalDiscountPrice: totalDiscountPrice,
+            listOrderDetail: arrayItemInfo
+        }
+
+        ////////////////////////////////////////////////////
+        addOrderItem(formObj).then(result => {
+            //console.log(result)
+            alert("정상적으로 주문 되었습니다")
+
+            // 주문 페이지 로 이동
+            self.location = '/order/list?userName=' + [[${#authentication.principal.username}]]
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+    // 결제 금액 다시 계산
+    function reCalculation(){
+
+        var totalOriginalPrice = 0;
+        var totalDiscountPrice = 0;
+        var totalPrice = 0;
+        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
+
+            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
+            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
+            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
+            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
+
+            if(selectedTag.checked){
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
+                const itemCount = parseInt(itemCountTag.getAttribute('value'));
+
+                totalOriginalPrice += itemPrice * itemCount
+                totalDiscountPrice += discountPrice * itemCount
+                totalPrice += (itemPrice - discountPrice) * itemCount
+            }
+        }, false)
+
+        // 배송비 계산
+        const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
+
+        orderPrice.value = totalOriginalPrice
+        deliveryFee.value = deliveryPrice
+        discountPrice.value = totalDiscountPrice
+        expectedPrice.value = totalPrice + deliveryPrice
+    }
+
+    // 상품 선택 삭제
+    function removeCart(cartId, obj){
+        if(!confirm("해당 항목을 정말 삭제 하겠습니까??")){
+            return
+        }
+
+        removeCartItem(cartId).then(result=>{
+            alert(result.cartId + ' 상품이 삭제 되었습니다')
+
+            // 장바구니 페이지 다시 로딩
+            self.location = '/cart/list'
+
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
+
+    // [배송지 변경] 버튼 클릭
+    function selectAddress(){
+
+        const formObj = {userName:currentUser}
+
+        getAllDeliveryAddress(formObj).then(result => {
+            // 기존 행 삭제
+            while (tableAddressList.firstChild) {
+                tableAddressList.removeChild(tableAddressList.firstChild);
+            }
+
+            let _html = `<div class="dialog">`
+
+            if(result && result.length > 0) {
+                result.forEach(function (e, i) {
+                    _html += `<div class="dialog">
+                        <div class="dialog_inner">
+                             <input type="hidden" name="modalSelectIndex">
+                             <div class="input-group mb-3">
+                                <input type="checkbox" class="checkboxModal" data-bs-target=${e.userAddressBookId} name="checkboxModal"
+                                    onchange="addressSelect( ${i}, this )"/>
+                                <h5>${e.deliveryName}</h5>
+                             </div>
+                             <div class="input-group mb-3">
+                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
+                               <p>${e.fullAddress}</p>
+                             </div>
+                             <hr class="my-4">
+                        </div>`
+                })
+            }
+            _html += '</div>'
+
+            const dom = new DOMParser().parseFromString(_html, 'text/html');
+            const dialog = dom.querySelector(".dialog");
+
+            let newRow = tableAddressList.insertRow(-1);
+            let newCell = newRow.insertCell(0);
+            newCell.appendChild(dialog);
+
+            addressListModal.show()
+
+        }).catch(e => {
+            if (e.response && e.response.status === 400) {
+                alert('잘못된 요청입니다.. 전달값 확인!!')
+                console.log(e.response.data);
+            } else {
+                console.log(e.response.data);
+                alert(e.response.data)
+            }
+            addressListModal.hide()
+        })
+    }
+
+    // 배송지 추가하기
+    function registerAddress() {
+
+        modalTitle.innerHTML = '배송지 추가'
+        modalType.value = 'register'
+
+        checkSolid.style.display='none'
+        checkRegular.style.display='inline'
+        modalMainAddressCheck.value='false'
+
+        registerModal.show()
+    }
+
+    // [모달창] 배송지 선택
+    document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
+
+        const checkboxes = document.getElementsByName("checkboxModal");
+        checkboxes.forEach((cb) => {
+            if(cb.checked === true){
+                getAddressInfo(cb.getAttribute("data-bs-target"))
+            }
+        })
+
+        addressListModal.hide()
+    }, false)
+
+
+    // [배송지 추가] 요청 처리
+    document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+
+        const formObj = {
+            deliveryName:modalDeliveryName.value,
+            recipientName:modalRecipientName.value,
+            recipientPhoneNumber:modalRecipientPhoneNumber.value,
+            zipcode:modalZipcode.value,
+            country:modalCountry.value,
+            cityName:modalCityName.value,
+            street:modalStreet.value,
+            detailAddress:modalDetailAddress.value,
+            deliveryRequest:modalDeliveryRequest.value,
+            mainAddressCheck:JSON.parse(modalMainAddressCheck.value),
+            callType:'register'
+        }
+
+        sendDeliveryAddress(formObj).then(result => {
+
+            registerModal.hide()
+
+            if(result.result === 'fail'){
+                alert(result.message)
+                //initModalForm()
+                return
+            }
+
+            // 화면 재 갱신
+            self.location = '/cart/list'
+        }).catch(e => {
+            if (e.response && e.response.status === 400) {
+
+                alert('잘못된 요청입니다.. 전달값 확인!!')
+                console.log(e.response.data);
+            } else {
+                console.log(e.response.data);
+                alert(e.response.data.message)
+            }
+            registerModal.hide()
+        })
+    }, false)
+
+
+    // [배송지 선택 모달창] 체크박스 선택시
+    function addressSelect(index, obj){
+        const checkboxes = document.getElementsByName("checkboxModal");
+        checkboxes.forEach((cb) => {
+            cb.checked = false;
+        })
+        obj.checked = true;
+    }
+
+    // 전달된 주소록 정보 요청 [배송지 선택]
+    function getAddressInfo(addressBookId) {
+        const formObj = {
+            userAddressBookId:addressBookId,
+        }
+
+        console.log('getAddressInfo()  : ' + addressBookId)
+        getDeliveryAddress(formObj).then(result => {
+            deliveryName.innerHTML = result.deliveryName
+            recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
+            fullAddress.innerHTML = result.fullAddress
+            userAddressBookId.value = addressBookId
+
+        }).catch(e => {
+            if (e.response && e.response.status === 400) {
+                alert('잘못된 요청입니다.. 전달값 확인!!')
+                console.log(e.response.data);
+            } else {
+                console.log(e.response.data);
+                alert(e.response.data)
+            }
+            updateModal.hide()
+        })
+    }
+
+</script>

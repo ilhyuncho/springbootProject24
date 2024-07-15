@@ -105,7 +105,7 @@
         alert('소모품 내역 수정이 완료 되었습니다')
 
           // 화면 재 갱신
-           self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
+          self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
                + '&userName=' + [[${#authentication.principal.username}]]
 
       }).catch(e => {

@@ -22,3 +22,14 @@ async function cancelOrderItem(orderItemId) {
     //console.log(response)
     return response.data
 }
+async function addOrderTemporary(formObj) {
+    console.log(formObj)
+
+    // <>[\\]^`{|} 같은 문자가 쿼리스트링에 포함되면 에러가 발생 해서 encodeURI 랩핑
+    // The valid characters are defined in RFC 7230 and RFC 3986
+
+    const response = await axios.post(`/order/addOrderTemporary`, formObj);
+
+    console.log(response)
+    return response.data
+}

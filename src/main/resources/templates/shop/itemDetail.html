@@ -269,7 +269,7 @@
     })
   }, false)
 
-  // [바로 주문] 클릭
+  // 바로 주문하기
   document.querySelector(".orderBtn").addEventListener("click", function(e) {
     e.preventDefault()
     e.stopPropagation()
@@ -286,29 +286,22 @@
       itemOptionList.push({optionValue:pItemOptionValue2.value})
     }
 
-    let arrayItemInfo = [];
-    const itemInfo = {
-      itemId: shopItemId,
+    let formObj = {
+      shopItemId: shopItemId,
+      itemName: itemName,
       itemCount: pItemCount.value,
       itemPrice: pOriginalPrice.value,
-      itemOptionList: itemOptionList,
-      discountPrice: pTotalDiscountPrice.value
-    };
-    arrayItemInfo.push(itemInfo);
-
-    let formObj = {
-      deliveryFee: pDeliveryFee.value,
-      totalPrice: pExpectedPrice.value,
-      listOrderDetail: arrayItemInfo
+      itemOptionList:itemOptionList,
     }
 
-    //////////////////////////////////////////////////
-    addOrderItem(formObj).then(result => {
-      //console.log(result)
-      alert("정상적으로 주문 되었습니다")
+    ////////////////////////////////////////////////////
+    addOrderTemporary(formObj).then(result => {
+      //alert("정상적으로 장바구니에 담겼습니다")
 
-      // 장바구니 페이지 로 이동
-      self.location = '/order/list'
+      console.log('result.orderTemporaryId : ' + result.orderTemporaryId)
+
+      // 주문서 페이지 로 이동
+      self.location = '/order/orderPage/' + result.orderTemporaryId
 
     }).catch(e => {
       console.log(e)

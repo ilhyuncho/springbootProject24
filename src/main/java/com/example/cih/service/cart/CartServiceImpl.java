@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
         return listDTO;
     }
     @Override
-    public void addCart(CartReqDTO cartReqDTO, String userName) {
+    public Long addCart(CartReqDTO cartReqDTO, String userName) {
 
         User user = userService.findUser(userName);
 
@@ -98,7 +98,7 @@ public class CartServiceImpl implements CartService {
                         Long.parseLong(cartReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
                 .build();
 
-        cartRepository.save(cart);
+        return cartRepository.save(cart).getCartId();
     }
     @Override
     public void modify(CartReqDTO cartReqDTO) {

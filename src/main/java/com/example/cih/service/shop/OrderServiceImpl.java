@@ -4,16 +4,21 @@ import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.common.exception.orderNotFoundException;
 import com.example.cih.domain.cart.Cart;
 import com.example.cih.domain.cart.CartRepository;
+import com.example.cih.domain.notification.EventNotification;
+import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.cart.CartReqDTO;
 import com.example.cih.dto.order.OrderDeliveryResDTO;
 import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
 import com.example.cih.dto.order.OrderViewDTO;
+import com.example.cih.service.common.CommonUtils;
+import com.example.cih.service.notification.NotificationService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,10 +43,12 @@ public class OrderServiceImpl implements OrderService {
     private final ShopItemRepository shopItemRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
-    private final UserService userService;
-    private final ItemOptionService itemOptionService;
     private final UserAddressBookRepository userAddressBookRepository;
+    private final OrderTemporaryRepository orderTemporaryRepository;
 
+    private final ItemOptionService itemOptionService;
+    private final UserService userService;
+    private final NotificationService notificationService;
     @Override
     public Long createOrder(User user, OrderReqDTO orderReqDTO){
 
@@ -152,6 +159,34 @@ public class OrderServiceImpl implements OrderService {
 
         log.error("cancelOrder" + orderItem.getOrderItemId());
         orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    }
+
+    @Override
+    public Long addOrderTemporary(CartReqDTO cartReqDTO, User user) {
+
+        ShopItem shopItem = shopItemRepository.findByItemName(cartReqDTO.getItemName())
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
+        // 이벤트 체크
+        EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
+
+        // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
+        int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
+
+        OrderTemporary orderTemporary = OrderTemporary.builder()
+                .shopItem(shopItem)
+                .itemCount(cartReqDTO.getItemCount())
+                .discountPrice(discountPrice)
+                .user(user)
+                // 아이템 옵션 set
+                .itemOptionId1(Long.valueOf(cartReqDTO.getItemOptionList().get(0).getOptionValue()))
+                .itemOptionId2(cartReqDTO.getItemOptionList().size() > 1 ?
+                        Long.parseLong(cartReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
+                .build();
+
+        OrderTemporary saveOrderTemporary = orderTemporaryRepository.save(orderTemporary);
+
+        return saveOrderTemporary.getOrderTemporaryId();
     }
 
     @Override
