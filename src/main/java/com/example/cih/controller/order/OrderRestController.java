@@ -1,12 +1,9 @@
 package com.example.cih.controller.order;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.cart.CartReqDTO;
+import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.dto.order.OrderReqDTO;
-import com.example.cih.service.buyingCar.BuyingCarService;
-import com.example.cih.service.cart.CartService;
 import com.example.cih.service.shop.OrderService;
-import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -53,12 +50,12 @@ public class OrderRestController {
 
     @ApiOperation(value = "바로 주문 내역 임시 저장", notes = "즉시 주문하기 실행")
     @PostMapping("/addOrderTemporary")
-    public Map<String, String> postAddOrderTemporary(@Valid @RequestBody CartReqDTO cartReqDTO,
+    public Map<String, String> postAddOrderTemporary(@Valid @RequestBody ItemBuyReqDTO itemBuyReqDTO,
                                             Principal principal){
 
         User user = userService.findUser(principal.getName());
 
-        Long orderTemporaryId = orderService.addOrderTemporary(cartReqDTO, user);
+        Long orderTemporaryId = orderService.addOrderTemporary(itemBuyReqDTO, user);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

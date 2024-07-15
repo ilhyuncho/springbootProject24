@@ -6,7 +6,7 @@ import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.cart.Cart;
-import com.example.cih.dto.cart.CartReqDTO;
+import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.dto.cart.CartDetailResDTO;
 import com.example.cih.service.common.CommonUtils;
@@ -72,11 +72,11 @@ public class CartServiceImpl implements CartService {
         return listDTO;
     }
     @Override
-    public Long addCart(CartReqDTO cartReqDTO, String userName) {
+    public Long addCart(ItemBuyReqDTO itemBuyReqDTO, String userName) {
 
         User user = userService.findUser(userName);
 
-        ShopItem shopItem = shopItemRepository.findByItemName(cartReqDTO.getItemName())
+        ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
         // 이벤트 체크
@@ -87,30 +87,30 @@ public class CartServiceImpl implements CartService {
 
         Cart cart = Cart.builder()
                 .shopItem(shopItem)
-                .itemCount(cartReqDTO.getItemCount())
+                .itemCount(itemBuyReqDTO.getItemCount())
                 .discountPrice(discountPrice)
                 .user(user)
                 .isActive(true)
                 .metricWeight(10)   // 학습용
                 // 아이템 옵션 set
-                .itemOptionId1(Long.valueOf(cartReqDTO.getItemOptionList().get(0).getOptionValue()))
-                .itemOptionId2(cartReqDTO.getItemOptionList().size() > 1 ?
-                        Long.parseLong(cartReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
+                .itemOptionId1(Long.valueOf(itemBuyReqDTO.getItemOptionList().get(0).getOptionValue()))
+                .itemOptionId2(itemBuyReqDTO.getItemOptionList().size() > 1 ?
+                        Long.parseLong(itemBuyReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
                 .build();
 
         return cartRepository.save(cart).getCartId();
     }
     @Override
-    public void modify(CartReqDTO cartReqDTO) {
+    public void modify(ItemBuyReqDTO itemBuyReqDTO) {
 
-        Cart cart = cartRepository.findById(cartReqDTO.getCartId())
+        Cart cart = cartRepository.findById(itemBuyReqDTO.getCartId())
                 .orElseThrow(() -> {
                     log.info("User expected to delete cart but was empty. cartId = '{}',"
-                            , cartReqDTO.getCartId());
+                            , itemBuyReqDTO.getCartId());
                     return new ItemNotFoundException("선택 상품이 없습니다");
                 });
 
-        cart.changeItemCount(cartReqDTO.getItemCount());
+        cart.changeItemCount(itemBuyReqDTO.getItemCount());
 
         cartRepository.save(cart);
     }

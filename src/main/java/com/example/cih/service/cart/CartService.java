@@ -1,7 +1,7 @@
 package com.example.cih.service.cart;
 
 import com.example.cih.domain.cart.Cart;
-import com.example.cih.dto.cart.CartReqDTO;
+import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.dto.cart.CartDetailResDTO;
 
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
 public interface CartService {
 
     List<CartDetailResDTO> getCartAll(String userName);
-    Long addCart(CartReqDTO cartReqDTO, String userName);
-    void modify(CartReqDTO cartReqDTO);
+    Long addCart(ItemBuyReqDTO itemBuyReqDTO, String userName);
+    void modify(ItemBuyReqDTO itemBuyReqDTO);
     Cart deleteInCart(Long cartId);
 
 }

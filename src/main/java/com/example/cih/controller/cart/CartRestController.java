@@ -2,7 +2,7 @@ package com.example.cih.controller.cart;
 
 
 import com.example.cih.domain.cart.Cart;
-import com.example.cih.dto.cart.CartReqDTO;
+import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.service.cart.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class CartRestController {
 
     @ApiOperation(value = "장바구니 상품 넣기", notes = "아이템 add 처리")
     @PostMapping("/add")
-    public Map<String,String> postAdd(@Valid @RequestBody CartReqDTO cartReqDTO,
+    public Map<String,String> postAdd(@Valid @RequestBody ItemBuyReqDTO itemBuyReqDTO,
                           Principal principal){
 
-        cartService.addCart(cartReqDTO, principal.getName());
+        cartService.addCart(itemBuyReqDTO, principal.getName());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
@@ -49,10 +49,10 @@ public class CartRestController {
     }
     @ApiOperation(value="장바구니 아이템 수량 변경", notes = "PUT 방식으로")
     @PutMapping(value="/{cartId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> postModify( @PathVariable("cartId") Long cartId, @RequestBody CartReqDTO cartReqDTO){
+    public Map<String, Long> postModify( @PathVariable("cartId") Long cartId, @RequestBody ItemBuyReqDTO itemBuyReqDTO){
 
-        cartReqDTO.setCartId(cartId);
-        cartService.modify(cartReqDTO);
+        itemBuyReqDTO.setCartId(cartId);
+        cartService.modify(itemBuyReqDTO);
 
         Map<String, Long> resultMap = new HashMap<>();
         resultMap.put("cartId", cartId);

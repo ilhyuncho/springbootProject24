@@ -12,7 +12,7 @@ import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.cart.CartReqDTO;
+import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.dto.order.OrderDeliveryResDTO;
 import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.order.OrderReqDTO;
@@ -162,9 +162,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Long addOrderTemporary(CartReqDTO cartReqDTO, User user) {
+    public Long addOrderTemporary(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
-        ShopItem shopItem = shopItemRepository.findByItemName(cartReqDTO.getItemName())
+        ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
         // 이벤트 체크
@@ -175,13 +175,13 @@ public class OrderServiceImpl implements OrderService {
 
         OrderTemporary orderTemporary = OrderTemporary.builder()
                 .shopItem(shopItem)
-                .itemCount(cartReqDTO.getItemCount())
+                .itemCount(itemBuyReqDTO.getItemCount())
                 .discountPrice(discountPrice)
                 .user(user)
                 // 아이템 옵션 set
-                .itemOptionId1(Long.valueOf(cartReqDTO.getItemOptionList().get(0).getOptionValue()))
-                .itemOptionId2(cartReqDTO.getItemOptionList().size() > 1 ?
-                        Long.parseLong(cartReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
+                .itemOptionId1(Long.valueOf(itemBuyReqDTO.getItemOptionList().get(0).getOptionValue()))
+                .itemOptionId2(itemBuyReqDTO.getItemOptionList().size() > 1 ?
+                        Long.parseLong(itemBuyReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
                 .build();
 
         OrderTemporary saveOrderTemporary = orderTemporaryRepository.save(orderTemporary);
