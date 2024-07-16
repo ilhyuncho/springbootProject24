@@ -24,6 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -146,6 +149,18 @@ public class OrderServiceImpl implements OrderService {
 
         OrderTemporary orderTemporary = orderTemporaryRepository.findById(orderTemporaryId)
                 .orElseThrow(() -> new ItemNotFoundException("OrderTemporary 이 존재하지않습니다"));
+
+        // 주문 내역 유효 기간 체크
+        LocalTime now = LocalDateTime.now().toLocalTime();
+        LocalTime expiredTime = orderTemporary.getExpiredDate().toLocalTime();
+
+        Duration diff = Duration.between(now, expiredTime);
+        long diffSeconds = diff.toSeconds();
+
+        if(diffSeconds < 0){
+           // throw new OrderExpiredException("주문서 만료 기간이 지났습니다");
+            return null;
+        }
 
 
         OrderTemporaryResDTO orderTemporaryResDTO = OrderTemporaryResDTO.builder()

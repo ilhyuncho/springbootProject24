@@ -16,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
@@ -47,7 +48,7 @@ public class OrderController {
     @ApiOperation(value = "주문서 페이지 이동", notes = "아이템 즉시 구매시")
     @GetMapping("/orderPage/{orderTemporaryId}")
     public String orderPage(@PathVariable(name="orderTemporaryId") Long orderTemporaryId,
-                       Model model,
+                       Model model, RedirectAttributes redirectAttributes,
                        Principal principal ){
 
         User user = userService.findUser(principal.getName());
@@ -56,9 +57,12 @@ public class OrderController {
 
 
         OrderTemporaryResDTO orderTemporaryResDTO = orderService.getOrderTemporary(orderTemporaryId);
+        if(orderTemporaryResDTO == null){
+            // 유효 기간 만료
+            return "redirect:/shop/main/";
+        }
 
         UserAddressBookResDTO mainAddressInfo = userAddressBookService.getMainAddressInfo(user);
-
 
         model.addAttribute("responseDTO", orderTemporaryResDTO);
         model.addAttribute("mainAddressInfo", mainAddressInfo);
