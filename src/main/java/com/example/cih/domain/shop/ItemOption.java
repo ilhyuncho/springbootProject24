@@ -22,13 +22,12 @@ public class ItemOption {
     @Column(name="itemOptionId")
     private Long itemOptionId;
 
-    private ItemOptionType type;
+    private ItemOptionType itemOptionType;
+    private String optionName;
     private Integer typePriority;
-
-    private String option1;
     private Integer optionOrder;
 
-    private String option2;
+   // private String option2;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SHOP_ITEM_ID")

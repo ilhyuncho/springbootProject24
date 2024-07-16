@@ -27,22 +27,19 @@ public class ShopItemServiceImpl implements ShopItemService {
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
     private final NotificationService notificationService;
-    private final UserService userService;
 
     @Override
-    public ShopItemExtandDTO getItem(Long shopItemId, User user) {  // User는 null 이 올수 있음
+    public ShopItemExtandDTO getItemInfo(Long shopItemId, User user) {  // User는 null 이 올수 있음
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
-        ShopItemExtandDTO shopItemExtandDTO = convertShopItemExtandDTO(shopItem);
-
-        // 이벤트 체크
+        // 진행 중인 이벤트 체크
         EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
-
         // 회원 등급, 이벤트 여부에 따라 아이템 가격 계산
         int discountPrice = CommonUtils.calcDiscountPrice(user, shopItem, event);
 
+        ShopItemExtandDTO shopItemExtandDTO = convertShopItemExtandDTO(shopItem);
         shopItemExtandDTO.setDiscountPrice(discountPrice);
 
         return shopItemExtandDTO;
@@ -51,112 +48,42 @@ public class ShopItemServiceImpl implements ShopItemService {
     @Override
     public List<ShopItemExtandDTO> getAllItems() {    // 관리자 페이지 상품 리스트
 
-        List<ShopItem> shopItemList = shopItemRepository.findAll();
+        List<ShopItem> listShopItem = shopItemRepository.findAll();
 
-        List<ShopItemExtandDTO> shopItemDTOList = shopItemList.stream().
-                map(ShopItemServiceImpl::convertShopItemExtandDTO).collect(Collectors.toList());
+        List<ShopItemExtandDTO> listShopItemDTO = listShopItem.stream()
+                .map(ShopItemServiceImpl::convertShopItemExtandDTO)
+                .collect(Collectors.toList());
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------begin---------------
-        for (ShopItemExtandDTO car : shopItemDTOList) {
-            car.getFileNames().stream()
+        for (ShopItemExtandDTO dto : listShopItemDTO) {
+            dto.getFileNames().stream()
                     .filter(carImage -> carImage.getImageOrder() != 0)
                     .collect(Collectors.toList())
-                    .forEach(x-> car.getFileNames().remove(x));
+                    .forEach(x-> dto.getFileNames().remove(x));
         }
-        // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------begin---------------
+        // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------end---------------
 
-        return shopItemDTOList;
+        return listShopItemDTO;
     }
 
     @Override
     public List<ShopItemDTO> getAllItemsForShop() {   // 악세서리 샵 상품 리스트 (심플)
 
-        List<ShopItem> shopItemList = shopItemRepository.findAll();
+        List<ShopItem> listShopItem = shopItemRepository.findAll();
 
-        List<ShopItemDTO> listDTO = shopItemList.stream()
+        return listShopItem.stream()
                 .map(ShopItemServiceImpl::convertShopItemDTO)
                 .collect(Collectors.toList());
-
-        log.error(listDTO);
-
-        return listDTO;
-    }
-
-    private static ShopItemDTO entityToDTO(ShopItem shopItem){
-
-        return ShopItemExtandDTO.builder()
-                .shopItemId(shopItem.getShopItemId())
-                .itemName(shopItem.getItemName())
-                .itemTitle(shopItem.getItemTitle())
-                .itemDesc(shopItem.getItemDesc())
-                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
-                .mainImage(shopItem.getMainImageDTO())
-                .build();
-    }
-
-    private static ShopItemDTO convertShopItemDTO(ShopItem shopItem) {
-
-        // 1. sample DTO 셋팅
-        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
-
-        log.error(shopItemDTO);
-        // 메인 이미지만 추출...
-
-//        ImageDTO mainImage = shopItem.getMainImage();
-//
-//
-//
-//        if( shopItem.getItemImageSet().size() > 0){
-//            ItemImage itemImage = shopItem.getItemImageSet().stream()
-//                    .filter(Objects::nonNull)
-//                    .filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
-//                    .findFirst().get();
-//
-//            shopItemDTO.addMainImage(itemImage.getUuid(), itemImage.getFileName(), itemImage.getImageOrder());
-//        }
-
-        return shopItemDTO;
-    }
-    private static ShopItemExtandDTO convertShopItemExtandDTO(ShopItem shopItem) {
-
-        // 1. sample DTO 셋팅
-        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
-
-        // 2. 확장 DTO 셋팅
-        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemDTO;
-
-        shopItemExtandDTO.setStockCount(shopItem.getStockCount());
-        shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
-        shopItemExtandDTO.setIsEventTarget(shopItem.getItemPrice().getIsEventTarget());
-
-        ////////////////////////////////////////////////////////////
-        // ItemOption Map 정보 가져오기
-        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
-
-        for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
-            shopItemExtandDTO.getListOptionType().add(ItemOptionDTO.builder()
-                    .optionType(itemOptionType.getName())
-                    .optionValue("0-선택안함," + mapItemOption.get(itemOptionType)).build());
-        }
-
-        // ItemImage 셋팅
-        if( shopItem.getItemImageSet().size() > 0) {
-            shopItem.getItemImageSet().forEach(shopItemImage -> {
-                shopItemExtandDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
-            });
-        }
-
-        return shopItemExtandDTO;
     }
     @Override
     public Long registerItem(ShopItemReqDTO shopItemReqDTO) {
 
-       log.error(shopItemReqDTO);
        shopItemRepository.findByItemName(shopItemReqDTO.getItemName())
                .ifPresent(m -> {
                    throw new ItemNotFoundException("해당 상품 정보가 이미 존재 함");
                });
 
+       // 아이템 가격 정책 저장
        ItemPrice itemPrice = ItemPrice.builder()
                .originalPrice(shopItemReqDTO.getOriginalPrice())
                .membershipPercent(shopItemReqDTO.getMembershipPercent())
@@ -165,6 +92,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         itemPriceRepository.save(itemPrice);
 
+        // ShopItem 정보 저장
         ShopItem shopItem = dtoToEntity(shopItemReqDTO, itemPrice);
 
         // 아이템 옵션 set
@@ -174,10 +102,10 @@ public class ShopItemServiceImpl implements ShopItemService {
             for (String value : values) {
 
                 ItemOption itemOption = ItemOption.builder()
-                        .type(ItemOptionType.fromValue(Integer.valueOf(itemOptionDTO.getOptionType())))
+                        .itemOptionType(ItemOptionType.fromValue(Integer.valueOf(itemOptionDTO.getOptionType())))
                         .optionOrder(orderIndex++)
                         .typePriority(itemOptionDTO.getTypePriority())
-                        .option1(value.trim())
+                        .optionName(value.trim())
                         .shopItem(shopItem)
                         .build();
 
@@ -196,22 +124,18 @@ public class ShopItemServiceImpl implements ShopItemService {
         ShopItem shopItem = shopItemRepository.findById(shopItemReqDTO.getShopItemId())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품 정보가 존재하지않습니다"));
 
-        // 수정 해야 하는지, 안해야 하는지. 먼저 체크??
-        ItemPrice itemPrice = shopItem.getItemPrice();
-        itemPrice.changePriceInfo(shopItemReqDTO.getOriginalPrice(),
+        // 가격 정책 update
+        shopItem.getItemPrice().changePriceInfo(shopItemReqDTO.getOriginalPrice(),
                 shopItemReqDTO.getMembershipPercent(), shopItemReqDTO.getIsEventTarget());
 
-        shopItem.change(shopItemReqDTO.getItemName(), shopItemReqDTO.getOriginalPrice(), shopItemReqDTO.getStockCount());
+        // shopItem 정보 update
+        shopItem.updateInfo(shopItemReqDTO.getItemName(), shopItemReqDTO.getStockCount());
 
-        // 첨부파일 처리
-        shopItem.clearImages();
+        // 첨부파일 update
+        shopItem.updateImages(shopItemReqDTO.getFileNames());
 
-        if(shopItemReqDTO.getFileNames() != null){
-            for (String fileName : shopItemReqDTO.getFileNames() ) {
-                String[] index = fileName.split("_");
-                shopItem.addImage(index[0], index[1]);
-            }
-        }
+        // 아이템 옵션 udpate
+        shopItem.updateItemOption(shopItemReqDTO.getItemOptionList());
 
         shopItemRepository.save(shopItem);
     }
@@ -226,6 +150,8 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         ShopItem shopItem = ShopItem.builder()
                 .itemName(shopItemReqDTO.getItemName())
+                .itemTitle(shopItemReqDTO.getItemTitle())
+                .itemDesc(shopItemReqDTO.getItemDesc())
                 .itemPrice(itemPrice)
                 .stockCount(shopItemReqDTO.getStockCount())
                 .build();
@@ -239,6 +165,57 @@ public class ShopItemServiceImpl implements ShopItemService {
         return shopItem;
     }
 
+    private static ShopItemDTO entityToDTO(ShopItem shopItem){
 
+        return ShopItemExtandDTO.builder()
+                .shopItemId(shopItem.getShopItemId())
+                .itemName(shopItem.getItemName())
+                .itemTitle(shopItem.getItemTitle())
+                .itemDesc(shopItem.getItemDesc())
+                .originalPrice(shopItem.getItemPrice().getOriginalPrice())
+                .mainImage(shopItem.getMainImageDTO())
+                .build();
+    }
+
+    private static ShopItemDTO convertShopItemDTO(ShopItem shopItem) {
+
+        return entityToDTO(shopItem);   // 1. sample DTO 셋팅
+    }
+    private static ShopItemExtandDTO convertShopItemExtandDTO(ShopItem shopItem) {
+
+        // 1. sample DTO 셋팅
+        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
+
+        // 2. 확장 DTO 셋팅
+        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemDTO;
+
+        shopItemExtandDTO.setStockCount(shopItem.getStockCount());
+        shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
+        shopItemExtandDTO.setIsEventTarget(shopItem.getItemPrice().getIsEventTarget());
+
+        ////////////////////////////////////////////////////////////
+        // ItemOption Map 정보 가져오기
+        SortedMap<ItemOptionType, String> mapItemOption = shopItem.getMapItemOption();
+        Map<ItemOptionType, String> mapItemOptionForView = shopItem.getMapItemOptionForView();
+
+        for (ItemOptionType itemOptionType : mapItemOption.keySet()) {
+            shopItemExtandDTO.getListOptionType().add(
+                    ItemOptionDTO.builder()
+                        .optionType(itemOptionType.getName())
+                        .optionValue("0-선택안함, " + mapItemOption.get(itemOptionType))
+                        .optionValueForView(mapItemOptionForView.get(itemOptionType))
+                        .build()
+            );
+        }
+
+        // ItemImage 셋팅
+        if( shopItem.getItemImageSet().size() > 0) {
+            shopItem.getItemImageSet().forEach(shopItemImage -> {
+                shopItemExtandDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
+            });
+        }
+
+        return shopItemExtandDTO;
+    }
 
 }

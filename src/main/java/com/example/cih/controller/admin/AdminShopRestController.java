@@ -27,8 +27,8 @@ public class AdminShopRestController {
     private final AdmnShopControllerValidator admnShopControllerValidator;
 
     @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
-    @PostMapping("/shopItem")
-    public ResponseEntity<Map<String, String>> postShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO
+    @PostMapping("/registerShopItem")
+    public ResponseEntity<Map<String, String>> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO
             , BindingResult bindingResult) throws BindException {
 
         if(bindingResult.hasErrors()) {
@@ -38,12 +38,29 @@ public class AdminShopRestController {
 
         admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
 
-
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
         resultMap.put("ItemId", ItemId.toString());
+
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+    }
+
+    @PostMapping("/modifyShopItem")
+    public ResponseEntity<Map<String, String>> postShopItemModify(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
+                                      BindingResult bindingResult) throws BindException {
+
+        if(bindingResult.hasErrors()) {
+            log.error("bindingResult.hasErrors()~~~");
+            throw new BindException(bindingResult);
+        }
+
+        shopItemService.modifyItem(shopItemReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+      //  resultMap.put("ItemId", ItemId.toString());
 
         return ResponseEntity.status(HttpStatus.OK).body(resultMap);
     }

@@ -12,7 +12,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          Item Detail Modify
+          상품 수정
         </div>
         <div class="card-body">
 
@@ -20,57 +20,79 @@
             <div class="input-group mb-3">
               <span class="input-group-text">ShopItemId</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
+                <input type="text" class="form-control shopItemId"
+                       th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">ItemName</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.itemName}" name="itemName">
+                <input type="text" class="form-control itemName" th:value="${responseDTO.itemName}">
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">originalPrice</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.originalPrice}" name="originalPrice">
+                <input type="text" class="form-control originalPrice" th:value="${responseDTO.originalPrice}">
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">StockCount</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.stockCount}" name="stockCount">
+                <input type="text" class="form-control stockCount" th:value="${responseDTO.stockCount}">
               </label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption1</span>
+              <span class="input-group-text">OptionType1</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.itemOption1}" name="itemOption1">
+                <select name="itemOptionType1" class= "itemOptionType1" id="itemOptionTypeSelect1">
+                  <option th:each="i, stat: ${ItemOptionTypeList}"
+                          th:selected="${i.getName() == responseDTO.getListOptionType().get(0).getOptionType()}"
+                          th:value="${i.getType()}">[[${i.getName}]]</option>
+                </select>
               </label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption2</span>
+              <span class="input-group-text">OptionValue1</span>
+              <input type="text" class="form-control itemOptionValue1"
+                     th:value="${responseDTO.getOptionType(0).optionValueForView}">
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionType2</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.itemOption2}" name="itemOption2">
+                <select name="itemOptionType2" class= "itemOptionType2" >
+                  <option th:each="i, stat: ${ItemOptionTypeList}" th:value="${i.getType()}"
+                          th:selected="${i.getName() == ((responseDTO.getListOptionType().size() > 1)
+                                      ? responseDTO.getListOptionType().get(1).getOptionType() : -1) }">[[${i.getName}]] </option>
+                </select>
               </label>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">OptionValue2</span>
+              <input type="text" class="form-control itemOptionValue2"
+                     th:value="${(responseDTO.getListOptionType().size() > 1)
+                        ? responseDTO.getOptionType(1).optionValueForView : ''}">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">MembershipPercent</span>
               <label>
-                <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" name="membershipPercent">
+                <input type="text" class="form-control membershipPercent" th:value="${responseDTO.membershipPercent}">
               </label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">뉴스 활성화</span>
+              <span class="input-group-text isEventTarget">이벤트 할인 적용 유무</span>
               <label>
-                <input type="radio" name="isEventTarget" value="1" th:checked="${responseDTO.isEventTarget eq true}" >적용</input>
-                <input type="radio" name="isEventTarget" value="0" th:checked="${responseDTO.isEventTarget eq false}" >미적용</input>
+                <input type="radio" name="isEventTarget" th:checked="${responseDTO.isEventTarget eq true}" value=true>적용</input>
+                <input type="radio" name="isEventTarget" th:checked="${responseDTO.isEventTarget eq false}" value=false>미적용</input>
               </label>
             </div>
 
@@ -143,6 +165,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
+  <script src="/js/admin.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -151,6 +174,16 @@
   const formObj = document.querySelector("#f1")
   const uploadResult = document.querySelector(".uploadResult")
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+
+  const shopItemId = document.querySelector('.shopItemId');
+  const membershipPercent = document.querySelector('.membershipPercent');
+  const itemName = document.querySelector('.itemName');
+  const originalPrice = document.querySelector('.originalPrice');
+  const stockCount = document.querySelector('.stockCount');
+  const itemOptionType1 = document.querySelector('.itemOptionType1');
+  const itemOptionValue1 = document.querySelector('.itemOptionValue1');
+  const itemOptionType2 = document.querySelector('.itemOptionType2');
+  const itemOptionValue2 = document.querySelector('.itemOptionValue2');
 
   function appendFileData(){
     // form태그에 현재 첨부파일 정보를 추가
@@ -262,16 +295,66 @@
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/admin/shopItemModify`
+    if(isNaN(membershipPercent.value)){
+      alert("숫자만 입력 가능합니다")
+      return;
+    }
 
-    // 첨부파일을  <input type='hidden..>으로 추가
-    appendFileData()
+    // const target = document.querySelector(".uploadHidden")
+    const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
 
-    // 삭제대상 파일들을 삭제
-    callRemoveFiles()
+    console.log("uploadFiles.length" + uploadFiles.length)
+    let str= ''
 
-    formObj.method = 'post'
-    formObj.submit()
+    const fileNameList = []
+    for(let i = 0 ; i < uploadFiles.length;i++){
+      const uploadFile = uploadFiles[i]
+      const imgLink = uploadFile.getAttribute("data-src")
+
+      console.log("imgLink:" + imgLink)
+
+      fileNameList.push(imgLink)
+    }
+    if(fileNameList.length === 0){
+      alert('상품의 이미지를 추가해야 합니다!!')
+      return;
+    }
+
+    ////////////////////////////////////////////////////
+    const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
+
+    const itemOptionList = []
+    if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
+      itemOptionList.push({typePriority:1, optionType:itemOptionType1.value, optionValue:itemOptionValue1.value})
+    }
+    if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
+      itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
+    }
+
+    const formObj = {
+      shopItemId:shopItemId.value,
+      itemName:itemName.value,
+      originalPrice:originalPrice.value,
+      stockCount:stockCount.value,
+      membershipPercent:membershipPercent.value,
+      isEventTarget:eventTargetValue,
+      itemOptionList:itemOptionList,
+      fileNames:fileNameList
+    }
+
+    modifyShopItem(formObj).then(result => {
+      console.log(result)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+
+    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+      console.log(e.response.data.message)
+      alert('catch: ' + e.response.data.message)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+    })
 
   }, false)
 

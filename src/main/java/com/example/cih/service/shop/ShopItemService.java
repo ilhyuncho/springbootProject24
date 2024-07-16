@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ShopItemService {
 
-    ShopItemExtandDTO getItem(Long itemId, User user);
+    ShopItemExtandDTO getItemInfo(Long itemId, User user);
 
     List<ShopItemExtandDTO> getAllItems();
     List<ShopItemDTO> getAllItemsForShop();

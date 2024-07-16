@@ -17,6 +17,8 @@ public class ShopItemReqDTO {
 
     private Long shopItemId;
     private String itemName;
+    private String itemTitle;
+    private String itemDesc;
 
     @Positive   // 양수 체크
     private Integer originalPrice;

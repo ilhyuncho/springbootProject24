@@ -34,8 +34,8 @@ public class ItemOptionServiceImpl implements ItemOptionService {
 
             return ItemOptionResDTO.builder()
                     .itemOptionId(itemOption.getItemOptionId())
-                    .optionName(itemOption.getOption1())
-                    .optionType(itemOption.getType().getName())
+                    .optionName(itemOption.getOptionName())
+                    .optionType(itemOption.getItemOptionType().getName())
                     .build();
         }).collect(Collectors.toList());
     }

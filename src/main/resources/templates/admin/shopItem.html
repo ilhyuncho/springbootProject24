@@ -32,28 +32,42 @@
             <div class="input-group mb-3">
               <span class="input-group-text">ItemName</span>
               <label>
-                <input type="text" name="itemName" class="form-control itemName" placeholder="예) 미지정 -> 자동 생성">
+                <input type="text" class="form-control itemName" placeholder="예) 미지정 -> 자동 생성">
               </label>
             </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemTitle</span>
+            <label>
+              <input type="text" class="form-control itemTitle" th:value="|Item Title!!|">
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemDesc</span>
+            <label>
+              <input type="text" class="form-control itemDesc" th:value="|Item Desc fsdfsdf|">
+            </label>
+          </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">원가 금액</span>
               <label>
-                <input type="text" name="originalPrice" class="form-control originalPrice" th:value="10000">
+                <input type="text" class="form-control originalPrice" th:value="10000">
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">재고 수량</span>
               <label>
-                <input type="text" name="stockCount" class="form-control stockCount" th:value="100">
+                <input type="text" class="form-control stockCount" th:value="100">
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">멤버쉽 할인율</span>
               <label>
-               <input type="text" name="membershipPercent" class="form-control membershipPercent" th:value="10">
+               <input type="text" class="form-control membershipPercent" th:value="10">
               </label>
             </div>
 
@@ -68,7 +82,7 @@
             <div class="input-group mb-3">
               <span class="input-group-text">OptionType1</span>
               <label>
-                <select name="itemOptionType1" class= "itemOptionType1" id="itemOptionTypeSelect1">
+                <select class= "itemOptionType1" id="itemOptionTypeSelect1">
                   <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 1}"
                           th:value="${i.getType()}">[[${i.getName}]]</option>
                 </select>
@@ -78,14 +92,14 @@
             <div class="input-group mb-3">
               <span class="input-group-text">OptionValue1</span>
               <label>
-                <input type="text" name="itemOptionValue1" class="form-control itemOptionValue1" value="노랑색, 파랑색, 하늘색">
+                <input type="text" class="form-control itemOptionValue1" value="노랑색, 파랑색, 하늘색">
               </label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">OptionType2</span>
               <label>
-                <select name="itemOptionType2" class= "itemOptionType2" id="itemOptionTypeSelect2">
+                <select class= "itemOptionType2" id="itemOptionTypeSelect2">
                   <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 2}"
                           th:value="${i.getType()}">[[${i.getName}]]</option>
                 </select>
@@ -95,7 +109,7 @@
             <div class="input-group mb-3">
               <span class="input-group-text">ItemOption2</span>
               <label>
-                <input type="text" name="itemOptionValue2" class="form-control itemOptionValue2" value="소,중,대">
+                <input type="text" class="form-control itemOptionValue2" value="소,중,대">
               </label>
             </div>
 
@@ -205,6 +219,8 @@
 
   const membershipPercent = document.querySelector('.membershipPercent');
   const itemName = document.querySelector('.itemName');
+  const itemTitle = document.querySelector('.itemTitle');
+  const itemDesc = document.querySelector('.itemDesc');
   const originalPrice = document.querySelector('.originalPrice');
   const stockCount = document.querySelector('.stockCount');
   const itemOptionType1 = document.querySelector('.itemOptionType1');
@@ -344,6 +360,8 @@
 
     const formObj = {
       itemName:itemName.value,
+      itemTitle:itemTitle.value,
+      itemDesc:itemDesc.value,
       originalPrice:originalPrice.value,
       stockCount:stockCount.value,
       membershipPercent:membershipPercent.value,
@@ -352,7 +370,7 @@
       fileNames:fileNameList
     }
 
-    RegisterShopItem(formObj).then(result => {
+    registerShopItem(formObj).then(result => {
       console.log(result.ItemId)
 
       if(result.result === 'success'){

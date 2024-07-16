@@ -5,6 +5,7 @@ import com.example.cih.dto.shop.ShopItemExtandDTO;
 import com.example.cih.dto.shop.ShopItemDTO;
 import com.example.cih.service.shop.ShopItemService;
 import com.example.cih.service.user.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -23,19 +24,20 @@ import java.util.List;
 @Log4j2
 public class ShopController {
 
-    private final ShopItemService shopItemService;
     private final UserService userService;
+    private final ShopItemService shopItemService;
 
+    @ApiOperation(value = "악세서리 샵 메인", notes = "회원, 비회원 접근 가능")
     @GetMapping("/main")
     public String shopMain(Model model){
 
-        List<ShopItemDTO> listDTO = shopItemService.getAllItemsForShop();    // 악세서리 샵 메인 ( 심플 )
-
+        List<ShopItemDTO> listDTO = shopItemService.getAllItemsForShop();
         model.addAttribute("itemList", listDTO);
-        //allItems.forEach(log::error);
+
         return "/shop/main";
     }
 
+    @ApiOperation(value = "악세서리 샵 아이템 선택시", notes = "회원, 비회원 접근 가능")
     @GetMapping("/itemDetail/{shopItemId}")
     public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId, Model model,
              Principal principal){
@@ -45,11 +47,8 @@ public class ShopController {
             user = userService.findUser(principal.getName());
         }
 
-        ShopItemExtandDTO itemDTO = shopItemService.getItem(shopItemId, user);    // 악세서리 아이템 상세
-
+        ShopItemExtandDTO itemDTO = shopItemService.getItemInfo(shopItemId, user);    // 악세서리 아이템 상세
         model.addAttribute("responseDTO", itemDTO);
-
-        log.error(itemDTO);
 
         return "/shop/itemDetail";
     }

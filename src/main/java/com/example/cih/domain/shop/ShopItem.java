@@ -3,6 +3,7 @@ package com.example.cih.domain.shop;
 
 import com.example.cih.common.exception.NotEnoughStockCountException;
 import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.shop.ItemOptionDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -52,9 +53,8 @@ public class ShopItem {
     @JoinColumn(name = "ITEM_PRICE_ID")
     private ItemPrice itemPrice;
 
-    public void change(String itemName, int price, int stockCount){
+    public void updateInfo(String itemName, int stockCount){
         this.itemName = itemName;
-        //this.price = price;   // 임시로
         this.stockCount = stockCount;
     }
 
@@ -73,7 +73,22 @@ public class ShopItem {
         itemImageSet.forEach(image -> image.changeItem(null));
         this.itemImageSet.clear();
     }
+    public void updateImages(List<String> listFileNames){
+        // 초기화
+        clearImages();
 
+        if(listFileNames.size() > 0){
+            listFileNames.forEach(fileName -> {
+                String[] index = fileName.split("_");
+                addImage(index[0], index[1]);
+            });
+        }
+
+        itemImageSet.forEach(log::error);
+    }
+    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  end---------------
+
+    //ShopItem 엔티티 에서 ItemOption 엔티티 객체들을 모두 관리  begin---------------
     public void addItemOption(ItemOption itemOption){
         if( itemOption != null ){
             itemOptionSet.add(itemOption);
@@ -85,7 +100,29 @@ public class ShopItem {
         itemOptionSet.forEach(option -> option.changeItem(null));
         this.itemOptionSet.clear();
     }
-    //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  end---------------
+
+    public void updateItemOption(List<ItemOptionDTO> listItemOption){
+        // 초기화
+        clearItemOption();
+
+        listItemOption.forEach(itemOptionDTO -> {
+            String[] values = itemOptionDTO.getOptionValue().split(",");
+            int orderIndex = 0;
+            for (String value : values) {
+
+                ItemOption itemOption = ItemOption.builder()
+                        .itemOptionType(ItemOptionType.fromValue(Integer.valueOf(itemOptionDTO.getOptionType())))
+                        .optionOrder(orderIndex++)
+                        .typePriority(itemOptionDTO.getTypePriority())
+                        .optionName(value.trim())
+                        .shopItem(this)
+                        .build();
+
+                addItemOption(itemOption);
+            }
+        });
+    }
+    //ShopItem 엔티티 에서 ItemOption 엔티티 객체들을 모두 관리  end---------------
 
     public void removeStock(int count) {
         if(stockCount < count){
@@ -103,13 +140,28 @@ public class ShopItem {
                 .sorted(Comparator.comparing(ItemOption::getTypePriority).thenComparing(ItemOption::getOptionOrder))
                 .forEach(itemOption -> {
                     // 예) "10-흰색, 8-파랑색, 7-검은색, 11-빨강색"  형식으로 파싱
-                    sortedMap.compute(itemOption.getType(), (k, v) -> (v == null)
-                            ? itemOption.getItemOptionId() + "-" + itemOption.getOption1()
-                            : (v += ", " + itemOption.getItemOptionId() + "-" + itemOption.getOption1()));
+                    sortedMap.compute(itemOption.getItemOptionType(), (k, v) -> (v == null)
+                            ? itemOption.getItemOptionId() + "-" + itemOption.getOptionName()
+                            : (v += ", " + itemOption.getItemOptionId() + "-" + itemOption.getOptionName()));
                 });
 
         return sortedMap;
     }
+    public Map<ItemOptionType, String> getMapItemOptionForView(){
+        Map<ItemOptionType, String> map = new HashMap<>();
+
+        itemOptionSet.stream()
+                .sorted(Comparator.comparing(ItemOption::getTypePriority).thenComparing(ItemOption::getOptionOrder))
+                .forEach(itemOption -> {
+                    // 예) "흰색, 파랑색, 검은색, 빨강색"  형식으로 파싱
+                    map.compute(itemOption.getItemOptionType(), (k, v) -> (v == null)
+                            ? itemOption.getOptionName()
+                            : (v += ", " +itemOption.getOptionName()));
+                });
+
+        return map;
+    }
+
     public ImageDTO getMainImageDTO(){
         ItemImage itemImage = itemImageSet.stream()
                 .filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
