@@ -12,11 +12,8 @@ import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.order.*;
 import com.example.cih.dto.shop.ItemBuyReqDTO;
-import com.example.cih.dto.order.OrderDeliveryResDTO;
-import com.example.cih.dto.order.OrderItemResDTO;
-import com.example.cih.dto.order.OrderReqDTO;
-import com.example.cih.dto.order.OrderViewDTO;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
 import com.example.cih.service.user.UserService;
@@ -80,6 +77,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void cancelOrder(Long orderItemId) {
+
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> {
+                    log.info("User expected to delete cart but was empty. orderId = '{}',"
+                            , orderItemId);
+                    return new orderNotFoundException("해당 주문 아이템 존재 하지 않습니다");
+                });
+
+        log.error("cancelOrder" + orderItem.getOrderItemId());
+        orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+    }
+
+    @Override
     public PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
 //        String[] types = pageRequestDTO.getTypes();
 //        String keyword = pageRequestDTO.getKeyword();
@@ -131,6 +142,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId) {
+
+        OrderTemporary orderTemporary = orderTemporaryRepository.findById(orderTemporaryId)
+                .orElseThrow(() -> new ItemNotFoundException("OrderTemporary 이 존재하지않습니다"));
+
+
+        OrderTemporaryResDTO orderTemporaryResDTO = OrderTemporaryResDTO.builder()
+                .orderTemporaryId(orderTemporary.getOrderTemporaryId())
+                .shopItemId(orderTemporary.getShopItem().getShopItemId())
+                .itemName(orderTemporary.getShopItem().getItemName())
+                .orderCount(orderTemporary.getItemCount())
+                .orderPrice(orderTemporary.getShopItem().getItemPrice().getOriginalPrice())
+                .discountPrice(orderTemporary.getDiscountPrice())
+                .orderDate(orderTemporary.getRegDate().toLocalDate())
+                .build();
+
+        // 아이템 옵션 set
+        orderTemporaryResDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderTemporary.getListOptionId()));
+
+        // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+        orderTemporary.getShopItem().getItemImageSet()
+                .stream().filter(image -> image.getImageOrder() == 0)
+                .peek(log::error)
+                .forEach(image -> {
+                    orderTemporaryResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+                });
+
+        log.error(orderTemporaryResDTO);
+
+        return orderTemporaryResDTO;
+    }
+
+    @Override
     public OrderViewDTO getOrderDetail(Long orderId) {
 
        OrderItem orderItem = orderItemRepository.getOrderItemByOrderId(orderId)
@@ -145,20 +189,6 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         return orderViewDTO;
-    }
-
-    @Override
-    public void cancelOrder(Long orderItemId) {
-
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> {
-                    log.info("User expected to delete cart but was empty. orderId = '{}',"
-                            , orderItemId);
-                    return new orderNotFoundException("해당 주문 아이템 존재 하지 않습니다");
-                });
-
-        log.error("cancelOrder" + orderItem.getOrderItemId());
-        orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
     }
 
     @Override
@@ -179,9 +209,8 @@ public class OrderServiceImpl implements OrderService {
                 .discountPrice(discountPrice)
                 .user(user)
                 // 아이템 옵션 set
-                .itemOptionId1(Long.valueOf(itemBuyReqDTO.getItemOptionList().get(0).getOptionValue()))
-                .itemOptionId2(itemBuyReqDTO.getItemOptionList().size() > 1 ?
-                        Long.parseLong(itemBuyReqDTO.getItemOptionList().get(1).getOptionValue()) : 0L )
+                .itemOptionId1(itemBuyReqDTO.getOptionId(0))
+                .itemOptionId2(itemBuyReqDTO.getOptionId(1))
                 .build();
 
         OrderTemporary saveOrderTemporary = orderTemporaryRepository.save(orderTemporary);

@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -39,8 +38,8 @@ public class OrderItem extends ItemOptionEntity{
                 .shopItem(shopItem)
                 .orderPrice(shopItem.getItemPrice().getOriginalPrice() - orderDetailDTO.getDiscountPrice() )
                 .orderCount(orderDetailDTO.getItemCount())
-                .itemOptionId1(orderDetailDTO.getListOptionValue().get(0))
-                .itemOptionId2(orderDetailDTO.getListOptionValue().size() > 1 ? orderDetailDTO.getListOptionValue().get(1) : 0L)
+                .itemOptionId1(orderDetailDTO.getOptionId(0))
+                .itemOptionId2(orderDetailDTO.getOptionId(1))
                 .build();
 
         // 해당 아이템 제고 수량 차감

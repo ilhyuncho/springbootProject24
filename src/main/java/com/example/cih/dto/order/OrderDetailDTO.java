@@ -1,11 +1,8 @@
 package com.example.cih.dto.order;
 
 
-import com.example.cih.dto.shop.ItemOptionDTO;
 import lombok.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -18,13 +15,11 @@ public class OrderDetailDTO{
     private Integer itemCount;
     private Integer itemPrice;
     private Integer discountPrice;
-    private List<ItemOptionDTO> itemOptionList;  // 선택한 옵션 내용
+    private String itemOptionIds;           // 선택한 옵션 ids ( 예) 3-3 )
 
-    public List<Long> getListOptionValue(){
-       return itemOptionList.stream()
-                .map(ItemOptionDTO::getOptionValue)
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
+    public Long getOptionId(int index){
+        String[] split = itemOptionIds.split(",");
+        return Long.parseLong(split[index]);
     }
 
 }

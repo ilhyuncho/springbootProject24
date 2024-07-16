@@ -61,16 +61,13 @@
                             </td>
 
                             <td><div class="updownCount">
-                                    <span><i class="fas fa-arrow-alt-circle-down down" th:data-num="${dto.cartId}"></i></span>
+                                    <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                     <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
                                            class="itemCount" th:value="${dto.itemCount}">
                                     <span><i class="fas fa-arrow-alt-circle-up up"></i></span>
                                 </div>
                             </td>
-                            <td><div th:each="option, stat1 :${dto.listItemOption}">
-                                <input type="hidden" th:name="p_ItemOptionId+${stat.index}+'_'+${stat1.index}" th:value="${option.itemOptionId}" >
-                                <input type="hidden" th:name="p_ItemOptionId+${stat.index}+'_'+${stat1.index}" th:value="${option.itemOptionId}" >
-                                </div>
+                            <td><input type="hidden" th:name="p_ItemOptionIds+${stat.index}" th:value="${dto.getOptionIds()}">
                                 [[${dto.getOptionDesc()}]]
                             </td>
 
@@ -391,8 +388,7 @@
             const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
             const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
             const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
-            const ItemOptionId1Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+0+']');
-            const ItemOptionId2Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+1+']');
+            const ItemOptionIdsTag = document.querySelector('input[name=p_ItemOptionIds'+idx);
             const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
 
             if( selectedTag.checked === true){
@@ -400,21 +396,11 @@
                 const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
                 const itemCount = parseInt(itemCountTag.getAttribute('value'));
                 const itemId = parseInt(itemIdTag.getAttribute('value'));
-                const ItemOptionId1 = parseInt(ItemOptionId1Tag.getAttribute('value'));
-                const ItemOptionId2 = ItemOptionId2Tag != null ? parseInt(ItemOptionId2Tag.getAttribute('value')) : 0;
+                const ItemOptionIds = ItemOptionIdsTag.getAttribute('value');
                 const cartId = parseInt(cartIdTag.getAttribute('value'));
 
                 totalPrice += itemPrice * itemCount;
                 totalDiscountPrice += discountPrice * itemCount;
-                console.log(idx + "-> itemId : " + itemId + ", ItemOptionId1 : " + ItemOptionId1 + ", ItemOptionId2 : " + ItemOptionId2)
-
-                const itemOptionList = []
-                itemOptionList.push({optionValue:ItemOptionId1})
-                if( ItemOptionId2 > 0 ){
-                    itemOptionList.push({optionValue:ItemOptionId2})
-                }
-
-                console.log(ItemOptionId2)
 
                 const itemInfo = {
                     itemId: itemId,
@@ -422,7 +408,7 @@
                     itemCount: itemCount,
                     itemPrice: itemPrice,
                     discountPrice: discountPrice,
-                    itemOptionList:itemOptionList,
+                    itemOptionIds: ItemOptionIds,
                 };
                 arrayItemInfo.push(itemInfo);
             }

@@ -39,6 +39,7 @@ public class ShopItemExtandDTO extends ShopItemDTO {
         return listOptionType.get(index);
     }
 
+
     public ItemSellingStatus getSellingStatus(){
         return this.stockCount <= 0 ? ItemSellingStatus.STATUS_SOLDOUT : ItemSellingStatus.STATUS_SELLING;
     }

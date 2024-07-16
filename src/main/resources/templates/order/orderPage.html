@@ -25,7 +25,40 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">주문 결제</h5>
+                    <input type="hidden" class="form-control selItemId" th:value="${responseDTO.shopItemId}">
 
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 이름</span>
+                        <label>
+                            <input type="text" name="selItemName" class="form-control" th:value="${responseDTO.itemName}">
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 가격</span>
+                        <label>
+                            <input type="text" class="form-control selItemPrice" th:value="${responseDTO.orderPrice}">
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 할인 가격</span>
+                        <label>
+                            <input type="text" class="form-control selDiscountPrice" th:value="${responseDTO.discountPrice}">
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">주문 갯수</span>
+                            <div class="updownCount">
+                                <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
+                                <input type="text" size="2" maxlength="4"
+                                       class="selOrderCount" th:value="${responseDTO.orderCount}">
+                                <span><i class="fas fa-arrow-alt-circle-up up"></i></span>
+                            </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">옵션</span>
+                        <input type="hidden" class="form-control selItemOptionIds" th:value="${responseDTO.getOptionIds()}" >
+                            [[${responseDTO.getOptionDesc()}]]
+                    </div>
 
 <!--                    ////////////////////////////////////////////////////////////////////////-->
                     <div class="card mb-3" style="max-width: 1040px;">
@@ -234,6 +267,12 @@
 
     const tableAddressList = document.getElementById("tableAddressList");
 
+    const selItemPrice = document.querySelector(".selItemPrice")
+    const selDiscountPrice = document.querySelector(".selDiscountPrice")
+    const selOrderCount = document.querySelector(".selOrderCount")
+    const selItemId = document.querySelector(".selItemId")
+    const selItemOptionIds = document.querySelector(".selItemOptionIds")
+
     const orderPrice = document.querySelector(".orderPrice")
     const expectedPrice = document.querySelector(".expectedPrice")
     const discountPrice = document.querySelector(".discountPrice")
@@ -262,13 +301,6 @@
     // 결제 금액 계산 호출
     reCalculation()
 
-    // 상품 선택 변경 ( checkbox )
-    document.querySelectorAll(".checkbox").forEach(function (item){
-        item.addEventListener('change', function(){
-            // 결제 금액 재 계산
-            reCalculation()
-        });
-    }, false)
 
     // 상품 갯수 수동 변경
     document.querySelectorAll(".itemCount").forEach(function (item,idx){
@@ -305,71 +337,38 @@
 
     // 주문 수량 변경
     function changeItemCount(idx, value){
+        const changeCount = parseInt(selOrderCount.value) + value
 
-        const inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
-        const p_count = parseInt(inputTag.getAttribute('value'));
-
-        const changeCount = p_count + value
         if( changeCount >= 0 ){
-            inputTag.setAttribute('value', changeCount )
-            inputTag.value = changeCount
+            selOrderCount.value = changeCount
 
             // 결제 금액 재 계산
             reCalculation()
         }
     }
 
-    // 주문 하기
+    // [주문 하기]
     document.querySelector(".submitBtn").addEventListener("click", function(e){
         e.preventDefault()
         e.stopPropagation()
 
-        let totalPrice = 0;
-        let totalDiscountPrice = 0;
+        const itemPriceTemp = selItemPrice.value
+        const discountPriceTemp = selDiscountPrice.value
+        const orderCountTemp = selOrderCount.value
+
+        const totalPrice = itemPriceTemp * orderCountTemp;
+        const totalDiscountPrice = discountPriceTemp * orderCountTemp;
+
         let arrayItemInfo = [];
-        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
+        const itemInfo = {
+            itemId: selItemId.value,
+            itemCount: selOrderCount.value,
+            itemPrice: selItemPrice.value,
+            discountPrice: selDiscountPrice.value,
+            itemOptionIds: selItemOptionIds.value,
+        };
+        arrayItemInfo.push(itemInfo);
 
-            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
-            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-            const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
-            const ItemOptionId1Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+0+']');
-            const ItemOptionId2Tag = document.querySelector('input[name=p_ItemOptionId'+idx+'_'+1+']');
-            const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
-
-            if( selectedTag.checked === true){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
-                const itemCount = parseInt(itemCountTag.getAttribute('value'));
-                const itemId = parseInt(itemIdTag.getAttribute('value'));
-                const ItemOptionId1 = parseInt(ItemOptionId1Tag.getAttribute('value'));
-                const ItemOptionId2 = ItemOptionId2Tag != null ? parseInt(ItemOptionId2Tag.getAttribute('value')) : 0;
-                const cartId = parseInt(cartIdTag.getAttribute('value'));
-
-                totalPrice += itemPrice * itemCount;
-                totalDiscountPrice += discountPrice * itemCount;
-                console.log(idx + "-> itemId : " + itemId + ", ItemOptionId1 : " + ItemOptionId1 + ", ItemOptionId2 : " + ItemOptionId2)
-
-                const itemOptionList = []
-                itemOptionList.push({optionValue:ItemOptionId1})
-                if( ItemOptionId2 > 0 ){
-                    itemOptionList.push({optionValue:ItemOptionId2})
-                }
-
-                console.log(ItemOptionId2)
-
-                const itemInfo = {
-                    itemId: itemId,
-                    cartId: cartId,
-                    itemCount: itemCount,
-                    itemPrice: itemPrice,
-                    discountPrice: discountPrice,
-                    itemOptionList:itemOptionList,
-                };
-                arrayItemInfo.push(itemInfo);
-            }
-        }, false)
 
         if(arrayItemInfo.length === 0){
             alert("상품을 선택하세요~!!!")
@@ -405,26 +404,13 @@
     // 결제 금액 다시 계산
     function reCalculation(){
 
-        var totalOriginalPrice = 0;
-        var totalDiscountPrice = 0;
-        var totalPrice = 0;
-        document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
+        const itemPriceTemp = selItemPrice.value
+        const discountPriceTemp = selDiscountPrice.value
+        const orderCountTemp = selOrderCount.value
 
-            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
-            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-
-            if(selectedTag.checked){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
-                const itemCount = parseInt(itemCountTag.getAttribute('value'));
-
-                totalOriginalPrice += itemPrice * itemCount
-                totalDiscountPrice += discountPrice * itemCount
-                totalPrice += (itemPrice - discountPrice) * itemCount
-            }
-        }, false)
+        const totalOriginalPrice = itemPriceTemp * orderCountTemp
+        const totalDiscountPrice = discountPriceTemp * orderCountTemp
+        const totalPrice = (itemPriceTemp - discountPriceTemp) * orderCountTemp
 
         // 배송비 계산
         const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500

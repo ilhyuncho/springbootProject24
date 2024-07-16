@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @Builder
@@ -18,6 +17,11 @@ public class ItemBuyReqDTO {
     private String itemName;
     private Integer itemCount;
     private Integer itemPrice;
-    
-    private List<ItemOptionDTO> itemOptionList;  // 선택한 옵션 내용
+    private String itemOptionIds;           // 선택한 옵션 ids ( 예) 3-3 )
+
+    public Long getOptionId(int index){
+        String[] split = itemOptionIds.split(",");
+        return Long.parseLong(split[index]);
+    }
+
 }

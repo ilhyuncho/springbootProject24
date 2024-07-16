@@ -40,5 +40,8 @@ public class CartDetailResDTO {
     public String getOptionDesc(){
         return CommonUtils.getItemOptionDesc(listItemOption);
     }
+    public String getOptionIds(){
+        return CommonUtils.getItemOptionIds(listItemOption);
+    }
 
 }

@@ -76,7 +76,6 @@
         <div class="input-group mb-3" th:with="optionDTO = ${responseDTO.listOptionType.get(0)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션1</span>
-            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType1">
           </div>
           <select class= "form-control pItemOptionValue1" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
@@ -88,7 +87,6 @@
              th:with="optionDTO = ${responseDTO.listOptionType.get(1)}">
           <div class="input-group-prepend">
             <span class="input-group-text">옵션2</span>
-            <input type="hidden" th:value="${optionDTO.getOptionType()}" class="pItemOptionType2">
           </div>
           <select class= "form-control pItemOptionValue2" >
             <option th:each="i, stat: ${#strings.arraySplit(optionDTO.getOptionValue() ,',')}" th:selected="${stat.index == 1}"
@@ -177,10 +175,7 @@
   const pItemCount = document.querySelector('.pItemCount')
   const pOriginalPrice = document.querySelector('.pOriginalPrice')
   const pDiscountPrice = document.querySelector('.pDiscountPrice')
-
-  const pItemOptionType1 = document.querySelector('.pItemOptionType1');
   const pItemOptionValue1 = document.querySelector('.pItemOptionValue1');
-  const pItemOptionType2 = document.querySelector('.pItemOptionType2');
   const pItemOptionValue2 = document.querySelector('.pItemOptionValue2');
 
   const pOrderPrice = document.querySelector(".pOrderPrice")
@@ -241,19 +236,12 @@
       return
     }
 
-    const itemOptionList = []
-    itemOptionList.push({optionValue:pItemOptionValue1.value})
-
-    if( optionCount > 1 && pItemOptionValue2.value.length > 0 ){
-        itemOptionList.push({optionValue:pItemOptionValue2.value})
-    }
-
     let formObj = {
       shopItemId: shopItemId,
       itemName: itemName,
       itemCount: pItemCount.value,
       itemPrice: pOriginalPrice.value,
-      itemOptionList:itemOptionList,
+      itemOptionIds: pItemOptionValue1.value + "," + (optionCount > 1 ? pItemOptionValue2.value : 0),
     }
 
     ////////////////////////////////////////////////////
@@ -279,26 +267,17 @@
       return
     }
 
-    const itemOptionList = []
-    itemOptionList.push({optionValue:pItemOptionValue1.value})
-
-    if( optionCount > 1 && pItemOptionValue2.value.length > 0 ){
-      itemOptionList.push({optionValue:pItemOptionValue2.value})
-    }
-
     let formObj = {
       shopItemId: shopItemId,
       itemName: itemName,
       itemCount: pItemCount.value,
       itemPrice: pOriginalPrice.value,
-      itemOptionList:itemOptionList,
+      itemOptionIds: pItemOptionValue1.value + "," + ( optionCount > 1 ? pItemOptionValue2.value : 0 ),
+
     }
 
     ////////////////////////////////////////////////////
     addOrderTemporary(formObj).then(result => {
-      //alert("정상적으로 장바구니에 담겼습니다")
-
-      console.log('result.orderTemporaryId : ' + result.orderTemporaryId)
 
       // 주문서 페이지 로 이동
       self.location = '/order/orderPage/' + result.orderTemporaryId

@@ -17,15 +17,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemResDTO {
-    private Long orderId;
-    private Long orderItemId;
-    private String deliveryStatus;
-    private int orderCount;
+public class OrderTemporaryResDTO {
+    private Long orderTemporaryId;
     private Long shopItemId;
     private String itemName;
     private int orderPrice;
     private int discountPrice;
+    private int orderCount;
     private LocalDate orderDate;
 
     @Builder.Default

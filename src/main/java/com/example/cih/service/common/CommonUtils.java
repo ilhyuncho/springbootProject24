@@ -57,6 +57,20 @@ public class CommonUtils {
         return desc;
     }
 
+    public static String getItemOptionIds(List<ItemOptionResDTO> listItemOption) {
+        ItemOptionResDTO itemOption1 = listItemOption.get(0);
+        String ids = itemOption1.getItemOptionId() + ",";
+
+        if(listItemOption.size() > 1){
+            ItemOptionResDTO itemOption2 = listItemOption.get(1);
+            ids += itemOption2.getItemOptionId();
+        }
+        else{
+            ids += "0";
+        }
+        return ids;
+    }
+
     public static ReplaceAlarm checkNextReplaceDay(RefCarConsumable refCarConsumable, CarConsumable carConsumable){
 
         int cycleKm = refCarConsumable.getReplaceCycleKm();
