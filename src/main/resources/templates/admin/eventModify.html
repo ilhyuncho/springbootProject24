@@ -223,24 +223,6 @@
     })
   }, false)
 
-  // Event 수정 요청
-  document.querySelector(".saveBtn").addEventListener("click", function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    formObj.action = `/admin/eventModify/${notiId}`
-
-    // 첨부파일을  <input type='hidden..>으로 추가
-    appendFileData()
-
-    // 삭제대상 파일들을 삭제
-    callRemoveFiles()
-
-    formObj.method = 'post'
-    formObj.submit()
-
-  }, false)
-
   // 첨부파일 업로드 후 화면에 표시
   function showUploadFile({uuid, fileName, link}){
     const str = `<div class="card col-4">
@@ -256,6 +238,7 @@
     uploadResult.innerHTML+=str
   }
 
+  //첨부 파일 삭제
   const removeFileList = []
   function removeFile(uuid, fileName, obj){
     if(!confirm("파일을 삭제!!")){
@@ -270,14 +253,6 @@
 
     const targetDiv = obj.closest(".card")
     targetDiv.remove()
-  }
-
-
-  function callRemoveFiles(){
-
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer(uuid, fileName)
-    })
   }
 
   function appendNotShownData(){
@@ -295,6 +270,32 @@
     }
     target.innerHTML += str;
   }
+
+  function callRemoveFiles(){
+
+    removeFileList.forEach(({uuid,fileName})=>{
+      removeFileToServer(uuid, fileName)
+    })
+  }
+
+
+
+  // Event 수정 요청
+  document.querySelector(".saveBtn").addEventListener("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 첨부파일을  <input type='hidden..>으로 추가
+    appendFileData()
+
+    // 삭제대상 파일들을 삭제
+    callRemoveFiles()
+
+    formObj.action = `/admin/eventModify/${notiId}`
+    formObj.method = 'post'
+    formObj.submit()
+
+  }, false)
 
   // [이벤트] 삭제 요청
   document.querySelector(".removeBtn").addEventListener("click", function (e) {

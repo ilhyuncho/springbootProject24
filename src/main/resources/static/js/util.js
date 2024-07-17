@@ -28,21 +28,17 @@ function getUploadFileNames(uploadFiles){
         const uploadFile = uploadFiles[i]
         const imgLink = uploadFile.getAttribute("data-src")
 
-        console.log("imgLink:" + imgLink)
-
         fileNameList.push(imgLink)
     }
-
     return fileNameList
 }
-
 function appendFileData(){
     // form태그에 현재 첨부파일 정보를 추가
     const target= document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img")
 
     let str= ''
-    for(let i=0; i<uploadFiles.length;i++){
+    for(let i= 0; i < uploadFiles.length;i++){
         const uploadFile = uploadFiles[i]
         const imgLink = uploadFile.getAttribute("data-src")
 
@@ -50,6 +46,7 @@ function appendFileData(){
     }
     target.innerHTML = str;
 }
+
 
 function showUploadFile({uuid, fileName, link}){
     const str = `<div class="card col-4">
