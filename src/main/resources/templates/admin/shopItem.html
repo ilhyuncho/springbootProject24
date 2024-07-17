@@ -253,7 +253,7 @@
     uploadToServer(formObj).then(result => {
 
       for(const uploadResult of result){
-        showUploadFile(uploadResult)
+        showUploadFile(uploadResult, true)
       }
 
       uploadModal.hide()
@@ -261,22 +261,6 @@
       uploadModal.hide()
     })
   }, false)
-
-
-
-
-  // 이미지 파일 삭제
-  function removeFile(uuid, fileName, obj){
-    console.log('shopItem.html - removeFile()!')
-
-    console.log(uuid + "," + fileName + "," + obj)
-
-    const targetDiv = obj.closest(".card")
-
-    removeFileToServer(uuid, fileName).then(data =>{
-      targetDiv.remove()
-    })
-  }
 
   // [상품 등록] 버튼 클릭
   document.querySelector(".registerItemBtn").addEventListener("click", function(e){
@@ -321,7 +305,6 @@
     }
 
     registerShopItem(formObj).then(result => {
-      //console.log(result.ItemId)
 
       if(result.result === 'success'){
         if(result.ItemId > 0){

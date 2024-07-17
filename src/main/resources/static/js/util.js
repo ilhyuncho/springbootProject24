@@ -47,12 +47,15 @@ function appendFileData(){
     target.innerHTML = str;
 }
 
+// 첨부파일 업로드 후 화면에 표시
+function showUploadFile({uuid, fileName, link}, direct){
 
-function showUploadFile({uuid, fileName, link}){
+    console.log('showUploadFile() direct : ' + direct)
+
     const str = `<div class="card col-4">
                 <div class="card-header d-flex justify-content-center">
                     ${fileName}
-                 <button class="btn-sm btn-danger" onclick="javascript:removeFile([[${uuid}]], [[${fileName}]], this)" >X</button>
+                 <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, this)" >X</button>
                  </div>
                  <div class="card-body">
                     <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
@@ -60,4 +63,23 @@ function showUploadFile({uuid, fileName, link}){
                  </div>`
 
     uploadResult.innerHTML+=str
+}
+
+// 이미지 파일 바로 삭제 또는 임시 삭제 처리
+function removeFileData(uuid, fileName, direct, obj){
+
+    const targetDiv = obj.closest(".card")
+
+    if( direct === true){
+        if(!confirm("파일을 삭제!!")){
+            return
+        }
+        removeFileToServer(uuid, fileName).then(data =>{
+            targetDiv.remove()
+        })
+    }
+    else{ // 일단 임시로 삭제한 파일 저장
+        removeFileList.push({uuid, fileName})
+        targetDiv.remove()
+    }
 }
