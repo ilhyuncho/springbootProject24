@@ -83,3 +83,19 @@ function removeFileData(uuid, fileName, direct, obj){
         targetDiv.remove()
     }
 }
+
+function appendNotShownData(){
+    if(removeFileList.length === 0) {
+        return
+    }
+    const target = document.querySelector(".uploadHidden")
+
+    let str= ''
+    for(let i = 0; i < removeFileList.length; i++){
+        const {uuid, fileName} = removeFileList[i];
+
+        str += `<input type='hidden' name='fileNames' value="${uuid}_${fileName}">`
+    }
+    target.innerHTML += str;
+}
+

@@ -133,31 +133,6 @@
   //첨부 파일 삭제 임시 저장
   const removeFileList = []
 
-  function appendNotShownData(){
-      if(removeFileList.length === 0) {
-        return
-      }
-
-      const target = document.querySelector(".uploadHidden")
-      let str= ''
-
-      for(let i = 0; i < removeFileList.length; i++){
-        const {uuid, fileName} = removeFileList[i];
-
-        str += `<input type='hidden' name='fileNames' value="${uuid}_${fileName}">`
-      }
-      target.innerHTML += str;
-  }
-
-
-
-  function callRemoveFiles(){
-
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer(uuid, fileName)
-    })
-  }
-
   // 이미지 업로드 모달
   document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
     e.stopPropagation()
@@ -227,6 +202,13 @@
     formObj.submit()
 
   }, false)
+
+  function callRemoveFiles(){
+
+    removeFileList.forEach(({uuid,fileName})=>{
+      removeFileToServer(uuid, fileName)
+    })
+  }
 
 
 
