@@ -12,42 +12,32 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          Item Detail Info( 관리자 용 )
+          상품 상세 정보( 관리자 용 )
         </div>
         <div class="card-body">
           <div class="input-group mb-3">
             <span class="input-group-text">ShopItemId</span>
-            <label>
-            <input type="text" class="form-control" th:value="${responseDTO.shopItemId}" readonly>
-            </label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.shopItemId}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">ItemName</span>
-            <label>
-              <input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly>
-            </label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">originalPrice</span>
-            <label>
-              <input type="text" class="form-control" th:value="${responseDTO.originalPrice}" readonly>
-            </label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.originalPrice}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">StockCount</span>
-            <label>
-              <input type="text" class="form-control" th:value="${responseDTO.stockCount}" readonly>
-            </label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.stockCount}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">optionType1</span>
-            <label>
-              <input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionType}" readonly>
-            </label>
+            <label><input type="text" class="form-control" th:value="${responseDTO.getOptionType(0).optionType}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
@@ -69,11 +59,9 @@
                      class="form-control" th:value="${responseDTO.getOptionType(1).optionValueForView}" readonly>
           </div>
 
-
           <div class="input-group mb-3">
             <span class="input-group-text">MembershipPercent</span>
-            <label>
-              <input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" readonly>
+            <label><input type="text" class="form-control" th:value="${responseDTO.membershipPercent}" readonly>
             </label>
           </div>
 
@@ -84,7 +72,6 @@
               <input type="radio" name="isEventTarget" value="0" th:checked="${responseDTO.isEventTarget eq false}" onclick="return false;">미적용</input>
             </label>
           </div>
-
 
           <div class="my-4">
             <div class="float-end">

@@ -166,6 +166,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/admin.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -185,21 +186,7 @@
   const itemOptionType2 = document.querySelector('.itemOptionType2');
   const itemOptionValue2 = document.querySelector('.itemOptionValue2');
 
-  function appendFileData(){
-    // form태그에 현재 첨부파일 정보를 추가
-    const target= document.querySelector(".uploadHidden")
-    const uploadFiles = uploadResult.querySelectorAll("img")
 
-    let str= ''
-
-    for(let i=0; i<uploadFiles.length;i++){
-      const uploadFile = uploadFiles[i]
-      const imgLink = uploadFile.getAttribute("data-src")
-
-      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
-    }
-    target.innerHTML = str;
-  }
 
   function appendNotShownData(){
     if(removeFileList.length === 0) {
@@ -232,13 +219,6 @@
     uploadResult.innerHTML+=str
   }
 
-  function callRemoveFiles(){
-
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer({uuid, fileName})
-    })
-  }
-
   //첨부 파일 삭제
   const removeFileList = []
   function removeFile(uuid, fileName, obj){
@@ -246,9 +226,6 @@
       return
     }
 
-    console.log(uuid)
-    console.log(fileName)
-    console.log(obj)
     // 일단 임시로 삭제한 파일 저장
     removeFileList.push({uuid, fileName})
 
@@ -300,21 +277,10 @@
       return;
     }
 
-    // const target = document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
 
-    console.log("uploadFiles.length" + uploadFiles.length)
-    let str= ''
+    const fileNameList = getUploadFileNames(uploadFiles)
 
-    const fileNameList = []
-    for(let i = 0 ; i < uploadFiles.length;i++){
-      const uploadFile = uploadFiles[i]
-      const imgLink = uploadFile.getAttribute("data-src")
-
-      console.log("imgLink:" + imgLink)
-
-      fileNameList.push(imgLink)
-    }
     if(fileNameList.length === 0){
       alert('상품의 이미지를 추가해야 합니다!!')
       return;

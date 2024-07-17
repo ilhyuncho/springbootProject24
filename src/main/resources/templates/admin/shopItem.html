@@ -186,6 +186,8 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/admin.js"></script>
+  <script src="/js/util.js"></script>
+
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -261,22 +263,12 @@
   }, false)
 
 
-  function showUploadFile({uuid, fileName, link}){
-    const str = `<div class="card col-4">
-                <div class="card-header d-flex justify-content-center">
-                ${fileName}
-                <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${fileName}',
-                this)" >X</button>
-                </div>
-                <div class="card-body">
-                    <img src="/view/${link}" data-src="${uuid+"_"+fileName}" >
-                </div>
-             </div> `
-    uploadResult.innerHTML += str
-  }
+
 
   // 이미지 파일 삭제
   function removeFile(uuid, fileName, obj){
+    console.log('shopItem.html - removeFile()!')
+
     console.log(uuid + "," + fileName + "," + obj)
 
     const targetDiv = obj.closest(".card")
@@ -297,15 +289,9 @@
     }
 
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
-    const fileNameList = []
-    for(let i = 0 ; i < uploadFiles.length;i++){
-      const uploadFile = uploadFiles[i]
-      const imgLink = uploadFile.getAttribute("data-src")
 
-      console.log("imgLink:" + imgLink)
+    const fileNameList = getUploadFileNames(uploadFiles)
 
-      fileNameList.push(imgLink)
-    }
     if(fileNameList.length === 0){
       alert('상품의 이미지를 추가해야 합니다!!')
       return;
@@ -335,7 +321,7 @@
     }
 
     registerShopItem(formObj).then(result => {
-      console.log(result.ItemId)
+      //console.log(result.ItemId)
 
       if(result.result === 'success'){
         if(result.ItemId > 0){

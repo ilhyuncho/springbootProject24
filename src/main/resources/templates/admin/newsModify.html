@@ -129,6 +129,7 @@
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -156,9 +157,6 @@
   // 에러 처리 부분 end ----------------------------
 
   const notiId = [[${responseDTO.notiId}]]
-
-
-
 
   // 이미지 업로드 모달
   document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
@@ -233,9 +231,6 @@
       return
     }
 
-    console.log(uuid)
-    console.log(fileName)
-    console.log(obj)
     // 일단 임시로 삭제한 파일 저장
     removeFileList.push({uuid, fileName})
 
@@ -243,25 +238,9 @@
     targetDiv.remove()
   }
 
-  function appendFileData(){
-    // form태그에 현재 첨부파일 정보를 추가
-    const target= document.querySelector(".uploadHidden")
-    const uploadFiles = uploadResult.querySelectorAll("img")
-
-    let str= ''
-    for(let i=0; i<uploadFiles.length;i++){
-      const uploadFile = uploadFiles[i]
-      const imgLink = uploadFile.getAttribute("data-src")
-
-      str += `<input type='hidden' name='fileNames' value="${imgLink}">`
-    }
-    target.innerHTML = str;
-  }
-
   function callRemoveFiles(){
-
     removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer({uuid, fileName})
+      removeFileToServer(uuid, fileName)
     })
   }
 
