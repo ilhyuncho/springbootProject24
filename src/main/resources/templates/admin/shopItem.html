@@ -18,57 +18,34 @@
         </div>
         <div class="card-body">
 
-          <!-- 인증 정보에서 사용자 정보 가져오기-->
-<!--          <div class="input-group mb-3" th:with="user=${#authentication.principal}">-->
-<!--            <span class="input-group-text">고객 명</span>-->
-<!--            <label>-->
-<!--              <input type="text" name="userID" class="form-control" th:value="${user.username}">-->
-<!--            </label>-->
-<!--          </div>-->
-          <!-- 인증 정보에서 사용자 정보 가져오기-->
-
-
-
-            <div class="input-group mb-3">
-              <span class="input-group-text">ItemName</span>
-              <label>
-                <input type="text" class="form-control itemName" placeholder="예) 미지정 -> 자동 생성">
-              </label>
-            </div>
-
           <div class="input-group mb-3">
-            <span class="input-group-text">ItemTitle</span>
-            <label>
-              <input type="text" class="form-control itemTitle" th:value="|Item Title!!|">
-            </label>
+            <span class="input-group-text">상품 명</span>
+            <label><input type="text" class="form-control itemName" placeholder="예) 미지정 -> 자동 생성"></label>
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">ItemDesc</span>
-            <label>
-              <input type="text" class="form-control itemDesc" th:value="|Item Desc fsdfsdf|">
-            </label>
+            <span class="input-group-text">상품 타이틀 명</span>
+            <label><input type="text" class="form-control itemTitle" th:value="|Item Title!!|"></label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">상품 설명</span>
+            <label><input type="text" class="form-control itemDesc" th:value="|Item Desc fsdfsdf|"></label>
           </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">원가 금액</span>
-              <label>
-                <input type="text" class="form-control originalPrice" th:value="10000">
-              </label>
+              <label><input type="text" class="form-control originalPrice" th:value="10000"></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">재고 수량</span>
-              <label>
-                <input type="text" class="form-control stockCount" th:value="100">
-              </label>
+              <label><input type="text" class="form-control stockCount" th:value="100"></label>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">멤버쉽 할인율</span>
-              <label>
-               <input type="text" class="form-control membershipPercent" th:value="10">
-              </label>
+              <label><input type="text" class="form-control membershipPercent" th:value="10"></label>
             </div>
 
             <div class="input-group mb-3">
@@ -80,9 +57,9 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">OptionType1</span>
+              <span class="input-group-text">옵션1 타입</span>
               <label>
-                <select class= "itemOptionType1" id="itemOptionTypeSelect1">
+                <select class= "itemOptionType1">
                   <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 1}"
                           th:value="${i.getType()}">[[${i.getName}]]</option>
                 </select>
@@ -90,16 +67,14 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">OptionValue1</span>
-              <label>
-                <input type="text" class="form-control itemOptionValue1" value="노랑색, 파랑색, 하늘색">
-              </label>
+              <span class="input-group-text">옵션1 값</span>
+              <label><input type="text" class="form-control itemOptionValue1" value="노랑색, 파랑색, 하늘색"></label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">OptionType2</span>
+              <span class="input-group-text">옵션2 타입</span>
               <label>
-                <select class= "itemOptionType2" id="itemOptionTypeSelect2">
+                <select class= "itemOptionType2">
                   <option th:each="i, stat: ${ItemOptionTypeList}" th:selected="${i.getType() == 2}"
                           th:value="${i.getType()}">[[${i.getName}]]</option>
                 </select>
@@ -107,14 +82,12 @@
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">ItemOption2</span>
-              <label>
-                <input type="text" class="form-control itemOptionValue2" value="소,중,대">
-              </label>
+              <span class="input-group-text">옵션2 값</span>
+              <label><input type="text" class="form-control itemOptionValue2" value="소,중,대"></label>
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text">Images</span>
+              <span class="input-group-text">상품 이미지</span>
               <div class="float-end uploadHidden">
                 <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
               </div>
@@ -122,8 +95,8 @@
 
             <div class="my-4">
               <div class="float-end">
-                <button type="submit" class="btn btn-primary submitBtn">아이템 등록</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+                <button type="submit" class="btn btn-primary registerItemBtn">아이템 등록</button>
+                <button type="reset" class="btn btn-secondary resetBtn">입력 초기화</button>
               </div>
             </div>
 
@@ -142,6 +115,7 @@
     </div>
   </div>
 
+  <!--    상품 리스트 보여줄 부분-->
   <div class="row mt-3">
     <div class="col">
       <div class="card">
@@ -153,9 +127,9 @@
             <thead>
             <tr>
               <th scope="col">shopItemId</th>
-              <th scope="col">itemName</th>
-              <th scope="col">originalPrice</th>
-              <th scope="col">stockCount</th>
+              <th scope="col">상품 명</th>
+              <th scope="col">원가 금액</th>
+              <th scope="col">재고 수량</th>
             </tr>
             </thead>
 
@@ -217,24 +191,22 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const membershipPercent = document.querySelector('.membershipPercent');
+  // 이미지 업로드 모달
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+  // 이미지 파일 업로드 결과 화면
+  const uploadResult = document.querySelector(".uploadResult")
+
   const itemName = document.querySelector('.itemName');
   const itemTitle = document.querySelector('.itemTitle');
   const itemDesc = document.querySelector('.itemDesc');
   const originalPrice = document.querySelector('.originalPrice');
   const stockCount = document.querySelector('.stockCount');
+  const membershipPercent = document.querySelector('.membershipPercent');
   const itemOptionType1 = document.querySelector('.itemOptionType1');
   const itemOptionValue1 = document.querySelector('.itemOptionValue1');
   const itemOptionType2 = document.querySelector('.itemOptionType2');
   const itemOptionValue2 = document.querySelector('.itemOptionValue2');
 
-  // 이미지 업로드 모달
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
-
-  // 사용자 인증 정보 확인 begin ----------------------
-  // const authlog = [[${#authentication}]]
-  // const authPrincipal = [[${#authentication.principal}]]
-  // 사용자 인증 정보 확인 end ----------------------
 
   // 에러 처리 부분 begin ----------------------------
   const errors = [[${errors}]]
@@ -277,7 +249,6 @@
     }
 
     uploadToServer(formObj).then(result => {
-      //console.log(result)
 
       for(const uploadResult of result){
         showUploadFile(uploadResult)
@@ -289,8 +260,7 @@
     })
   }, false)
 
-  // 이미지 파일 업로드 결과 화면
-  const uploadResult = document.querySelector(".uploadResult")
+
   function showUploadFile({uuid, fileName, link}){
     const str = `<div class="card col-4">
                 <div class="card-header d-flex justify-content-center">
@@ -316,8 +286,8 @@
     })
   }
 
-  document.querySelector(".submitBtn").addEventListener("click", function(e){
-
+  // [상품 등록] 버튼 클릭
+  document.querySelector(".registerItemBtn").addEventListener("click", function(e){
     e.preventDefault()
     e.stopPropagation()
 
@@ -326,12 +296,7 @@
       return;
     }
 
-    const target = document.querySelector(".uploadHidden")
     const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
-
-    console.log("uploadFiles.length" + uploadFiles.length)
-    let str= ''
-
     const fileNameList = []
     for(let i = 0 ; i < uploadFiles.length;i++){
       const uploadFile = uploadFiles[i]
@@ -356,7 +321,6 @@
     if(itemOptionType2.value > 0 && itemOptionValue2.value.length > 0){
       itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
     }
-
 
     const formObj = {
       itemName:itemName.value,
@@ -391,6 +355,24 @@
     })
 
   }, false)
+
+  document.querySelector(".resetBtn").addEventListener("click", function(e){
+    e.preventDefault()
+    e.stopPropagation()
+
+    itemName.value = ''
+    itemTitle.value = 'item Title'
+    itemDesc.value = 'item Desc ~~~~'
+    originalPrice.value = '100000'
+    membershipPercent.value = '10'
+
+    itemOptionType1.options[1].selected = true
+    itemOptionValue1.value = '노랑색, 파랑색, 하늘색'
+    itemOptionType2.options[2].selected = true
+    itemOptionValue2.value = '소,중,대'
+
+  }, false)
+
 
 </script>
 </html>
