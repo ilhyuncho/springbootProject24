@@ -33,8 +33,8 @@ public class ShopItemRepositoryTests {
                     .stockCount(10000)
                     .build();
 
-            shopItem.addImage("1a1a1a", "ionic5.png");
-            shopItem.addImage("2a2a2a", "ionic51.png");
+            shopItem.addImage("1a1a1a", "ionic5.png", true);
+            shopItem.addImage("2a2a2a", "ionic51.png", true);
 
 
             shopItemRepository.save(shopItem);

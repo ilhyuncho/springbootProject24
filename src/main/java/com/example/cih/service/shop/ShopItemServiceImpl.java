@@ -8,7 +8,6 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.shop.*;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
-import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -132,12 +131,12 @@ public class ShopItemServiceImpl implements ShopItemService {
         shopItem.updateInfo(shopItemReqDTO.getItemName(), shopItemReqDTO.getStockCount());
 
         // 첨부파일 update
-        shopItem.updateImages(shopItemReqDTO.getFileNames());
+        shopItem.updateImages(shopItemReqDTO.getFileNames(), shopItemReqDTO.getMainImageFileName());
 
         // 아이템 옵션 udpate
         shopItem.updateItemOption(shopItemReqDTO.getItemOptionList());
 
-        shopItemRepository.save(shopItem);
+        //shopItemRepository.save(shopItem);
     }
 
     @Override
@@ -159,7 +158,8 @@ public class ShopItemServiceImpl implements ShopItemService {
         if(shopItemReqDTO.getFileNames() != null){
             shopItemReqDTO.getFileNames().forEach(fileName ->{
                 String[] arr = fileName.split("_");
-                shopItem.addImage(arr[0], arr[1]);
+
+                shopItem.addImage(arr[0], arr[1], arr[1].equals(shopItemReqDTO.getMainImageFileName()));
             });
         }
         return shopItem;

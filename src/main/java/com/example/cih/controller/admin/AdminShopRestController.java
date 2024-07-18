@@ -38,6 +38,8 @@ public class AdminShopRestController {
 
         admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
 
+        log.error(shopItemReqDTO);
+
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
         Map<String, String> resultMap = new HashMap<>();

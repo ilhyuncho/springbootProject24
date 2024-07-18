@@ -198,6 +198,7 @@ public class ProjectSettingTest {
                     .fileName("item" + i + ".png")
                     .uuid("1111")
                     .shopItem(shopItem)
+                    .isMainImage(true)
                     .build();
             itemImageRepository.save(itemImage);
         });

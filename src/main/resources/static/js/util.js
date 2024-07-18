@@ -48,19 +48,27 @@ function appendFileData(){
 }
 
 // 첨부파일 업로드 후 화면에 표시
-function showUploadFile({uuid, fileName, link}, direct){
+function showUploadFile({uuid, fileName, link}, direct, index){
 
-    console.log('showUploadFile() direct : ' + direct)
+    console.log(index)
 
-    const str = `<div class="card col-4">
-                <div class="card-header d-flex justify-content-center">
-                    ${fileName}
-                 <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, this)" >X</button>
-                 </div>
-                 <div class="card-body">
-                    <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
-                 </div>
-                 </div>`
+    let str = `<div class="card col-4">
+            <div class="card-header d-flex">`
+
+    if( index === 0){
+        str += `<input type="radio" name="isMainImage" checked value="${fileName}" >기본</input>`
+    }
+    else{
+        str += `<input type="radio" name="isMainImage" value="${fileName}" >기본</input>`
+    }
+
+    str += `&nbsp;&nbsp; ${fileName}
+              <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, this)" >X</button>
+            </div>
+            <div class="card-body">
+                <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
+            </div>
+           </div>`
 
     uploadResult.innerHTML+=str
 }

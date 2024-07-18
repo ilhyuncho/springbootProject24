@@ -36,6 +36,8 @@ public class ShopItemReqDTO {
 
     Boolean isEventTarget;
 
+    String mainImageFileName;
+
     @Builder.Default
     private List<String> fileNames= new ArrayList<>();
 

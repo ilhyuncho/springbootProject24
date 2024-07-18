@@ -33,11 +33,9 @@ public class ItemImage {
     @JoinColumn(name = "SHOP_ITEM_ID")
     ShopItem shopItem;
 
+    private Boolean isMainImage;
+
     public void changeItem(ShopItem shopItem){
         this.shopItem = shopItem;
     }
-
-
-
-
 }

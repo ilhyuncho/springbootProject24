@@ -59,13 +59,18 @@ public class ShopItem {
     }
 
     //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  begin---------------
-    public void addImage(String uuid, String fileName){
+    public void addImage(String uuid, String fileName, Boolean isMainImage){
+
         ItemImage carImage = ItemImage.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .shopItem(this)
                 .imageOrder(itemImageSet.size())
+                .isMainImage(isMainImage)
                 .build();
+
+        log.error("addImage : " + carImage);
+
         itemImageSet.add(carImage);
     }
 
@@ -73,14 +78,15 @@ public class ShopItem {
         itemImageSet.forEach(image -> image.changeItem(null));
         this.itemImageSet.clear();
     }
-    public void updateImages(List<String> listFileNames){
+    public void updateImages(List<String> listFileNames, String mainImageFileName){
         // 초기화
         clearImages();
 
         if(listFileNames.size() > 0){
             listFileNames.forEach(fileName -> {
+
                 String[] index = fileName.split("_");
-                addImage(index[0], index[1]);
+                addImage(index[0], index[1], (index[1].equals(mainImageFileName)) );
             });
         }
 
@@ -164,10 +170,12 @@ public class ShopItem {
 
     public ImageDTO getMainImageDTO(){
         ItemImage itemImage = itemImageSet.stream()
-                .filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
+                //.filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
+                .filter(ItemImage::getIsMainImage)
                 .findFirst().orElse(null);
 
         if(itemImage == null){
+            log.error("itemImage == null");
             return null;
         }
 

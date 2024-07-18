@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
 
+
 <head>
   <title>Item Detail Modify</title>
 </head>
@@ -123,8 +124,11 @@
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
               <th:block th:each="fileName:${responseDTO.fileNames}">
                 <div class="card col-4">
-                  <div class="card-header d-flex justify-content-center">
-                    [[${fileName.fileName}]]
+                  <div class="card-header d-flex">
+                    <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">기본</input>
+                       &nbsp;&nbsp;
+                       [[${fileName.fileName}]]
                     <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
                   </div>
                   <div class="card-body">
@@ -243,8 +247,11 @@
       return;
     }
 
+
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
+    const mainImageFileName = document.querySelector('input[name="isMainImage"]:checked').value;
+
 
     const itemOptionList = []
     if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
@@ -262,7 +269,8 @@
       membershipPercent:membershipPercent.value,
       isEventTarget:eventTargetValue,
       itemOptionList:itemOptionList,
-      fileNames:fileNameList
+      fileNames:fileNameList,
+      mainImageFileName:mainImageFileName
     }
 
     // 삭제대상 파일들을 삭제

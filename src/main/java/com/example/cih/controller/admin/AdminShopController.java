@@ -50,6 +50,8 @@ public class AdminShopController {
         model.addAttribute("responseDTO", shopItem);
         model.addAttribute("ItemOptionTypeList", ItemOptionType.getAllTypes());
 
+        log.error(shopItem);
+
         String requestURI = request.getRequestURI();
         return request.getRequestURI().substring(0, requestURI.lastIndexOf("/"));
     }

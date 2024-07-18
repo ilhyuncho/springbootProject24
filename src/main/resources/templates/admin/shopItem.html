@@ -252,8 +252,11 @@
 
     uploadToServer(formObj).then(result => {
 
+      const uploadFiles = uploadResult.querySelectorAll("img")
+
+      let temp = uploadFiles.length
       for(const uploadResult of result){
-        showUploadFile(uploadResult, true)
+        showUploadFile(uploadResult, true, temp++  )
       }
 
       uploadModal.hide()
@@ -283,6 +286,7 @@
 
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
+    const mainImageFileName = document.querySelector('input[name="isMainImage"]:checked').value;
 
     const itemOptionList = []
     if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
@@ -301,7 +305,8 @@
       membershipPercent:membershipPercent.value,
       isEventTarget:eventTargetValue,
       itemOptionList:itemOptionList,
-      fileNames:fileNameList
+      fileNames:fileNameList,
+      mainImageFileName:mainImageFileName
     }
 
     registerShopItem(formObj).then(result => {
