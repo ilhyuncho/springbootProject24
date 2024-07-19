@@ -249,7 +249,7 @@
     for(let i = 0; i < files.length;i++){
       formObj.append("files", files[i]);
     }
-    formObj.append("isResize", false);
+    //formObj.append("isResize", true);
 
     uploadToServer(formObj).then(result => {
 
@@ -346,8 +346,17 @@
     itemOptionType2.options[2].selected = true
     itemOptionValue2.value = '소,중,대'
 
-  }, false)
+    const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
 
+    for(let i = 0 ; i < uploadFiles.length;i++){
+      const uploadFile = uploadFiles[i]
+      const imgLink = uploadFile.getAttribute("data-src")
+      const ArrayFileName = imgLink.split('_')    // uuid, fileName 으로 분리
+
+      removeFileData(ArrayFileName[0], ArrayFileName[1], true, uploadFile)
+    }
+
+  }, false)
 
 </script>
 </html>

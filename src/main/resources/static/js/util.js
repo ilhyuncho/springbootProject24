@@ -79,9 +79,9 @@ function removeFileData(uuid, fileName, direct, obj){
     const targetDiv = obj.closest(".card")
 
     if( direct === true){
-        if(!confirm("파일을 삭제!!")){
-            return
-        }
+        // if(!confirm("파일을 삭제!!")){
+        //     return
+        // }
         removeFileToServer(uuid, fileName).then(data =>{
             targetDiv.remove()
         })
