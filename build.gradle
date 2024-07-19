@@ -95,6 +95,12 @@ dependencies {
 
 //    // JSTL ( 24.03.22 )
 //    implementation group: 'jstl', name: 'jstl', version:'1.2'
+
+    // 이미지 파일 라사이즈 를 위해 ( 24.07.19 )
+    implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
+
+
 }
 
 tasks.named('test') {

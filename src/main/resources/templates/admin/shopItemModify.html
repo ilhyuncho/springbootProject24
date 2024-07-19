@@ -126,7 +126,7 @@
                 <div class="card col-4">
                   <div class="card-header d-flex">
                     <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
-                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">기본</input>
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인</input>
                        &nbsp;&nbsp;
                        [[${fileName.fileName}]]
                     <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>

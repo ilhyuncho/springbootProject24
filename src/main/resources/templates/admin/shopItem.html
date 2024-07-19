@@ -249,6 +249,7 @@
     for(let i = 0; i < files.length;i++){
       formObj.append("files", files[i]);
     }
+    formObj.append("isResize", false);
 
     uploadToServer(formObj).then(result => {
 

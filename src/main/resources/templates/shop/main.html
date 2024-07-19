@@ -10,10 +10,11 @@
 <div layout:fragment="content">
   <div class="row">
         <th:block th:each="item:${itemList}">
-          <div class="col-md-4 margin">
+          <div class="col-md-3 margin">
             <div class="card">
               <a th:href="|@{'/shop/itemDetail/' + ${item.shopItemId}}|" class="text-decoration-none">
-                <img th:src="|/view/s_${item.mainImage.uuid}_${item.mainImage.fileName}|" th:data-src="${item.mainImage.uuid}">
+                <img th:src="|/view/s_${item.mainImage.uuid}_${item.mainImage.fileName}|" th:width="200"
+                     th:data-src="${item.mainImage.uuid}">
 
                 <div class="card-body">
                   <h4 class="card-title">[[${item.itemTitle}]]</h4>

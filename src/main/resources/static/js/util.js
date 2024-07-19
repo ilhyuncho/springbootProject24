@@ -56,10 +56,10 @@ function showUploadFile({uuid, fileName, link}, direct, index){
             <div class="card-header d-flex">`
 
     if( index === 0){
-        str += `<input type="radio" name="isMainImage" checked value="${fileName}" >기본</input>`
+        str += `<input type="radio" name="isMainImage" checked value="${fileName}" >메인</input>`
     }
     else{
-        str += `<input type="radio" name="isMainImage" value="${fileName}" >기본</input>`
+        str += `<input type="radio" name="isMainImage" value="${fileName}" >메인</input>`
     }
 
     str += `&nbsp;&nbsp; ${fileName}
