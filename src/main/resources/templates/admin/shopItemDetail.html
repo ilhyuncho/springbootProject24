@@ -90,7 +90,7 @@
         <div class="row mt-3">
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-                <div class="card col-4">
+                <div class="card col-2">
                   <div class="card-header d-flex justify-content-center">
                     (메인 이미지) &nbsp; [[${responseDTO.mainImage.fileName}]]
                   </div>
@@ -106,8 +106,8 @@
         <div class="row mt-3">
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-              <th:block th:each="fileName:${responseDTO.fileNames}">
-                <div class="card col-4">
+              <th:block th:each="fileName:${responseDTO.getImageDTOExceptMainImage()}">
+                <div class="card col-2">
                   <div class="card-header d-flex justify-content-center">
                     [[${fileName.fileName}]]
                   </div>

@@ -7,6 +7,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public class ShopItemExtandDTO extends ShopItemDTO {
 
     @Builder.Default
     private List<ItemOptionDTO> listOptionType= new ArrayList<>();
+
+    private ImageDTO mainImage; // html에서 responseDTO.getMainImage() 로 참조 함
 
     @Builder.Default
     private List<ImageDTO> fileNames= new ArrayList<>();
@@ -42,5 +46,10 @@ public class ShopItemExtandDTO extends ShopItemDTO {
 
     public ItemSellingStatus getSellingStatus(){
         return this.stockCount <= 0 ? ItemSellingStatus.STATUS_SOLDOUT : ItemSellingStatus.STATUS_SELLING;
+    }
+
+    public List<ImageDTO> getImageDTOExceptMainImage(){
+        return fileNames.stream().filter(imageDTO -> !Objects.equals(imageDTO.getFileName(), mainImage.getFileName()))
+                .collect(Collectors.toList());
     }
 }

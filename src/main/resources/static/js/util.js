@@ -22,7 +22,9 @@ const maskingName = (value) => {
     }
 }
 
-function getUploadFileNames(uploadFiles){
+function getUploadFileNames(){
+    const uploadFiles = uploadResult.querySelectorAll("img") // uploadResult : 업로드 미리 보기
+
     const fileNameList = []
     for(let i = 0 ; i < uploadFiles.length;i++){
         const uploadFile = uploadFiles[i]
@@ -30,6 +32,7 @@ function getUploadFileNames(uploadFiles){
 
         fileNameList.push(imgLink)
     }
+
     return fileNameList
 }
 function appendFileData(){
