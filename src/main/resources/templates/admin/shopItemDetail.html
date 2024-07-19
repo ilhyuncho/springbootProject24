@@ -90,12 +90,13 @@
         <div class="row mt-3">
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-                <div class="card col-2">
+                <div class="card col-4">
                   <div class="card-header d-flex justify-content-center">
                     (메인 이미지) &nbsp; [[${responseDTO.mainImage.fileName}]]
                   </div>
                   <div class="card-body">
-                    <img th:src="|/view/s_${responseDTO.mainImage.uuid}_${responseDTO.mainImage.fileName}|" th:data-src="${responseDTO.mainImage.uuid}" >
+                      <img th:src="|/view/${responseDTO.mainImage.uuid}_${responseDTO.mainImage.fileName}|" th:width="200px"
+                           th:data-src="${responseDTO.mainImage.uuid}" onclick="window.open(this.src)">
                   </div>
                 </div>
             </div>
@@ -107,12 +108,13 @@
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
               <th:block th:each="fileName:${responseDTO.getImageDTOExceptMainImage()}">
-                <div class="card col-2">
+                <div class="card col-4">
                   <div class="card-header d-flex justify-content-center">
                     [[${fileName.fileName}]]
                   </div>
                   <div class="card-body">
-                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                    <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" th:width="200px"
+                         th:data-src="${fileName.uuid}" onclick="window.open(this.src)">
                   </div>
                 </div>
               </th:block>
@@ -128,5 +130,6 @@
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
 
 </script>
