@@ -9,7 +9,7 @@ public interface ShopItemService {
     ShopItemExtandDTO getItemInfo(Long itemId, User user);
 
     List<ShopItemExtandDTO> getAllItems();
-    List<ShopItemDTO> getAllItemsForShop();
+    List<ShopItemResDTO> getAllItemsForShop();
 
     Long registerItem(ShopItemReqDTO shopItemReqDTO);
 

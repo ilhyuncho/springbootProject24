@@ -1,6 +1,5 @@
 package com.example.cih.dto.shop;
 
-import com.example.cih.dto.ImageDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -10,11 +9,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ShopItemDTO {
+public class ShopItemResDTO {
     private Long shopItemId;
     private String itemName;
     private String itemTitle;
     private String itemDesc;
     private Integer originalPrice;
     private Integer discountPrice;
+    private Boolean isFreeDelivery;     // 무료 배송 여부
 }

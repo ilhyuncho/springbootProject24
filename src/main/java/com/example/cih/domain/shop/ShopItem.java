@@ -29,7 +29,9 @@ public class ShopItem {
     private String itemTitle;
     private String itemDesc;
 
-    private int stockCount;     // 재고수량
+    private int stockCount;                   // 재고 수량
+    private int purchaseCount;                // 구매 수량
+    private boolean isFreeDelivery;           // 무료 배송 여부
 
     @OneToMany(mappedBy = "shopItem", //
             cascade = {CascadeType.ALL}, // ShopItem 엔티티에서 하위 엔티티 객체들을 관리 하는 기능을 추가 해서 사용
@@ -130,11 +132,11 @@ public class ShopItem {
     }
     //ShopItem 엔티티 에서 ItemOption 엔티티 객체들을 모두 관리  end---------------
 
-    public void removeStock(int count) {
-        if(stockCount < count){
+    public void addPurchaseCount(int count) {
+        if(stockCount - purchaseCount < count){
             throw new NotEnoughStockCountException("need more Stock");
         }
-        stockCount -= count;
+        purchaseCount += count;
     }
 
     public SortedMap<ItemOptionType, String> getMapItemOption(){

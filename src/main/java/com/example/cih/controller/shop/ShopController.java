@@ -2,7 +2,7 @@ package com.example.cih.controller.shop;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.shop.ShopItemExtandDTO;
-import com.example.cih.dto.shop.ShopItemDTO;
+import com.example.cih.dto.shop.ShopItemResDTO;
 import com.example.cih.service.shop.ShopItemService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -31,9 +31,12 @@ public class ShopController {
     @GetMapping("/main")
     public String shopMain(Model model){
 
-        List<ShopItemDTO> listDTO = shopItemService.getAllItemsForShop();
+        List<ShopItemResDTO> listDTO = shopItemService.getAllItemsForShop();
         model.addAttribute("itemList", listDTO);
 
+        for (ShopItemResDTO shopItemResDTO : listDTO) {
+            log.error(shopItemResDTO);
+        }
         return "/shop/main";
     }
 

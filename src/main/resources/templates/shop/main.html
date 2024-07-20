@@ -8,7 +8,8 @@
 </head>
 
 <div layout:fragment="content">
-  <div class="row">
+
+  <div class="row mt-3">
         <th:block th:each="item:${itemList}">
           <div class="col-md-3 margin">
             <div class="card">
@@ -19,12 +20,15 @@
                 <div class="card-body">
                   <h4 class="card-title">[[${item.itemTitle}]]</h4>
                   <h3 class="card-title text-danger">[[${item.originalPrice}]]원 </h3>
+                  <h6 class="card-title text-black">구매 [[${item.purchaseCount}]]</h6>
+                  <h6 class="card-title text-black" th:if="${item.isFreeDelivery}">무료배송</h6>
                 </div>
               </a>
            </div>
           </div>
         </th:block>
   </div>
+
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">

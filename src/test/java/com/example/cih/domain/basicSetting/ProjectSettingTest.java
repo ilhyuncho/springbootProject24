@@ -153,6 +153,8 @@ public class ProjectSettingTest {
                     .itemName("item" + i)
                     .itemPrice(itemPrice)
                     .stockCount(10000)
+                    .purchaseCount(0)
+                    .isFreeDelivery(i == 1)
                     .itemTitle("item" + i +"_title")
                     .itemDesc("item" + i +"Desc ~~~~~~~~~~~~!@1231242343546")
                     .build();

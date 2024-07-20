@@ -148,11 +148,12 @@
   <hr class="my-4">
   <hr class="my-4">
 
-  <div th:each="fileName : ${responseDTO.fileNames}" class="text-center">
-    <img th:if="${not #strings.isEmpty(fileName.fileName)}"
-            th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" width="800">
-  </div>
 
+
+  <div th:each="fileName : ${responseDTO.getImageDTOExceptMainImage()}" class="text-center">
+    <img th:if="${not #strings.isEmpty(fileName.fileName)}" width="800"
+            th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
+  </div>
 
 
   <!--    axios 라이브러리 추가-->

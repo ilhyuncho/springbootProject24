@@ -17,8 +17,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ShopItemExtandDTO extends ShopItemDTO {
-    private Integer stockCount;     // 재고수량
+public class ShopItemExtandDTO extends ShopItemResDTO {
+    private Integer stockCount;         // 재고수량
+    private Integer purchaseCount;      // 구매수량
     private Integer membershipPercent;
     private Boolean isEventTarget;
 

@@ -42,8 +42,8 @@ public class OrderItem extends ItemOptionEntity{
                 .itemOptionId2(orderDetailDTO.getOptionId(1))
                 .build();
 
-        // 해당 아이템 제고 수량 차감
-        shopItem.removeStock(orderDetailDTO.getItemCount());
+        // 해당 아이템 구매 수량 update
+        shopItem.addPurchaseCount(orderDetailDTO.getItemCount());
 
         return orderItem;
     }

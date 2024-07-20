@@ -31,7 +31,7 @@ public class ItemPrice {
 //    @Builder.Default
 //    private Boolean isOnSale = false;
 
-    public void changePriceInfo(Integer originalPrice, Integer membershipPercent, Boolean isEventTarget ){
+    public void changePriceInfo(Integer originalPrice, Integer membershipPercent, Boolean isEventTarget){
         this.originalPrice = originalPrice;
         this.membershipPercent = membershipPercent;
         this.isEventTarget = isEventTarget;

@@ -66,7 +66,7 @@ public class ShopItemServiceImpl implements ShopItemService {
     }
 
     @Override
-    public List<ShopItemDTO> getAllItemsForShop() {   // 악세서리 샵 상품 리스트 (심플)
+    public List<ShopItemResDTO> getAllItemsForShop() {   // 악세서리 샵 상품 리스트 (심플)
 
         List<ShopItem> listShopItem = shopItemRepository.findAll();
 
@@ -153,6 +153,7 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .itemDesc(shopItemReqDTO.getItemDesc())
                 .itemPrice(itemPrice)
                 .stockCount(shopItemReqDTO.getStockCount())
+                .purchaseCount(0)
                 .build();
 
         if(shopItemReqDTO.getFileNames() != null){
@@ -165,7 +166,7 @@ public class ShopItemServiceImpl implements ShopItemService {
         return shopItem;
     }
 
-    private static ShopItemDTO entityToDTO(ShopItem shopItem){
+    private static ShopItemResDTO entityToDTO(ShopItem shopItem){
 
         return ShopItemExtandDTO.builder()
                 .shopItemId(shopItem.getShopItemId())
@@ -174,20 +175,23 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .itemDesc(shopItem.getItemDesc())
                 .originalPrice(shopItem.getItemPrice().getOriginalPrice())
                 .mainImage(shopItem.getMainImageDTO())
+                .isFreeDelivery(shopItem.isFreeDelivery())
+                .stockCount(shopItem.getStockCount())
+                .purchaseCount(shopItem.getPurchaseCount())
                 .build();
     }
 
-    private static ShopItemDTO convertShopItemDTO(ShopItem shopItem) {
+    private static ShopItemResDTO convertShopItemDTO(ShopItem shopItem) {
 
         return entityToDTO(shopItem);   // 1. sample DTO 셋팅
     }
     private static ShopItemExtandDTO convertShopItemExtandDTO(ShopItem shopItem) {
 
         // 1. sample DTO 셋팅
-        ShopItemDTO shopItemDTO = entityToDTO(shopItem);
+        ShopItemResDTO shopItemResDTO = entityToDTO(shopItem);
 
         // 2. 확장 DTO 셋팅
-        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemDTO;
+        ShopItemExtandDTO shopItemExtandDTO = (ShopItemExtandDTO) shopItemResDTO;
 
         shopItemExtandDTO.setStockCount(shopItem.getStockCount());
         shopItemExtandDTO.setMembershipPercent(shopItem.getItemPrice().getMembershipPercent());
