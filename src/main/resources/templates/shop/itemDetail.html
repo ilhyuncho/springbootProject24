@@ -34,7 +34,7 @@
 
   <div class="d-flex">
     <div class="itemMainImgDiv">
-      <img class="rounded" style="width:200px" th:alt="${responseDTO.itemName}"
+      <img class="rounded" style="width:200px; margin-right: 5rem" th:alt="${responseDTO.itemName}"
            th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|">
     </div>
     <div class="wd50">
@@ -107,6 +107,8 @@
             </label>
           </div>
           <div class="input-group mb-3">
+            <input type="hidden" th:value="${responseDTO.isFreeDelivery}" class="pIsFreeDelivery">
+
             <span class="input-group-text">배송비</span>
             <label>
               <input type="text" class="form-control pDeliveryFee" readonly>
@@ -149,7 +151,6 @@
   <hr class="my-4">
 
 
-
   <div th:each="fileName : ${responseDTO.getImageDTOExceptMainImage()}" class="text-center">
     <img th:if="${not #strings.isEmpty(fileName.fileName)}" width="800"
             th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
@@ -179,6 +180,7 @@
   const pExpectedPrice = document.querySelector(".pExpectedPrice")
   const pTotalDiscountPrice = document.querySelector(".pTotalDiscountPrice")
   const pDeliveryFee = document.querySelector(".pDeliveryFee")
+  const pIsFreeDelivery = document.querySelector(".pIsFreeDelivery")
 
 
   reCalculation()
@@ -193,13 +195,14 @@
     const itemPrice = pOriginalPrice.value
     const discountPrice = pDiscountPrice.value
     const itemCount = pItemCount.value
+    const isFreeDelivery = pIsFreeDelivery.value
 
     const totalOriginalPrice = itemPrice * itemCount
     const totalDiscountPrice = discountPrice * itemCount
     const totalPrice = (itemPrice - discountPrice) * itemCount
 
     // 배송비 계산
-    const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
+    const deliveryPrice = (isFreeDelivery === 'true' || totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
 
     pOrderPrice.value = totalOriginalPrice
     pDeliveryFee.value = deliveryPrice

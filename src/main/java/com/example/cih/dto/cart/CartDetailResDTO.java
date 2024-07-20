@@ -21,7 +21,7 @@ public class CartDetailResDTO {
     private Integer itemCount;
     private Integer itemPrice;
     private Integer discountPrice;
-
+    private Boolean isFreeDelivery;
     @Builder.Default
     private List<ItemOptionResDTO> listItemOption = new ArrayList<>();
 

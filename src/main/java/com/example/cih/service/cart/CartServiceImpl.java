@@ -53,6 +53,7 @@ public class CartServiceImpl implements CartService {
                             .itemCount(cart.getItemCount())
                             .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
                             .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
+                            .isFreeDelivery(cart.getShopItem().isFreeDelivery())
                             .build();
 
                     // 아이템 옵션 set

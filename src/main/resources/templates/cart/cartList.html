@@ -56,8 +56,8 @@
                             <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10" readonly
                                        class="p_price" th:value="${dto.itemPrice}">
                             </td>
-                            <td><input type="text" th:name="p_discountPrice+${stat.index}"  id="p_discountPrice" size="8" maxlength="10" readonly
-                                       class="p_discountPrice" th:value="${dto.discountPrice}">
+                            <td><input type="text" th:name="p_discountPrice+${stat.index}" id="p_discountPrice" size="8"
+                                       maxlength="10" readonly class="p_discountPrice" th:value="${dto.discountPrice}">
                             </td>
 
                             <td><div class="updownCount">
@@ -71,10 +71,10 @@
                                 [[${dto.getOptionDesc()}]]
                             </td>
 
-                            <td><input type="hidden" th:name="p_itemId+${stat.index}" th:value="${dto.shopItemId}">
-                            </td>
-                            <td><input type="hidden" th:name="p_cartId+${stat.index}" th:value="${dto.cartId}">
-                            </td>
+                            <td><input type="hidden" th:name="p_itemId+${stat.index}" th:value="${dto.shopItemId}"></td>
+                            <td><input type="hidden" th:name="p_cartId+${stat.index}" th:value="${dto.cartId}"></td>
+                            <td><input type="hidden" th:name="p_isFreeDelivery+${stat.index}" th:value="${dto.isFreeDelivery}"></td>
+
                             <td><button class="btn-sm btn-danger" th:onclick="removeCart([[${dto.cartId}]], this)" >X</button>
                             </td>
                         </tr>
@@ -448,21 +448,28 @@
     // 결제 금액 다시 계산
     function reCalculation(){
 
-        var totalOriginalPrice = 0;
-        var totalDiscountPrice = 0;
-        var totalPrice = 0;
+        let totalOriginalPrice = 0;
+        let totalDiscountPrice = 0;
+        let totalPrice = 0;
+        let freeDelivery = false;
+
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
             const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
             const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
             const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
             const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            const isFreeDeliveryTag = document.querySelector('input[name=p_isFreeDelivery'+idx+']');
 
             if(selectedTag.checked){
                 const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
                 const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
                 const itemCount = parseInt(itemCountTag.getAttribute('value'));
+                const isFreeDelivery = parseInt(isFreeDeliveryTag.getAttribute('value'));
 
+                if(isFreeDelivery){
+                    freeDelivery = true;
+                }
                 totalOriginalPrice += itemPrice * itemCount
                 totalDiscountPrice += discountPrice * itemCount
                 totalPrice += (itemPrice - discountPrice) * itemCount
@@ -470,7 +477,7 @@
         }, false)
 
         // 배송비 계산
-        const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
+        const deliveryPrice = (freeDelivery === true || totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
 
         orderPrice.value = totalOriginalPrice
         deliveryFee.value = deliveryPrice
