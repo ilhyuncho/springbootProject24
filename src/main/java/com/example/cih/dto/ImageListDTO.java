@@ -33,7 +33,7 @@ public class ImageListDTO {
                 .findFirst().orElse(null);
     }
 
-    public List<ImageDTO> getImageDTOExceptMainImage(){
+    public List<ImageDTO> getListExceptMainImage(){
         return fileNames.stream().filter(imageDTO -> !imageDTO.getIsMainImage())
                 .collect(Collectors.toList());
     }

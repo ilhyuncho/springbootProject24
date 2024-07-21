@@ -151,7 +151,7 @@
   <hr class="my-4">
 
 
-  <div th:each="fileName : ${responseDTO.getImageDTOExceptMainImage()}" class="text-center">
+  <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
     <img th:if="${not #strings.isEmpty(fileName.fileName)}" width="800"
             th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" >
   </div>

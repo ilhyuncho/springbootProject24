@@ -71,8 +71,6 @@ public class ShopItem {
                 .isMainImage(isMainImage)
                 .build();
 
-        log.error("addImage : " + itemImage);
-
         itemImageSet.add(itemImage);
     }
 
