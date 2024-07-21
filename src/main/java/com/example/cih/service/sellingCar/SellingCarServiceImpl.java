@@ -82,7 +82,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                     sellingCarResDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
                 }
 
-                log.error(buyingCarInfo);
+                log.error("buyingCarInfo: " + buyingCarInfo);
            // }
 
             // 좋아요 상태 전송
@@ -211,10 +211,8 @@ public class SellingCarServiceImpl implements SellingCarService {
         sellingCar.getCar().getImageSet()
                         .stream().sorted(Comparator.comparing(CarImage::getImageOrder))
                         .forEach(image -> {
-            sellingCarResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+            sellingCarResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder(), image.getIsMainImage());
         });
-
-        sellingCarResDTO.setMainImage(sellingCar.getCar().getMainImageDTO());
 
         return sellingCarResDTO;
     }

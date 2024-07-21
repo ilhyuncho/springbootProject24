@@ -1,22 +1,18 @@
 package com.example.cih.dto.notification;
 
 
-import com.example.cih.dto.ImageDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.cih.dto.ImageListDTO;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotiResDTO {
+public class NotiResDTO extends ImageListDTO {
     private Long notiId;
     private String name;
     private String title;
@@ -24,16 +20,5 @@ public class NotiResDTO {
     private LocalDate regDate;
     private Boolean isUse;
     private Boolean isPopup;
-
-    @Builder.Default
-    private List<ImageDTO> fileNames = new ArrayList<>();
-    public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO image = ImageDTO.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .imageOrder(imageOrder)
-                .build();
-        fileNames.add(image);
-    }
 
 }

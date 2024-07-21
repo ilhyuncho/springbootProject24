@@ -64,7 +64,8 @@ public class CartServiceImpl implements CartService {
                             .stream().filter(image -> image.getImageOrder() == 0)
                             .peek(log::error)
                             .forEach(image -> {
-                                cartDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
+                                cartDTO.addImage(image.getUuid(), image.getFileName(),
+                                        image.getImageOrder(), image.getIsMainImage());
                             });
 
                     return cartDTO;

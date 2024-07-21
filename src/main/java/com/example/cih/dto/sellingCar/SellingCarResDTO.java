@@ -1,46 +1,31 @@
 package com.example.cih.dto.sellingCar;
 import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
-import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageListDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class SellingCarResDTO {
+@ToString(callSuper = true)
+public class SellingCarResDTO extends ImageListDTO {
     private Long carId;
     private String carNumber;
     private String carModel;
     private Integer carYears;
-    private SellingCarStatus sellingCarStatus;
-    private BuyCarStatus buyCarStatus;
+    private Boolean isLike;
     private Integer requiredPrice;
     private Long sellingCarId;
-    private Boolean isLike;
     private Integer viewCount;
+    private BuyCarStatus buyCarStatus;
+    private SellingCarStatus sellingCarStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;
-
-    private ImageDTO mainImage;
-
-    @Builder.Default
-    private List<ImageDTO> fileNames = new ArrayList<>();
-
-    public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO imageDTO = ImageDTO.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .imageOrder(imageOrder)
-                .build();
-        fileNames.add(imageDTO);
-    }
-
 }

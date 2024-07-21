@@ -63,7 +63,7 @@ public class ShopItem {
     //ShopItem 엔티티 에서 ItemImage 엔티티 객체들을 모두 관리  begin---------------
     public void addImage(String uuid, String fileName, Boolean isMainImage){
 
-        ItemImage carImage = ItemImage.builder()
+        ItemImage itemImage = ItemImage.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .shopItem(this)
@@ -71,9 +71,9 @@ public class ShopItem {
                 .isMainImage(isMainImage)
                 .build();
 
-        log.error("addImage : " + carImage);
+        log.error("addImage : " + itemImage);
 
-        itemImageSet.add(carImage);
+        itemImageSet.add(itemImage);
     }
 
     public void clearImages(){

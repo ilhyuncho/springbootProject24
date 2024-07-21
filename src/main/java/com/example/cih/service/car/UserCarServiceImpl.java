@@ -149,7 +149,6 @@ public class UserCarServiceImpl implements UserCarService {
                 .carGrade(car.getCarGrade().getValue())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
-                .mainImage(car.getMainImageDTO())
                 .build();
 
         // 판매 진행 정보 매핑
@@ -160,8 +159,8 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
-          //  log.error(carImage.getUuid()+ carImage.getFileName()+ carImage.getImageOrder());
-            carViewResDTO.addImage(carImage.getUuid(), carImage.getFileName(), carImage.getImageOrder());
+            carViewResDTO.addImage(carImage.getUuid(), carImage.getFileName(),
+                    carImage.getImageOrder(), carImage.getIsMainImage());
         });
 
         return carViewResDTO;

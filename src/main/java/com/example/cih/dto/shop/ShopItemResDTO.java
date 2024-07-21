@@ -1,5 +1,6 @@
 package com.example.cih.dto.shop;
 
+import com.example.cih.dto.ImageListDTO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -9,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ShopItemResDTO {
+public class ShopItemResDTO extends ImageListDTO {
     private Long shopItemId;
     private String itemName;
     private String itemTitle;

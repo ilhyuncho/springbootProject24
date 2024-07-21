@@ -1,23 +1,24 @@
 package com.example.cih.dto.order;
 
 
-import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageListDTO;
 import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.common.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderTemporaryResDTO {
+public class OrderTemporaryResDTO extends ImageListDTO {
     private Long orderTemporaryId;
     private Long shopItemId;
     private String itemName;
@@ -28,18 +29,6 @@ public class OrderTemporaryResDTO {
 
     @Builder.Default
     private List<ItemOptionResDTO> listItemOption = new ArrayList<>();
-
-    @Builder.Default
-    private List<ImageDTO> fileNames = new ArrayList<>();
-
-    public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO imageDTO = ImageDTO.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .imageOrder(imageOrder)
-                .build();
-        fileNames.add(imageDTO);
-    }
 
     public String getOptionDesc(){
         return CommonUtils.getItemOptionDesc(listItemOption);

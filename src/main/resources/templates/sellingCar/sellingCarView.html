@@ -23,7 +23,7 @@
 
   <div class="d-flex">
     <div class="itemMainImgDiv">
-      <img th:src="|/view/${responseDTO.fileNames.get(0).uuid}_${responseDTO.fileNames.get(0).fileName}|"
+      <img th:src="|/view/s_${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
            class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
     </div>
     <div class="wd50">

@@ -1,7 +1,7 @@
 package com.example.cih.dto.car;
 
 import com.example.cih.domain.sellingCar.SellingCarStatus;
-import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageListDTO;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarViewResDTO {        // 내차 정보 로딩 시
+public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩 시
 
     private Long carId;
     private String userName;
@@ -37,15 +37,12 @@ public class CarViewResDTO {        // 내차 정보 로딩 시
     @NotNull
     private Long    carKm;
 
-    private ImageDTO mainImage;
-    private List<ImageDTO> fileNames = new ArrayList<>();
-
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String carNumber, String carGrade, String carModel, int carYears,
-                         String carColors, Long carKm, ImageDTO mainImage) {
+                         String carColors, Long carKm) {
         this.carId = carId;
         this.userName = userName;
         this.carNumber = carNumber;
@@ -54,15 +51,5 @@ public class CarViewResDTO {        // 내차 정보 로딩 시
         this.carYears = carYears;
         this.carColors = carColors;
         this.carKm = carKm;
-        this.mainImage = mainImage;
-    }
-
-    public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO imageDTO = ImageDTO.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .imageOrder(imageOrder)
-                .build();
-        fileNames.add(imageDTO);
     }
 }

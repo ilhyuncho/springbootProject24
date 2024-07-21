@@ -39,8 +39,8 @@
                   <span class="badge progress-bar-success" style="background-color: #0a53be">[[${dto.sellingCarStatus}]]</span>
 
                   <div th:if="${dto.mainImage != null}">
-                    <img th:src="|/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}|" th:width="150"
-                         th:data-src="${dto.mainImage.uuid}" onclick="window.open(this.src)">
+                    <img th:src="|/view/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="150"
+                         th:data-src="${dto.getMainImage().uuid}" onclick="window.open(this.src)">
                   </div>
 
                 </th>

@@ -13,4 +13,5 @@ public class ImageDTO {
     private String uuid;
     private String fileName;
     private Integer imageOrder;
+    private Boolean isMainImage;
 }

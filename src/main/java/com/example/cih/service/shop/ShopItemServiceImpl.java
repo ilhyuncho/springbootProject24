@@ -168,17 +168,25 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private static ShopItemResDTO entityToDTO(ShopItem shopItem){
 
-        return ShopItemExtandDTO.builder()
+        ShopItemExtandDTO shopItemExtandDTO = ShopItemExtandDTO.builder()
                 .shopItemId(shopItem.getShopItemId())
                 .itemName(shopItem.getItemName())
                 .itemTitle(shopItem.getItemTitle())
                 .itemDesc(shopItem.getItemDesc())
                 .originalPrice(shopItem.getItemPrice().getOriginalPrice())
-                .mainImage(shopItem.getMainImageDTO())
                 .isFreeDelivery(shopItem.isFreeDelivery())
                 .stockCount(shopItem.getStockCount())
                 .purchaseCount(shopItem.getPurchaseCount())
                 .build();
+
+        if( shopItem.getItemImageSet().size() > 0) {
+            shopItem.getItemImageSet().forEach(shopItemImage -> {
+                shopItemExtandDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(),
+                        shopItemImage.getImageOrder(), shopItemImage.getIsMainImage());
+            });
+        }
+
+        return shopItemExtandDTO;
     }
 
     private static ShopItemResDTO convertShopItemDTO(ShopItem shopItem) {
@@ -210,13 +218,6 @@ public class ShopItemServiceImpl implements ShopItemService {
                         .optionValueForView(mapItemOptionForView.get(itemOptionType))
                         .build()
             );
-        }
-
-        // ItemImage 셋팅
-        if( shopItem.getItemImageSet().size() > 0) {
-            shopItem.getItemImageSet().forEach(shopItemImage -> {
-                shopItemExtandDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(), shopItemImage.getImageOrder());
-            });
         }
 
         return shopItemExtandDTO;

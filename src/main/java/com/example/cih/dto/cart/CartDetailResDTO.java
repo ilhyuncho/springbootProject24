@@ -1,20 +1,21 @@
 package com.example.cih.dto.cart;
 
 
-import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageListDTO;
 import com.example.cih.dto.shop.ItemOptionResDTO;
 import com.example.cih.service.common.CommonUtils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @ToString
-@Builder
-public class CartDetailResDTO {
+@SuperBuilder
+public class CartDetailResDTO extends ImageListDTO {
     private Long cartId;
     private Long shopItemId;
     private String itemName;
@@ -22,26 +23,13 @@ public class CartDetailResDTO {
     private Integer itemPrice;
     private Integer discountPrice;
     private Boolean isFreeDelivery;
+
     @Builder.Default
     private List<ItemOptionResDTO> listItemOption = new ArrayList<>();
 
-    @Builder.Default
-    private List<ImageDTO> fileNames = new ArrayList<>();
-
-    public void addImage(String uuid, String fileName, int imageOrder){
-        ImageDTO imageDTO = ImageDTO.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .imageOrder(imageOrder)
-                .build();
-        fileNames.add(imageDTO);
+    public String getOptionDesc(){return CommonUtils.getItemOptionDesc(listItemOption);
     }
-
-    public String getOptionDesc(){
-        return CommonUtils.getItemOptionDesc(listItemOption);
-    }
-    public String getOptionIds(){
-        return CommonUtils.getItemOptionIds(listItemOption);
+    public String getOptionIds(){return CommonUtils.getItemOptionIds(listItemOption);
     }
 
 }

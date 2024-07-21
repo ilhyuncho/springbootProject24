@@ -15,7 +15,6 @@ import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -39,7 +37,6 @@ public class MyPageController {
 
     private final BuyingCarService buyingCarService;
 
-    private final ModelMapper modelMapper;
     private final FileHandler fileHandler;
 
 
@@ -55,6 +52,7 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
+        listCarDTO.forEach(log::error);
         return "/myPage/carList";
     }
     @ApiOperation(value = "차 등록 페이지로 이동", notes = "")
