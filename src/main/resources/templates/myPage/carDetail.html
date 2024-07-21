@@ -12,7 +12,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          Car Detail Info
+          내차 상세 정보
         </div>
         <div class="card-body">
           <!--            dto 값 출력 부분-->
@@ -104,8 +104,11 @@
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
               <th:block th:each="fileName:${responseDTO.fileNames}">
-                <div class="card col-4">
+                <div class="card col-3">
                   <div class="card-header d-flex justify-content-center">
+                    <input type="radio" name="isMainImage" th:value="${fileName.fileName}" onclick="return false;"
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
+                    </input>
                     [[${fileName.fileName}]]
                   </div>
                   <div class="card-body">

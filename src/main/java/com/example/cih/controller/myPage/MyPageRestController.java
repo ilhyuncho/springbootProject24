@@ -2,6 +2,7 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.reference.RefCarSample;
+import com.example.cih.dto.car.CarInfoReqDTO;
 import com.example.cih.dto.car.CarKmUpdateReqDTO;
 import com.example.cih.dto.car.CarRegisterReqDTO;
 import com.example.cih.service.car.UserCarService;
@@ -65,11 +66,25 @@ public class MyPageRestController {
 
         log.error("carRegisterReqDTO : " + carRegisterReqDTO);
 
-        Long carId = userCarService.register(principal.getName(), carRegisterReqDTO.getCarNumber());
+        Long carId = userCarService.registerMyCar(principal.getName(), carRegisterReqDTO.getCarNumber());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
         resultMap.put("carId", carId.toString());
+
+        return resultMap;
+    }
+
+    @ApiOperation(value = "차 세부 변경 (post)", notes = "")
+    @PostMapping("/carModify")
+    public Map<String,String> postCarModify(@RequestBody CarInfoReqDTO carInfoReqDTO,
+                                Principal principal ){
+        log.error("car modify post...." + carInfoReqDTO);
+
+        userCarService.modifyMyCar(carInfoReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
 
         return resultMap;
     }

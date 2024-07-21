@@ -78,7 +78,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public Long register(String userName, String carNumber) {
+    public Long registerMyCar(String userName, String carNumber) {
 
         // 유저의 기존 등록 차 정보 get
         User user = userService.findUser(userName);
@@ -117,10 +117,10 @@ public class UserCarServiceImpl implements UserCarService {
         car.clearImages();
 
         if(carInfoReqDTO.getFileNames() != null){
-            for (String fileName : carInfoReqDTO.getFileNames() ) {
+            carInfoReqDTO.getFileNames().forEach(fileName -> {
                 String[] index = fileName.split("_");
-                car.addImage(index[0], index[1]);
-            }
+                car.addImage(index[0], index[1], carInfoReqDTO.getMainImageFileName().equals(index[1]) );
+            });
         }
 
         carRepository.save(car);
@@ -149,6 +149,7 @@ public class UserCarServiceImpl implements UserCarService {
                 .carGrade(car.getCarGrade().getValue())
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
+                .mainImage(car.getMainImageDTO())
                 .build();
 
         // 판매 진행 정보 매핑

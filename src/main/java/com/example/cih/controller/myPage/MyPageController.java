@@ -19,7 +19,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -79,31 +78,6 @@ public class MyPageController {
         model.addAttribute("userName", userName);
 
         return request.getRequestURI();
-    }
-
-    @ApiOperation(value = "차 세부 변경 (post)", notes = "")
-    @PostMapping("/carModify")
-    public String postCarModify(@Valid CarInfoReqDTO carInfoReqDTO,
-                                BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes,
-                                Principal principal ){
-        log.error("car modify post...." + carInfoReqDTO);
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("carId", carInfoReqDTO.getCarId());
-            return "redirect:/myPage/carDetail";
-        }
-
-        userCarService.modifyMyCar(carInfoReqDTO);
-
-        redirectAttributes.addFlashAttribute("result", "modified");
-        redirectAttributes.addAttribute("carId", carInfoReqDTO.getCarId());
-        redirectAttributes.addAttribute("userName", principal.getName());
-
-        return "redirect:/myPage/carDetail";
     }
 
     @ApiOperation(value = "차 정보 삭제", notes = "")

@@ -37,6 +37,7 @@ public class CarViewResDTO {        // 내차 정보 로딩 시
     @NotNull
     private Long    carKm;
 
+    private ImageDTO mainImage;
     private List<ImageDTO> fileNames = new ArrayList<>();
 
     private Long sellingCarId;
@@ -44,7 +45,7 @@ public class CarViewResDTO {        // 내차 정보 로딩 시
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String carNumber, String carGrade, String carModel, int carYears,
-                         String carColors, Long carKm) {
+                         String carColors, Long carKm, ImageDTO mainImage) {
         this.carId = carId;
         this.userName = userName;
         this.carNumber = carNumber;
@@ -53,6 +54,7 @@ public class CarViewResDTO {        // 내차 정보 로딩 시
         this.carYears = carYears;
         this.carColors = carColors;
         this.carKm = carKm;
+        this.mainImage = mainImage;
     }
 
     public void addImage(String uuid, String fileName, int imageOrder){

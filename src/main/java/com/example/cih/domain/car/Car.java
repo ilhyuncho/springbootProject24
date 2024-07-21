@@ -7,6 +7,7 @@ import com.example.cih.domain.sellingCar.SellType;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.ImageDTO;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
@@ -91,12 +92,13 @@ public class Car extends BaseEntity {
     }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
-    public void addImage(String uuid, String fileName){
+    public void addImage(String uuid, String fileName, Boolean isMainImage){
         CarImage carImage = CarImage.builder()
                 .uuid(uuid)
                 .fileName(fileName)
                 .car(this)
                 .imageOrder(imageSet.size())
+                .isMainImage(isMainImage)
                 .build();
         imageSet.add(carImage);
     }
@@ -104,6 +106,24 @@ public class Car extends BaseEntity {
         imageSet.forEach(image -> image.changeCar(null));
         this.imageSet.clear();
     }
+    public ImageDTO getMainImageDTO(){
+        CarImage itemImage = imageSet.stream()
+                //.filter(shopItemImage -> shopItemImage.getImageOrder() == 0)
+                .filter(CarImage::getIsMainImage)
+                .findFirst().orElse(null);
+
+        if(itemImage == null){
+            log.error("itemImage is null, carId : " + carId);
+            return null;
+        }
+
+        return ImageDTO.builder()
+                .uuid(itemImage.getUuid())
+                .fileName(itemImage.getFileName())
+                .imageOrder(itemImage.getImageOrder())
+                .build();
+    }
+
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
 
     public void cancelCellingCar(){

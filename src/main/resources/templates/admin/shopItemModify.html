@@ -126,9 +126,10 @@
                 <div class="card col-3">
                   <div class="card-header d-flex">
                     <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
-                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인</input>
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
+                    </input>
                        &nbsp;&nbsp;
-                       [[${fileName.fileName}]]
+                    [[${fileName.fileName}]]
                     <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
                   </div>
                   <div class="card-body">
@@ -243,11 +244,11 @@
       return;
     }
 
+    // 삭제대상 파일들을 삭제
+    callRemoveFiles()
 
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
-    const mainImageFileName = document.querySelector('input[name="isMainImage"]:checked').value;
-
 
     const itemOptionList = []
     if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
@@ -266,11 +267,8 @@
       isEventTarget:eventTargetValue,
       itemOptionList:itemOptionList,
       fileNames:fileNameList,
-      mainImageFileName:mainImageFileName
+      mainImageFileName:getMainImageFileName()
     }
-
-    // 삭제대상 파일들을 삭제
-    callRemoveFiles()
 
     modifyShopItem(formObj).then(result => {
       console.log(result)

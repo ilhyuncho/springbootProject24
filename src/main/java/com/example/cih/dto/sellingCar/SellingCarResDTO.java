@@ -29,6 +29,8 @@ public class SellingCarResDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;
 
+    private ImageDTO mainImage;
+
     @Builder.Default
     private List<ImageDTO> fileNames = new ArrayList<>();
 

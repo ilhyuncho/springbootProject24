@@ -106,8 +106,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("regDate");
-        
-        
+
 //        Page<SellingCar> sellingCars =
 //                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
@@ -214,6 +213,8 @@ public class SellingCarServiceImpl implements SellingCarService {
                         .forEach(image -> {
             sellingCarResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder());
         });
+
+        sellingCarResDTO.setMainImage(sellingCar.getCar().getMainImageDTO());
 
         return sellingCarResDTO;
     }

@@ -11,7 +11,7 @@ public interface UserCarService {
     List<CarViewResDTO> readMyCarList(PageRequestDTO pageRequestDTO, String userName);
     CarViewResDTO readMyCarDetailInfo(String userName, Long carId);
 
-    Long register(String userName, String carNumber);
+    Long registerMyCar(String userName, String carNumber);
 
     void modifyMyCar(CarInfoReqDTO carInfoReqDTO);
     void modifyMyCarKm(CarKmUpdateReqDTO carKmUpdateReqDTO);

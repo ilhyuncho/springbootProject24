@@ -19,37 +19,37 @@
           <form th:action="@{/myPage/carModify}" method="post" id="f1">
             <div class="input-group mb-3">
               <span class="input-group-text">CarID</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carId}" name="carId" readonly>
+              <input type="text" class="form-control carId" th:value="${responseDTO.carId}" name="carId" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarNumber</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carNumber}" name="carNumber" readonly>
+              <input type="text" class="form-control carNumber" th:value="${responseDTO.carNumber}" name="carNumber" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarGrade</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carGrade}" name="carGrade" readonly>
+              <input type="text" class="form-control carGrade" th:value="${responseDTO.carGrade}" name="carGrade" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarModel</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carModel}" name="carModel" readonly>
+              <input type="text" class="form-control carModel" th:value="${responseDTO.carModel}" name="carModel" readonly>
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarYears</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carYears}" name="carYears">
+              <input type="text" class="form-control carYears" th:value="${responseDTO.carYears}" name="carYears">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarColors</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carColors}" name="carColors">
+              <input type="text" class="form-control carColors" th:value="${responseDTO.carColors}" name="carColors">
             </div>
 
             <div class="input-group mb-3">
               <span class="input-group-text">CarKm</span>
-              <input type="text" class="form-control" th:value="${responseDTO.carKm}" name="carKm" >
+              <input type="text" class="form-control carKm" th:value="${responseDTO.carKm}" name="carKm" >
             </div>
 
             <!-- 첨부 파일 새로 등록-->
@@ -82,8 +82,13 @@
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
         <th:block th:each="fileName:${responseDTO.fileNames}">
-          <div class="card col-4">
+          <div class="card col-3">
             <div class="card-header d-flex justify-content-center">
+
+              <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
+                     th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
+              </input>
+
               [[${fileName.fileName}]]
               <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
             </div>
@@ -107,7 +112,6 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <input type="file" name="files" class="form-control" multiple>
-
           </div>
         </div>
         <div class="modal-footer">
@@ -121,6 +125,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/car.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -129,6 +134,12 @@
   const formObj = document.querySelector("#f1")
   const uploadResult = document.querySelector(".uploadResult")
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+
+  const carId = document.querySelector('.carId');
+  const carYears = document.querySelector('.carYears');
+  const carColors = document.querySelector('.carColors');
+  const carKm = document.querySelector('.carKm');
+
 
   //첨부 파일 삭제 임시 저장
   const removeFileList = []
@@ -157,8 +168,11 @@
     uploadToServer(formObj).then(result => {
       //console.log(result)
 
+      const uploadFiles = uploadResult.querySelectorAll("img")
+
+      let temp = uploadFiles.length
       for(const uploadResult of result){
-        showUploadFile(uploadResult, false)
+        showUploadFile(uploadResult, false, temp++)
       }
 
       uploadModal.hide()
@@ -168,21 +182,36 @@
   }, false)
 
 
-  // Car 수정 요청
+  // Car 정보 수정 요청
   document.querySelector(".saveBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/myPage/carModify?userName=`+ [[${#authentication.principal.username}]]
-
-    // 첨부파일을  <input type='hidden..>으로 추가
-    appendFileData()
-
     // 삭제대상 파일들을 삭제
     callRemoveFiles()
 
-    formObj.method = 'post'
-    formObj.submit()
+    const formObj = {
+      carId:carId.value,
+      carYears:carYears.value,
+      carColors:carColors.value,
+      carKm:carKm.value,
+      fileNames:getUploadFileNames(),              // 업로드될 파일 이름 리스트 가져오기
+      mainImageFileName: getMainImageFileName()
+    }
+
+    modifyCarInfo(formObj).then(result => {
+      console.log(result)
+
+      // 화면 재 갱신
+      self.location = '/myPage/carList?userName=' + [[${#authentication.principal.username}]]
+
+    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+      console.log(e.response.data.message)
+      alert('catch: ' + e.response.data.message)
+
+      // 화면 재 갱신
+      self.location = '/myPage/carList?userName=' + [[${#authentication.principal.username}]]
+    })
 
   }, false)
 

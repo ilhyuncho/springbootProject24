@@ -251,7 +251,7 @@
 
       let temp = uploadFiles.length
       for(const uploadResult of result){
-        showUploadFile(uploadResult, true, temp++  )
+        showUploadFile(uploadResult, true, temp++ )
       }
 
       uploadModal.hide()
@@ -279,7 +279,6 @@
 
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
-    const mainImageFileName = document.querySelector('input[name="isMainImage"]:checked').value;
 
     const itemOptionList = []
     if(itemOptionType1.value > 0 && itemOptionValue1.value.length > 0){
@@ -299,7 +298,7 @@
       isEventTarget:eventTargetValue,
       itemOptionList:itemOptionList,
       fileNames:fileNameList,
-      mainImageFileName:mainImageFileName
+      mainImageFileName:getMainImageFileName()
     }
 
     registerShopItem(formObj).then(result => {

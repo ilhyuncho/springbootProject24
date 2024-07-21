@@ -16,7 +16,7 @@ import java.util.List;
 public class CarInfoReqDTO {
 
     private Long    carId;
-    private Long   userId;
+    //private Long    userId;
     @NotNull
     private int     carYears;
     @NotEmpty
@@ -24,6 +24,6 @@ public class CarInfoReqDTO {
     @NotNull
     private Long    carKm;
 
+    private String mainImageFileName;
     private List<String> fileNames = new ArrayList<>();
-
 }

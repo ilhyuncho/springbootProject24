@@ -1,6 +1,7 @@
 package com.example.cih.domain.shop;
 
 
+import com.example.cih.domain.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name="itemImages")
 @ToString
-public class ItemImage {
+public class ItemImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -55,7 +55,7 @@ function showUploadFile({uuid, fileName, link}, direct, index){
 
     console.log(index)
 
-    let str = `<div class="card col-4">
+    let str = `<div class="card col-3">
             <div class="card-header d-flex">`
 
     if( index === 0){
@@ -108,5 +108,13 @@ function appendNotShownData(){
         str += `<input type='hidden' name='fileNames' value="${uuid}_${fileName}">`
     }
     target.innerHTML += str;
+}
+
+function getMainImageFileName(){
+    const isMainImage = document.querySelector('input[name="isMainImage"]:checked')
+    if(isMainImage !== null){
+        return isMainImage.value
+    }
+    return null
 }
 

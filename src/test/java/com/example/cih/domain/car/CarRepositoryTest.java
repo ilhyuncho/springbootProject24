@@ -69,7 +69,7 @@ public class CarRepositoryTest extends ApplicationTests {
                 .build();
 
         IntStream.rangeClosed(1, 4).forEach( i -> {
-            car.addImage(UUID.randomUUID().toString(),"fileName" + i +".jpg" );
+            car.addImage(UUID.randomUUID().toString(),"fileName" + i +".jpg", true );
         });
 
         Car result = carRepository.save(car);
@@ -108,7 +108,7 @@ public class CarRepositoryTest extends ApplicationTests {
 
         // 새롭게 추가
         IntStream.rangeClosed(1, 4).forEach( i -> {
-            car.addImage(UUID.randomUUID().toString(),"updatefileName" + i +".jpg" );
+            car.addImage(UUID.randomUUID().toString(),"updatefileName" + i +".jpg", true );
         });
 
         carRepository.save(car);

@@ -1,6 +1,7 @@
 package com.example.cih.domain.car;
 
 
+import com.example.cih.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,13 +13,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString(exclude = "car")
 @Table(name="carImages")
-public class CarImage implements Comparable<CarImage> { // @OneToMany 처리에서 순번에 맞게 정렬하기 위해서
+public class CarImage extends BaseEntity implements Comparable<CarImage> { // @OneToMany 처리에서 순번에 맞게 정렬하기 위해서
     @Id
     private String uuid;
 
     private String fileName;
 
     private int imageOrder;
+
+    private Boolean isMainImage;
 
     @ManyToOne
     @JoinColumn(name="carId")
