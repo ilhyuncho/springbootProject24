@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,12 +16,14 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Log4j2
 public class ImageListDTO {
     @Builder.Default
     private List<ImageDTO> fileNames = new ArrayList<>();
 
-    public void addImage(String uuid, String fileName, int imageOrder, Boolean isMainImage){
+    public void addImage(Long imageId, String uuid, String fileName, int imageOrder, Boolean isMainImage){
         ImageDTO imageDTO = ImageDTO.builder()
+                .imageId(imageId)
                 .uuid(uuid)
                 .fileName(fileName)
                 .imageOrder(imageOrder)
@@ -40,4 +43,12 @@ public class ImageListDTO {
                 .sorted(Comparator.comparing(ImageDTO::getImageOrder))
                 .collect(Collectors.toList());
     }
+
+    public List<ImageDTO> getListAllImage(){
+        return fileNames.stream()
+                .sorted(Comparator.comparing(ImageDTO::getImageOrder))
+                .collect(Collectors.toList());
+    }
+
+
 }

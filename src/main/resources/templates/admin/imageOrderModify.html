@@ -46,15 +46,15 @@
         <div class="row mt-3">
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-              <th:block th:each="fileName:${responseDTO.fileNames}">
+
+              <th:block th:each="fileName:${responseDTO.getListAllImage()}">
                 <div class="card col-3">
                   <div class="card-header d-flex">
-                    <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
-                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
-                    </input>
-                       &nbsp;&nbsp;
                     [[${fileName.fileName}]]
-                    <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
+                    &nbsp;&nbsp;
+                    <span>
+                      <input type="text" size="2" maxlength="2" th:value="${fileName.imageOrder}">
+                    </span>
                   </div>
                   <div class="card-body">
                     <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
@@ -89,7 +89,10 @@
     e.preventDefault()
     e.stopPropagation()
 
-    ////////////////////////////////////////////////////
+
+
+
+
 
 
     const formObj = {

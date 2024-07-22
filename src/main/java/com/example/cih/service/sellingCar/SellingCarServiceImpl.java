@@ -211,7 +211,8 @@ public class SellingCarServiceImpl implements SellingCarService {
         sellingCar.getCar().getImageSet()
                         .stream().sorted(Comparator.comparing(CarImage::getImageOrder))
                         .forEach(image -> {
-            sellingCarResDTO.addImage(image.getUuid(), image.getFileName(), image.getImageOrder(), image.getIsMainImage());
+            sellingCarResDTO.addImage(image.getCarImageId(), image.getUuid(), image.getFileName(),
+                    image.getImageOrder(), image.getIsMainImage());
         });
 
         return sellingCarResDTO;

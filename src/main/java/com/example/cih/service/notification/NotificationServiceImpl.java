@@ -303,7 +303,7 @@ public class NotificationServiceImpl implements NotificationService {
         }
         // 이미지 파일 정보 매핑
         notification.getNotificationImageSet().forEach(image -> {
-            notiResDTO.addImage(image.getUuid(), image.getFileName(),
+            notiResDTO.addImage(image.getNotificationImageId(), image.getUuid(), image.getFileName(),
                     image.getImageOrder(), image.getIsMainImage());
         });
 

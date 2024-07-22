@@ -14,7 +14,12 @@ import javax.persistence.*;
 @ToString(exclude = "car")
 @Table(name="carImages")
 public class CarImage extends BaseEntity implements Comparable<CarImage> { // @OneToMany 처리에서 순번에 맞게 정렬하기 위해서
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="carImageId")
+    private Long carImageId;
+
     private String uuid;
 
     private String fileName;

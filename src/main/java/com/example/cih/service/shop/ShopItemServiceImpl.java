@@ -181,7 +181,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
         if( shopItem.getItemImageSet().size() > 0) {
             shopItem.getItemImageSet().forEach(shopItemImage -> {
-                shopItemExtandDTO.addImage(shopItemImage.getUuid(), shopItemImage.getFileName(),
+                shopItemExtandDTO.addImage(shopItemImage.getItemImageId(), shopItemImage.getUuid(), shopItemImage.getFileName(),
                         shopItemImage.getImageOrder(), shopItemImage.getIsMainImage());
             });
         }

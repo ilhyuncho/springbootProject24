@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
                         .stream().filter(image -> image.getImageOrder() == 0)
                         .peek(log::error)
                         .forEach(image -> {
-                            itemDTO.addImage(image.getUuid(), image.getFileName(),
+                            itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
                                     image.getImageOrder(), image.getIsMainImage());
                         });
 
@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
                 .stream().filter(image -> image.getImageOrder() == 0)
                 .peek(log::error)
                 .forEach(image -> {
-                    orderTemporaryResDTO.addImage(image.getUuid(), image.getFileName(),
+                    orderTemporaryResDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
                             image.getImageOrder(), image.getIsMainImage());
                 });
 

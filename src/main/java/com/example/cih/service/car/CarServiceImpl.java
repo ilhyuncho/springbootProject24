@@ -56,7 +56,7 @@ public class CarServiceImpl implements CarService {
 
         // 차 이미지 파일 정보 매핑
         car.getImageSet().forEach(carImage -> {
-            carViewResDTO.addImage(carImage.getUuid(), carImage.getFileName(),
+            carViewResDTO.addImage(carImage.getCarImageId(), carImage.getUuid(), carImage.getFileName(),
                     carImage.getImageOrder(), carImage.getIsMainImage());
         });
 
