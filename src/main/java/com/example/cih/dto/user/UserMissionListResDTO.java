@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class UserMissionListResDTO<E> extends PageResponseDTO<E> {
 
-    Integer totalMPoint;
+    private final Integer totalMPoint;
 
     public UserMissionListResDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total,
                                  Integer totalMPoint ) {

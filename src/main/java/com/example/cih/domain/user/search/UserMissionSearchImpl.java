@@ -25,7 +25,8 @@ public class UserMissionSearchImpl extends QuerydslRepositorySupport implements 
                                                UserMissionReqDTO userMissionReqDTO ) {
 
         LocalDateTime searchStartTime = Util.convertStringToLocalDateTime(userMissionReqDTO.getFromDay());
-        LocalDateTime searchEndTime = Util.convertStringToLocalDateTime(userMissionReqDTO.getToDay());
+        LocalDateTime searchEndTime = Util.convertStringToLocalDateTime(userMissionReqDTO.getToDay()).plusDays(1);
+
         log.error("searchStartTime : " + searchStartTime);
         log.error("searchEndTime : " + searchEndTime);
 

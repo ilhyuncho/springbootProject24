@@ -21,7 +21,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/myInfo")
@@ -45,9 +44,7 @@ public class myInfoRestController {
 
         User user = userService.findUser(principal.getName());
 
-        UserMissionListResDTO<UserMissionResDTO> listUserMission = userMissionService.getListUserMission(pageRequestDTO, user, userMissionReqDTO);
-
-        return listUserMission;
+        return userMissionService.getListUserMission(pageRequestDTO, user, userMissionReqDTO);
     }
     @ApiOperation(value = "배송 주소 정보 get", notes = "")
     @GetMapping("/addressInfo")

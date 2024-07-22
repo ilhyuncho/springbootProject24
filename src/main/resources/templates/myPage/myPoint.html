@@ -42,7 +42,7 @@
                 <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
                   <option value="7">7일</option>
                   <option value="30">30일</option>
-                  <option value="90">90일</option>
+                  <option value="90" selected>90일</option>
                 </select>
                 <span class="inp-t inp-date" style="width: 150px;">
 					<input type="date" title="날짜" id="fromDay" >
@@ -75,8 +75,6 @@
     </div>
   </div>
 
-
-
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/myInfo.js"></script>
 
@@ -84,32 +82,40 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  let page = 1
-  let size = 5
-
   const fromDay = document.querySelector('#fromDay');
   const toDay = document.querySelector('#toDay');
   const searchPeriod = document.querySelector('#searchPeriod');
   const tableMyPoint = document.getElementById("tableMyPoint");
   const myMPoint = document.querySelector('.myMPoint');
 
-  var beforeDay = 90;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
-  var nowDate = new Date();
-  var startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+  // 조회 기간 셋팅 (기본 현재 날짜 기준 90일 전 부터 조회)
+  changePeriodSelect()
+  // 조회 요청
+  getMyPointInfo()
 
-  var tomorrowDate = nowDate.setDate(nowDate.getDate() + 1)
-  var endDate = new Date(tomorrowDate).toISOString().substring(0, 10)
+  function changePeriodSelect(){
+    const beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
+    const nowDate = new Date();
+    const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+    const endDate = new Date().toISOString().substring(0, 10)
 
-  const formObj = {
-    fromDay:startDate,
-    toDay:endDate
+    // 날짜 input 값 설정
+    fromDay.value = startDate
+    toDay.value = endDate
   }
+  // 포인트 조회 요청 처리
+  document.querySelector(".searchBtn").addEventListener("click", function(e){
+    getMyPointInfo()
 
-  getMyPointInfo(formObj)
+  }, false)
+  function getMyPointInfo(){
 
-  function getMyPointInfo(formObj){
+    const formObj = {
+      fromDay:fromDay.value,
+      toDay:toDay.value
+    }
+
     getMyPoint(formObj).then(data => {
-
       // 유저의 총 포인트 set
       myMPoint.value = data.totalMPoint
 
@@ -119,13 +125,6 @@
       console.error(e)
     })
   }
-
-  function makePointData(arr, dtoData){
-    arr[0] = dtoData.refMissionName
-    arr[1] = dtoData.gainPoint
-    arr[2] = dtoData.regDate
-  }
-
   function printMyPoint(dtoList ) {    // 목록 출력
     // 기존 행 삭제
     while (tableMyPoint.firstChild) {
@@ -148,17 +147,10 @@
       })
     }
   }
-
-  function changePeriodSelect(){
-
-    var beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
-    var nowDate = new Date();
-    var startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
-    var endDate = new Date().toISOString().substring(0, 10)
-
-  // 날짜 input 값 설정
-    fromDay.value = startDate
-    toDay.value = endDate
+  function makePointData(arr, dtoData){
+    arr[0] = dtoData.refMissionName
+    arr[1] = dtoData.gainPoint
+    arr[2] = dtoData.regDate
   }
 
   // function temp(){
@@ -195,25 +187,4 @@
   //
   //
 
-
-
-
-  // 포인트 조회 요청 처리
-  document.querySelector(".searchBtn").addEventListener("click", function(e){
-
-    console.log("fromDay : " + fromDay.value)
-    console.log("toDay : " + toDay.value)
-
-    let endDate = new Date(toDay.value)
-    endDate = endDate.setDate(endDate.getDate() + 1)  // 내일 날짜
-    endDate = new Date(endDate).toISOString().substring(0, 10) // 2024-04-03 으로 포멧 변경
-
-    const formObj = {
-      fromDay:fromDay.value,
-      toDay:endDate
-    }
-
-    getMyPointInfo(formObj)
-
-  }, false)
 </script>
