@@ -19,3 +19,13 @@ async function modifyShopItem(formObj) {
 
     return response.data
 }
+
+async function modifyImageOrder(formObj) {
+    //console.log(formObj)
+
+    const response = await axios.post(`/admin/modifyImageOrder`,formObj)
+    console.log("response: " + response)
+    console.log("response.data: " + response.data)
+
+    return response.data
+}

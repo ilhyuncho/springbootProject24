@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
 
-          <form th:action="@{/myPage/carModify}" method="post" id="f1">
+          <form th:action="@{/myPage/shopItemDelete}" method="post" id="f1">
             <div class="input-group mb-3">
               <span class="input-group-text">ShopItemId</span>
               <label>
@@ -110,8 +110,8 @@
                 <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
-                <button type="button" class="btn btn-secondary modBtn">Modify</button>
-                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                <button type="button" class="btn btn-secondary modBtn">수정 완료</button>
+                <button type="button" class="btn btn-danger removeBtn">삭제</button>
               </div>
             </div>
 

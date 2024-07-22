@@ -73,4 +73,16 @@ public class AdminShopController {
         return "redirect:/admin/shopItem";
     }
 
+
+    @GetMapping("/imageOrderModify/{shopItemId}")
+    public String getImageOrderModify(@PathVariable("shopItemId") Long shopItemId, Model model){
+
+        ShopItemExtandDTO shopItem = shopItemService.getItemInfo(shopItemId, null);
+
+        model.addAttribute("responseDTO", shopItem);
+
+        return "/admin/imageOrderModify";
+    }
+
+
 }

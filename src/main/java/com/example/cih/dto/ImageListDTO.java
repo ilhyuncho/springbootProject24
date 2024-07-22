@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,9 @@ public class ImageListDTO {
     }
 
     public List<ImageDTO> getListExceptMainImage(){
-        return fileNames.stream().filter(imageDTO -> !imageDTO.getIsMainImage())
+        return fileNames.stream()
+                .filter(imageDTO -> !imageDTO.getIsMainImage())
+                .sorted(Comparator.comparing(ImageDTO::getImageOrder))
                 .collect(Collectors.toList());
     }
 }

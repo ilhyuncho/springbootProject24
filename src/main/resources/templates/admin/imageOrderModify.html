@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+  <title>Image Order Modify</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          상품 이미지 순서 수정
+        </div>
+        <div class="card-body">
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ShopItemId</span>
+            <label>
+              <input type="text" class="form-control shopItemId"
+                     th:value="${responseDTO.shopItemId}" name="shopItemId" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
+            <span class="input-group-text">ItemName</span>
+            <label>
+              <input type="text" class="form-control itemName" th:value="${responseDTO.itemName}">
+            </label>
+          </div>
+
+          <div class="my-4">
+            <div class="float-end">
+              <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">List</button>
+              </a>
+              <button type="button" class="btn btn-secondary modBtn">수정 완료</button>
+              <button type="button" class="btn btn-danger removeBtn">삭제</button>
+            </div>
+          </div>
+        </div><!-- <div class="card-body">-->
+
+        <!--  첨부파일 섬네일을 보여줄 부분-->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
+              <th:block th:each="fileName:${responseDTO.fileNames}">
+                <div class="card col-3">
+                  <div class="card-header d-flex">
+                    <input type="radio" name="isMainImage" th:value="${fileName.fileName}"
+                           th:checked="${fileName.fileName == responseDTO.mainImage.fileName}">메인
+                    </input>
+                       &nbsp;&nbsp;
+                    [[${fileName.fileName}]]
+                    <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
+                  </div>
+                  <div class="card-body">
+                    <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+                  </div>
+                </div>
+              </th:block>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/upload.js"></script>
+  <script src="/js/admin.js"></script>
+  <script src="/js/util.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const uploadResult = document.querySelector(".uploadResult")
+  const shopItemId = document.querySelector('.shopItemId');
+
+
+  // 이미지 순서 수정 요청
+  document.querySelector(".modBtn").addEventListener("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    ////////////////////////////////////////////////////
+
+
+    const formObj = {
+      shopItemId:shopItemId.value,
+    }
+
+    modifyImageOrder(formObj).then(result => {
+      console.log(result)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+
+    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+      console.log(e.response.data.message)
+      alert('catch: ' + e.response.data.message)
+
+      // 화면 재 갱신
+      self.location = '/admin/shopItemDetail/' + shopItemId.value
+    })
+
+  }, false)
+
+
+</script>
