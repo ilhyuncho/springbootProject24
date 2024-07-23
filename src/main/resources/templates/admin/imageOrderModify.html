@@ -46,16 +46,15 @@
           <div class="col">
             <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
 
-              <th:block th:each="fileName:${responseDTO.getListAllImage()}">
+              <th:block th:each="fileName:${responseDTO.getListExceptMainImage()}">
                 <div class="card col-3">
                   <div class="card-header d-flex">
-                    [[${fileName.fileName}]]
-                    &nbsp;
-                    (id: [[${fileName.imageId}]])
-                    &nbsp;&nbsp;
-                    <span>
-                      <input type="text" class="inputOrder" size="2" maxlength="2" th:data-src="${fileName.imageId}" th:value="${fileName.imageOrder}">
-                    </span>
+                    (Id: [[${fileName.imageId}]]) &nbsp; [[${fileName.fileName}]]
+                    <div>
+                      순서 :
+                        <input type="text" class="inputOrder" size="2" maxlength="2" th:data-src="${fileName.imageId}"
+                               th:value="${fileName.imageOrder}">
+                    </div>
                   </div>
                   <div class="card-body">
                     <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >

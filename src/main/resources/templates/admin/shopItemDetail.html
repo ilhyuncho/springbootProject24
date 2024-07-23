@@ -113,7 +113,7 @@
               <th:block th:each="fileName:${responseDTO.getListExceptMainImage()}">
                 <div class="card col-4">
                   <div class="card-header d-flex justify-content-center">
-                    [[${fileName.fileName}]] &nbsp; ([[${fileName.imageOrder}]])
+                    [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
                   </div>
                   <div class="card-body">
                     <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" th:width="200px"
