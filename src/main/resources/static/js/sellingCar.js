@@ -14,8 +14,17 @@ async function getSellingCar({sellingCarId}){
     return result.data
 }
 
+// 추천 차량 조회
 async function getRecommendSellingCar({page, size}){
     const result = await axios.get(`/sellingCar/recommend`, {params: {page}})
+
+    console.log(result.data)
+    return result.data
+}
+
+// 최근 본 차량 조회
+async function getRecentlySeenSellingCar({page, size}){
+    const result = await axios.get(`/sellingCar/recentlySeenCar`, {params: {page}})
 
     console.log(result.data)
     return result.data
@@ -25,7 +34,6 @@ async function cancelSellingCar(formObj) {
     console.log(formObj)
 
     const response = await axios.post(`/sellingCar/cancel`, formObj)
-
     return response.data
 }
 
@@ -36,3 +44,4 @@ async function sendLike(formObj) {
 
     return response.data
 }
+

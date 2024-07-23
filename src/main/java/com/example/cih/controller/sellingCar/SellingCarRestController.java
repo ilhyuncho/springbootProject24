@@ -4,6 +4,7 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.sellingCar.SellingCarService;
+import com.example.cih.service.user.UserSearchCarHistoryService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class SellingCarRestController {
 
     private final SellingCarService sellingCarService;
     private final UserService userService;
+    private final UserSearchCarHistoryService userSearchCarHistoryService;
 
     @ApiOperation(value = "판매 차량 등록", notes = "차 소유주가 차량 등록")
     @PostMapping("/register")
@@ -78,18 +80,30 @@ public class SellingCarRestController {
         return resultMap;
     }
 
-    @ApiOperation(value = "메인 화면, 추천 차량 정보 전달", notes = "")
+    @ApiOperation(value = "추천 차량 정보 전달", notes = "메인 화면")
     @GetMapping("/recommend")
     public List<SellingCarResDTO> getRecommendSellingCar(){
 
-        return sellingCarService.getRecommendList();
+        List<SellingCarResDTO> recommendList = sellingCarService.getRecommendList();
+
+        log.error(recommendList);
+        return recommendList;
+    }
+
+    @ApiOperation(value = "최근 본 차량 정보 전달", notes = "메인 화면")
+    @GetMapping("/recentlySeenCar")
+    public List<SellingCarResDTO> getRecentlySeenCar(Principal principal){
+
+        User user = userService.findUser(principal.getName());
+
+        return userSearchCarHistoryService.getSearchCarHistory(user);
     }
 
     @ApiOperation(value = "판매 차량 좋아요", notes = "")
     @PostMapping("/like")
     public Map<String,String> postlike(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                    BindingResult bindingResult,
-                                                   Principal principal ) throws BindException {
+                                                   Principal principal) throws BindException {
         log.error("postlike post...." + sellingCarRegDTO);
 
         if(bindingResult.hasErrors()){

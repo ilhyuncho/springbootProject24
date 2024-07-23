@@ -32,6 +32,15 @@
                         </div>
                     </div>
 
+                    <div class="row mt-3 text-warning" >
+                        <hr class="my-4">
+                        <h3>최근 본 차량</h3>
+
+                        <div class="row RecentlySeenCarList">
+
+                        </div>
+                    </div>
+
                 </div><!-- <div class="card-body">-->
             </div>
         </div>
@@ -48,12 +57,10 @@
                 </div>
                 <div th:if="${eventDTO != null}">
                     <div class="modal-body" th:with="notiId = ${eventDTO.notiId}">
-
                         <label>
                             <input type="text" class="form-control eventTitle" readonly>
                         </label>
                         <br>
-
                         <a th:href="|@{'/notification/show/event/' + ${notiId}}|" class="text-decoration-none">
                             <button type="button" class="btn btn-primary">자세히 보기</button>
                         </a>
@@ -78,9 +85,9 @@
 
    const eventModal = new bootstrap.Modal(document.querySelector(".eventModal"))
    const RecommendCarList = document.querySelector('.RecommendCarList')          // 추천 차량 목록 DOM
+   const RecentlySeenCarList = document.querySelector('.RecentlySeenCarList')    // 최근 본 차량 목록 DOM
    const eventTitle = document.querySelector(".eventTitle")
 
-   const sellingCarId = 1
    // 페이지 번호 클릭
    let page = 1
    let size = 5
@@ -100,25 +107,33 @@
 
     function printMainView(page,size){
 
+       // 추천 차 정보 요청
         getRecommendSellingCar({page, size}).then(data=> {
-            printList(data) // 목록 처리
+            printList(data, RecommendCarList) // 목록 처리
+
+        }).catch(e=>{
+            console.error(e)
+        })
+        // 최근 본 차 정보 요청
+        getRecentlySeenSellingCar({page, size}).then(data=> {
+            printList(data, RecentlySeenCarList) // 목록 처리
 
         }).catch(e=>{
             console.error(e)
         })
     }
 
-    function printList(dtoList){
+   function printList(dtoList, form){
 
-        let str = '';
-        if(dtoList && dtoList.length > 0){
+       let str = '';
+       if(dtoList && dtoList.length > 0){
+           for(const dto of dtoList){
+               const requiredPrice = makePriceCurrency(dto.requiredPrice)
 
-            for(const dto of dtoList){
-                const requiredPrice = makePriceCurrency(dto.requiredPrice)
-                str += `<div class="col-md-4 margin">
+               str += `<div class="col-md-4 margin">
                             <div class="card">
                                 <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
-                                    <img src="/view/s_${dto.fileNames.at(0).uuid}_${dto.fileNames.at(0).fileName}">
+                                    <img src="/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >
                                      <div class="card-body">
                                       <h4 class="card-title">${dto.carModel}</h4>
                                       <h3 class="card-title text-danger">${requiredPrice}</h3>
@@ -126,10 +141,10 @@
                                 </a>
                             </div>
                         </div>`
-            }
-        }
-        RecommendCarList.innerHTML = str
-    }
+           }
+       }
+       form.innerHTML = str
+   }
 
    // 갱신 버튼 클릭
    document.querySelector(".submitBtn").addEventListener("click", function(e){

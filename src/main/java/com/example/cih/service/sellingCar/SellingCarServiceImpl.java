@@ -19,6 +19,7 @@ import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.CarService;
 import com.example.cih.service.user.UserMissionService;
+import com.example.cih.service.user.UserSearchCarHistoryService;
 import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,12 +40,11 @@ public class SellingCarServiceImpl implements SellingCarService {
     private final UserService userService;
     private final CarService carService;
 
-    private final CarRepository carRepository;
     private final SellingCarRepository sellingCarRepository;
     private final UserLikeRepository userLikeRepository;
     private final UserMissionService userMissionService;
     private final BuyingCarService buyingCarService;
-
+    private final UserSearchCarHistoryService userSearchCarHistoryService;
 
     @Override
     public void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
@@ -72,8 +72,6 @@ public class SellingCarServiceImpl implements SellingCarService {
 
        // 로그인 고객일 경우
         if( user != null ){
-           // log.error(user.toString());
-
             // 해당 고객이 구매 요청을 했었는지 확인
             // 임시로
            // if(!Objects.equals(sellingCar.getUser().getUserId(), user.getUserId())){
@@ -81,14 +79,10 @@ public class SellingCarServiceImpl implements SellingCarService {
                 if(buyingCarInfo != null){
                     sellingCarResDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
                 }
-
-                log.error("buyingCarInfo: " + buyingCarInfo);
            // }
-
             // 좋아요 상태 전송
             userLikeRepository.findByUserAndSellingCar(user, sellingCar)
                     .ifPresent(userLike -> sellingCarResDTO.setIsLike(userLike.getIsLike()));
-
         }
 
         // 소유자 외의 고객이 검색 했을때
@@ -96,6 +90,9 @@ public class SellingCarServiceImpl implements SellingCarService {
                 (user != null && !Objects.equals(user.getUserId(), sellingCar.getUser().getUserId())) ){
             sellingCar.changeViewCount();
         }
+
+        // 검색 기록 save ( 임시로 이 위치 - 위 if문으로 들어가야 함 )
+        userSearchCarHistoryService.insertSearchCarHistory(user, sellingCar);
 
         return sellingCarResDTO;
     }
@@ -136,24 +133,17 @@ public class SellingCarServiceImpl implements SellingCarService {
     public List<SellingCarResDTO> getRecommendList(){
 
         List<SellingCar> recommendSellingCar = sellingCarRepository.findRecommendSellingCar(4);
-        for (SellingCar sellingCar : recommendSellingCar) {
-            log.error(sellingCar);
-        }
 
-        List<SellingCarResDTO> listDTO = recommendSellingCar.stream()
+        return recommendSellingCar.stream()
                 .map(SellingCarServiceImpl::entityToDTO)
-                .map(sellingCarViewDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
-                    sellingCarViewDTO.getFileNames().stream()
-                            .filter(carImage -> carImage.getImageOrder() != 0)
+                .map(SellingCarResDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
+                    SellingCarResDTO.getFileNames().stream()
+                            .filter(carImage -> !carImage.getIsMainImage())
                             .collect(Collectors.toList())
-                            .forEach(x -> sellingCarViewDTO.getFileNames().remove(x));
-                    return sellingCarViewDTO;
+                            .forEach(x -> SellingCarResDTO.getFileNames().remove(x));
+                    return SellingCarResDTO;
                 })
                 .collect(Collectors.toList());
-
-        log.error(listDTO);
-
-        return listDTO;
     }
 
     @Override
@@ -195,7 +185,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         }
     }
 
-    private static SellingCarResDTO entityToDTO(SellingCar sellingCar) {
+    public static SellingCarResDTO entityToDTO(SellingCar sellingCar) {
         SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
                 .requiredPrice(sellingCar.getRequiredPrice())
