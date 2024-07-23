@@ -135,6 +135,8 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 errorMessage.append(fieldError.getField())
                         .append(" : ")
                         .append(fieldError.getCode())
+                        .append(" : ")
+                        .append(fieldError.getDefaultMessage())
                         .append("\n");
             });
             errorMap.put("message", errorMessage.toString());

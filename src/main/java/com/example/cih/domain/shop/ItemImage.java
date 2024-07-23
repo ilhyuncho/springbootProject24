@@ -39,4 +39,8 @@ public class ItemImage extends BaseEntity {
     public void changeItem(ShopItem shopItem){
         this.shopItem = shopItem;
     }
+    public void changeImageOrder(int imageOrder){
+        this.imageOrder = imageOrder;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.cih.service.shop;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.shop.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface ShopItemService {
     Long registerItem(ShopItemReqDTO shopItemReqDTO);
 
     void modifyItem(ShopItemReqDTO shopItemReqDTO);
+    void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO);
 
     void deleteItem(Long itemId);
 }

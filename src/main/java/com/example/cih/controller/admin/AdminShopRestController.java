@@ -2,6 +2,7 @@ package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.util.Util;
+import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.service.shop.ShopItemService;
 import io.swagger.annotations.ApiOperation;
@@ -36,9 +37,10 @@ public class AdminShopRestController {
             throw new BindException(bindingResult);
         }
 
-        admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
-
-        log.error(shopItemReqDTO);
+        //admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
+        if(shopItemReqDTO.getItemName().isEmpty()){
+            shopItemReqDTO.setItemName(Util.createRandomName("Item"));
+        }
 
         Long ItemId = shopItemService.registerItem(shopItemReqDTO);
 
@@ -66,5 +68,24 @@ public class AdminShopRestController {
 
         return ResponseEntity.status(HttpStatus.OK).body(resultMap);
     }
+    @PostMapping("/modifyImageOrder")
+    public ResponseEntity<Map<String, String>> postImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
+                                                                  BindingResult bindingResult) throws BindException {
+
+        // ImageOrder 값이 중복 되는지 체크
+        admnShopControllerValidator.validate(imageOrderReqDTO, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            log.error("bindingResult.hasErrors()~~~");
+            throw new BindException(bindingResult);
+        }
+
+        shopItemService.modifyImageOrder(imageOrderReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+    }
+
 
 }

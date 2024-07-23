@@ -37,7 +37,6 @@
                 <button type="button" class="btn btn-primary">List</button>
               </a>
               <button type="button" class="btn btn-secondary modBtn">수정 완료</button>
-              <button type="button" class="btn btn-danger removeBtn">삭제</button>
             </div>
           </div>
         </div><!-- <div class="card-body">-->
@@ -51,9 +50,11 @@
                 <div class="card col-3">
                   <div class="card-header d-flex">
                     [[${fileName.fileName}]]
+                    &nbsp;
+                    (id: [[${fileName.imageId}]])
                     &nbsp;&nbsp;
                     <span>
-                      <input type="text" size="2" maxlength="2" th:value="${fileName.imageOrder}">
+                      <input type="text" class="inputOrder" size="2" maxlength="2" th:data-src="${fileName.imageId}" th:value="${fileName.imageOrder}">
                     </span>
                   </div>
                   <div class="card-body">
@@ -69,7 +70,6 @@
       </div>
     </div>
   </div>
-
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
@@ -90,13 +90,21 @@
     e.stopPropagation()
 
 
+////////////////////////////////////////////////////////////////
 
+    const imageOrder = uploadResult.querySelectorAll('.inputOrder')
 
+    const imageOrderList = []
+    for(let i= 0; i < imageOrder.length;i++){
+      const inputValue = imageOrder[i]
+      const imageId = inputValue.getAttribute("data-src")
 
-
+      imageOrderList.push({imageId:imageId, imageOrder:inputValue.value})
+    }
 
     const formObj = {
-      shopItemId:shopItemId.value,
+      objectId:shopItemId.value,
+      imageOrderList:imageOrderList
     }
 
     modifyImageOrder(formObj).then(result => {

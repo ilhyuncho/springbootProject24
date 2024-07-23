@@ -5,6 +5,8 @@ import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.shop.*;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
@@ -25,6 +27,7 @@ public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;
     private final ItemPriceRepository itemPriceRepository;
+    private final ItemImageRepository itemImageRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -54,12 +57,12 @@ public class ShopItemServiceImpl implements ShopItemService {
                 .collect(Collectors.toList());
 
         // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------begin---------------
-        for (ShopItemExtandDTO dto : listShopItemDTO) {
-            dto.getFileNames().stream()
-                    .filter(carImage -> carImage.getImageOrder() != 0)
-                    .collect(Collectors.toList())
-                    .forEach(x-> dto.getFileNames().remove(x));
-        }
+//        for (ShopItemExtandDTO dto : listShopItemDTO) {
+//            dto.getFileNames().stream()
+//                    .filter(carImage -> carImage.getImageOrder() != 0)
+//                    .collect(Collectors.toList())
+//                    .forEach(x-> dto.getFileNames().remove(x));
+//        }
         // 대표 이미지만 필터링 ( ImageOrder = 0 )------------------end---------------
 
         return listShopItemDTO;
@@ -137,6 +140,25 @@ public class ShopItemServiceImpl implements ShopItemService {
         shopItem.updateItemOption(shopItemReqDTO.getItemOptionList());
 
         //shopItemRepository.save(shopItem);
+    }
+
+    @Override
+    public void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO) {
+
+        ShopItem shopItem = shopItemRepository.findById(imageOrderReqDTO.getObjectId())
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
+        // 관리자가 재설정한 image order
+        Map<Long, Integer> mapImageDTO = imageOrderReqDTO.getImageOrderList().stream()
+                .collect(Collectors.toMap(ImageDTO::getImageId, ImageDTO::getImageOrder));
+
+        // DB에 등록된 image order 데이터 get
+        List<ItemImage> listItemImage = itemImageRepository.findByShopItem(shopItem);
+
+        listItemImage.forEach(itemImage -> {
+            itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
+        });
+
     }
 
     @Override
