@@ -23,15 +23,12 @@
 
   <div class="d-flex">
     <div class="itemMainImgDiv">
-      <img th:src="|/view/s_${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
-           class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
+      <img th:src="|/view/${responseDTO.getMainImage().uuid}_${responseDTO.getMainImage().fileName}|"
+           style="width:400px; margin-right: 5rem" class="rounded itemMainImg" th:alt="${responseDTO.carModel}">
     </div>
     <div class="wd50">
-
       <div class="h4" th:text="|(${responseDTO.carNumber}) ${responseDTO.carModel}|"></div>
       <hr class="my-4">
-
-
       <div class="my-4">
         <!--       뷰 횟수-->
         <span><i class="fa-solid fa-eye"></i> [[${responseDTO.viewCount}]]</span>
@@ -73,10 +70,11 @@
       <hr class="my-4">
       <hr class="my-4">
 
-      <div th:each="fileName : ${responseDTO.fileNames}" class="text-center">
+      <div th:each="fileName : ${responseDTO.getListExceptMainImage()}" class="text-center">
         <img th:if="${not #strings.isEmpty(fileName.fileName)}"
              th:src="|/view/${fileName.uuid}_${fileName.fileName}|" class="rounded mgb-15" width="800">
       </div>
+
     </div>
 
 

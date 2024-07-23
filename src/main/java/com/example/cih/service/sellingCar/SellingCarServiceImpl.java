@@ -115,13 +115,14 @@ public class SellingCarServiceImpl implements SellingCarService {
 
         List<SellingCarResDTO> listSellingCarResDTO = sellingCars.getContent().stream()
                 .map(SellingCarServiceImpl::entityToDTO)
-                .map(sellingCarViewDTO -> {  // 대표 이미지만 필터링 ( ImageOrder = 0 )
-                    sellingCarViewDTO.getFileNames().stream()
-                            .filter(carImage -> carImage.getImageOrder() != 0)
-                            .collect(Collectors.toList())
-                            .forEach(x -> sellingCarViewDTO.getFileNames().remove(x));
-                    return sellingCarViewDTO;
-                })
+//                .map(sellingCarViewDTO -> {  // 대표 이미지만 필터링 ( ImageOrder = 0 )
+//                    sellingCarViewDTO.getFileNames().stream()
+//                            .filter(carImage -> carImage.getImageOrder() != 0)
+//                            .collect(Collectors.toList())
+//                            .forEach(x -> sellingCarViewDTO.getFileNames().remove(x));
+//                    return sellingCarViewDTO;
+//                }
+//                )
                 .collect(Collectors.toList());
 
         return PageResponseDTO.<SellingCarResDTO>withAll()
