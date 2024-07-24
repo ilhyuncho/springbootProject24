@@ -39,7 +39,7 @@ public class SellingCar extends BaseEntity {
     )
     private LocalDateTime expiredDate;
 
-    @OneToOne(mappedBy = "sellingCar")
+    @OneToOne(mappedBy = "sellingCar")  // SellingCar DB 테이블에는 Car정보는 없음
     private Car car;
 
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향

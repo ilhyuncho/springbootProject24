@@ -70,7 +70,7 @@ public class Car extends BaseEntity {
     private Set<CarImage> imageSet = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "SELLINGCAR_ID")   // 주 테이블(Car)에 외래 키 양방향
+    @JoinColumn(name = "SELLINGCAR_ID")      // 주 테이블(Car)에 외래 키
     private SellingCar sellingCar;          // 판매 정보
 
 
@@ -126,8 +126,8 @@ public class Car extends BaseEntity {
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
 
-    public void cancelCellingCar(){
-        sellingCar.changeStatus(SellingCarStatus.CANCEL);
+    public void updateCellingCarStatus(SellingCarStatus sellingCarStatus){
+        sellingCar.changeStatus(sellingCarStatus);
         this.sellingCar = null;
     }
 

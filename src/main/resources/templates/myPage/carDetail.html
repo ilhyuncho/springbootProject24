@@ -182,6 +182,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
 
+        <input type="hidden" class="sellingStatus">
+
         <div class="modal-header">
           <h5 class="modal-title">판매 진행 수정</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -192,7 +194,7 @@
           </div>
         </div>
         <div class="modal-footer" th:data-num="sellingCancel">
-          <button type="button" class="btn btn-danger sendCancelBtn">취소</button>
+          <button type="button" class="btn btn-danger sendModifyBtn">취소</button>
           <button type="button" class="btn btn-outline-dark closeCancelModalBtn">닫기</button>
         </div>
       </div>
@@ -242,7 +244,8 @@
   const modifyCarName = document.querySelector(".modifyCarName")
   const currCarKm = document.querySelector(".currCarKm")
   const updateKmValue = document.querySelector(".updateKmValue")
-  const sendCancelBtn = document.querySelector(".sendCancelBtn")
+  const sendModifyBtn = document.querySelector(".sendModifyBtn")
+  const sellingStatus = document.querySelector(".sellingStatus")
 
   const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
@@ -348,8 +351,9 @@
 
     hideModal(e.target)
 
+    sellingStatus.value = 'CANCEL'
     modifyCarName.value = `"${carNumber}" 차량 판매를 정말 취소 하나요?'`
-    sendCancelBtn.innerHTML='취소'
+    sendModifyBtn.innerHTML='취소'
     sellingModifyModal.show()
   }, false)
 
@@ -360,18 +364,22 @@
 
     hideModal(e.target)
 
+    sellingStatus.value = 'COMPLETE'
     modifyCarName.value = `"${carNumber}" 차량 판매가 정말 완료 되었습니까?'`
-    sendCancelBtn.innerHTML='완료'
+    sendModifyBtn.innerHTML='완료'
     sellingModifyModal.show()
   }, false)
 
-  // 모달창의 [판매 취소] 전송 버튼 클릭
-  document.querySelector(".sendCancelBtn").addEventListener("click", function (e){
+
+
+  // 모달창의 [판매 취소 or 완료] 전송 버튼 클릭
+  document.querySelector(".sendModifyBtn").addEventListener("click", function (e){
     const formObj = {
       carId:carId,
+      sellingCarStatus:sellingStatus.value
     }
 
-    cancelSellingCar(formObj).then(result => {
+    modifySellingCar(formObj).then(result => {
 
       // 화면 재 갱신
       self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
@@ -383,6 +391,8 @@
     })
 
   }, false)
+
+
 
   // 모달창의 [구매 희망 리스트] 클릭
   document.querySelector(".currentSituationBtn").addEventListener("click", function (e) {

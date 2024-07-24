@@ -147,21 +147,19 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public void cancelSellingCar(String userName, Long carId) {
+    public void updateSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
         User user = userService.findUser(userName);
 
-        Car car = carService.getCarInfo(carId);
+        Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 
         SellingCar sellingCar = car.getSellingCar();
-        if(SellingCarStatus.PROCESSING == sellingCar.getSellingCarStatus())
-        {
-            car.cancelCellingCar();
+        if(SellingCarStatus.PROCESSING == sellingCar.getSellingCarStatus()) {
+            car.updateCellingCarStatus(sellingCarRegDTO.getSellingCarStatus());
         }
         else{
              throw new OwnerCarNotFoundException("소유 차가 판매 중이 아닙니다");
         }
     }
-
     @Override
     public void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {
 

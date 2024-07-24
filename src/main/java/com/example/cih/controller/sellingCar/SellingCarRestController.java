@@ -60,25 +60,27 @@ public class SellingCarRestController {
         return sellingCarResDTO;
     }
 
-    @ApiOperation(value = "판매 취소", notes = "판매 중이던 차량 판매 취소")
-    @PostMapping("/cancel")
-    public Map<String,String> postCancelSellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
+    @ApiOperation(value = "판매 취소 or 완료 처리", notes = "판매 중이던 차량")
+    @PostMapping("/modify")
+    public Map<String,String> postModifySellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                  BindingResult bindingResult,
                                                  Principal principal ) throws BindException {
-        log.error("cancelSellingCar post...." + sellingCarRegDTO.getCarId());
+        log.error("postModifySellingCar post...." + sellingCarRegDTO.getCarId());
 
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
         }
 
-        sellingCarService.cancelSellingCar(principal.getName(), sellingCarRegDTO.getCarId());
+        sellingCarService.updateSellingCar(principal.getName(), sellingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
 
         return resultMap;
     }
+
+
 
     @ApiOperation(value = "추천 차량 정보 전달", notes = "메인 화면")
     @GetMapping("/recommend")

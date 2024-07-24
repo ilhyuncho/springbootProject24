@@ -30,10 +30,10 @@ async function getRecentlySeenSellingCar({page, size}){
     return result.data
 }
 
-async function cancelSellingCar(formObj) {
+async function modifySellingCar(formObj) {
     console.log(formObj)
 
-    const response = await axios.post(`/sellingCar/cancel`, formObj)
+    const response = await axios.post(`/sellingCar/modify`, formObj)
     return response.data
 }
 
