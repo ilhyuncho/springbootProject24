@@ -135,16 +135,12 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="input-group mb-3" th:with="user=${#authentication.principal}">
-            <span class="input-group-text">소유자</span>
-            <input type="text" class="form-control owner" th:value="${user.username}" readonly>
-          </div>
           <div class="input-group mb-3">
             <span class="input-group-text">희망 가격</span>
             <input type="text" class="form-control requiredPrice" th:value="1000000">
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" th:data-num="sellingCar">
           <button type="button" class="btn btn-primary registerBtn">판매 등록</button>
           <button type="button" class="btn btn-outline-dark closeSellingCarModalBtn">Close</button>
         </div>
@@ -164,50 +160,44 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">판매 최소가격</span>
-            <input type="text" class="form-control requiredPrice" id="modalRequiredPrice">
+            <input type="text" class="form-control" id="modalRequiredPrice">
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">판매 마감 시간</span>
-            <input type="text" class="form-control requiredPrice" id="modalExpiredDate">
+            <input type="text" class="form-control" id="modalExpiredDate">
           </div>
-
-          <div class="input-group mb-3" th:with="user=${#authentication.principal}">
-            <span class="input-group-text">소유자</span>
-            <input type="text" class="form-control owner" th:value="${user.username}" readonly>
-          </div>
-
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" th:data-num="sellingCarShow">
             <button type="button" class="btn btn-primary currentSituationBtn">구매 희망 리스트</button>
+            <button type="button" class="btn btn-success sellingCompleteBtn">판매 완료</button>
             <button type="button" class="btn btn-danger sellingCancelBtn">판매 취소</button>
-            <button type="button" class="btn btn-outline-dark closeShowModalBtn">Close</button>
+            <button type="button" class="btn btn-outline-dark closeShowModalBtn">닫기</button>
         </div>
       </div>
     </div>
   </div>  <!--    sellingCarShowModal-->
 
-  <!--   판매 취소 모달창-->
-  <div class="modal sellingCancelModal" tabindex="-1">
+  <!--   판매 수정 모달창-->
+  <div class="modal sellingModifyModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">판매 취소</h5>
+          <h5 class="modal-title">판매 진행 수정</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <input type="text" class="form-control cancelCarName" readonly>
+            <input type="text" class="form-control modifyCarName" readonly>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" th:data-num="sellingCancel">
           <button type="button" class="btn btn-danger sendCancelBtn">취소</button>
           <button type="button" class="btn btn-outline-dark closeCancelModalBtn">닫기</button>
         </div>
       </div>
     </div>
-  </div>  <!--    sellingCancelModal-->
+  </div>  <!--    sellingModifyModal-->
 
   <!--   누적 주행거리 갱신 모달창-->
   <div class="modal updateKmModal" tabindex="-1">
@@ -221,10 +211,10 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">현재 km</span>
-            <input type="text" class="form-control updateKmValue">
+            <input type="text" class="form-control initChild updateKmValue">
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" th:data-num="updateKm">
           <button type="button" class="btn btn-danger sendUpdateKmBtn">갱신</button>
           <button type="button" class="btn btn-outline-dark closeUpdateKmModalBtn">Close</button>
         </div>
@@ -236,10 +226,23 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/sellingCar.js"></script>
   <script src="/js/myPage.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  // Modal
+  const sellingCarModal = new bootstrap.Modal(document.querySelector(".sellingCarModal"))
+  const sellingModifyModal = new bootstrap.Modal(document.querySelector(".sellingModifyModal"))
+  const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
+  const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
+
+  const requiredPrice = document.querySelector(".requiredPrice")
+  const modifyCarName = document.querySelector(".modifyCarName")
+  const currCarKm = document.querySelector(".currCarKm")
+  const updateKmValue = document.querySelector(".updateKmValue")
+  const sendCancelBtn = document.querySelector(".sendCancelBtn")
 
   const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
@@ -247,35 +250,41 @@
   const carNumber = [[${responseDTO.carNumber}]]
   const listFileNames = [[${responseDTO.fileNames}]]
 
-  // Modal
-  const sellingCarModal = new bootstrap.Modal(document.querySelector(".sellingCarModal"))
-  const sellingCancelModal = new bootstrap.Modal(document.querySelector(".sellingCancelModal"))
-  const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
-  const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
-  const requiredPrice = document.querySelector(".requiredPrice")
-  const cancelCarName = document.querySelector(".cancelCarName")
-  const owner = document.querySelector(".owner")
-  const updateKmValue = document.querySelector(".updateKmValue")
-  const sellingCancelBtn = document.querySelector(".sellingCancelBtn")
-  const currCarKm = document.querySelector(".currCarKm")
+
+  function hideModal(target){
+
+    const footer = target.closest(".modal-footer")
+    console.log('footer : ' + footer.getAttribute("data-num"))
+
+    if( footer.getAttribute("data-num") === 'sellingCar'){
+      requiredPrice.value = ''
+      sellingCarModal.hide()
+    }
+    else if( footer.getAttribute("data-num") === 'updateKm'){
+      updateKmValue.value = ''
+      updateKmModal.hide()
+    }
+    else if( footer.getAttribute("data-num") === 'sellingCarShow') {
+      sellingCarShowModal.hide()
+    }
+    else if( footer.getAttribute("data-num") === 'sellingCancel') {
+      sellingModifyModal.hide()
+    }
+  }
 
   document.querySelector(".closeShowModalBtn").addEventListener("click", function (e){
-    sellingCarShowModal.hide()
+    hideModal(e.target)
   }, false)
-
   document.querySelector(".closeUpdateKmModalBtn").addEventListener("click", function (e){
-    updateKmValue.value = ''
-    updateKmModal.hide()
+    hideModal(e.target)
   }, false)
-
   document.querySelector(".closeSellingCarModalBtn").addEventListener("click", function (e){
-    updateKmValue.value = ''
-    sellingCarModal.hide()
+    hideModal(e.target)
+  }, false)
+  document.querySelector(".closeCancelModalBtn").addEventListener("click", function (e){
+    hideModal(e.target)
   }, false)
 
-  document.querySelector(".closeCancelModalBtn").addEventListener("click", function (e){
-    sellingCancelModal.hide()
-  }, false)
 
   // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
@@ -293,8 +302,7 @@
 
       sellingCarShowModal.show()
     }).catch(e => {
-      console.log(e.response.data);
-      alert(e.response.data)
+      errorResponse(e)
     })
 
   }, false)
@@ -307,7 +315,7 @@
     sellingCarModal.show()
   }, false)
 
-  // 모달창의 [차량 판매] 처리
+  // 모달창의 [판매 등록] 처리
   document.querySelector(".registerBtn").addEventListener("click", function(e){
 
     if( listFileNames.length === 0 ){
@@ -322,42 +330,42 @@
 
     registerSellingCar(formObj).then(result => {
 
-      requiredPrice.value= ''
-      owner.value=''
-
-      sellingCarModal.hide()
-
       // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data.message);
-      } else {
-        alert('잘못된 요청(else). 전달값 확인!!')
-        console.log(e.response.data);
-        alert(e.response.data.message)
-      }
-      sellingCarModal.hide()
+      errorResponse(e)
+    }).finally(i => {
+      hideModal(e.target)
     })
   }, false)
 
 
-  // [판매 취소] 등록 버튼 클릭
+  // 모달창의 [판매 취소] 버튼 클릭
   document.querySelector(".sellingCancelBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
-    cancelCarName.value = `"${carNumber}" 차량 판매를 정말 취소 할거야?'`
+    hideModal(e.target)
 
-    sellingCarShowModal.hide()
-    sellingCancelModal.show()
+    modifyCarName.value = `"${carNumber}" 차량 판매를 정말 취소 하나요?'`
+    sendCancelBtn.innerHTML='취소'
+    sellingModifyModal.show()
   }, false)
 
-  // [판매 취소] 전송 버튼 클릭
+  // [판매 완료] 버튼 클릭
+  document.querySelector(".sellingCompleteBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    hideModal(e.target)
+
+    modifyCarName.value = `"${carNumber}" 차량 판매가 정말 완료 되었습니까?'`
+    sendCancelBtn.innerHTML='완료'
+    sellingModifyModal.show()
+  }, false)
+
+  // 모달창의 [판매 취소] 전송 버튼 클릭
   document.querySelector(".sendCancelBtn").addEventListener("click", function (e){
     const formObj = {
       carId:carId,
@@ -365,74 +373,49 @@
 
     cancelSellingCar(formObj).then(result => {
 
-      alert(result.result)
-
-      sellingCancelModal.hide()
-
       // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-      sellingCancelModal.hide()
+      errorResponse(e)
+    }).finally(i =>{
+      hideModal(e.target)
     })
 
   }, false)
 
-  // [구매 희망 리스트] 클릭
+  // 모달창의 [구매 희망 리스트] 클릭
   document.querySelector(".currentSituationBtn").addEventListener("click", function (e) {
 
+    // 화면 재 갱신
     self.location = '/sellingCar/' + carId
-
   }, false)
 
-  // [누적 주행거리 갱신 버튼] 클릭
+  // [누적 주행거리 갱신] 클릭
   document.querySelector(".updateKmBtn").addEventListener("click", function (e) {
     e.stopPropagation()
     e.preventDefault()
 
     updateKmValue.setAttribute("placeholder",currCarKm.value )
-
     updateKmModal.show()
-
   }, false)
 
-  // [누적 주행거리 갱신 버튼] 전송 버튼 클릭
+  // [누적 주행거리 갱신] 전송 버튼 클릭
   document.querySelector(".sendUpdateKmBtn").addEventListener("click", function (e){
     const formObj = {
       carId:carId,
       updateKmValue:updateKmValue.value,
     }
 
-    console.log(formObj)
-
     updateCarKm(formObj).then(result => {
 
-      updateKmModal.hide()
-
       // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-
-      } else {
-        alert('잘못된 요청입니다.. 전달값 확인1!!')
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-      updateKmModal.hide()
+      errorResponse(e)
+    }).finally(i => {
+      hideModal(e.target)
     })
 
   }, false)

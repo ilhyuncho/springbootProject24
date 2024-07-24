@@ -118,3 +118,15 @@ function getMainImageFileName(){
     return null
 }
 
+function errorResponse(e){
+    if (e.response && e.response.status === 400) {
+        alert('잘못된 요청입니다.. 전달값 확인!! status = 400')
+        console.log(e.response.data);
+
+    } else {
+        alert('잘못된 요청입니다.. 전달값 확인!!')
+        console.log(e.response.data);
+        alert(e.response.data)
+    }
+}
+
