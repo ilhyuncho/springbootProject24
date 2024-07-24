@@ -131,9 +131,9 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   const formObj = document.querySelector("#f1")
   const uploadResult = document.querySelector(".uploadResult")
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
   const carId = document.querySelector('.carId');
   const carYears = document.querySelector('.carYears');
@@ -154,11 +154,9 @@
 
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
+
     const formObj = new FormData();
-
     const fileInput = document.querySelector("input[name='files']")
-    console.log(fileInput.files)
-
     const files = fileInput.files
 
     for(let i = 0; i < files.length;i++){
@@ -166,10 +164,8 @@
     }
 
     uploadToServer(formObj).then(result => {
-      //console.log(result)
 
       const uploadFiles = uploadResult.querySelectorAll("img")
-
       let temp = uploadFiles.length
       for(const uploadResult of result){
         showUploadFile(uploadResult, false, temp++)
@@ -206,7 +202,6 @@
       self.location = '/myPage/carList?userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
-      console.log(e.response.data.message)
       alert('catch: ' + e.response.data.message)
 
       // 화면 재 갱신

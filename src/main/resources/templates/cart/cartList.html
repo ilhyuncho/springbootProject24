@@ -160,7 +160,6 @@
 <!--                    //////////////////////////////////////////-->
 
 
-
                 </div><!-- <div class="card-body">-->
             </div>
         </div>
@@ -209,22 +208,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">배송지명</span>
                         <input type="text" id="modalDeliveryName" th:value="회사1">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">받는 분</span>
                         <input type="text" id="modalRecipientName" th:value="홍길동">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">연락처</span>
                         <input type="tel" id="modalRecipientPhoneNumber" th:value="010-1223-9384">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">우편번호</span>
                         <input type="text" id="modalZipcode" th:value="|123-345|">
@@ -277,6 +272,7 @@
     <script src="/js/cart.js"></script>
     <script src="/js/order.js"></script>
     <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -295,18 +291,18 @@
     const fullAddress = document.querySelector("#fullAddress")
     const userAddressBookId = document.querySelector("#userAddressBookId")
 
-    const modalDeliveryName = document.querySelector('#modalDeliveryName');
-    const modalRecipientName = document.querySelector('#modalRecipientName');
-    const modalRecipientPhoneNumber = document.querySelector('#modalRecipientPhoneNumber');
-    const modalZipcode = document.querySelector('#modalZipcode');
-    const modalCountry = document.querySelector('#modalCountry');
-    const modalCityName = document.querySelector('#modalCityName');
-    const modalStreet = document.querySelector('#modalStreet');
-    const modalDetailAddress = document.querySelector('#modalDetailAddress');
-    const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
-    const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
-    const modalTitle = document.querySelector('.modalTitle');
-    const modalType = document.querySelector('.modalType');
+    const modalDeliveryName = document.querySelector('#modalDeliveryName')
+    const modalRecipientName = document.querySelector('#modalRecipientName')
+    const modalRecipientPhoneNumber = document.querySelector('#modalRecipientPhoneNumber')
+    const modalZipcode = document.querySelector('#modalZipcode')
+    const modalCountry = document.querySelector('#modalCountry')
+    const modalCityName = document.querySelector('#modalCityName')
+    const modalStreet = document.querySelector('#modalStreet')
+    const modalDetailAddress = document.querySelector('#modalDetailAddress')
+    const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest')
+    const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck')
+    const modalTitle = document.querySelector('.modalTitle')
+    const modalType = document.querySelector('.modalType')
 
 
     const currentUser = [[${#authentication.principal.username}]]
@@ -319,14 +315,14 @@
         item.addEventListener('change', function(){
             // 결제 금액 재 계산
             reCalculation()
-        });
+        })
     }, false)
 
     // 상품 갯수 수동 변경
     document.querySelectorAll(".itemCount").forEach(function (item,idx){
         item.addEventListener('change', function(){
 
-            const inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
+            const inputTag = document.querySelector('input[name=p_itemCount'+idx+']')
             const p_count = inputTag.value;
 
             if(p_count >= 0){
@@ -346,20 +342,19 @@
     document.querySelectorAll(".updownCount").forEach(function (item,idx){
         // 갯수 차감
         item.children[0].addEventListener('click', function(){
-            changeItemCount(idx, -1);
-        });
+            changeItemCount(idx, -1)
+        })
         // 갯수 증가
         item.children[2].addEventListener('click', function(){
-            changeItemCount(idx, 1);
-        });
-
+            changeItemCount(idx, 1)
+        })
     }, false)
 
     // 주문 수량 변경
     function changeItemCount(idx, value){
 
-        const inputTag = document.querySelector('input[name=p_itemCount'+idx+']');
-        const p_count = parseInt(inputTag.getAttribute('value'));
+        const inputTag = document.querySelector('input[name=p_itemCount'+idx+']')
+        const p_count = parseInt(inputTag.getAttribute('value'))
 
         const changeCount = p_count + value
         if( changeCount >= 0 ){
@@ -376,29 +371,29 @@
         e.preventDefault()
         e.stopPropagation()
 
-        let totalPrice = 0;
-        let totalDiscountPrice = 0;
-        let arrayItemInfo = [];
+        let totalPrice = 0
+        let totalDiscountPrice = 0
+        let arrayItemInfo = []
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
-            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
-            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-            const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']');
-            const ItemOptionIdsTag = document.querySelector('input[name=p_ItemOptionIds'+idx);
-            const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']');
+            const selectedTag = document.querySelector('input[name=p_selected'+idx+']')
+            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']')
+            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']')
+            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']')
+            const itemIdTag = document.querySelector('input[name=p_itemId'+idx+']')
+            const ItemOptionIdsTag = document.querySelector('input[name=p_ItemOptionIds'+idx)
+            const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']')
 
             if( selectedTag.checked === true){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
-                const itemCount = parseInt(itemCountTag.getAttribute('value'));
-                const itemId = parseInt(itemIdTag.getAttribute('value'));
-                const ItemOptionIds = ItemOptionIdsTag.getAttribute('value');
-                const cartId = parseInt(cartIdTag.getAttribute('value'));
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value'))
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value'))
+                const itemCount = parseInt(itemCountTag.getAttribute('value'))
+                const itemId = parseInt(itemIdTag.getAttribute('value'))
+                const ItemOptionIds = ItemOptionIdsTag.getAttribute('value')
+                const cartId = parseInt(cartIdTag.getAttribute('value'))
 
-                totalPrice += itemPrice * itemCount;
-                totalDiscountPrice += discountPrice * itemCount;
+                totalPrice += itemPrice * itemCount
+                totalDiscountPrice += discountPrice * itemCount
 
                 const itemInfo = {
                     itemId: itemId,
@@ -408,18 +403,18 @@
                     discountPrice: discountPrice,
                     itemOptionIds: ItemOptionIds,
                 };
-                arrayItemInfo.push(itemInfo);
+                arrayItemInfo.push(itemInfo)
             }
         }, false)
 
         if(arrayItemInfo.length === 0){
             alert("상품을 선택하세요~!!!")
-            return;
+            return
         }
 
         if(userAddressBookId.value === '0' ){
             alert("배송지를 입력하세요~!!!")
-            return;
+            return
         }
 
         let formObj = {
@@ -432,7 +427,6 @@
 
         ////////////////////////////////////////////////////
         addOrderItem(formObj).then(result => {
-            //console.log(result)
             alert("정상적으로 주문 되었습니다")
 
             // 주문 페이지 로 이동
@@ -446,27 +440,27 @@
     // 결제 금액 다시 계산
     function reCalculation(){
 
-        let totalOriginalPrice = 0;
-        let totalDiscountPrice = 0;
-        let totalPrice = 0;
-        let freeDelivery = false;
+        let totalOriginalPrice = 0
+        let totalDiscountPrice = 0
+        let totalPrice = 0
+        let freeDelivery = false
 
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
-            const selectedTag = document.querySelector('input[name=p_selected'+idx+']');
-            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']');
-            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']');
-            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']');
-            const isFreeDeliveryTag = document.querySelector('input[name=p_isFreeDelivery'+idx+']');
+            const selectedTag = document.querySelector('input[name=p_selected'+idx+']')
+            const itemPriceTag = document.querySelector('input[name=p_price'+idx+']')
+            const discountPriceTag = document.querySelector('input[name=p_discountPrice'+idx+']')
+            const itemCountTag = document.querySelector('input[name=p_itemCount'+idx+']')
+            const isFreeDeliveryTag = document.querySelector('input[name=p_isFreeDelivery'+idx+']')
 
             if(selectedTag.checked){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'));
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'));
-                const itemCount = parseInt(itemCountTag.getAttribute('value'));
-                const isFreeDelivery = parseInt(isFreeDeliveryTag.getAttribute('value'));
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value'))
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value'))
+                const itemCount = parseInt(itemCountTag.getAttribute('value'))
+                const isFreeDelivery = parseInt(isFreeDeliveryTag.getAttribute('value'))
 
                 if(isFreeDelivery){
-                    freeDelivery = true;
+                    freeDelivery = true
                 }
                 totalOriginalPrice += itemPrice * itemCount
                 totalDiscountPrice += discountPrice * itemCount
@@ -543,26 +537,18 @@
             addressListModal.show()
 
         }).catch(e => {
-            if (e.response && e.response.status === 400) {
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data)
-            }
+            errorResponse(e)
             addressListModal.hide()
         })
     }
 
     // 배송지 추가하기
     function registerAddress() {
-
         modalTitle.innerHTML = '배송지 추가'
         modalType.value = 'register'
-
+        modalMainAddressCheck.value='false'
         checkSolid.style.display='none'
         checkRegular.style.display='inline'
-        modalMainAddressCheck.value='false'
 
         registerModal.show()
     }
@@ -573,13 +559,13 @@
         const checkboxes = document.getElementsByName("checkboxModal");
         checkboxes.forEach((cb) => {
             if(cb.checked === true){
+                // 선택된 배송지 정보 다시 요청
                 getAddressInfo(cb.getAttribute("data-bs-target"))
             }
         })
 
         addressListModal.hide()
     }, false)
-
 
     // [배송지 추가] 요청 처리
     document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
@@ -611,26 +597,18 @@
             // 화면 재 갱신
             self.location = '/cart/list'
         }).catch(e => {
-            if (e.response && e.response.status === 400) {
-
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data.message)
-            }
+            errorResponse(e)
             registerModal.hide()
         })
     }, false)
-
 
     // [배송지 선택 모달창] 체크박스 선택시
     function addressSelect(index, obj){
         const checkboxes = document.getElementsByName("checkboxModal");
         checkboxes.forEach((cb) => {
-            cb.checked = false;
+            cb.checked = false
         })
-        obj.checked = true;
+        obj.checked = true
     }
 
     // 전달된 주소록 정보 요청 [배송지 선택]
@@ -639,7 +617,6 @@
             userAddressBookId:addressBookId,
         }
 
-        console.log('getAddressInfo()  : ' + addressBookId)
         getDeliveryAddress(formObj).then(result => {
             deliveryName.innerHTML = result.deliveryName
             recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
@@ -647,13 +624,7 @@
             userAddressBookId.value = addressBookId
 
         }).catch(e => {
-            if (e.response && e.response.status === 400) {
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data)
-            }
+            errorResponse(e)
             updateModal.hide()
         })
     }

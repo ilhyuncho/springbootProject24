@@ -219,10 +219,7 @@
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
     const formObj = new FormData();
-
     const fileInput = document.querySelector("input[name='files']")
-    console.log(fileInput.files)
-
     const files = fileInput.files
 
     for(let i = 0; i < files.length;i++){
@@ -230,7 +227,6 @@
     }
 
     uploadToServer(formObj).then(result => {
-      //console.log(result)
 
       for(const uploadResult of result){
         showUploadFile(uploadResult, true)

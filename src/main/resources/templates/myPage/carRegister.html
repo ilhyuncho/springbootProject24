@@ -114,7 +114,6 @@
 
     // 내차 찾기 요청
     document.querySelector(".findBtn").addEventListener("click", function(e){
-
         const formObj = {
             carNumber:carNumber.value
         }
@@ -135,21 +134,15 @@
         }).catch(e => {
             console.log(e)
         })
-        //console.log(carNumber.value)
-
     }, false)
 
     // [모달] 내차 확인
     document.querySelector(".findReqBtn").addEventListener("click", function(e){
-
         const formObj = {
             carNumber:modalCarNumber.value
         }
 
         RegisterMyCar(formObj).then(result => {
-
-            console.log(result)
-
             if(result.carId > 0){
                 // 화면 재 갱신
                 self.location = '/myPage/carDetail?carId=' + result.carId

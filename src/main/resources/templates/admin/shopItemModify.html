@@ -177,9 +177,9 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   const formObj = document.querySelector("#f1")
   const uploadResult = document.querySelector(".uploadResult")
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
 
   const shopItemId = document.querySelector('.shopItemId');
   const membershipPercent = document.querySelector('.membershipPercent');
@@ -215,7 +215,6 @@
     }
 
     uploadToServer(formObj).then(result => {
-      //console.log(result)
 
       for(const uploadResult of result){
         showUploadFile(uploadResult, false)

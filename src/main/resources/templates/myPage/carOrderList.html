@@ -49,6 +49,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/buyingCar.js"></script>
+    <script src="/js/util.js"></script>
 </div>
 
 
@@ -69,14 +70,7 @@
             self.location = '/order/list' // 자바스크립트로 다른 url 호출
 
         }).catch(e=>{
-            if (e.response && e.response.status === 400) {
-
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data)
-            }
+            errorResponse(e)
         })
     }
 

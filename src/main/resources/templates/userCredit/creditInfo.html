@@ -15,27 +15,22 @@
           결제-Info
         </div>
         <div class="card-body" th:if="${not #strings.isEmpty(responseDTO)}">
-
           <div class="input-group mb-3">
             <span class="input-group-text">UserCreditID</span>
             <input type="text" class="form-control" th:value="${responseDTO.userCreditID}" readonly>
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">UserId</span>
             <input type="text" class="form-control" th:value="${responseDTO.userId}" readonly>
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">BankName</span>
             <input type="text" class="form-control" th:value="${responseDTO.bankName}" readonly>
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">BankAccount</span>
             <input type="text" class="form-control" th:value="${responseDTO.bankAccount}" readonly>
           </div>
-
         </div><!-- <div class="card-body">-->
 
         <div class="my-4">

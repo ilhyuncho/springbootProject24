@@ -214,11 +214,10 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   const eventStartDate = document.querySelector('.eventStartDate');
   const eventEndDate = document.querySelector('.eventEndDate');
 
-  // 이미지 업로드 모달
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   // 이미지 파일 업로드 결과 화면
   const uploadResult = document.querySelector(".uploadResult")
 
@@ -245,7 +244,6 @@
     history.replaceState({}, null, null)
     alert(errorMessage)
   }
-
   // 에러 처리 부분 end ----------------------------
 
   // (테스트용) 기본 날짜 셋팅
@@ -266,10 +264,7 @@
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
     const formObj = new FormData();
-
     const fileInput = document.querySelector("input[name='files']")
-    console.log(fileInput.files)
-
     const files = fileInput.files
 
     for(let i = 0; i < files.length;i++){
@@ -288,10 +283,7 @@
     })
   }, false)
 
-
-
   document.querySelector(".submitBtn").addEventListener("click", function(e){
-
     e.preventDefault()
     e.stopPropagation()
 

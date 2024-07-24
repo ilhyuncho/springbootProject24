@@ -183,7 +183,6 @@
   // 삭제 할지 정하자..
   const currentUser = [[${#authentication.principal.username}]]
 
-
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))
   const modifyOfferModal = new bootstrap.Modal(document.querySelector(".modifyOfferModal"))
 
@@ -221,9 +220,6 @@
   }
 
   function printBuyingCarList(page,size){
-
-    console.log('printBuyingCarList call~~~')
-
     getList({sellingCarId, page, size}).then(data=> {
         printList(data.dtoList) // 목록 처리
         printPages(data)        // 페이지 처리
@@ -235,17 +231,6 @@
       console.error(e)
     })
   }
-
-  // function printHighProposalPrice(){
-  //   getHighProposalPrice(sellingCarId).then(data=> {
-  //     if(data.proposalPrice){
-  //       highProposalPrice.value = makePriceCurrency(data.proposalPrice)
-  //     }
-  //
-  //   }).catch(e=>{
-  //     console.error(e)
-  //   })
-  // }
 
   // 목록 출력
   function printList(dtoList){
@@ -323,8 +308,6 @@
     const target = e.target
     const offerType = target.getAttribute("btn-type")
 
-
-
     if(offerType === "new"){
       purchaseOfferModal.show()
     }
@@ -334,7 +317,6 @@
 
       modifyOfferModal.show()
     }
-
   }, false)
 
   function sendPurchaseOffer(formObj) {
@@ -342,19 +324,10 @@
     createOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
-
       initModalDisplay(formObj)
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-
+      errorResponse(e)
       initModalDisplay(formObj)
     })
   }
@@ -363,19 +336,10 @@
     updateOffer(formObj).then(result => {
 
       printBuyingCarList(1,10)
-
       initModalDisplay(formObj)
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-
+      errorResponse(e)
       initModalDisplay(formObj)
     })
   }
@@ -413,8 +377,6 @@
 
   // 모달창의 가격 수정 제안 처리
   document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
-
-    console.log(parseInt(modifyPrice.value.replace(",","")))
 
     if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
       alert('기존 가격과 같습니다')

@@ -107,6 +107,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/sellingCar.js"></script>
   <script src="/js/buyingCar.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -136,14 +137,13 @@
     }
   }
 
-  // 상담 요청 -버튼 클릭
+  // 상담 요청 or 취소 -버튼 클릭
   document.querySelector(".requestConsultBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
     const target = e.target
     const offerType = target.getAttribute("data-bs-target")
-    console.log("offerType" + offerType)
 
     if( offerType === 'requestConsult'){
       requestConsultModal.show()
@@ -152,14 +152,13 @@
       if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
         return
       }
+
       requestCancel()
     }
-
 
   }, false)
 
   function sellingCarLike(isLike){
-
     const formObj = {
       carId:carId,
       isLike:isLike,
@@ -167,23 +166,14 @@
 
     sendLike(formObj).then(result => {
 
-      console.log('성공')
       viewCarLike(isLike)
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-    }, false)
+      errorResponse(e)
+    })
   }
 
   function requestCancel(){
-
     const formObj = {
       offerType:'requestCancel',
       carId:carId,
@@ -197,18 +187,11 @@
       self.location = '/sellingCar/view/' +  sellingCarId
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
-    }, false)
+      errorResponse(e)
+    })
   }
 
-  // 상담 요청 - 서버로 전송
+  // [상담 요청] 전송
   document.querySelector(".sendRequestBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
@@ -227,19 +210,10 @@
       self.location = '/sellingCar/view/' +  sellingCarId
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
+      errorResponse(e)
     })
 
   }, false)
-
-
 
 
 </script>

@@ -59,22 +59,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
           <div class="input-group mb-3">
             <span class="input-group-text">배송지명</span>
             <input type="text" id="modalDeliveryName" th:value="회사1">
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">받는 분</span>
             <input type="text" id="modalRecipientName" th:value="홍길동">
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">연락처</span>
             <input type="tel" id="modalRecipientPhoneNumber" th:value="010-1223-9384">
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">우편번호</span>
             <input type="text" id="modalZipcode" th:value="|123-345|">
@@ -95,12 +91,10 @@
             <span class="input-group-text">상세주소</span>
             <input type="text" id="modalDetailAddress" size=40 maxlength=38 th:value="|101동405호|">
           </div>
-
           <div class="input-group mb-3">
             <span class="input-group-text">배송 요청사항</span>
             <input type="text" id="modalDeliveryRequest" size=40 maxlength=38 th:value="|배송 요청사항!!|">
           </div>
-
           <div class="input-group mb-3">
             <input type="hidden" id="modalMainAddressCheck" class="form-control">
             <!-- 체크 표시-->
@@ -125,6 +119,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -135,15 +130,13 @@
   const modalDeliveryName = document.querySelector('#modalDeliveryName');
   const modalRecipientName = document.querySelector('#modalRecipientName');
   const modalRecipientPhoneNumber = document.querySelector('#modalRecipientPhoneNumber');
+  const modalDetailAddress = document.querySelector('#modalDetailAddress');
+  const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
+  const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
   const modalZipcode = document.querySelector('#modalZipcode');
   const modalCountry = document.querySelector('#modalCountry');
   const modalCityName = document.querySelector('#modalCityName');
   const modalStreet = document.querySelector('#modalStreet');
-  const modalDetailAddress = document.querySelector('#modalDetailAddress');
-
-  const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest');
-  const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck');
-
 
   const modalTitle = document.querySelector('.modalTitle');
   const modalType = document.querySelector('.modalType');
@@ -152,26 +145,6 @@
   const checkSolid = document.getElementById("checkSolid");
   const checkRegular = document.getElementById("checkRegular");
 
-  const currentUser = [[${#authentication.principal.username}]]
-
-
-  // 모달창의 [기본 배송지 설정] 체크 박스 클릭시
-  function checkMain(isCheck){
-
-    console.log(isCheck)
-
-    if(isCheck === true){
-      checkSolid.style.display = 'inline'
-      checkRegular.style.display = 'none'
-      modalMainAddressCheck.value = 'true'
-    }
-    else if(isCheck === false){
-      checkSolid.style.display = 'none'
-      checkRegular.style.display = 'inline'
-      modalMainAddressCheck.value = 'false'
-    }
-
-  }
 
   document.querySelector(".registerBtn").addEventListener("click", function (e){
     e.stopPropagation()
@@ -183,8 +156,6 @@
     checkSolid.style.display='none'
     checkRegular.style.display='inline'
     modalMainAddressCheck.value='false'
-
-
 
     updateModal.show()
   }, false)
@@ -207,8 +178,6 @@
       callType:modalType.value
     }
 
-    console.log(modalType.value)
-
     sendDeliveryAddress(formObj).then(result => {
 
       updateModal.hide()
@@ -223,14 +192,8 @@
       self.location = '/myPage/deliveryAddress?userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
+      errorResponse(e)
 
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data.message)
-      }
       updateModal.hide()
     })
   }, false)
@@ -242,8 +205,6 @@
     }
 
     getDeliveryAddress(formObj).then(result => {
-
-      console.log(result)
 
       modalTitle.innerHTML = '배송지 수정'
       modalType.value = 'modify'
@@ -265,16 +226,23 @@
       updateModal.show()
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
+      errorResponse(e)
       updateModal.hide()
     })
+  }
+
+  // 모달창의 [기본 배송지 설정] 체크 박스 클릭시
+  function checkMain(isCheck){
+    if(isCheck === true){
+      checkSolid.style.display = 'inline'
+      checkRegular.style.display = 'none'
+      modalMainAddressCheck.value = 'true'
+    }
+    else if(isCheck === false){
+      checkSolid.style.display = 'none'
+      checkRegular.style.display = 'inline'
+      modalMainAddressCheck.value = 'false'
+    }
   }
 
   function deleteAddress(userAddressBookId){
@@ -297,14 +265,7 @@
       self.location = '/myPage/deliveryAddress?userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
+      errorResponse(e)
       updateModal.hide()
     })
   }
@@ -320,30 +281,5 @@
       modalDetailAddress.value =''
       modalDeliveryRequest.value =''
   }
-
-  // const hypenTel = (target) => {
-  //   target.value = target.value
-  //           .replace(/[^0-9]/g, '')
-  //           .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)
-  // };
-  //
-  // function phoneFormat(phoneNumber) {
-  //   // 특수문자 제거
-  //   const value = phoneNumber.replace(/[^0-9]/g, '');
-  //
-  //   // 00 OR 000 지정
-  //   const firstLength = value.length > 9 ? 3 : 2;
-  //
-  //   // ({2,3}) - ({3,4}) - ({4})
-  //   return [
-  //     // 첫번째 구간 (00 or 000)
-  //     value.slice(0, firstLength),
-  //     // 두번째 구간 (000 or 0000)
-  //     value.slice(firstLength, value.length - 4),
-  //     // 남은 마지막 모든 숫자
-  //     value.slice(value.length - 4),
-  //   ].join('-');
-  // }
-
 
 </script>

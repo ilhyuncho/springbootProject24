@@ -205,6 +205,7 @@
   <!--    axios 라이브러리 추가-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/history.js"></script>
+  <script src="/js/util.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -273,14 +274,7 @@
       //         + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
+      errorResponse(e)
       addGasHistoryModal.hide()
     })
 
@@ -300,8 +294,6 @@
   // [정비 기록] modal 전송 버튼 클릭
   document.querySelector(".sendRepairHistoryBtn").addEventListener("click", function (e){
 
-    console.log('repairType : ' + repairType.value)
-
     const formObj = {
       carId:carId,
       consumableId:repairType.value,
@@ -309,36 +301,25 @@
       replaceShop:repairShop.value,
       accumKm:repairAccumKm.value,
       replaceDate:new Date(repairEventDate.value),
-      //repairType:repairType.value,
       consumableType:'REPAIR',
     }
-
-    console.log(formObj)
 
     addHistory(formObj).then(result => {
 
       addRepairHistoryModal.hide()
-
       getRepairList() // 목록 갱신
 
     }).catch(e => {
-      if (e.response && e.response.status === 400) {
-
-        alert('잘못된 요청입니다.. 전달값 확인!!')
-        console.log(e.response.data);
-      } else {
-        console.log(e.response.data);
-        alert(e.response.data)
-      }
+      errorResponse(e)
       addRepairHistoryModal.hide()
     })
 
   }, false)
 
 
-  var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+  const triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
   triggerTabList.forEach(function (triggerEl) {
-    var tabTrigger = new bootstrap.Tab(triggerEl)
+    const tabTrigger = new bootstrap.Tab(triggerEl)
 
     triggerEl.addEventListener('click', function (event) {
       event.preventDefault()
@@ -418,7 +399,6 @@
          //   k++;
          // }
         }
-
       })
     }
   }
@@ -444,7 +424,6 @@
             k++;
           }
         }
-
       })
     }
   }

@@ -99,27 +99,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">진행 상태</span>
                         <input type="text" class="form-control modalDeliveryStatus">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">받는 사람</span>
                         <input type="text" class="form-control modalRecipientName">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">연락처</span>
                         <input type="text" class="form-control modalRecipientPhoneNumber">
                     </div>
-
                     <div class="input-group mb-3">
                         <span class="input-group-text">받는 주소</span>
                         <input type="text" class="form-control modalFullAddress">
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
@@ -132,21 +127,19 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/order.js"></script>
     <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
 
     const deliveryProcessModal = new bootstrap.Modal(document.querySelector(".deliveryProcessModal"))
-
     const modalDeliveryStatus = document.querySelector(".modalDeliveryStatus")
     const modalRecipientName = document.querySelector(".modalRecipientName")
     const modalRecipientPhoneNumber = document.querySelector(".modalRecipientPhoneNumber")
     const modalFullAddress = document.querySelector(".modalFullAddress")
 
-
     function cancelOrder(orderItemId, object){
-
         if(!confirm("정말로 구매를 취소 하겠습니까?")){
             return
         }
@@ -157,45 +150,31 @@
             self.location = '/order/list' // 자바스크립트로 다른 url 호출
 
         }).catch(e=>{
-            if (e.response && e.response.status === 400) {
-
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data)
-            }
+            errorResponse(e)
         })
     }
 
     // 배송 현황 팝업창 보기
     function showDeliveryStatus(orderId, object){
-
         const formObj = {
             orderId:orderId,
         }
+
         getOrderDeliveryProcess(formObj).then(result=>{
 
+            modalRecipientPhoneNumber.value = result.recipientPhoneNumber
             modalDeliveryStatus.value = result.deliveryStatus
             modalRecipientName.value = result.recipientName
-            modalRecipientPhoneNumber.value = result.recipientPhoneNumber
             modalFullAddress.value = result.fullAddress
 
             deliveryProcessModal.show()
         }).catch(e=>{
-            if (e.response && e.response.status === 400) {
-                alert('잘못된 요청입니다.. 전달값 확인!!')
-                console.log(e.response.data);
-            } else {
-                console.log(e.response.data);
-                alert(e.response.data)
-            }
+            errorResponse(e)
         })
     }
 
     // 페이지 버튼 클릭 이벤트 begin ------------------
     document.querySelector(".pagination").addEventListener("click", function(e){
-
         e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
         e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
 
