@@ -381,8 +381,14 @@
 
     modifySellingCar(formObj).then(result => {
 
-      // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
+      if(sellingStatus.value === 'CANCEL'){
+        // 화면 재 갱신
+        self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
+      }
+      else if(sellingStatus.value === 'COMPLETE'){
+        // 화면 재 갱신
+        self.location = '/myPage/carList?userName=' + [[${#authentication.principal.username}]]
+      }
 
     }).catch(e => {
       errorResponse(e)

@@ -73,6 +73,7 @@ public class Car extends BaseEntity {
     @JoinColumn(name = "SELLINGCAR_ID")      // 주 테이블(Car)에 외래 키
     private SellingCar sellingCar;          // 판매 정보
 
+    private Boolean isActive;               // 유효한 상태 인지
 
     public void setUser(User user) {
         this.user = user;
@@ -123,12 +124,18 @@ public class Car extends BaseEntity {
                 .imageOrder(itemImage.getImageOrder())
                 .build();
     }
-
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  end---------------
 
     public void updateCellingCarStatus(SellingCarStatus sellingCarStatus){
         sellingCar.changeStatus(sellingCarStatus);
-        this.sellingCar = null;
+
+        if(sellingCarStatus.equals(SellingCarStatus.CANCEL)){    // 판매 취소
+            this.sellingCar = null;
+        }
+        else if(sellingCarStatus.equals(SellingCarStatus.COMPLETE)){ // 판매 완료
+            this.isActive = false;
+        }
+
     }
 
     public void change( Long carKm, int carYears, String carColors ){

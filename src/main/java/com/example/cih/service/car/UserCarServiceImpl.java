@@ -99,6 +99,7 @@ public class UserCarServiceImpl implements UserCarService {
                         .carYears(refCarSample.getCarYear())
                         .carGrade(refCarSample.getCarGrade())
                         .carKm(0L)
+                        .isActive(true)
                         .user(user)
                 .build();
 

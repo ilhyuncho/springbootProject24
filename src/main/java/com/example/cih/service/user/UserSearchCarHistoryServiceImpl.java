@@ -1,6 +1,7 @@
 package com.example.cih.service.user;
 
 import com.example.cih.domain.sellingCar.SellingCar;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.sellingCar.SellingCarServiceImpl;
@@ -50,6 +51,7 @@ public class UserSearchCarHistoryServiceImpl implements UserSearchCarHistoryServ
         return listHistory.stream()
                 .sorted(Comparator.comparing(UserSearchCarHistory::getModDate))
                 .map(UserSearchCarHistory::getSellingCar)
+                .filter(sellingCar -> sellingCar.getSellingCarStatus() == SellingCarStatus.PROCESSING)
                 .map(SellingCarServiceImpl::entityToDTO)
                 .map(SellingCarResDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
                     SellingCarResDTO.getFileNames().stream()

@@ -6,18 +6,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public enum SellingCarStatus {
-    INIT(0),
-    PROCESSING(1),
-    COMPLETE(2),
-    CANCEL(3);
+    INIT(0, "상태 없음"),
+    PROCESSING(1, "판매 중"),
+    COMPLETE(2, "판매 완료"),
+    CANCEL(3, "판매 취소");
 
     private final static Map<Integer, SellingCarStatus> valueMap = Arrays.stream(SellingCarStatus.values())
             .collect(Collectors.toMap(SellingCarStatus::getValue, Function.identity()));
 
     private final Integer value;
+    private final String name;
 
-    SellingCarStatus(Integer value) {
+    SellingCarStatus(Integer value, String name) {
         this.value = value;
+        this.name = name;
     }
 
     public static SellingCarStatus fromValue(Integer value) {
@@ -28,5 +30,8 @@ public enum SellingCarStatus {
     }
     public Integer getValue(){
         return value;
+    }
+    public String getName(){
+        return name;
     }
 }

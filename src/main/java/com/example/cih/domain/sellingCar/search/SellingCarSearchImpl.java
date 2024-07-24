@@ -41,7 +41,7 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
             }
             query.where(booleanBuilder);
         }
-        query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));
+        query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시
 
         this.getQuerydsl().applyPagination(pageable, query);
         List<SellingCar> list = query.fetch();
