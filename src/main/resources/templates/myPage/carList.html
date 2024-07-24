@@ -33,9 +33,13 @@
             <tbody>
               <tr th:each="dto:${list}">
                 <th scope="row">
-                  <a th:href="|@{/myPage/carDetail(carId=${dto.carId}, userName=${#authentication.principal.username} )}|"
-                     class="text-decoration-none"> [[${dto.carNumber}]]</a>
-
+                  <span th:if="${#strings.equals(dto.sellingCarStatus, 'COMPLETE') == false}">
+                    <a th:href="|@{/myPage/carDetail(carId=${dto.carId}, userName=${#authentication.principal.username} )}|"
+                       class="text-decoration-none"> [[${dto.carNumber}]]</a>
+                  </span>
+                  <span th:if="${#strings.equals(dto.sellingCarStatus, 'COMPLETE')}">
+                    [[${dto.carNumber}]]
+                  </span>
                   <span class="badge progress-bar-success" th:if="${dto.sellingCarStatus}"
                         style="background-color: #0a53be">[[${dto.sellingCarStatus.name}]]</span>
 

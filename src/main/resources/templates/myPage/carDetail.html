@@ -75,19 +75,17 @@
                 <button type="button" class="btn btn-primary">소모품 관리</button>
               </a>
 
+
               <button type="button" class="btn btn-primary sellingCarRegBtn text-decoration-none"
                       th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') ? 'invisible':''}" >
-                    <span th:id="sellingCarReg">
-                      차량 판매
-                    </span>
+                    <span th:id="sellingCarReg">차량 판매</span>
               </button>
 
               <button type="button" class="btn btn-primary sellingCarShowBtn text-decoration-none"
                       th:classappend="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING') == false ? 'invisible':''}" >
-                    <span th:id="sellingCarShow">
-                      판매 현황
-                    </span>
+                    <span th:id="sellingCarShow">판매 현황</span>
               </button>
+
 
               <a th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
