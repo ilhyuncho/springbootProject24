@@ -58,7 +58,7 @@
                                        maxlength="10" readonly class="p_discountPrice" th:value="${dto.discountPrice}">
                             </td>
 
-                            <td><div class="updownCount">
+                            <td><div class="upDownCount">
                                     <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                     <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
                                            class="itemCount" th:value="${dto.itemCount}">
@@ -92,28 +92,21 @@
                                     <input type="hidden" id="userAddressBookId" class="form-control"
                                            th:value="${mainAddressInfo != null ? mainAddressInfo.userAddressBookId : 0}">
 
-                                    <div th:if="${mainAddressInfo == null}">
-                                        <div class="input-group mb-3">
-                                            <button type="button" class="btn btn-primary"
-                                                    th:onclick="registerAddress()">배송지 추가하기</button>
+                                    <div class="input-group mb-3">
+                                        <div class="h4 text-danger">
+                                            <span id="deliveryName" th:text="${mainAddressInfo != null ? mainAddressInfo.deliveryName : ''}"></span>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    th:onclick="selectAddress()" >변경</button>
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                    th:onclick="registerAddress()">추가</button>
                                         </div>
                                     </div>
-                                    <div th:unless="${mainAddressInfo == null}">
-                                        <div class="input-group mb-3">
-                                            <div class="h4 text-danger">
-                                                <span id="deliveryName" th:text="${mainAddressInfo.deliveryName}"></span>
-                                                &nbsp;
-                                                <button type="button" class="btn btn-success btn-sm"
-                                                 th:onclick="selectAddress()" >변경</button>
-                                            </div>
-                                        </div>
-                                        <div class="input-group mb-3">
-                                                <span id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></span>
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <span id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></span>
-                                        </div>
+                                    <div class="input-group mb-3" th:if="${mainAddressInfo}">
+                                        <div id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></div>
+                                        <div id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></div>
                                     </div>
+
                                 </div><!-- <div class="card-body">-->
 
                             </div>
@@ -260,7 +253,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+                    <button type="button" class="btn btn-primary sendRegisterBtn">배송지 추가</button>
                     <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
                 </div>
             </div>
@@ -310,6 +303,9 @@
     // 결제 금액 계산 호출
     reCalculation()
 
+
+
+
     // 상품 선택 변경 ( checkbox )
     document.querySelectorAll(".checkbox").forEach(function (item){
         item.addEventListener('change', function(){
@@ -318,7 +314,7 @@
         })
     }, false)
 
-    // 상품 갯수 수동 변경
+    // 주문 수량 변경1 ( 텍스트박스 수동 입력 )
     document.querySelectorAll(".itemCount").forEach(function (item,idx){
         item.addEventListener('change', function(){
 
@@ -330,7 +326,7 @@
                 inputTag.value = p_count
             }
             else{
-                inputTag.setAttribute('value', 0 )
+                inputTag.setAttribute('value', '0' )
                 inputTag.value = 0
             }
             // 결제 금액 재 계산
@@ -338,8 +334,8 @@
         });
     }, false)
 
-    // 주문 수량 갯수 변경 ( up, down button )
-    document.querySelectorAll(".updownCount").forEach(function (item,idx){
+    // 주문 수량 변경2 ( up, down button )
+    document.querySelectorAll(".upDownCount").forEach(function (item,idx){
         // 갯수 차감
         item.children[0].addEventListener('click', function(){
             changeItemCount(idx, -1)
@@ -352,11 +348,10 @@
 
     // 주문 수량 변경
     function changeItemCount(idx, value){
-
         const inputTag = document.querySelector('input[name=p_itemCount'+idx+']')
         const p_count = parseInt(inputTag.getAttribute('value'))
-
         const changeCount = p_count + value
+
         if( changeCount >= 0 ){
             inputTag.setAttribute('value', changeCount )
             inputTag.value = changeCount
@@ -477,7 +472,7 @@
         expectedPrice.value = totalPrice + deliveryPrice
     }
 
-    // 상품 선택 삭제
+    // 상품 삭제
     function removeCart(cartId, obj){
         if(!confirm("해당 항목을 정말 삭제 하겠습니까??")){
             return
@@ -488,7 +483,6 @@
 
             // 장바구니 페이지 다시 로딩
             self.location = '/cart/list'
-
         }).catch(e=>{
             console.log(e)
         })
@@ -538,17 +532,16 @@
 
         }).catch(e => {
             errorResponse(e)
-            addressListModal.hide()
         })
     }
 
-    // 배송지 추가하기
+    // [배송지 추가] 버튼 클릭
     function registerAddress() {
         modalTitle.innerHTML = '배송지 추가'
-        modalType.value = 'register'
         modalMainAddressCheck.value='false'
         checkSolid.style.display='none'
         checkRegular.style.display='inline'
+        modalType.value = 'register'
 
         registerModal.show()
     }
@@ -567,7 +560,25 @@
         addressListModal.hide()
     }, false)
 
-    // [배송지 추가] 요청 처리
+    // [모달창] 선택된 배송지 정보 요청
+    function getAddressInfo(addressBookId) {
+        const formObj = {
+            userAddressBookId:addressBookId,
+        }
+
+        getDeliveryAddress(formObj).then(result => {
+            deliveryName.innerHTML = result.deliveryName
+            recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
+            fullAddress.innerHTML = result.fullAddress
+            userAddressBookId.value = addressBookId
+
+        }).catch(e => {
+            errorResponse(e)
+            updateModal.hide()
+        })
+    }
+
+    // [모달창] 배송지 추가 요청
     document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
 
         const formObj = {
@@ -593,7 +604,6 @@
                 //initModalForm()
                 return
             }
-
             // 화면 재 갱신
             self.location = '/cart/list'
         }).catch(e => {
@@ -602,7 +612,7 @@
         })
     }, false)
 
-    // [배송지 선택 모달창] 체크박스 선택시
+    // [모달창] 배송지 선택 체크박스 클릭시
     function addressSelect(index, obj){
         const checkboxes = document.getElementsByName("checkboxModal");
         checkboxes.forEach((cb) => {
@@ -611,22 +621,5 @@
         obj.checked = true
     }
 
-    // 전달된 주소록 정보 요청 [배송지 선택]
-    function getAddressInfo(addressBookId) {
-        const formObj = {
-            userAddressBookId:addressBookId,
-        }
-
-        getDeliveryAddress(formObj).then(result => {
-            deliveryName.innerHTML = result.deliveryName
-            recipientName.innerHTML = "(" + result.recipientName + ") " + result.recipientPhoneNumber
-            fullAddress.innerHTML = result.fullAddress
-            userAddressBookId.value = addressBookId
-
-        }).catch(e => {
-            errorResponse(e)
-            updateModal.hide()
-        })
-    }
 
 </script>

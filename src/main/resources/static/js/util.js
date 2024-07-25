@@ -126,7 +126,7 @@ function errorResponse(e){
     } else {
         alert('잘못된 요청입니다.. 전달값 확인!!')
         console.log(e.response.data);
-        alert(e.response.data)
+        alert(e.response.data.message)
     }
 }
 
