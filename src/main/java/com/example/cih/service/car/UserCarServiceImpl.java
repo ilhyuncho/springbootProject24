@@ -137,7 +137,8 @@ public class UserCarServiceImpl implements UserCarService {
 
     @Override
     public void deleteMyCar(Long carId) {
-        carRepository.deleteById(carId);
+        Optional<Car> car = carRepository.findById(carId);
+        car.ifPresent(carRepository::delete);
     }
 
     private static CarViewResDTO entityToDTO(Car car) {

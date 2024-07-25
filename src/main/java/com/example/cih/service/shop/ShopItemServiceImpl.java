@@ -158,14 +158,12 @@ public class ShopItemServiceImpl implements ShopItemService {
         listItemImage.forEach(itemImage -> {
             itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
         });
-
     }
 
     @Override
     public void deleteItem(Long itemId) {
         shopItemRepository.deleteById(itemId);
     }
-
 
     private static ShopItem dtoToEntity(ShopItemReqDTO shopItemReqDTO, ItemPrice itemPrice) {
 
