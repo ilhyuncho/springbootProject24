@@ -73,28 +73,19 @@
                                     <input type="hidden" id="userAddressBookId" class="form-control"
                                            th:value="${mainAddressInfo != null ? mainAddressInfo.userAddressBookId : 0}">
 
-                                    <div th:if="${mainAddressInfo == null}">
-                                        <div class="input-group mb-3">
-                                            <button type="button" class="btn btn-primary"
-                                                    th:onclick="registerAddress()">배송지 추가하기</button>
+                                    <div class="input-group mb-3">
+                                        <div class="h4 text-danger">
+                                            <span id="deliveryName" th:text="${mainAddressInfo != null ? mainAddressInfo.deliveryName : ''}"></span>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-success btn-sm"
+                                             th:onclick="selectAddress()" >변경</button>
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                    th:onclick="registerAddress()">추가</button>
                                         </div>
                                     </div>
-                                    <div th:unless="${mainAddressInfo == null}">
-                                        <div class="input-group mb-3">
-                                            <div class="h4 text-danger">
-                                                <span id="deliveryName" th:text="${mainAddressInfo.deliveryName}"></span>
-                                                &nbsp;
-                                                <button type="button" class="btn btn-success btn-sm"
-                                                 th:onclick="selectAddress()" >변경</button>
-                                            </div>
-                                        </div>
-                                        <div class="input-group mb-3">
-                                                <span id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></span>
-                                        </div>
-                                        <div class="input-group mb-3">
-                                            <span id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></span>
-                                        </div>
-                                    </div>
+
+                                    <div id="recipientName" th:text="|${mainAddressInfo != null ? '(' + mainAddressInfo.recipientName + ') ' + mainAddressInfo.recipientPhoneNumber : ''}|"></div>
+                                    <div id="fullAddress" th:text="|${mainAddressInfo != null ? mainAddressInfo.fullAddress : ''}|"></div>
                                 </div><!-- <div class="card-body">-->
 
                             </div>
@@ -421,23 +412,6 @@
         expectedPrice.value = totalPrice + deliveryPrice
     }
 
-    // 상품 선택 삭제
-    function removeCart(cartId, obj){
-        if(!confirm("해당 항목을 정말 삭제 하겠습니까??")){
-            return
-        }
-
-        removeCartItem(cartId).then(result=>{
-            alert(result.cartId + ' 상품이 삭제 되었습니다')
-
-            // 장바구니 페이지 다시 로딩
-            self.location = '/cart/list'
-
-        }).catch(e=>{
-            console.log(e)
-        })
-    }
-
     // [배송지 변경] 버튼 클릭
     function selectAddress(){
 
@@ -539,9 +513,9 @@
                 //initModalForm()
                 return
             }
+            // 배송지 선택 모달 창 오픈
+            selectAddress()
 
-            // 화면 재 갱신
-            self.location = '/cart/list'
         }).catch(e => {
             errorResponse(e)
             registerModal.hide()

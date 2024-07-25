@@ -102,10 +102,9 @@
                                                     th:onclick="registerAddress()">추가</button>
                                         </div>
                                     </div>
-                                    <div class="input-group mb-3" th:if="${mainAddressInfo}">
-                                        <div id="recipientName" th:text="|(${mainAddressInfo.recipientName}) ${mainAddressInfo.recipientPhoneNumber}|"></div>
-                                        <div id="fullAddress" th:text="|${mainAddressInfo.fullAddress}|"></div>
-                                    </div>
+
+                                    <div id="recipientName" th:text="|${mainAddressInfo != null ? '(' + mainAddressInfo.recipientName + ') ' + mainAddressInfo.recipientPhoneNumber : ''}|"></div>
+                                    <div id="fullAddress" th:text="|${mainAddressInfo != null ? mainAddressInfo.fullAddress : ''}|"></div>
 
                                 </div><!-- <div class="card-body">-->
 
@@ -604,8 +603,10 @@
                 //initModalForm()
                 return
             }
-            // 화면 재 갱신
-            self.location = '/cart/list'
+
+            // 배송지 선택 모달 창 오픈
+            selectAddress()
+
         }).catch(e => {
             errorResponse(e)
             registerModal.hide()
