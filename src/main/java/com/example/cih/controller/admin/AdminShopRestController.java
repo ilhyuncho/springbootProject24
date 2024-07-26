@@ -34,6 +34,12 @@ public class AdminShopRestController {
 
         if(bindingResult.hasErrors()) {
             log.error("bindingResult.hasErrors()~~~");
+
+//            Map<String, String> resultMap = new HashMap<>();
+//            resultMap.put("result", "fail");
+//            resultMap.put("message", "전달 값 오류!!!");
+//            return ResponseEntity.badRequest().body(resultMap);
+
             throw new BindException(bindingResult);
         }
 
