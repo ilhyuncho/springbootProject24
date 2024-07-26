@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ public class ConsumableRestController {
 
     @ApiOperation(value = "소모품 교환 날짜 등록", notes = "차 소유주가 등록")
     @PostMapping("/register")
-    public Map<String,String> postRegisterConsumable(@Valid @RequestBody CarConsumableRegDTO carConsumableRegDTO,
+    public Map<String,String> postRegisterConsumable(@Validated @RequestBody CarConsumableRegDTO carConsumableRegDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
         if(bindingResult.hasErrors()){

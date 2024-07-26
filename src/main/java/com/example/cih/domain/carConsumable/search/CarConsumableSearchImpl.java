@@ -96,6 +96,9 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
         query.where(carConsumable.consumableType.eq(ConsumableType.GAS));
 
+        // Projections 방식은 been(setter를 이용), constructor 방식이 있음
+        // 예: Projections.constructor(TodoDTO.class, todoEntity); TodoDTO에는 TodoEntity를 생성자의
+        // 파라미터로 만들어야 함
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
                 ,carConsumable.consumableType.as("consumableType")
@@ -129,6 +132,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
         query.where(carConsumable.car.carId.eq(statisticsReqDTO.getCarId()));
 
+        // Bean 방식이라고 하는 setter를 이용하는 방식
         JPQLQuery<StatisticsDistanceDTO> dtoQuery = query.select(Projections.bean(StatisticsDistanceDTO.class
                 ,carConsumable.replaceDate.as("eventDate")
                 ,carConsumable.consumableType.as("consumableType")
