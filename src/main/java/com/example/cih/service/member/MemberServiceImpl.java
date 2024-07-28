@@ -19,7 +19,7 @@ public class MemberServiceImpl implements MemberService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     @Override
-    public void register(MemberJoinDTO memberJoinDTO) throws MemberIdExistException {
+    public void registerMember(MemberJoinDTO memberJoinDTO) throws MemberIdExistException {
 
         boolean isExisted = memberRepository.existsById(memberJoinDTO.getMemberId());
 

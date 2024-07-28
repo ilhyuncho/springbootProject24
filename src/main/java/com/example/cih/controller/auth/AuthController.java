@@ -2,6 +2,7 @@ package com.example.cih.controller.auth;
 
 import com.example.cih.dto.member.MemberJoinDTO;
 import com.example.cih.service.member.MemberService;
+import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
 
     private final MemberService memberService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public void login(String error, String logout){
@@ -39,7 +41,8 @@ public class AuthController {
     public String postRegister(MemberJoinDTO memberJoinDTO, RedirectAttributes redirectAttributes){
 
         try{
-            memberService.register(memberJoinDTO);
+            memberService.registerMember(memberJoinDTO);
+            userService.registerUser(memberJoinDTO.getMemberId());
         }
         catch (MemberService.MemberIdExistException ex){
             redirectAttributes.addFlashAttribute("error", "memberId");
@@ -47,7 +50,7 @@ public class AuthController {
         }
 
         redirectAttributes.addFlashAttribute("result", "success");
-        return "redirect:/dashBoard/list";
+        return "redirect:/auth/login";
     }
 
 }

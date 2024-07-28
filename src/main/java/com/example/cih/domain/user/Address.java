@@ -15,13 +15,13 @@ import java.io.Serializable;
 @Builder
 public class Address implements Serializable {
 
-    @NotEmpty
+    //@NotEmpty
     private City city;
 
-    @NotEmpty
+    //@NotEmpty
     private String street;
 
-    @NotEmpty
+    //@NotEmpty
     private String detailAddress;
 
     public String fullAddress(){

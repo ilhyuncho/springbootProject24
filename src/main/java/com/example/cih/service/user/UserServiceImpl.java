@@ -2,15 +2,14 @@ package com.example.cih.service.user;
 
 import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.user.User;
+import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 
 @Service
@@ -20,6 +19,17 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+
+    @Override
+    public Long registerUser(String userName) {
+        User user = User.builder()
+                .userName(userName)
+                .mPoint(0)
+                .mGrade(UserGradeType.GRADE_A)
+                .build();
+
+        return userRepository.save(user).getUserId();
+    }
 
     @Override
     public UserDTO findUserDTO(String userName){
@@ -40,8 +50,8 @@ public class UserServiceImpl implements UserService{
         return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
-                .address(user.getAddress().fullAddress())
-                .billingAddress(user.getBillingAddress().fullAddress())
+                .address(user.getAddress() != null ? user.getAddress().fullAddress() : null)
+                .billingAddress(user.getAddress() != null ? user.getBillingAddress().fullAddress() : null)
                 .mPoint(user.getMPoint())
                 .mGrade(user.getMGrade())
                 .build();

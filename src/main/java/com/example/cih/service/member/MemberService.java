@@ -7,5 +7,5 @@ public interface MemberService {
     static class MemberIdExistException extends  Exception{
 
     }
-    void register(MemberJoinDTO memberJoinDTO) throws MemberIdExistException;
+    void registerMember(MemberJoinDTO memberJoinDTO) throws MemberIdExistException;
 }
