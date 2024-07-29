@@ -40,8 +40,12 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">주소</span>
-            <input type="text" class="form-control" th:value="${userDTO.address}" readonly>
+            <span class="input-group-text">주소&nbsp;
+              <a class= "updateAddress"  href="#" onclick="selectModalOpen()">
+                [[${#strings.isEmpty(userDTO.address) ? '(주소 등록)' : '(주소 수정)'}]]
+              </a>
+            </span>
+            <input type="text" class="form-control userAddress" th:value="${userDTO.address}" readonly>
           </div>
 
           <div class="input-group mb-3">
@@ -50,7 +54,7 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">배송 주소<a th:href="|@{/myPage/deliveryAddress(userName=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
+            <span class="input-group-text">배송 주소&nbsp;<a th:href="|@{/myPage/deliveryAddress(userName=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
               <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
           </div>
 
@@ -59,8 +63,144 @@
     </div>
   </div>
 
+
+  <!--주소 추가 모달창-->
+  <div class="modal registerAddressModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <input type="hidden" class="form-control modalType">
+          <input type="hidden" class="form-control modalUserAddressBookId">
+          <h5 class="modal-title modalTitle">주소 추가</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">우편번호</span>
+            <input type="text" id="modalZipcode" th:value="|123-345|" placeholder="Enter your Zipcode">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">국가</span>
+            <input type="text" id="modalCountry" size=40 maxlength=38 th:value="|대한민국|" placeholder="Enter your Country">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">도시명</span>
+            <input type="text" id="modalCityName" size=40 maxlength=38 th:value="|부천시|" placeholder="Enter your Country">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">주소</span>
+            <input type="text" id="modalStreet" size=40 maxlength=38 th:value="|수도로123번길44|" placeholder="Enter your Street">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상세주소</span>
+            <input type="text" id="modalDetailAddress" size=40 maxlength=38 th:value="|101동405호|" placeholder="Enter your DetailAddress">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!--주소 추가 모달창-->
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  const registerAddressModal = new bootstrap.Modal(document.querySelector(".registerAddressModal"))
+
+  const userDTO = [[${userDTO}]]
+
+  console.log('userDTO : ' + userDTO.address)
+
+  const userAddress = document.querySelector('.userAddress');
+  const updateAddress = document.querySelector('.updateAddress');
+
+  const modalDetailAddress = document.querySelector('#modalDetailAddress');
+  const modalZipcode = document.querySelector('#modalZipcode');
+  const modalCountry = document.querySelector('#modalCountry');
+  const modalCityName = document.querySelector('#modalCityName');
+  const modalStreet = document.querySelector('#modalStreet');
+  const modalTitle = document.querySelector('.modalTitle');
+  const sendRegisterBtn = document.querySelector('.sendRegisterBtn');
+
+  function selectModalOpen(){
+    if(userAddress.value.length === 0){
+      registerAddress()
+    }
+    else{
+      modifyAddress()
+    }
+  }
+
+  // [주소 등록] 모달창 오픈
+  function registerAddress(){
+    modalZipcode.value = '123-456'
+    modalCountry.value = '대한민국'
+    modalCityName.value = '인천시'
+    modalStreet.value = '축제로123번길44'
+    modalDetailAddress.value = '2동305호'
+
+    modalTitle.innerHTML='주소 추가'
+    sendRegisterBtn.innerHTML = '등록하기'
+
+    registerAddressModal.show()
+  }
+
+  // [주소 수정] 모달창 오픈
+  function modifyAddress(){
+    const formObj = {
+      userName:userDTO.userName,
+    }
+
+    getMainAddress(formObj).then(result => {
+      modalZipcode.value = result.city.zipcode
+      modalCountry.value = result.city.country
+      modalCityName.value = result.city.cityName
+      modalStreet.value = result.street
+      modalDetailAddress.value = result.detailAddress
+
+      modalTitle.innerHTML='주소 수정'
+      sendRegisterBtn.innerHTML = '수정하기'
+
+      registerAddressModal.show()
+
+    }).catch(e => {
+      errorResponse(e)
+    })
+  }
+
+  // [주소 추가] 요청 처리
+  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+
+    const formObj = {
+      zipcode:modalZipcode.value,
+      country:modalCountry.value,
+      cityName:modalCityName.value,
+      street:modalStreet.value,
+      detailAddress:modalDetailAddress.value,
+    }
+
+    sendRegisterMainAddress(formObj).then(result => {
+      alert("주소 등록 성공!!!")
+
+      userAddress.value = result.fullAddress
+      updateAddress.innerHTML='(주소 수정)'
+
+      registerAddressModal.hide()
+    }).catch(e => {
+      errorResponse(e)
+      registerAddressModal.hide()
+    })
+  }, false)
+
+
 
 </script>

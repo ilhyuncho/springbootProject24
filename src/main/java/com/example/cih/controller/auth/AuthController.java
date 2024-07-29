@@ -1,5 +1,6 @@
 package com.example.cih.controller.auth;
 
+import com.example.cih.common.util.Util;
 import com.example.cih.dto.member.MemberJoinDTO;
 import com.example.cih.service.member.MemberService;
 import com.example.cih.service.user.UserService;
@@ -39,6 +40,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public String postRegister(MemberJoinDTO memberJoinDTO, RedirectAttributes redirectAttributes){
+
+        // 테스트 용
+        if(memberJoinDTO.getMemberId().isEmpty()){
+            memberJoinDTO.setMemberId(Util.createRandomName("member"));
+        }
 
         try{
             memberService.registerMember(memberJoinDTO);

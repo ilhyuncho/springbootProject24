@@ -4,6 +4,7 @@ import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.domain.user.UserRepository;
+import com.example.cih.dto.user.UserAddressReqDTO;
 import com.example.cih.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,13 +46,24 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
     }
 
+    @Override
+    public User registerMainAddress(String userName, UserAddressReqDTO userAddressReqDTO) {
+
+        User user = findUser(userName);
+
+        user.registerMainAddress(userAddressReqDTO);
+
+        return user;
+    }
+
+
     private static UserDTO entityToDTO(User user) {
 
         return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
                 .address(user.getAddress() != null ? user.getAddress().fullAddress() : null)
-                .billingAddress(user.getAddress() != null ? user.getBillingAddress().fullAddress() : null)
+                .billingAddress(user.getBillingAddress() != null ? user.getBillingAddress().fullAddress() : null)
                 .mPoint(user.getMPoint())
                 .mGrade(user.getMGrade())
                 .build();

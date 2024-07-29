@@ -80,7 +80,7 @@
                                             <button type="button" class="btn btn-success btn-sm"
                                              th:onclick="selectAddress()" >변경</button>
                                             <button type="button" class="btn btn-primary btn-sm"
-                                                    th:onclick="registerAddress()">추가</button>
+                                                    th:onclick="registerDeliveryAddress()">추가</button>
                                         </div>
                                     </div>
 
@@ -461,7 +461,7 @@
     }
 
     // 배송지 추가하기
-    function registerAddress() {
+    function registerDeliveryAddress() {
 
         modalTitle.innerHTML = '배송지 추가'
         modalType.value = 'register'

@@ -2,13 +2,12 @@ package com.example.cih.domain.user;
 
 
 import com.example.cih.domain.car.Car;
+import com.example.cih.dto.user.UserAddressReqDTO;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -71,4 +70,16 @@ public class User {
           this.mPoint += point;
       }
 
+      public void registerMainAddress(UserAddressReqDTO userAddressReqDTO){
+
+          City city = new City(userAddressReqDTO.getZipcode(),
+                  userAddressReqDTO.getCityName(),
+                  userAddressReqDTO.getCountry());
+
+          this.address = Address.builder()
+                  .city(city)
+                  .street(userAddressReqDTO.getStreet())
+                  .detailAddress(userAddressReqDTO.getDetailAddress())
+                  .build();
+      }
 }

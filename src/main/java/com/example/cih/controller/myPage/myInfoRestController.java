@@ -1,5 +1,6 @@
 package com.example.cih.controller.myPage;
 
+import com.example.cih.domain.user.Address;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.order.OrderDeliveryResDTO;
@@ -53,9 +54,7 @@ public class myInfoRestController {
 
         //User user = userService.findUser(userName);
 
-        UserAddressBookResDTO userAddressBookResDTO = userAddressBookService.getUserAddressBookInfo(userAddressBookId);
-
-        return userAddressBookResDTO;
+        return userAddressBookService.getUserAddressBookInfo(userAddressBookId);
     }
     @ApiOperation(value = "모든 배송 주소 정보 get", notes = "")
     @GetMapping("/allAddressInfo")
@@ -67,9 +66,9 @@ public class myInfoRestController {
         return userAddressBookService.getAllUserAddressBookInfo(user);
     }
 
-    @ApiOperation(value = "배송지 추가 등록", notes = "")
-    @PostMapping("/registerAddress")
-    public Map<String,String> postRegisterAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
+    @ApiOperation(value = "배송지 추가", notes = "")
+    @PostMapping("/registerDeliveryAddress")
+    public Map<String,String> postRegisterDeliveryAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
         if(bindingResult.hasErrors()){
@@ -86,8 +85,8 @@ public class myInfoRestController {
     }
 
     @ApiOperation(value = "배송지 수정", notes = "")
-    @PostMapping("/modifyAddress")
-    public Map<String,String> postModifyAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
+    @PostMapping("/modifyDeliveryAddress")
+    public Map<String,String> postModifyDeliveryAddress(@Valid @RequestBody UserAddressBookReqDTO userAddressBookReqDTO,
                                                   BindingResult bindingResult,
                                                   Principal principal ) throws BindException {
         if(bindingResult.hasErrors()){
@@ -131,6 +130,32 @@ public class myInfoRestController {
         return orderDeliveryProcess;
     }
 
+    @ApiOperation(value = "기본 주소 정보 get", notes = "")
+    @GetMapping("/getMainAddress")
+    //@PreAuthorize("principal.username != #userName")
+    public Address getMainAddress(Principal principal){
+
+        User user = userService.findUser(principal.getName());
+        return user.getAddress();
+    }
+
+    @ApiOperation(value = "기본 주소 추가", notes = "")
+    @PostMapping("/registerMainAddress")
+    public Map<String,String> postRegisterMainAddress(@Valid @RequestBody UserAddressReqDTO userAddressReqDTO,
+                                                          BindingResult bindingResult,
+                                                          Principal principal) throws BindException {
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        User user = userService.registerMainAddress(principal.getName(), userAddressReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        resultMap.put("fullAddress", user.getAddress().fullAddress() );
+        return resultMap;
+    }
 
 
 }
