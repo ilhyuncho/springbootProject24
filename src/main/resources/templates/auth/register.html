@@ -84,7 +84,10 @@
 <script layout:fragment="script" th:inline="javascript">
     const error = [[${error}]]
 
-    if(error && error === 'memberId'){
-        alert("이미 동일한 계정이 존재 함!!@!!!")
+    // if(error && error === 'memberId'){
+    //     alert("이미 동일한 계정이 존재 함!!@!!!")
+    // }
+    if(error){
+        alert(error)
     }
 </script>

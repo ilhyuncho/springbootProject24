@@ -1,5 +1,6 @@
 package com.example.cih.service.member;
 
+import com.example.cih.common.exception.member.MemberExceptions;
 import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
@@ -19,13 +20,17 @@ public class MemberServiceImpl implements MemberService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     @Override
-    public void registerMember(MemberJoinDTO memberJoinDTO) throws MemberIdExistException {
+    public void registerMember(MemberJoinDTO memberJoinDTO){
 
         boolean isExisted = memberRepository.existsById(memberJoinDTO.getMemberId());
-
         if(isExisted){
-            throw new MemberIdExistException();
+            //throw new MemberIdExistException();
+            throw MemberExceptions.DUPLICATE.get();
         }
+
+        // Member 전용 예외 처리 방법
+//        memberRepository.findById(memberJoinDTO.getMemberId())
+//                .orElseThrow(MemberExceptions.DUPLICATE::get);
 
         Member member = modelMapper.map(memberJoinDTO, Member.class);
         member.changePassword(passwordEncoder.encode(member.getMemberPw()));

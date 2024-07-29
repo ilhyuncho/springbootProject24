@@ -1,5 +1,6 @@
 package com.example.cih.controller.auth;
 
+import com.example.cih.common.exception.member.MemberTaskException;
 import com.example.cih.common.util.Util;
 import com.example.cih.dto.member.MemberJoinDTO;
 import com.example.cih.service.member.MemberService;
@@ -52,6 +53,11 @@ public class AuthController {
         }
         catch (MemberService.MemberIdExistException ex){
             redirectAttributes.addFlashAttribute("error", "memberId");
+            return "redirect:/auth/register";
+        }
+        catch (MemberTaskException ex){
+            redirectAttributes.addFlashAttribute("error", ex.getMsg());
+            log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
             return "redirect:/auth/register";
         }
 
