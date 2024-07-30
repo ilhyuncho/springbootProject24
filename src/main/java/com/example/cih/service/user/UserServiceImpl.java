@@ -1,13 +1,18 @@
 package com.example.cih.service.user;
 
 import com.example.cih.common.exception.UserNotFoundException;
+import com.example.cih.common.exception.member.MemberExceptions;
+import com.example.cih.domain.member.Member;
+import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.domain.user.UserRepository;
 import com.example.cih.dto.user.UserAddressReqDTO;
 import com.example.cih.dto.user.UserDTO;
+import com.example.cih.dto.user.UserPasswordReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +24,10 @@ import javax.transaction.Transactional;
 @Transactional
 public class UserServiceImpl implements UserService{
 
+    private final MemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public Long registerUser(String userName) {
@@ -54,6 +62,22 @@ public class UserServiceImpl implements UserService{
         user.registerMainAddress(userAddressReqDTO);
 
         return user;
+    }
+
+    @Override
+    public void changePassword(String userName, UserPasswordReqDTO userPasswordReqDTO) {
+
+        Member member = memberRepository.findById(userName)
+                .orElseThrow(MemberExceptions.NOT_FOUND::get);
+
+        boolean matches = passwordEncoder.matches(userPasswordReqDTO.getCurrentPassword(), member.getMemberPw());
+
+        if(matches){
+            member.changePassword(passwordEncoder.encode(userPasswordReqDTO.getNewPassword()));
+        }
+        else{
+            throw MemberExceptions.PASSWORD_NOT_SAME.get();
+        }
     }
 
 

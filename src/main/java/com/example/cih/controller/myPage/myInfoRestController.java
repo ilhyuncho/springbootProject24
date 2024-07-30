@@ -157,5 +157,22 @@ public class myInfoRestController {
         return resultMap;
     }
 
+    @ApiOperation(value = "비밀번호 변경", notes = "")
+    @PostMapping("/changePassword")
+    public Map<String,String> postChangePassword(@Valid @RequestBody UserPasswordReqDTO userPasswordReqDTO,
+                                                      BindingResult bindingResult,
+                                                      Principal principal) throws BindException {
+        if(bindingResult.hasErrors()){
+            log.error("has errors.....");
+            throw new BindException(bindingResult);
+        }
+
+        userService.changePassword(principal.getName(), userPasswordReqDTO);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
+        return resultMap;
+    }
+
 
 }

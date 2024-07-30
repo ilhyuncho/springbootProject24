@@ -33,6 +33,13 @@
           </div>
 
           <div class="input-group mb-3">
+            <span class="input-group-text">비밀번호</span>
+            <label>
+              <button type="button" class="btn btn-info changePasswordBtn">비밀번호 수정</button>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
             <span class="input-group-text">포인트<a th:href="|@{/myPage/myPoint(userName=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
             <label>
               <input type="text" class="form-control" th:value="${userDTO.mPoint}" readonly>
@@ -106,6 +113,40 @@
     </div>
   </div> <!--주소 추가 모달창-->
 
+  <!--비밀번호 변경 모달창-->
+  <div class="modal changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <input type="hidden" class="form-control modalType">
+          <input type="hidden" class="form-control modalUserAddressBookId">
+          <h5 class="modal-title modalTitle">주소 추가</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">현재 비밀번호</span>
+            <input type="password" id="modalCurrentPassword" th:value="1111" placeholder="Enter your Password">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">신규 비밀번호</span>
+            <input type="password" id="modalNewPassword" th:value="1234" placeholder="Enter your  New Password">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">신규 비밀번호 확인</span>
+            <input type="password" id="modalNewPasswordConfirm" th:value="1234" placeholder="Enter your New Password">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary sendNewPasswordBtn">비밀번호 변경</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!--주소 추가 모달창-->
+
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
@@ -115,6 +156,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
   const registerAddressModal = new bootstrap.Modal(document.querySelector(".registerAddressModal"))
+  const changePasswordModal = new bootstrap.Modal(document.querySelector(".changePasswordModal"))
 
   const userDTO = [[${userDTO}]]
 
@@ -130,6 +172,10 @@
   const modalStreet = document.querySelector('#modalStreet');
   const modalTitle = document.querySelector('.modalTitle');
   const sendRegisterBtn = document.querySelector('.sendRegisterBtn');
+
+  const modalCurrentPassword = document.querySelector('#modalCurrentPassword');
+  const modalNewPassword = document.querySelector('#modalNewPassword');
+  const modalNewPasswordConfirm = document.querySelector('#modalNewPasswordConfirm');
 
   function selectModalOpen(){
     if(userAddress.value.length === 0){
@@ -201,6 +247,34 @@
     })
   }, false)
 
+  // [비밀번호] 변경 버튼 클릭
+  document.querySelector(".changePasswordBtn").addEventListener("click", function(e){
+    changePasswordModal.show()
+  }, false)
+
+  // [모달창] 새로운 비밀번호 변경 요청
+  document.querySelector(".sendNewPasswordBtn").addEventListener("click", function(e){
+    const formObj = {
+      currentPassword:modalCurrentPassword.value,
+      newPassword:modalNewPassword.value,
+      newPasswordConfirm:modalNewPasswordConfirm.value,
+    }
+
+    if(modalNewPassword.value !== modalNewPasswordConfirm.value){
+      alert("비밀번호가 일치 하지 않습니다")
+      return
+    }
+
+    sendChangePassword(formObj).then(result => {
+      alert("비밀 번호 변경 성공!!!")
+
+      changePasswordModal.hide()
+    }).catch(e => {
+      errorResponse(e)
+      changePasswordModal.hide()
+    })
+
+  }, false)
 
 
 </script>

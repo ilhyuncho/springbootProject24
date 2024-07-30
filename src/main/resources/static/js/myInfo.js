@@ -65,3 +65,12 @@ async function getMainAddress(formObj){
     //  console.log(response)
     return response.data
 }
+
+// 고객의 비밀번호 변경
+async function sendChangePassword(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/myInfo/changePassword`, formObj)
+    console.log(response)
+    return response.data
+}

@@ -1,6 +1,7 @@
 package com.example.cih.common.exception;
 
 
+import com.example.cih.common.exception.member.MemberTaskException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,20 @@ import java.util.NoSuchElementException;
 public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
 
     // 사용자 지정 에러 처리
+
+
+    @ExceptionHandler(value = {MemberTaskException.class})
+    public ResponseEntity<?> handleBoardNotFound(MemberTaskException e, WebRequest request){
+
+        log.error("RestExceptionAdvice - MemberTaskException!!! ");
+        return super.handleExceptionInternal(
+                e,
+                e.getMsg(),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                request
+        );
+    }
     @ExceptionHandler(value = {BoardNotFoundException.class})
     public ResponseEntity<?> handleBoardNotFound(BoardNotFoundException e, WebRequest request){
 
