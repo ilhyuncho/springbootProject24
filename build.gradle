@@ -99,7 +99,10 @@ dependencies {
     // 이미지 파일 라사이즈 를 위해 ( 24.07.19 )
     implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 
-
+    // JWT 실습 ( 24.07.30 )
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
 }
 

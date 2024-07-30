@@ -1,6 +1,7 @@
 package com.example.cih.service.member;
 
 import com.example.cih.common.exception.member.MemberExceptions;
+import com.example.cih.common.jwt.util.MemberDTO;
 import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
@@ -10,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Log4j2
 @Service
@@ -39,6 +41,17 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    @Override
+    public MemberDTO getMember(String memberId, String memberPw) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberExceptions.BAD_CREDENTIALS::get);
+
+        if(!passwordEncoder.matches(memberPw, member.getMemberPw())){
+            throw MemberExceptions.BAD_CREDENTIALS.get();
+        }
+
+        return new MemberDTO(member.getMemberId(), member.getMemberPw(), member.getEmail());
+    }
 
 
 }
