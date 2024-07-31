@@ -27,8 +27,7 @@ import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,68 +79,71 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(Long orderItemId) {
+    public void cancelOrder(Long orderId) {
 
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> {
-                    log.info("User expected to delete cart but was empty. orderId = '{}',"
-                            , orderItemId);
-                    return new orderNotFoundException("해당 주문 아이템 존재 하지 않습니다");
+                    log.info("User expected to delete cart but was empty. orderId = '{}',", orderId);
+                    return new orderNotFoundException("해당 주문 정보가 존재 하지 않습니다");
                 });
 
-        log.error("cancelOrder" + orderItem.getOrderItemId());
-        orderItem.getOrder().changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
+        order.changeDeliveryStatus(DeliveryStatus.DELIVERY_CANCEL);
     }
 
     @Override
-    public PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName) {
-//        String[] types = pageRequestDTO.getTypes();
-//        String keyword = pageRequestDTO.getKeyword();
+    public PageResponseDTO<OrderListResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO) {
+
         Pageable pageable = pageRequestDTO.getPageable("orderItemId");
 
-        User user = userService.findUser(userName);
-
+        // 고객의 주문 내역 조회
         List<Order> orderList = orderRepository.findByUser(user);
 
-        Map<Long, Order> orderMap = orderList.stream()
-                .collect(Collectors.toMap(Order::getOrderId, Function.identity()));
-
+        // 주문 별 상품 구매 내역 조회
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
-        List<OrderItemResDTO> listDTO = resultOrderItem.getContent().stream().map(orderItem -> {
+        Map<Order, List<OrderItem>> mapOrderItem = resultOrderItem.getContent().stream()
+                .collect(Collectors.groupingBy(OrderItem::getOrder, Collectors.mapping(Function.identity(), Collectors.toList())));
 
-                OrderItemResDTO itemDTO = OrderItemResDTO.builder()
-                        .orderId(orderItem.getOrder().getOrderId())
-                        .orderItemId(orderItem.getOrderItemId())
-                        .orderCount(orderItem.getOrderCount())
-                        .deliveryStatus(orderMap.get(orderItem.getOrder().getOrderId()).getDeliveryStatus().getName())
-                        .shopItemId(orderItem.getShopItem().getShopItemId())
-                        .itemName(orderItem.getShopItem().getItemName())
-                        .orderPrice(orderItem.getOrderPrice())
-                        .orderDate(orderMap.get(orderItem.getOrder().getOrderId()).getOrderTime().toLocalDate())
-                        .build();
 
-                // 아이템 옵션 set
-                itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
+        List<OrderListResDTO> listResDTO = new ArrayList<>();
 
-                // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+        for (Order order : mapOrderItem.keySet()) {
+
+            OrderListResDTO orderListResDTO = OrderListResDTO.builder()
+                    .orderId(order.getOrderId())
+                    .deliveryStatus(order.getDeliveryStatus().getName())
+                    .orderDate(order.getOrderTime().toLocalDate())
+                    .orderPrice(order.getTotalPrice())
+                    .build();
+
+            // 주문 타이틀 생성
+            String itemNames = mapOrderItem.get(order).stream()
+                    .map(orderItem -> orderItem.getShopItem().getItemName())
+                    .reduce("", (a, b) -> a + b + ",")
+                    .replaceFirst(".$", "");    // 정규 표현식을 활용한 마지막 문자 제거
+                                                                // . -> 모든 문자, $ -> 문자열의 끝
+            orderListResDTO.setItemName(itemNames);
+
+            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+            mapOrderItem.get(order).forEach(orderItem -> {
                 orderItem.getShopItem().getItemImageSet()
-                        .stream().filter(image -> image.getImageOrder() == 0)
-                        .peek(log::error)
+                        .stream().filter(ItemImage::getIsMainImage)
                         .forEach(image -> {
-                            itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                            orderListResDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
                                     image.getImageOrder(), image.getIsMainImage());
                         });
+            });
 
+            listResDTO.add(orderListResDTO);
+        }
 
-                return itemDTO;
-                }
-        ).collect(Collectors.toList());
+        // 주문 순서 역순으로 정렬
+        listResDTO.sort(Comparator.comparing(OrderListResDTO::getOrderId).reversed());
 
-        return PageResponseDTO.<OrderItemResDTO>withAll()
+        return PageResponseDTO.<OrderListResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(listDTO)
-                .total((int)resultOrderItem.getTotalElements())
+                .dtoList(listResDTO)
+                .total((int)resultOrderItem.getTotalElements()) // 수정 해야 함!!!
                 .build();
     }
 
@@ -192,20 +194,42 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderViewDTO getOrderDetail(Long orderId) {
+    public List<OrderItemResDTO> getOrderDetail(Long orderId) {
 
-       OrderItem orderItem = orderItemRepository.getOrderItemByOrderId(orderId)
-                .orElseThrow(() -> new ItemNotFoundException("orderItem이 존재하지않습니다"));;
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("order정보가 존재하지않습니다"));
 
-        log.error("getOrderDetail : " + orderItem.getShopItem().getItemName());
+        List<OrderItem> listOrderItem = orderItemRepository.findByOrder(order);
 
-        OrderViewDTO orderViewDTO = OrderViewDTO.builder()
-                .orderCount(orderItem.getOrderCount())
-                .itemName(orderItem.getShopItem().getItemName())
-                .itemPrice(orderItem.getShopItem().getItemPrice().getOriginalPrice())
-                .build();
+        List<OrderItemResDTO> listOrderItemResDTO = listOrderItem.stream().map(orderItem -> {
+            OrderItemResDTO itemDTO = OrderItemResDTO.builder()
+                    .orderId(orderItem.getOrder().getOrderId())
+                    .orderItemId(orderItem.getOrderItemId())
+                    .orderCount(orderItem.getOrderCount())
+                    .shopItemId(orderItem.getShopItem().getShopItemId())
+                    .itemName(orderItem.getShopItem().getItemName())
+                    .orderPrice(orderItem.getOrderPrice())
 
-        return orderViewDTO;
+                    .deliveryStatus(order.getDeliveryStatus().getName())
+                    .orderDate(order.getOrderTime().toLocalDate())
+                    .build();
+
+            // 아이템 옵션 set
+            itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
+
+            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+            orderItem.getShopItem().getItemImageSet()
+                    .stream().filter(image -> image.getImageOrder() == 0)
+                    .peek(log::error)
+                    .forEach(image -> {
+                        itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                                image.getImageOrder(), image.getIsMainImage());
+                    });
+
+            return itemDTO;
+        }).collect(Collectors.toList());
+
+        return listOrderItemResDTO;
     }
 
     @Override

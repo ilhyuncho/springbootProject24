@@ -6,14 +6,16 @@ import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 
+import java.util.List;
+
 public interface OrderService {
     Long createOrder(User user, OrderReqDTO orderReqDTO);
     void cancelOrder(Long orderId);
-    PageResponseDTO<OrderItemResDTO> getOrderAll(PageRequestDTO pageRequestDTO, String userName);
+    PageResponseDTO<OrderListResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO);
     OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId);
 
     Long addOrderTemporary(ItemBuyReqDTO itemBuyReqDTO, User user);
     OrderDeliveryResDTO getOrderDeliveryProcess(Long OrderId);
 
-    OrderViewDTO getOrderDetail(Long orderId);
+    List<OrderItemResDTO> getOrderDetail(Long orderId);
 }

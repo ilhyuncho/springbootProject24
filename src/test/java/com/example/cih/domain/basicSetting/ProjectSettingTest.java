@@ -122,17 +122,17 @@ public class ProjectSettingTest {
 
             Long userId = userRepository.save(user).getUserId();
 
-//            UserAddressBook userAddressBook = UserAddressBook.builder()
-//                    .user(user)
-//                    .address(address)
-//                    .deliveryName("마이홈")
-//                    .RecipientName("김민수")
-//                    .deliveryRequest("문앞에 놓아주세요")
-//                    .RecipientPhoneNumber("01012349482")
-//                    .isMainAddress(true)
-//                    .isActive(true)
-//                    .build();
-//            userAddressBookRepository.save(userAddressBook);
+            UserAddressBook userAddressBook = UserAddressBook.builder()
+                    .user(user)
+                    .address(address)
+                    .deliveryName("마이홈")
+                    .RecipientName("김민수")
+                    .deliveryRequest("문앞에 놓아주세요")
+                    .RecipientPhoneNumber("01012349482")
+                    .isMainAddress(true)
+                    .isActive(true)
+                    .build();
+            userAddressBookRepository.save(userAddressBook);
         });
         
         // 배송 주소록 생성

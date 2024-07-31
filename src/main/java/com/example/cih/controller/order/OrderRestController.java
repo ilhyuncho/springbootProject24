@@ -37,10 +37,10 @@ public class OrderRestController {
     }
 
     @ApiOperation(value = "상품 구매 취소", notes = "")
-    @PostMapping("/cancel/{orderItemId}")
-    public Map<String, String> PostCancel(@PathVariable("orderItemId") Long orderItemId){
+    @PostMapping("/cancel/{orderId}")
+    public Map<String, String> PostCancel(@PathVariable("orderId") Long orderId){
 
-        orderService.cancelOrder(orderItemId);
+        orderService.cancelOrder(orderId);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

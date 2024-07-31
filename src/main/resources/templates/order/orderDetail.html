@@ -11,26 +11,37 @@
                     주문 상세
                 </div>
                 <div class="card-body">
-                    <!--            dto 값 출력 부분-->
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">itemName</span>
-                        <input type="text" class="form-control" th:value="${responseDTO.itemName}" readonly>
-                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">주문 날짜</th>
+                            <th scope="col">상품 이름</th>
+                            <th scope="col">옵션</th>
+                            <th scope="col">주문 갯수</th>
+                            <th scope="col">주문 가격</th>
+                            <th scope="col">총 주문 가격</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="dto:${responseDTO}">
+                            <th scope="row">[[${dto.orderDate}]]</th>
+                            <td>
+                                <a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
+                                   class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                <div>
+                                    <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
+                                         class="rounded itemMainImg" style="width:100px">
+                                </div>
+                            </td>
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">orderCount</span>
-                        <input type="text" class="form-control" th:value="${responseDTO.orderCount}" readonly>
-                    </div>
+                            <td>[[${dto.getOptionDesc()}]]</td>
+                            <td>[[${dto.orderCount}]]</td>
+                            <td>[[${dto.orderPrice}]]</td>
+                            <td>[[${dto.orderPrice * dto.orderCount}]]</td>
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">itemPrice</span>
-                        <textarea class="form-control col-sm-5" rows="5" readonly>[[${responseDTO.itemPrice}]]</textarea>
-                    </div>
-
-<!--                    <div class="input-group mb-3">-->
-<!--                        <span class="input-group-text">CarModel</span>-->
-<!--                        <input type="text" class="form-control" th:value="${responseDTO.carModel}" readonly>-->
-<!--                    </div>-->
+                        </tr>
+                        </tbody>
+                    </table>
 
                 </div><!-- <div class="card-body">-->
 

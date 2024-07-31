@@ -19,6 +19,7 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name="shopItems")
 @Log4j2
+@ToString(exclude = {"itemImageSet", "itemOptionSet"})
 public class ShopItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

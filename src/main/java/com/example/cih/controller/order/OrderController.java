@@ -4,9 +4,9 @@ import com.example.cih.domain.user.User;
 import com.example.cih.dto.order.OrderItemResDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.order.OrderListResDTO;
 import com.example.cih.dto.order.OrderTemporaryResDTO;
 import com.example.cih.dto.user.UserAddressBookResDTO;
-import com.example.cih.service.cart.CartService;
 import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.user.UserAddressBookService;
 import com.example.cih.service.user.UserService;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
@@ -36,11 +37,13 @@ public class OrderController {
                        Model model,
                        Principal principal ){
 
-        PageResponseDTO<OrderItemResDTO> cartAll = orderService.getOrderAll(pageRequestDTO, principal.getName());
+        User user = userService.findUser(principal.getName());
 
-        model.addAttribute("responseDTO", cartAll);
+        PageResponseDTO<OrderListResDTO> orderAll = orderService.getOrderAll(user, pageRequestDTO);
 
-        log.error(cartAll);
+        model.addAttribute("responseDTO", orderAll);
+
+        log.error(orderAll);
 
         return "/order/orderList";
     }
@@ -52,9 +55,6 @@ public class OrderController {
                        Principal principal ){
 
         User user = userService.findUser(principal.getName());
-
-        log.error(orderTemporaryId);
-
 
         OrderTemporaryResDTO orderTemporaryResDTO = orderService.getOrderTemporary(orderTemporaryId);
         if(orderTemporaryResDTO == null){
@@ -70,18 +70,15 @@ public class OrderController {
         return "/order/orderPage";
     }
 
+    @ApiOperation(value = "주문 내역 상세 조회", notes = "주문 내역을 자세히")
+    @GetMapping("/orderDetail/{orderId}")
+    public String orderDetail(@PathVariable(name="orderId") Long orderId,
+                              Model model){
 
+        List<OrderItemResDTO> listOrderItemResDTO = orderService.getOrderDetail(orderId);
 
-
-//    @ApiOperation(value = "주문내역 상세 조회", notes = "주문 내역을 자세히")
-//    @GetMapping("/orderDetail")
-//    public String orderDetail(Long orderItemId,
-//                              Model model){
-//
-//        OrderViewDTO orderViewDTO = orderService.getOrderDetail(orderItemId);
-//
-//        model.addAttribute("responseDTO", orderViewDTO);
-//        return "/order/orderDetail";
-//    }
+        model.addAttribute("responseDTO", listOrderItemResDTO);
+        return "/order/orderDetail";
+    }
 
 }

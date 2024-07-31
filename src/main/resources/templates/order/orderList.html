@@ -12,53 +12,45 @@
                     <h5 class="card-title">주문 내역</h5>
                 </div>
                 <div class="card-body">
-                    <!-- HTML 테그의 속성이 아니라 HTML 콘텐츠 영역안에서 직접 데이터를 출력하고 싶으면 다음과 같이 [[...]] 를 사용하면 됩니다.-->
-                    [[${pageRequestDto.size}]]
 
                     <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">주문 날짜</th>
-                            <th scope="col">상품 이름</th>
-                            <th scope="col">옵션</th>
-                            <th scope="col">주문 갯수</th>
+                            <th scope="col">상품 이미지</th>
+                            <th scope="col">상품 이름's</th>
                             <th scope="col">주문 가격</th>
                             <th scope="col">총 주문 가격</th>
                             <th scope="col">배송 상태</th>
                         </tr>
                         </thead>
-                        <tbody th:with="link = ${pageRequestDto.getLink()}">
-                        <tr th:each="dto:${responseDTO.dtoList}">
-                            <td>[[${dto.orderDate}]]</td>
-                            <th scope="row">
-                                <a th:href="|@{'/shop/itemDetail/' + ${dto.shopItemId}}|"
-                                   class="text-decoration-none"> [[${dto.itemName}]]</a>
-                                <div>
-                                    <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|"
-                                         class="rounded itemMainImg" style="width:100px">
-                                </div>
-                            </th>
-
-                            <td>[[${dto.getOptionDesc()}]]</td>
-                            <td>[[${dto.orderCount}]]</td>
-                            <td>[[${dto.orderPrice}]]</td>
-                            <td>[[${dto.orderPrice * dto.orderCount}]]</td>
-
-                            <td>
-                                <div th:if="${dto.deliveryStatus != '주문 취소'}">
-                                    <a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
-                                       class="text-decoration-none"> [[${dto.deliveryStatus}]]</a>
-                                </div>
-                                <div th:unless="${dto.deliveryStatus != '주문 취소'}">
-                                      [[${dto.deliveryStatus}]]
-                                </div>
-                            </td>
-
-                            <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
+                        <tbody>
+                            <tr th:each="dto:${responseDTO.dtoList}">
+                                <td>[[${dto.orderDate}]]</td>
+                                <td>
+                                    <th:block th:each="fileName:${dto.fileNames}">
+                                        <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:width="50"
+                                             th:data-src="|${fileName.uuid}_${fileName.fileName}|" >
+                                    </th:block>
+                                </td>
+                                <td><a th:href="|@{'/order/orderDetail/' + ${dto.orderId}}|"
+                                       class="text-decoration-none"> [[${dto.itemName}]]</a>
+                                </td>
+                                <td>[[${dto.orderPrice}]]</td>
+                                <td>
+                                    <div th:if="${dto.deliveryStatus != '주문 취소'}">
+                                        <a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"
+                                           class="text-decoration-none"> [[${dto.deliveryStatus}]]</a>
+                                    </div>
+                                    <div th:unless="${dto.deliveryStatus != '주문 취소'}">
+                                        [[${dto.deliveryStatus}]]
+                                    </div>
+                                </td>
+                                <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
                                     <button type="button" class="btn btn-primary "
-                                            th:onclick="cancelOrder([[${dto.orderItemId}]], this)">구매 취소</button></a>
-                            </td>
-                        </tr>
+                                            th:onclick="cancelOrder([[${dto.orderId}]], this)">구매 취소</button></a>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -139,12 +131,12 @@
     const modalRecipientPhoneNumber = document.querySelector(".modalRecipientPhoneNumber")
     const modalFullAddress = document.querySelector(".modalFullAddress")
 
-    function cancelOrder(orderItemId, object){
+    function cancelOrder(orderId, object){
         if(!confirm("정말로 구매를 취소 하겠습니까?")){
             return
         }
 
-        cancelOrderItem(orderItemId).then(result=>{
+        sendCancelOrder(orderId).then(result=>{
             alert('정상적으로 삭제 되었습니다.')
 
             self.location = '/order/list' // 자바스크립트로 다른 url 호출
@@ -174,23 +166,24 @@
     }
 
     // 페이지 버튼 클릭 이벤트 begin ------------------
-    document.querySelector(".pagination").addEventListener("click", function(e){
-        e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-        e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+    // document.querySelector(".pagination").addEventListener("click", function(e){
+    //     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    //     e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+    //
+    //     const target = e.target   // a 태그
+    //     if(target.tagName !== 'A'){
+    //         return
+    //     }
+    //
+    //     const num = target.getAttribute("data-num")
+    //     const formObj = document.querySelector("form")
+    //
+    //     formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    //     formObj.submit();
+    //
+    // }, false)
+    // 페이지 버튼 클릭 이벤트 end ------------------
 
-        const target = e.target   // a 태그
-        if(target.tagName !== 'A'){
-            return
-        }
-
-        const num = target.getAttribute("data-num")
-        const formObj = document.querySelector("form")
-
-        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-        formObj.submit();
-
-    }, false)
-    // 페이지 버튼 클릭 이벤트 begin ------------------
 
 
 </script>
