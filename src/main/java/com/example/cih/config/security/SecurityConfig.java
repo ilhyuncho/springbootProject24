@@ -2,6 +2,7 @@ package com.example.cih.config.security;
 
 
 import com.example.cih.common.handler.LoginSuccessHandler;
+import com.example.cih.common.jwt.util.JWTCheckFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -26,6 +28,8 @@ public class SecurityConfig {
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
+
+    //private final JWTCheckFilter jwtCheckFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -43,6 +47,10 @@ public class SecurityConfig {
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
                 .tokenValiditySeconds(60*60*24*30); // 30일?
+
+        // 일단, swagger-ui 접근이 안되어서 일단 보류
+        // jwtCheckFilter를 UsernamePasswordAuthenticationFilter 앞에 두기
+        // http.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 모든 경로에 접근 가능
         return http.build();
