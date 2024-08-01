@@ -23,6 +23,7 @@ public class TokenController {
 
     @ApiOperation(value = "JWT 생성 테스트", notes = "swagger UI로 접근")
     @PostMapping("/make")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Map<String, String>> makeToken(@RequestBody MemberDTO memberSecurityDTO){
 
         log.error("make token.....................");
@@ -40,6 +41,6 @@ public class TokenController {
         log.error("accessToken: " + accessToken);
         log.error("refreshToken: " + refreshToken);
 
-        return null;
+        return ResponseEntity.ok( Map.of("accessToken", accessToken, "refreshToken", refreshToken));
     }
 }

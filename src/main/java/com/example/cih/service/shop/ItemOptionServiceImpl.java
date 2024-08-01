@@ -26,17 +26,13 @@ public class ItemOptionServiceImpl implements ItemOptionService {
     @Override
     public List<ItemOptionResDTO> getListItemOptionInfo(List<Long> listOptionId) {
 
-        return listOptionId.stream()
-                .filter(optionId -> optionId != 0)
-                .map( optionId -> {
-            ItemOption itemOption = itemOptionRepository.findById(optionId)
-                    .orElseThrow(() -> new NoSuchElementException("아이템 옵션 정보가 존재하지않습니다"));
+        List<ItemOption> listItemOption = itemOptionRepository.findAllById(listOptionId);  // findAllById 은 주로 대량 조회
 
-            return ItemOptionResDTO.builder()
+        return listItemOption.stream().map(itemOption ->
+            ItemOptionResDTO.builder()
                     .itemOptionId(itemOption.getItemOptionId())
                     .optionName(itemOption.getOptionName())
                     .optionType(itemOption.getItemOptionType().getName())
-                    .build();
-        }).collect(Collectors.toList());
+                    .build()).collect(Collectors.toList());
     }
 }

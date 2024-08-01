@@ -16,7 +16,6 @@ import com.example.cih.dto.order.*;
 import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
-import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -24,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Function;
@@ -46,7 +43,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderTemporaryRepository orderTemporaryRepository;
 
     private final ItemOptionService itemOptionService;
-    private final UserService userService;
     private final NotificationService notificationService;
     @Override
     public Long createOrder(User user, OrderReqDTO orderReqDTO){
@@ -57,7 +53,8 @@ public class OrderServiceImpl implements OrderService {
         // 상세 구매 아이템 정보 생성
         List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
 
-            if( orderDetailDTO.getCartId() != null){  // 장바구니를 통해서 주문시
+            // 장바구니를 통해서 주문시
+            if( orderDetailDTO.getCartId() != null){
                 Cart cart = cartRepository.findById(orderDetailDTO.getCartId())
                         .orElseThrow(() -> new ItemNotFoundException("장바구니 정보가 존재하지않습니다"));
                 // 장바구니 정보 비활성화
@@ -72,10 +69,11 @@ public class OrderServiceImpl implements OrderService {
 
         }).collect(Collectors.toList());
 
+        // Order 생성
         Order order = Order.createOrder(user, userAddressBook, orderReqDTO, listOrderItem);
-        Order save = orderRepository.save(order);
+        orderRepository.save(order);
 
-        return save.getOrderId();
+        return order.getOrderId();
     }
 
     @Override
@@ -146,6 +144,43 @@ public class OrderServiceImpl implements OrderService {
                 .total((int)resultOrderItem.getTotalElements()) // 수정 해야 함!!!
                 .build();
     }
+    @Override
+    public List<OrderItemResDTO> getOrderDetail(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("order정보가 존재하지않습니다"));
+
+        List<OrderItem> listOrderItem = orderItemRepository.findByOrder(order);
+
+        List<OrderItemResDTO> listOrderItemResDTO = listOrderItem.stream().map(orderItem -> {
+            OrderItemResDTO itemDTO = OrderItemResDTO.builder()
+                    .orderId(orderItem.getOrder().getOrderId())
+                    .orderItemId(orderItem.getOrderItemId())
+                    .orderCount(orderItem.getOrderCount())
+                    .shopItemId(orderItem.getShopItem().getShopItemId())
+                    .itemName(orderItem.getShopItem().getItemName())
+                    .orderPrice(orderItem.getOrderPrice())
+                    .deliveryStatus(order.getDeliveryStatus().getName())
+                    .orderDate(order.getOrderTime().toLocalDate())
+                    .build();
+
+            // 아이템 옵션 set
+            itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
+
+            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
+            orderItem.getShopItem().getItemImageSet()
+                    .stream().filter(image -> image.getImageOrder() == 0)
+                    .peek(log::error)
+                    .forEach(image -> {
+                        itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
+                                image.getImageOrder(), image.getIsMainImage());
+                    });
+
+            return itemDTO;
+        }).collect(Collectors.toList());
+
+        return listOrderItemResDTO;
+    }
 
     @Override
     public OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId) {
@@ -154,17 +189,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ItemNotFoundException("OrderTemporary 이 존재하지않습니다"));
 
         // 주문 내역 유효 기간 체크
-        LocalTime now = LocalDateTime.now().toLocalTime();
         LocalTime expiredTime = orderTemporary.getExpiredDate().toLocalTime();
-
-        Duration diff = Duration.between(now, expiredTime);
-        long diffSeconds = diff.toSeconds();
-
-        if(diffSeconds < 0){
+        if(CommonUtils.checkTimeOver(expiredTime)){
            // throw new OrderExpiredException("주문서 만료 기간이 지났습니다");
             return null;
         }
-
 
         OrderTemporaryResDTO orderTemporaryResDTO = OrderTemporaryResDTO.builder()
                 .orderTemporaryId(orderTemporary.getOrderTemporaryId())
@@ -188,48 +217,7 @@ public class OrderServiceImpl implements OrderService {
                             image.getImageOrder(), image.getIsMainImage());
                 });
 
-        log.error(orderTemporaryResDTO);
-
         return orderTemporaryResDTO;
-    }
-
-    @Override
-    public List<OrderItemResDTO> getOrderDetail(Long orderId) {
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ItemNotFoundException("order정보가 존재하지않습니다"));
-
-        List<OrderItem> listOrderItem = orderItemRepository.findByOrder(order);
-
-        List<OrderItemResDTO> listOrderItemResDTO = listOrderItem.stream().map(orderItem -> {
-            OrderItemResDTO itemDTO = OrderItemResDTO.builder()
-                    .orderId(orderItem.getOrder().getOrderId())
-                    .orderItemId(orderItem.getOrderItemId())
-                    .orderCount(orderItem.getOrderCount())
-                    .shopItemId(orderItem.getShopItem().getShopItemId())
-                    .itemName(orderItem.getShopItem().getItemName())
-                    .orderPrice(orderItem.getOrderPrice())
-
-                    .deliveryStatus(order.getDeliveryStatus().getName())
-                    .orderDate(order.getOrderTime().toLocalDate())
-                    .build();
-
-            // 아이템 옵션 set
-            itemDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(orderItem.getListOptionId()));
-
-            // 아이템 이미지 파일 정보 매핑 ( 대표 이미지 만 )
-            orderItem.getShopItem().getItemImageSet()
-                    .stream().filter(image -> image.getImageOrder() == 0)
-                    .peek(log::error)
-                    .forEach(image -> {
-                        itemDTO.addImage(image.getItemImageId(), image.getUuid(), image.getFileName(),
-                                image.getImageOrder(), image.getIsMainImage());
-                    });
-
-            return itemDTO;
-        }).collect(Collectors.toList());
-
-        return listOrderItemResDTO;
     }
 
     @Override
@@ -254,9 +242,9 @@ public class OrderServiceImpl implements OrderService {
                 .itemOptionId2(itemBuyReqDTO.getOptionId(1))
                 .build();
 
-        OrderTemporary saveOrderTemporary = orderTemporaryRepository.save(orderTemporary);
+        orderTemporaryRepository.save(orderTemporary);
 
-        return saveOrderTemporary.getOrderTemporaryId();
+        return orderTemporary.getOrderTemporaryId();
     }
 
     @Override
@@ -267,7 +255,7 @@ public class OrderServiceImpl implements OrderService {
 
         UserAddressBook userAddressBook = order.getUserAddressBook();
 
-        OrderDeliveryResDTO orderDeliveryResDTO = OrderDeliveryResDTO.builder()
+        return OrderDeliveryResDTO.builder()
                         .orderId(order.getOrderId())
                         .deliveryStatus(order.getDeliveryStatus().getName())
                         .deliveryName(userAddressBook.getDeliveryName())
@@ -276,9 +264,5 @@ public class OrderServiceImpl implements OrderService {
                         .fullAddress(userAddressBook.getAddress().fullAddress())
                         .recipientPhoneNumber(userAddressBook.getRecipientPhoneNumber())
                         .build();
-
-        log.error(orderDeliveryResDTO);
-
-        return orderDeliveryResDTO;
     }
 }

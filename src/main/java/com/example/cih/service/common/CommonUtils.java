@@ -12,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Log4j2
@@ -101,6 +103,15 @@ public class CommonUtils {
         }
 
         return ReplaceAlarm.NOT_CYCLE;
+    }
+
+    public static Boolean checkTimeOver(LocalTime checkTime){
+        LocalTime now = LocalDateTime.now().toLocalTime();
+
+        Duration diff = Duration.between(now, checkTime);
+        long diffSeconds = diff.toSeconds();
+
+        return diffSeconds < 0;
     }
 
     public static String phoneFormat(String str) {

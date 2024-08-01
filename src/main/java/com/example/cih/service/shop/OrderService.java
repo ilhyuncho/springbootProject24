@@ -12,10 +12,10 @@ public interface OrderService {
     Long createOrder(User user, OrderReqDTO orderReqDTO);
     void cancelOrder(Long orderId);
     PageResponseDTO<OrderListResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO);
+    List<OrderItemResDTO> getOrderDetail(Long orderId);
     OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId);
-
     Long addOrderTemporary(ItemBuyReqDTO itemBuyReqDTO, User user);
     OrderDeliveryResDTO getOrderDeliveryProcess(Long OrderId);
 
-    List<OrderItemResDTO> getOrderDetail(Long orderId);
+
 }
