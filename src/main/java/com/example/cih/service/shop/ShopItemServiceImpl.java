@@ -12,6 +12,8 @@ import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
+//@Scope(BeanDefinition.SCOPE_PROTOTYPE)  // 프로토타입 스코프 빈 생성 ( 변경 가능한 속성을 포함 시킬수 있다 )
+                                          //서버가 요청에 따라 독립적으로 오브젝트를 생성해서 [상태를 저장]해둬야 하는 경우
 public class ShopItemServiceImpl implements ShopItemService {
 
     private final ShopItemRepository shopItemRepository;

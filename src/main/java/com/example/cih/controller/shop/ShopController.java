@@ -31,6 +31,9 @@ public class ShopController {
     @GetMapping("/main")
     public String shopMain(Model model){
 
+        // 프로토타입 스코프 빈 테스트용 ( shopItemService 가 각각 생성되어 전달 됨
+        log.error(shopItemService);
+
         List<ShopItemResDTO> listDTO = shopItemService.getAllItemsForShop();
         model.addAttribute("itemList", listDTO);
 

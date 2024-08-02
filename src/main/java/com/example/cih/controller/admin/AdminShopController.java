@@ -29,6 +29,9 @@ public class AdminShopController {
     @GetMapping("/shopItem")
     public String getShopItem(Model model){
 
+        // 프로토타입 스코프 빈 테스트용 ( shopItemService 가 각각 생성되어 전달 됨
+        log.error(shopItemService);
+
         List<ShopItemExtandDTO> listDTO = shopItemService.getAllItems();       // 관리자 페이지 메인
 
         model.addAttribute("itemList", listDTO);
