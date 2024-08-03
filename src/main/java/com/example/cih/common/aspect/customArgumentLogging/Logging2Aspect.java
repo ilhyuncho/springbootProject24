@@ -11,15 +11,15 @@ import org.springframework.util.StopWatch;
 @Aspect
 @Log4j2
 @Component
-@Order(1)
-public class LoggingAspect {
+@Order(2)
+public class Logging2Aspect {
 
     @Around("@annotation(ElapseLoggable)")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable{
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        log.error("(1) start time clock");
+        log.error("(2) start time clock");
 
         Object result;
 
@@ -29,7 +29,7 @@ public class LoggingAspect {
             stopWatch.stop();
             String methodName = joinPoint.getSignature().getName();
             long elapsedTime = stopWatch.getLastTaskTimeMillis();
-            log.error("(1) {}, elapsed time: {} ms", methodName, elapsedTime);
+            log.error("(2) {}, elapsed time: {} ms", methodName, elapsedTime);
 
             //getProduct, elapsed time: 112 ms
         }
