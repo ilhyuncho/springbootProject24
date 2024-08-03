@@ -1,6 +1,7 @@
 package com.example.cih.controller.admin;
 
 
+import com.example.cih.common.aspect.customArgumentLogging.ElapseLoggable;
 import com.example.cih.common.handler.FileHandler;
 import com.example.cih.domain.shop.ItemOptionType;
 import com.example.cih.dto.shop.ShopItemReqDTO;
@@ -27,6 +28,7 @@ public class AdminShopController {
     private final FileHandler fileHandler;
 
     @GetMapping("/shopItem")
+    @ElapseLoggable // 커스텀 aspect 지정
     public String getShopItem(Model model){
 
         // 프로토타입 스코프 빈 테스트용 ( shopItemService 가 각각 생성되어 전달 됨
