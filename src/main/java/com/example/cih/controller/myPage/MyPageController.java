@@ -66,6 +66,7 @@ public class MyPageController {
     public String getCarDetailOrModify(HttpServletRequest request,
                                     String userName,
                                     @RequestParam("carId") Long carId,
+                                    //@RequestParam(required = false) Long carId,   -> 비 필수 값 지정
                                     Model model){
 
         UserDTO userDTO = userService.findUserDTO(userName);
