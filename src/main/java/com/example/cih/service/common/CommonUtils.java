@@ -19,6 +19,11 @@ import java.util.List;
 @Log4j2
 public class CommonUtils {
 
+    private CommonUtils(){
+        // 인스턴스화를 막으려고 private 생성자를 사용
+        throw new AssertionError();
+    };
+
     // 할인 가격 계산
     public static int calcDiscountPrice(User user, ShopItem shopItem, EventNotification event){
 

@@ -13,6 +13,11 @@ import java.util.stream.Stream;
 @Log4j2
 public class Util {
 
+    private Util(){
+        // 인스턴스화를 막으려고 private 생성자를 사용
+        throw new AssertionError();
+    };
+
     public static String createRandomName(String preString){
         int randomValue = (new Random().nextInt(1000));
 
