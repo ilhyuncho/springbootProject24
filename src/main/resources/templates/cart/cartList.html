@@ -109,10 +109,10 @@
                                 <div class="card-body">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">보유 포인트</span>
-                                        <input type="text" class="form-control totalMPoint" th:value="${mPoint}" readonly>
+                                        <input type="text" class="form-control" id="totalMPoint" th:value="${mPoint}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="number" class="form-control useMPoint" th:value="0" th:placeholder="사용">
+                                        <input type="number" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
                                         <button type="button" class="btn btn-success btn-sm" th:onclick="useAllPoint()" >전액 사용</button>
                                     </div>
                                 </div>
@@ -127,25 +127,25 @@
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text">상품 금액</span>
                                                 <label>
-                                                    <input type="text" class="form-control orderPrice"  readonly>
+                                                    <input type="text" class="form-control" id="orderPrice" readonly>
                                                 </label>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text">배송비</span>
                                                 <label>
-                                                    <input type="text" class="form-control deliveryFee" readonly>
+                                                    <input type="text" class="form-control" id="deliveryFee" readonly>
                                                 </label>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text">상품 할인</span>
                                                 <label>
-                                                    <input type="text" class="form-control discountPrice" readonly>
+                                                    <input type="text" class="form-control" id="discountPrice" readonly>
                                                 </label>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text">결제 예정 금액</span>
                                                 <label>
-                                                    <input type="text" class="form-control expectedPrice" readonly>
+                                                    <input type="text" class="form-control" id="expectedPrice" readonly>
                                                 </label>
                                             </div>
 
@@ -167,7 +167,7 @@
     </div>
 
     <!-- 배송지 리스트 모달창-->
-    <div class="modal addressListModal" tabindex="-1">
+    <div class="modal modalAddressList" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -199,13 +199,13 @@
 
 
     <!-- 주소록 등록을 위한 모달창-->
-    <div class="modal registerModal" tabindex="-1">
+    <div class="modal modalAddressRegister" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <input type="hidden" class="form-control modalType">
-                    <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
+                    <input type="hidden" class="form-control" id="modalType">
+                    <h5 class="modal-title" id="modalTitle" th:value="|배송지 추가|"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -278,19 +278,22 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const addressListModal = new bootstrap.Modal(document.querySelector(".addressListModal"))
-    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+    const modalAddressList = new bootstrap.Modal(document.querySelector('.modalAddressList'))
+    const modalAddressRegister = new bootstrap.Modal(document.querySelector('.modalAddressRegister'))
 
-    const tableAddressList = document.getElementById("tableAddressList");
+    const tableAddressList = document.getElementById('tableAddressList');
 
-    const orderPrice = document.querySelector(".orderPrice")
-    const expectedPrice = document.querySelector(".expectedPrice")
-    const discountPrice = document.querySelector(".discountPrice")
-    const deliveryFee = document.querySelector(".deliveryFee")
-    const deliveryName = document.querySelector("#deliveryName")
-    const recipientName = document.querySelector("#recipientName")
-    const fullAddress = document.querySelector("#fullAddress")
-    const userAddressBookId = document.querySelector("#userAddressBookId")
+    const orderPrice = document.getElementById('orderPrice');
+    const expectedPrice = document.getElementById('expectedPrice')
+    const discountPrice = document.getElementById('discountPrice')
+    const deliveryFee = document.getElementById('deliveryFee')
+
+    const deliveryName = document.getElementById('deliveryName')
+    const recipientName = document.getElementById('recipientName')
+    const fullAddress = document.getElementById('fullAddress')
+    const userAddressBookId = document.getElementById('userAddressBookId')
+    const totalMPoint = document.getElementById('totalMPoint')
+    const useMPoint = document.getElementById('useMPoint')
 
     const modalDeliveryName = document.querySelector('#modalDeliveryName')
     const modalRecipientName = document.querySelector('#modalRecipientName')
@@ -302,13 +305,8 @@
     const modalDetailAddress = document.querySelector('#modalDetailAddress')
     const modalDeliveryRequest = document.querySelector('#modalDeliveryRequest')
     const modalMainAddressCheck = document.querySelector('#modalMainAddressCheck')
-    const modalTitle = document.querySelector('.modalTitle')
-    const modalType = document.querySelector('.modalType')
-
-    const totalMPoint = document.querySelector('.totalMPoint')
-    const useMPoint = document.querySelector('.useMPoint')
-
-
+    const modalTitle = document.querySelector('#modalTitle')
+    const modalType = document.querySelector('#modalType')
 
 
     const currentUser = [[${#authentication.principal.username}]]
@@ -431,7 +429,7 @@
             return
         }
 
-        let formObj = {
+        const formObj = {
             deliveryFee: deliveryFee.value,
             userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
@@ -528,7 +526,7 @@
                         <div class="dialog_inner">
                              <input type="hidden" name="modalSelectIndex">
                              <div class="input-group mb-3">
-                                <input type="checkbox" class="checkboxModal" data-bs-target=${e.userAddressBookId} name="checkboxModal"
+                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
                                     onchange="addressSelect( ${i}, this )"/>
                                 <h5>${e.deliveryName}</h5>
                              </div>
@@ -549,7 +547,7 @@
             let newCell = newRow.insertCell(0);
             newCell.appendChild(dialog);
 
-            addressListModal.show()
+            modalAddressList.show()
 
         }).catch(e => {
             errorResponse(e)
@@ -564,13 +562,13 @@
         checkRegular.style.display='inline'
         modalType.value = 'register'
 
-        registerModal.show()
+        modalAddressRegister.show()
     }
 
     // [모달창] 배송지 선택
     document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
 
-        const checkboxes = document.getElementsByName("checkboxModal");
+        const checkboxes = document.getElementsByName("modalCheckAddress");
         checkboxes.forEach((cb) => {
             if(cb.checked === true){
                 // 선택된 배송지 정보 다시 요청
@@ -578,7 +576,7 @@
             }
         })
 
-        addressListModal.hide()
+        modalAddressList.hide()
     }, false)
 
     // [모달창] 선택된 배송지 정보 요청
@@ -618,7 +616,7 @@
 
         sendDeliveryAddress(formObj).then(result => {
 
-            registerModal.hide()
+            modalAddressRegister.hide()
 
             if(result.result === 'fail'){
                 alert(result.message)
@@ -631,13 +629,13 @@
 
         }).catch(e => {
             errorResponse(e)
-            registerModal.hide()
+            modalAddressRegister.hide()
         })
     }, false)
 
     // [모달창] 배송지 선택 체크박스 클릭시
     function addressSelect(index, obj){
-        const checkboxes = document.getElementsByName("checkboxModal");
+        const checkboxes = document.getElementsByName("modalCheckAddress");
         checkboxes.forEach((cb) => {
             cb.checked = false
         })
@@ -646,7 +644,6 @@
 
     // [포인트 전액 사용] 버튼 클릭
     function useAllPoint(){
-
         const expectedPriceValue = parseInt(expectedPrice.value)
         const totalMPointValue = parseInt(totalMPoint.value)
         useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue : expectedPriceValue
@@ -655,7 +652,7 @@
     }
 
     // [포인트 사용] 수동 입력
-    document.querySelector(".useMPoint").addEventListener("change", function (e) {
+    document.querySelector("#useMPoint").addEventListener("change", function (e) {
 
         const totalMPointValue = parseInt(totalMPoint.value)
         const useMPointValue = parseInt(useMPoint.value)

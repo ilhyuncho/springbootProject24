@@ -139,7 +139,7 @@
     </div>
 
     <!-- 배송지 리스트 모달창-->
-    <div class="modal addressListModal" tabindex="-1">
+    <div class="modal modalAddressList" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -171,7 +171,7 @@
 
 
     <!-- 주소록 등록을 위한 모달창-->
-    <div class="modal registerModal" tabindex="-1">
+    <div class="modal modalAddressRegister" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -184,7 +184,7 @@
 
                     <div class="input-group mb-3">
                         <span class="input-group-text">배송지명</span>
-                        <input type="text" id="modalDeliveryName" th:value="회사1">
+                        <input type="text" id="modalDeliveryName" th:value="회사2">
                     </div>
 
                     <div class="input-group mb-3">
@@ -254,8 +254,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const addressListModal = new bootstrap.Modal(document.querySelector(".addressListModal"))
-    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+    const modalAddressList = new bootstrap.Modal(document.querySelector(".modalAddressList"))
+    const modalAddressRegister = new bootstrap.Modal(document.querySelector(".modalAddressRegister"))
 
     const tableAddressList = document.getElementById("tableAddressList");
 
@@ -372,7 +372,7 @@
             return;
         }
 
-        let formObj = {
+        const formObj = {
             deliveryFee: deliveryFee.value,
             userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
@@ -431,7 +431,7 @@
                         <div class="dialog_inner">
                              <input type="hidden" name="modalSelectIndex">
                              <div class="input-group mb-3">
-                                <input type="checkbox" class="checkboxModal" data-bs-target=${e.userAddressBookId} name="checkboxModal"
+                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
                                     onchange="addressSelect( ${i}, this )"/>
                                 <h5>${e.deliveryName}</h5>
                              </div>
@@ -452,11 +452,11 @@
             let newCell = newRow.insertCell(0);
             newCell.appendChild(dialog);
 
-            addressListModal.show()
+            modalAddressList.show()
 
         }).catch(e => {
             errorResponse(e)
-            addressListModal.hide()
+            modalAddressList.hide()
         })
     }
 
@@ -470,20 +470,20 @@
         checkRegular.style.display='inline'
         modalMainAddressCheck.value='false'
 
-        registerModal.show()
+        modalAddressRegister.show()
     }
 
     // [모달창] 배송지 선택
     document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
 
-        const checkboxes = document.getElementsByName("checkboxModal");
+        const checkboxes = document.getElementsByName("modalCheckAddress");
         checkboxes.forEach((cb) => {
             if(cb.checked === true){
                 getAddressInfo(cb.getAttribute("data-bs-target"))
             }
         })
 
-        addressListModal.hide()
+        modalAddressList.hide()
     }, false)
 
 
@@ -506,7 +506,7 @@
 
         sendDeliveryAddress(formObj).then(result => {
 
-            registerModal.hide()
+            modalAddressRegister.hide()
 
             if(result.result === 'fail'){
                 alert(result.message)
@@ -518,14 +518,14 @@
 
         }).catch(e => {
             errorResponse(e)
-            registerModal.hide()
+            modalAddressRegister.hide()
         })
     }, false)
 
 
     // [배송지 선택 모달창] 체크박스 선택시
     function addressSelect(index, obj){
-        const checkboxes = document.getElementsByName("checkboxModal");
+        const checkboxes = document.getElementsByName("modalCheckAddress");
         checkboxes.forEach((cb) => {
             cb.checked = false;
         })
