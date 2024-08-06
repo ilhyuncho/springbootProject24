@@ -15,13 +15,14 @@ import java.io.IOException;
 //@Component        // 주석 풀면 현재 사이트 접근 불가
 @RequiredArgsConstructor
 @Log4j2
-public class JWTCheckFilter extends OncePerRequestFilter {
+public class JWTCheckFilter extends OncePerRequestFilter {  // OncePerRequestFilter ->
+                                                            // 모든 요청에 대해서 동작하는 필터를 작성할 때 사용
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         
         // JWTCheckFilter가 동작하지 않아야 하는 경로를 지정하기 위해서 사용
 
-        if(request.getServletPath().startsWith("/swagger-ui/")){
+        if(request.getServletPath().startsWith("/swagger-ui/")){    // 동작하지 않음
             return true;
         }
 
