@@ -82,9 +82,9 @@
 <!--                    ////////////////////////////////////////////////////////////////////////-->
                     <div class="card mb-3" style="max-width: 1040px;">
                         <div class="row g-0">
+
                             <div class="col-md-4">
                                 <div class="card-body">
-
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">배송지 정보</span>
                                     </div>
@@ -102,13 +102,22 @@
                                                     th:onclick="registerDeliveryAddress()">추가</button>
                                         </div>
                                     </div>
-
                                     <div id="recipientName" th:text="|${mainAddressInfo != null ? '(' + mainAddressInfo.recipientName + ') ' + mainAddressInfo.recipientPhoneNumber : ''}|"></div>
                                     <div id="fullAddress" th:text="|${mainAddressInfo != null ? mainAddressInfo.fullAddress : ''}|"></div>
-
                                 </div><!-- <div class="card-body">-->
 
-                            </div>
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">보유 포인트</span>
+                                        <input type="text" class="form-control totalMPoint" th:value="${mPoint}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control useMPoint" th:value="0" th:placeholder="사용">
+                                        <button type="button" class="btn btn-success btn-sm" th:onclick="useAllPoint()" >전액 사용</button>
+                                    </div>
+                                </div>
+
+                            </div><!-- <div class="col-md-4">-->
 
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -296,6 +305,11 @@
     const modalTitle = document.querySelector('.modalTitle')
     const modalType = document.querySelector('.modalType')
 
+    const totalMPoint = document.querySelector('.totalMPoint')
+    const useMPoint = document.querySelector('.useMPoint')
+
+
+
 
     const currentUser = [[${#authentication.principal.username}]]
 
@@ -367,6 +381,7 @@
 
         let totalPrice = 0
         let totalDiscountPrice = 0
+        let totalPaymentPrice = 0
         let arrayItemInfo = []
         document.querySelectorAll("#tableOrderList").forEach(function (item,idx){
 
@@ -386,8 +401,8 @@
                 const ItemOptionIds = ItemOptionIdsTag.getAttribute('value')
                 const cartId = parseInt(cartIdTag.getAttribute('value'))
 
-                totalPrice += itemPrice * itemCount
-                totalDiscountPrice += discountPrice * itemCount
+                totalPrice += itemPrice * itemCount                 // 상품 원래 가격 * 구매 갯수
+                totalDiscountPrice += discountPrice * itemCount     // 할인 가격 * 구매 갯수
 
                 const itemInfo = {
                     itemId: itemId,
@@ -400,6 +415,11 @@
                 arrayItemInfo.push(itemInfo)
             }
         }, false)
+
+        // 총 결제 금액 = 제품별 구매 금액 + 배송비 - 사용 포인트
+        totalPaymentPrice += (totalPrice - totalDiscountPrice)
+        totalPaymentPrice += parseInt(deliveryFee.value)
+        totalPaymentPrice -= parseInt(useMPoint.value)
 
         if(arrayItemInfo.length === 0){
             alert("상품을 선택하세요~!!!")
@@ -416,6 +436,8 @@
             userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
             totalDiscountPrice: totalDiscountPrice,
+            totalPaymentPrice: totalPaymentPrice,
+            useMPoint : useMPoint.value,
             listOrderDetail: arrayItemInfo
         }
 
@@ -468,7 +490,7 @@
         orderPrice.value = totalOriginalPrice
         deliveryFee.value = deliveryPrice
         discountPrice.value = totalDiscountPrice
-        expectedPrice.value = totalPrice + deliveryPrice
+        expectedPrice.value = totalPrice + deliveryPrice - useMPoint.value
     }
 
     // 상품 삭제
@@ -622,5 +644,30 @@
         obj.checked = true
     }
 
+    // [포인트 전액 사용] 버튼 클릭
+    function useAllPoint(){
+
+        const expectedPriceValue = parseInt(expectedPrice.value)
+        const totalMPointValue = parseInt(totalMPoint.value)
+        useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue : expectedPriceValue
+
+        reCalculation()
+    }
+
+    // [포인트 사용] 수동 입력
+    document.querySelector(".useMPoint").addEventListener("change", function (e) {
+
+        const totalMPointValue = parseInt(totalMPoint.value)
+        const useMPointValue = parseInt(useMPoint.value)
+
+        if(useMPointValue > totalMPointValue){
+            useMPoint.value = totalMPointValue
+        }
+        if(useMPointValue < 0){
+            useMPoint.value = 0
+        }
+
+        reCalculation()
+    }, false)
 
 </script>

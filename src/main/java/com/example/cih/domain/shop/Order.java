@@ -29,8 +29,10 @@ public class Order {
     private User user;
 
     private Integer deliveryFee;
-    private Integer totalPrice;
-    private Integer totalDiscountPrice;
+    private Integer totalPrice;             // 원래 상품 가격
+    private Integer totalDiscountPrice;     // 할인 금액
+    private Integer totalPaymentPrice;      // 실제 결제 금액
+    private Integer useMPoint;              // 주문에 사용한 포인트
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @Builder.Default
@@ -51,7 +53,9 @@ public class Order {
                 .user(userInfo)
                 .totalPrice(orderReqDTO.getTotalPrice())
                 .totalDiscountPrice(orderReqDTO.getTotalDiscountPrice())
+                .totalPaymentPrice(orderReqDTO.getTotalPaymentPrice())
                 .deliveryFee(orderReqDTO.getDeliveryFee())
+                .useMPoint(orderReqDTO.getUseMPoint())
                 .userAddressBook(userAddressBook)
                 .orderTime(LocalDateTime.now())
                 .deliveryStatus(DeliveryStatus.DELIVERY_PREPARE)
@@ -60,6 +64,11 @@ public class Order {
 
         for (OrderItem orderItem : listOrderItem) {
             order.addOrderItem(orderItem);
+        }
+
+        // 유저 보유 포인트 차감
+        if(orderReqDTO.getUseMPoint() > 0){
+            userInfo.minusMPoint(orderReqDTO.getUseMPoint());
         }
 
         return order;

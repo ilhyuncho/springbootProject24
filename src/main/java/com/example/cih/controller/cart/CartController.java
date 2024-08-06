@@ -39,10 +39,9 @@ public class CartController {
 
         UserAddressBookResDTO mainAddressInfo = userAddressBookService.getMainAddressInfo(user);
 
-
-        listDto.forEach(log::error);
         model.addAttribute("responseDTO", listDto);
         model.addAttribute("mainAddressInfo", mainAddressInfo);
+        model.addAttribute("mPoint", user.getMPoint());
 
         return "/cart/cartList";
     }

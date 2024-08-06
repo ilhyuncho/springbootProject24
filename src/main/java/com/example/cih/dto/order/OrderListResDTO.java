@@ -18,7 +18,8 @@ public class OrderListResDTO extends ImageListDTO {
     private String deliveryStatus;
     private String itemName;
 
-    private int orderPrice;
+    private int orderPrice;         // 총 주문 가격
+    private int paymentPrice;       // 총 결제 가격
     private LocalDate orderDate;
 
 }

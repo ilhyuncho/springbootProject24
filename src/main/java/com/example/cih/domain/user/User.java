@@ -70,6 +70,10 @@ public class User {
           this.mPoint += point;
       }
 
+      public void minusMPoint(Integer point){
+          this.mPoint -= point;
+      }
+
       public void registerMainAddress(UserAddressReqDTO userAddressReqDTO){
 
           City city = new City(userAddressReqDTO.getZipcode(),

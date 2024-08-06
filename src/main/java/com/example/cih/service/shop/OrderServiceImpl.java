@@ -50,6 +50,11 @@ public class OrderServiceImpl implements OrderService {
         UserAddressBook userAddressBook = userAddressBookRepository.findById(orderReqDTO.getUserAddressBookId())
                 .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
 
+        if(orderReqDTO.getUseMPoint() > 0
+                && orderReqDTO.getUseMPoint() < user.getMPoint()){
+            throw new IllegalArgumentException("사용 포인트 값이 잘못 되었습니다");
+        }
+
         // 상세 구매 아이템 정보 생성
         List<OrderItem> listOrderItem = orderReqDTO.getListOrderDetail().stream().map(orderDetailDTO -> {
 
@@ -112,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
                     .deliveryStatus(order.getDeliveryStatus().getName())
                     .orderDate(order.getOrderTime().toLocalDate())
                     .orderPrice(order.getTotalPrice())
+                    .paymentPrice(order.getTotalPaymentPrice())
                     .build();
 
             // 주문 타이틀 생성
