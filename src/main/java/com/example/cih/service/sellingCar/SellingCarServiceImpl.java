@@ -120,6 +120,7 @@ public class SellingCarServiceImpl implements SellingCarService {
 //                    return sellingCarViewDTO;
 //                }
 //                )
+                .peek(log::error)
                 .collect(Collectors.toList());
 
         return PageResponseDTO.<SellingCarResDTO>withAll()

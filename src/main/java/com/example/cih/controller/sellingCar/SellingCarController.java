@@ -39,6 +39,8 @@ public class SellingCarController {
     public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                               Model model){
 
+        log.error(pageRequestDTO);
+
         PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
 
         model.addAttribute("responseDTO", listSellingCar);
