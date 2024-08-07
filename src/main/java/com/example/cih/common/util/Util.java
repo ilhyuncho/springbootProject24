@@ -5,8 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -56,5 +59,19 @@ public class Util {
 //                                now.getHour(), now.getMinute(), now.getSecond() );
     }
 
+    // 두 날짜 사이의 날짜 구하기
+    public static List<LocalDate> getDatesBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
+
+
+        // 두 날짜 사이에 해당되는 날짜 구하기 ( 2021-09-30 ~ 2021-10-04 )
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
+//        LocalDate startDate = LocalDate.parse("2021/09/30", formatter);
+//        LocalDate endDate = LocalDate.parse("2021/10/05", formatter);
+//
+//        Util.getDatesBetweenTwoDates(startDate, endDate).forEach(log::error);
+
+        return startDate.datesUntil(endDate)
+                .collect(Collectors.toList());
+    }
 
 }
