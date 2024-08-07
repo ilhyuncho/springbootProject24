@@ -30,6 +30,6 @@ public class CarConsumableRegDTO {
     private String replaceShop;
 
     @NotNull
-    @FutureOrPresent
+    //@FutureOrPresent
     private LocalDate replaceDate;
 }

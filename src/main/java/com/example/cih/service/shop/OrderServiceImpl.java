@@ -105,8 +105,8 @@ public class OrderServiceImpl implements OrderService {
         Page<OrderItem> resultOrderItem = orderItemRepository.findByOrders(orderList, pageable);
 
         Map<Order, List<OrderItem>> mapOrderItem = resultOrderItem.getContent().stream()
-                .collect(Collectors.groupingBy(OrderItem::getOrder, Collectors.mapping(Function.identity(), Collectors.toList())));
-
+                .collect(Collectors.groupingBy(OrderItem::getOrder,
+                        Collectors.mapping(Function.identity(), Collectors.toList())));
 
         List<OrderListResDTO> listResDTO = new ArrayList<>();
 

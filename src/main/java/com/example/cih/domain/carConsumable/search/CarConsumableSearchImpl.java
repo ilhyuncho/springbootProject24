@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class CarConsumableSearchImpl extends QuerydslRepositorySupport implements CarConsumableSearch {
@@ -102,7 +103,7 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
         JPQLQuery<StatisticsResDTO> dtoQuery = query.select(Projections.bean(StatisticsResDTO.class
                 ,formattedDateOnlyMonth.as("eventDate")
                 ,carConsumable.consumableType.as("consumableType")
-                ,carConsumable.gasLitter.sum().as("eventValue")
+                ,carConsumable.gasLitter.sum().as("eventValue")     // 주유량 합산
         ));
 
         List<StatisticsResDTO> list = dtoQuery.fetch();
@@ -222,6 +223,11 @@ public class CarConsumableSearchImpl extends QuerydslRepositorySupport implement
 
             StatisticsTotalResDTO resultDTO = StatisticsTotalResDTO.builder()
                     .accKm(totalAcckm).build();
+
+            // summingInt (다운 스트림 사용 예)
+//            var downstream = Collectors.summingInt(StatisticsTotalDTO::getAccKm);
+//            list.stream().collect(Collectors.groupingBy(StatisticsTotalDTO::getCost, downstream));
+
 
             list.forEach(log::error);
 

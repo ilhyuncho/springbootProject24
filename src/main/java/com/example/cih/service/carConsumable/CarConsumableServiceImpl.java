@@ -160,7 +160,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
        return carConsumableRepository.findByConsumableTypes(car, listConsumableType)
                .stream()
                .map(CarConsumableServiceImpl::entityToHistoryDTO)
-               .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate))
+               .sorted(Comparator.comparing(HistoryCarResDTO::getReplaceDate).reversed())
                .collect(Collectors.toList());
     }
 
