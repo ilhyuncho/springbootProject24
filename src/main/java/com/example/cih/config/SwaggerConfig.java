@@ -27,8 +27,8 @@ public class SwaggerConfig {
     public Docket api(){
         return new Docket(DocumentationType.OAS_30)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.any())    // api가 작성되어 있는 패키지 지정 / basepackage로 지정하여 해당 패키지에 존재하는 api 문서화
+                .paths(PathSelectors.any())             // URL 경로를 지정하여 해당 URL에 해당하는 요청만 Swagger API 문서로 만듬
                 .build();
     }
     private ApiInfo apiInfo() {
