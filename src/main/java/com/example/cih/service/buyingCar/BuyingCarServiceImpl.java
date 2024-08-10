@@ -113,7 +113,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
         BuyingCar buyingCar = getBuyingCarInfo(user, sellingCar);
-        Objects.requireNonNull(buyingCar, () -> {
+        Objects.requireNonNull(buyingCar, () -> {   // requireNonNull은 해당 참조가 null일 경우 즉시 개발자에게 알리는 것이 목적
             throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다"); });
 
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
