@@ -24,6 +24,7 @@ import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,9 +113,8 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
 
         BuyingCar buyingCar = getBuyingCarInfo(user, sellingCar);
-        if(buyingCar == null){
-            throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다");
-        }
+        Objects.requireNonNull(buyingCar, () -> {
+            throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다"); });
 
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 

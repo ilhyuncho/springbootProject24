@@ -120,13 +120,13 @@ function getMainImageFileName(){
 
 function errorResponse(e){
     if (e.response && e.response.status === 400) {
-        alert('잘못된 요청입니다.. 전달값 확인!! status = 400')
+        //alert('잘못된 요청입니다.. 전달값 확인!! status = 400')
         alert(e.response.data.message)
         console.log(e.response.data);
         console.log(e.response.data.message);
 
     } else {
-        alert('잘못된 요청입니다.. 전달값 확인!!')
+       // alert('잘못된 요청입니다.. 전달값 확인!!')
         console.log(e.response.data);
         alert(e.response.data.message)
     }
