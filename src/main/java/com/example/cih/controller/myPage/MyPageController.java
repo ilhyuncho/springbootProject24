@@ -33,9 +33,8 @@ import java.util.List;
 public class MyPageController {
 
     private final UserCarService userCarService;
-    private final UserService userService;
-
     private final BuyingCarService buyingCarService;
+    private final UserService userService;
 
     private final FileHandler fileHandler;
 
@@ -46,9 +45,9 @@ public class MyPageController {
     public String getCarList(PageRequestDTO pageRequestDTO, String memberId,
                               Model model){
 
-        UserDTO userDTO = userService.findUserDTO(memberId);
+        User user = userService.findUser(memberId);
 
-        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getMemberId());
+        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(user, pageRequestDTO);
 
         model.addAttribute("list", listCarDTO);
 
@@ -69,9 +68,9 @@ public class MyPageController {
                                     //@RequestParam(required = false) Long carId,   -> 비 필수 값 지정
                                     Model model){
 
-        UserDTO userDTO = userService.findUserDTO(memberId);
+        User user = userService.findUser(memberId);
 
-        CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(userDTO.getMemberId(), carId);
+        CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(user, carId);
 
         model.addAttribute("responseDTO", carViewResDTO);
         //model.addAttribute("userName", memberId);

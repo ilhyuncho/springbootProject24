@@ -20,20 +20,17 @@ public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
 
     @Override
-    public CarViewResDTO readOne(Long carId){
-
-        Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
-
-        CarViewResDTO carViewDTO = entityToDTO(car);
-
-        return carViewDTO;
-    }
-
-    @Override
     public Car getCarInfo(Long carId) {
         return carRepository.findById(carId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("차 정보가 존재하지않습니다"));
+    }
+
+    @Override
+    public CarViewResDTO readOne(Long carId){
+
+        Car car = getCarInfo(carId);
+
+        return entityToDTO(car);
     }
 
     private static CarViewResDTO entityToDTO(Car car) {

@@ -34,9 +34,7 @@ public class UserCarServiceImpl implements UserCarService {
     private final CarRepository carRepository;
 
     @Override
-    public List<CarViewResDTO> readMyCarList(PageRequestDTO pageRequestDTO, String memberId){
-        // 고객 정보 get
-        User user = userService.findUser(memberId);
+    public List<CarViewResDTO> readMyCarList(User user, PageRequestDTO pageRequestDTO){
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
@@ -56,9 +54,7 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public CarViewResDTO readMyCarDetailInfo(String memberId, Long carId) {
-        // 고객 정보 get
-        User user = userService.findUser(memberId);
+    public CarViewResDTO readMyCarDetailInfo(User user, Long carId) {
 
         // 전체 보유 Car list
         List<Car> ownCarList = user.getOwnCars();
@@ -78,10 +74,9 @@ public class UserCarServiceImpl implements UserCarService {
     }
 
     @Override
-    public Long registerMyCar(String memberId, String carNumber) {
+    public Long registerMyCar(User user, String carNumber) {
 
         // 유저의 기존 등록 차 정보 get
-        User user = userService.findUser(memberId);
         List<Projection.CarSummary> userCarList = carRepository.findByUser(user);
         boolean isRegister = userCarList.stream().anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
         if(isRegister){
@@ -103,7 +98,8 @@ public class UserCarServiceImpl implements UserCarService {
                         .user(user)
                 .build();
 
-        userMissionService.insertUserMission(memberId, UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
+        userMissionService.insertUserMission(user.getMemberId(),
+                UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
 
         return carRepository.save(car).getCarId();
     }

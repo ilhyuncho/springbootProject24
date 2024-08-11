@@ -24,16 +24,9 @@ import java.util.Optional;
 public class UserCreditServiceImpl implements UserCreditService {
 
     private final UserCreditRepository userCreditRepository;
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
-
-    private final UserService userService;
 
     @Override
-    public Long register(String memberId, UserCreditDTO userCreditDTO){
-
-        // 고객 정보 get
-        User user = userService.findUser(memberId);
+    public Long register(User user, UserCreditDTO userCreditDTO){
 
         UserCredit userCredit = UserCredit.builder()
                 .user(user)
@@ -41,15 +34,10 @@ public class UserCreditServiceImpl implements UserCreditService {
                 .bankAccount(userCreditDTO.getBankAccount())
                 .build();
 
-        Long userCreditsId = userCreditRepository.save(userCredit).getUserCreditsId();
-
-        return userCreditsId;
+        return userCreditRepository.save(userCredit).getUserCreditsId();
     }
     @Override
     public UserCreditDTO readCreditInfo(User user){
-
-        //UserCredit userCredit = userCreditRepository.findByUser(user).
-               // .orElseThrow(() -> new UserCreditNotFoundException("결제 정보가 존재하지않습니다"));
 
         Optional<UserCredit> result = userCreditRepository.findByUser(user);
 

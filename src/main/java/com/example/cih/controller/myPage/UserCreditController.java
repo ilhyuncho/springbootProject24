@@ -53,9 +53,7 @@ public class UserCreditController {
                            RedirectAttributes redirectAttributes,
                            Principal principal     // 임시로 다른 인증 정보 받아오는 법 확인해 보자 ( @AuthenticationPrincipal )
                            ) {
-
         log.error("userCreditDTO : " + userCreditDTO);
-        log.error("principal : " + principal.toString());
 
         if(bindingResult.hasErrors()) {
             // throw new BindException(bindingResult);
@@ -65,7 +63,9 @@ public class UserCreditController {
             return "redirect:/userCredit/register";
         }
 
-        Long bno = userCreditService.register(principal.getName(), userCreditDTO);
+        User user = userService.findUser(principal.getName()); // 고객 정보 get
+
+        Long bno = userCreditService.register(user, userCreditDTO);
 
         return "redirect:/userCredit/info?userName=" + principal.getName();
     }

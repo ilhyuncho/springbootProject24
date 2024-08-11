@@ -2,11 +2,13 @@ package com.example.cih.controller.myPage;
 
 
 import com.example.cih.domain.reference.RefCarSample;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarInfoReqDTO;
 import com.example.cih.dto.car.CarKmUpdateReqDTO;
 import com.example.cih.dto.car.CarRegisterReqDTO;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.reference.RefCarSampleService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class MyPageRestController {
 
     private final UserCarService userCarService;
+    private final UserService userService;
     private final RefCarSampleService refCarSampleService;
 
     @ApiOperation(value = "내차 누적 주행거리 갱신", notes = "차 소유주가 등록")
@@ -64,9 +67,9 @@ public class MyPageRestController {
     public Map<String,String> postCarRegister(@RequestBody CarRegisterReqDTO carRegisterReqDTO,
                                      Principal principal){
 
-        log.error("carRegisterReqDTO : " + carRegisterReqDTO);
+        User user = userService.findUser(principal.getName());
 
-        Long carId = userCarService.registerMyCar(principal.getName(), carRegisterReqDTO.getCarNumber());
+        Long carId = userCarService.registerMyCar(user, carRegisterReqDTO.getCarNumber());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
