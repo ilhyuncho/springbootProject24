@@ -32,9 +32,9 @@ class OrderRepositoryTest {
     @Commit
     public void insertOrder(){
 
-        User user = userRepository.findByUserName("member1").orElseGet(
+        User user = userRepository.findByMemberId("member1").orElseGet(
                 () -> User.builder()
-                        .userName("user1")
+                        .userName("김민수1")
                         .address(Address.builder().build())
                         .billingAddress(Address.builder().build())
                         .build()

@@ -9,6 +9,7 @@ public class MemberJoinDTO {
 
     private String memberId;
     private String memberPw;
+    private String memberName;
     private String email;
     private boolean isDel;
     private boolean isSocial;

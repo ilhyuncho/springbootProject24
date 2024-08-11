@@ -9,11 +9,11 @@ import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import java.util.List;
 
 public interface SellingCarService {
-    void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO);
+    void registerSellingCar(String memberId, SellingCarRegDTO sellingCarRegDTO);
     SellingCarResDTO getSellingCarInfo(Long sellingCarId, User user);
     PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestDTO pageRequestDTO);
     List<SellingCarResDTO> getRecommendList();
 
     void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);
-    void updateSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO);
+    void updateSellingCar(String memberId, SellingCarRegDTO sellingCarRegDTO);
 }

@@ -233,15 +233,10 @@ public class UserRepositoryTest {
 
         Long userId = userRepository.save(user).getUserId();
 
-        Optional<User> user1 = userRepository.findByUserName("user3");
+        Optional<User> user1 = userRepository.findByMemberId("user3");
         Assertions.assertEquals(user1.get().getUserName(), user.getUserName());
     }
 
-//    @BeforeEach
-//    @Transactional
-//    public void deleteUser(){
-//        userRepository.deleteByUserName("user2");
-//    }
     @Test
     @Transactional
     @Commit
@@ -273,7 +268,7 @@ public class UserRepositoryTest {
     @Transactional
     public void selectWithCars(){
 
-        Optional<User> user1 = userRepository.findByUserName("user1");
+        Optional<User> user1 = userRepository.findByMemberId("user1");
         User user = user1.get();
 
         List<Car> ownCars = user.getOwnCars();
@@ -288,7 +283,7 @@ public class UserRepositoryTest {
     @Transactional
     @Commit
     public void deleteCars() {
-        Optional<User> user1 = userRepository.findByUserName("user3");
+        Optional<User> user1 = userRepository.findByMemberId("user3");
         User user = user1.get();
 
         user.getOwnCars().clear();
@@ -301,7 +296,7 @@ public class UserRepositoryTest {
     @Transactional
     @Commit
     public void deleteUser() {
-        userRepository.deleteByUserName("user3");
+        userRepository.deleteByMemberId("user3");
 
         // 부모를 삭제 하면 자동으로 자식도 삭제됨
         // orphanRemoval = true

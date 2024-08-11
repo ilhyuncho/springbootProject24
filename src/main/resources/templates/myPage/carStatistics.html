@@ -159,7 +159,7 @@
       </div>
     </div><!--    <div class="col">-->
 
-    <a th:href="|@{/myPage/carDetail(carId=${carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
+    <a th:href="|@{/myPage/carDetail(carId=${carId}, memberId=${#authentication.principal.username} )}|" class="text-decoration-none">
       <button type="button" class="btn btn-primary">back</button>
     </a>
 

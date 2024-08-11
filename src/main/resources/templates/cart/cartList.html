@@ -444,7 +444,7 @@
             alert("정상적으로 주문 되었습니다")
 
             // 주문 페이지 로 이동
-            self.location = '/order/list?userName=' + [[${#authentication.principal.username}]]
+            self.location = '/order/list'
 
         }).catch(e => {
             console.log(e)
@@ -510,7 +510,7 @@
     // [배송지 변경] 버튼 클릭
     function selectAddress(){
 
-        const formObj = {userName:currentUser}
+        const formObj = {memberId:currentUser}
 
         getAllDeliveryAddress(formObj).then(result => {
             // 기존 행 삭제

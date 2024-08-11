@@ -113,7 +113,8 @@ public class ProjectSettingTest {
                     .build();
 
             User user = User.builder()
-                    .userName("member" + i)
+                    .memberId("member" + i)
+                    .userName("김민수" + i)
                     .address(address)
                     .billingAddress(address1)
                     .mPoint(0)

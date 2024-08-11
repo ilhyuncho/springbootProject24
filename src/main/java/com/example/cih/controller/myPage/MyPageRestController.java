@@ -62,7 +62,7 @@ public class MyPageRestController {
     @ApiOperation(value = "차 등록 (post)", notes = "")
     @PostMapping(value="/carRegister")
     public Map<String,String> postCarRegister(@RequestBody CarRegisterReqDTO carRegisterReqDTO,
-                                     Principal principal ){
+                                     Principal principal){
 
         log.error("carRegisterReqDTO : " + carRegisterReqDTO);
 

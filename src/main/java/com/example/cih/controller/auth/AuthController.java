@@ -49,15 +49,14 @@ public class AuthController {
 
         try{
             memberService.registerMember(memberJoinDTO);
-            userService.registerUser(memberJoinDTO.getMemberId());
-        }
-        catch (MemberService.MemberIdExistException ex){
+            userService.registerUser(memberJoinDTO);
+        }catch (MemberService.MemberIdExistException ex){
             redirectAttributes.addFlashAttribute("error", "memberId");
             return "redirect:/auth/register";
-        }
-        catch (MemberTaskException ex){
+        }catch (MemberTaskException ex){
+            //log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
+
             redirectAttributes.addFlashAttribute("error", ex.getMsg());
-            log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
             return "redirect:/auth/register";
         }
 

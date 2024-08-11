@@ -11,7 +11,7 @@ import com.example.cih.dto.user.UserMissionResDTO;
 
 public interface UserMissionService {
 
-    void insertUserMission(String userName, UserActionType userActionType, String... varCheckValue);
+    void insertUserMission(String memberId, UserActionType userActionType, String... varCheckValue);
 
     RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue);
 

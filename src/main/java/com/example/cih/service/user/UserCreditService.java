@@ -5,7 +5,7 @@ import com.example.cih.dto.user.UserCreditDTO;
 
 public interface UserCreditService {
 
-    Long register(String userName, UserCreditDTO userCreditDTO);
+    Long register(String memberId, UserCreditDTO userCreditDTO);
 
     UserCreditDTO readCreditInfo(User user);
 }

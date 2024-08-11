@@ -27,9 +27,9 @@ public class StatisticsController {
     @ApiOperation(value = "내차 관리 통계 화면", notes = "")
     @GetMapping
     public String statistics(@ModelAttribute("carId") Long carId,
-                      String userName, Model model){
+                      String memberId, Model model){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         log.error("statistics-get : " + carId);
 

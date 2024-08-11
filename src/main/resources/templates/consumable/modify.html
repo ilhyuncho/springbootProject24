@@ -52,7 +52,7 @@
 
                 <div class="my-4">
                     <div class="float-end">
-                        <a th:href="|@{/consumable/history(carId=${responseDTO.carId},refConsumableId=${responseDTO.refConsumableId}, userName=${#authentication.principal.username} )}|"
+                        <a th:href="|@{/consumable/history(carId=${responseDTO.carId},refConsumableId=${responseDTO.refConsumableId}, memberId=${#authentication.principal.username} )}|"
                            class="text-decoration-none">
                             <button type="button" class="btn btn-primary">List</button>
                         </a>
@@ -102,7 +102,7 @@
 
           // 화면 재 갱신
           self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
-               + '&userName=' + [[${#authentication.principal.username}]]
+               + '&memberId=' + [[${#authentication.principal.username}]]
 
       }).catch(e => {
           errorResponse(e)
@@ -118,7 +118,7 @@
 
           // 화면 재 갱신
           self.location = '/consumable/history?carId=' + carId + '&refConsumableId=' + [[${responseDTO.refConsumableId}]]
-              + '&userName=' + [[${#authentication.principal.username}]]
+              + '&memberId=' + [[${#authentication.principal.username}]]
 
       }).catch(e => {
           errorResponse(e)

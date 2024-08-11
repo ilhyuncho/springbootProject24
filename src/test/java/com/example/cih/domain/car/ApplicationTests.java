@@ -26,7 +26,7 @@ abstract class ApplicationTests {
     @BeforeAll()
     public void beforeAll(){
 
-        user = userRepository.findByUserName("member1").orElseGet(
+        user = userRepository.findByMemberId("member1").orElseGet(
                 () -> {
                     City city = new City("000-222","buchoen", "korea" );
                     Address address = Address.builder()

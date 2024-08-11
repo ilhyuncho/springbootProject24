@@ -47,8 +47,8 @@ public class SellingCarServiceImpl implements SellingCarService {
     private final UserSearchCarHistoryService userSearchCarHistoryService;
 
     @Override
-    public void registerSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
-        User user = userService.findUser(userName);
+    public void registerSellingCar(String memberId, SellingCarRegDTO sellingCarRegDTO) {
+        User user = userService.findUser(memberId);
 
         Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 
@@ -58,7 +58,7 @@ public class SellingCarServiceImpl implements SellingCarService {
 
         car.registerSellingCar(sellingCarRegDTO.getRequiredPrice());
 
-        userMissionService.insertUserMission(userName, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
+        userMissionService.insertUserMission(memberId, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
     }
 
     @Override
@@ -148,8 +148,8 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public void updateSellingCar(String userName, SellingCarRegDTO sellingCarRegDTO) {
-        User user = userService.findUser(userName);
+    public void updateSellingCar(String memberId, SellingCarRegDTO sellingCarRegDTO) {
+        User user = userService.findUser(memberId);
 
         Car car = carService.getCarInfo(sellingCarRegDTO.getCarId());
 

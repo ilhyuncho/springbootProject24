@@ -43,12 +43,12 @@ public class MyPageController {
     @ApiOperation(value = "보유 차 리스트 조회", notes = "")
     @GetMapping("/carList")
     //@PreAuthorize("principal.username != #userName")
-    public String getCarList(PageRequestDTO pageRequestDTO, String userName,
+    public String getCarList(PageRequestDTO pageRequestDTO, String memberId,
                               Model model){
 
-        UserDTO userDTO = userService.findUserDTO(userName);
+        UserDTO userDTO = userService.findUserDTO(memberId);
 
-        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getUserName());
+        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(pageRequestDTO, userDTO.getMemberId());
 
         model.addAttribute("list", listCarDTO);
 
@@ -64,17 +64,17 @@ public class MyPageController {
     @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
     @GetMapping({"/carDetail", "/carModify"})
     public String getCarDetailOrModify(HttpServletRequest request,
-                                    String userName,
+                                    String memberId,
                                     @RequestParam("carId") Long carId,
                                     //@RequestParam(required = false) Long carId,   -> 비 필수 값 지정
                                     Model model){
 
-        UserDTO userDTO = userService.findUserDTO(userName);
+        UserDTO userDTO = userService.findUserDTO(memberId);
 
-        CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(userDTO.getUserName(), carId);
+        CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(userDTO.getMemberId(), carId);
 
         model.addAttribute("responseDTO", carViewResDTO);
-        model.addAttribute("userName", userName);
+        //model.addAttribute("userName", memberId);
 
         return request.getRequestURI();
     }
@@ -96,7 +96,7 @@ public class MyPageController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
         //redirectAttributes.addAttribute("userName","user1");
-        return "redirect:/myPage/carList?userName=" + principal.getName();
+        return "redirect:/myPage/carList?memberId=" + principal.getName();
     }
 
     @ApiOperation(value = "차 정보 읽기", notes = "도메인 클래스 컨버터 기능 확인용")

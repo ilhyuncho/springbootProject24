@@ -30,10 +30,10 @@ public class UserCreditServiceImpl implements UserCreditService {
     private final UserService userService;
 
     @Override
-    public Long register(String userName, UserCreditDTO userCreditDTO){
+    public Long register(String memberId, UserCreditDTO userCreditDTO){
 
         // 고객 정보 get
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         UserCredit userCredit = UserCredit.builder()
                 .user(user)

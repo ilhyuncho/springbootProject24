@@ -151,7 +151,7 @@ public class CarRepositoryTest extends ApplicationTests {
     public void selectCar(){
 
         // 고객 정보 get
-        Optional<User> user = userRepository.findByUserName("user1");
+        Optional<User> user = userRepository.findByMemberId("user1");
         User userInfo = user.orElseThrow();
 
 

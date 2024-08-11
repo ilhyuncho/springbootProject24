@@ -34,7 +34,7 @@
               <tr th:each="dto:${list}">
                 <th scope="row">
                   <span th:if="${#strings.equals(dto.sellingCarStatus, 'COMPLETE') == false}">
-                    <a th:href="|@{/myPage/carDetail(carId=${dto.carId}, userName=${#authentication.principal.username} )}|"
+                    <a th:href="|@{/myPage/carDetail(carId=${dto.carId}, memberId=${#authentication.principal.username} )}|"
                        class="text-decoration-none"> [[${dto.carNumber}]]</a>
                   </span>
                   <span th:if="${#strings.equals(dto.sellingCarStatus, 'COMPLETE')}">

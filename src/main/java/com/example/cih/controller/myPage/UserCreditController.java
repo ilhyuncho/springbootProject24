@@ -30,9 +30,9 @@ public class UserCreditController {
 
 
     @GetMapping("/info")
-    public String info(PageRequestDTO pageRequestDTO, String userName, Model model){
+    public String info(PageRequestDTO pageRequestDTO, String memberId, Model model){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         UserCreditDTO userCreditDTO = userCreditService.readCreditInfo(user);
 

@@ -31,8 +31,7 @@ public class ConsumableController {
 
     @ApiOperation(value = "내차 소모품 화면", notes = "")
     @GetMapping("/info")
-    public String get(@ModelAttribute("carId") Long carId,
-                      String userName, Model model){
+    public String get(@ModelAttribute("carId") Long carId, Model model){
 
         List<CarConsumableResDTO> listCarConsumableResDTO = carConsumableService.getListConsumableInfo(carId);
 
@@ -44,9 +43,9 @@ public class ConsumableController {
     @ApiOperation(value = "소모품 히스토리", notes = "")
     @GetMapping("/history")
     public String history(@ModelAttribute("carId") Long carId, Long refConsumableId,
-                      String userName, Model model){
+                      String memberId, Model model){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(refConsumableId)
                 .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
@@ -65,8 +64,6 @@ public class ConsumableController {
     @GetMapping("/modify")
     public String modify(@ModelAttribute("consumableId") Long consumableId,
                           Model model){
-
-//        User user = userService.findUser(userName);
 
         log.error("consumableId : " + consumableId);
 

@@ -24,9 +24,9 @@ public class HistoryController {
     @ApiOperation(value = "내차 기록 화면", notes = "")
     @GetMapping
     public String get(@ModelAttribute("carId") Long carId,
-                      String userName, Model model){
+                      String memberId, Model model){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         log.error("history-get : " + carId);
 

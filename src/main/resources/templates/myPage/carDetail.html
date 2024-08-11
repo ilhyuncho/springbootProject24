@@ -63,15 +63,15 @@
           <div class="my-4" th:with="user=${#authentication.principal}">
             <div class="float-end">
 
-              <a th:href="|@{/history(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/history(carId=${responseDTO.carId}, memberId=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">차량 기록</button>
               </a>
 
-              <a th:href="|@{/statistics(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/statistics(carId=${responseDTO.carId}, memberId=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">통계</button>
               </a>
 
-              <a th:href="|@{/consumable/info(carId=${responseDTO.carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/consumable/info(carId=${responseDTO.carId})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">소모품 관리</button>
               </a>
 
@@ -87,10 +87,10 @@
               </button>
 
 
-              <a th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
-              <a th:href="|@{/myPage/carModify(carId=${responseDTO.carId}, userName=${#authentication.principal.username} )}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carModify(carId=${responseDTO.carId}, memberId=${#authentication.principal.username} )}|" class="text-decoration-none">
                 <button type="button" class="btn btn-secondary">Modify</button>
               </a>
             </div>
@@ -245,7 +245,7 @@
   const sendModifyBtn = document.querySelector(".sendModifyBtn")
   const sellingStatus = document.querySelector(".sellingStatus")
 
-  const userName = [[${userName}]]
+  //const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
   const carNumber = [[${responseDTO.carNumber}]]
@@ -331,7 +331,7 @@
     registerSellingCar(formObj).then(result => {
 
       // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myPage/carDetail?carId=' + carId + '&memberId=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       errorResponse(e)
@@ -380,11 +380,11 @@
 
       if(sellingStatus.value === 'CANCEL'){
         // 화면 재 갱신
-        self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
+        self.location = '/myPage/carDetail?carId=' + carId + '&memberId=' + [[${#authentication.principal.username}]]
       }
       else if(sellingStatus.value === 'COMPLETE'){
         // 화면 재 갱신
-        self.location = '/myPage/carList?userName=' + [[${#authentication.principal.username}]]
+        self.location = '/myPage/carList?memberId=' + [[${#authentication.principal.username}]]
       }
 
     }).catch(e => {
@@ -423,7 +423,7 @@
     updateCarKm(formObj).then(result => {
 
       // 화면 재 갱신
-      self.location = '/myPage/carDetail?carId=' + carId + '&userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myPage/carDetail?carId=' + carId + '&memberId=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       errorResponse(e)

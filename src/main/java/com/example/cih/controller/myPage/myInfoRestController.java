@@ -36,7 +36,7 @@ public class myInfoRestController {
     private final OrderService orderService;
 
     @ApiOperation(value = "나의 포인트 정보 조회", notes = "")
-    @GetMapping("/myPoint")
+    @GetMapping("/getMyPoint")
     public UserMissionListResDTO<UserMissionResDTO> getMyPoint(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                                                                UserMissionReqDTO userMissionReqDTO,
                                                                Principal principal){
@@ -51,17 +51,14 @@ public class myInfoRestController {
     @GetMapping("/addressInfo")
     //@PreAuthorize("principal.username != #userName")
     public UserAddressBookResDTO addressInfo(Long userAddressBookId){
-
-        //User user = userService.findUser(userName);
-
         return userAddressBookService.getUserAddressBookInfo(userAddressBookId);
     }
     @ApiOperation(value = "모든 배송 주소 정보 get", notes = "")
     @GetMapping("/allAddressInfo")
     //@PreAuthorize("principal.username != #userName")
-    public List<UserAddressBookResDTO> allAddressInfo(String userName){
+    public List<UserAddressBookResDTO> allAddressInfo(String memberId){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         return userAddressBookService.getAllUserAddressBookInfo(user);
     }
@@ -122,12 +119,7 @@ public class myInfoRestController {
     @GetMapping("/orderDeliveryProcess")
     //@PreAuthorize("principal.username != #userName")
     public OrderDeliveryResDTO orderDeliveryProcess(Long orderId){
-
-        //User user = userService.findUser(userName);
-
-        OrderDeliveryResDTO orderDeliveryProcess = orderService.getOrderDeliveryProcess(orderId);
-
-        return orderDeliveryProcess;
+        return orderService.getOrderDeliveryProcess(orderId);
     }
 
     @ApiOperation(value = "기본 주소 정보 get", notes = "")

@@ -25,6 +25,9 @@ public class User {
     @Column(name="userName", length = 10, nullable = false)
     private String userName;
 
+    @Column(name="memberId", nullable = false)
+    private String memberId;
+
     private UserGradeType mGrade;     // 등급
     private Integer mPoint;     // 획득 포인트
 

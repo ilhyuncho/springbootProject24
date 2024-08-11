@@ -33,7 +33,7 @@
             <tr th:each="dto:${listDTO}">
 
               <th scope="row">
-                <a th:href="|@{/consumable/history(carId=${carId},refConsumableId=${dto.refConsumableId}, userName=${#authentication.principal.username} )}|"
+                <a th:href="|@{/consumable/history(carId=${carId},refConsumableId=${dto.refConsumableId}, memberId=${#authentication.principal.username} )}|"
                    class="text-decoration-none"> [[${dto.name}]]</a>
               </th>
 
@@ -55,7 +55,7 @@
 
           <div class="my-4">
             <div class="float-end">
-              <a th:href="|@{/myPage/carDetail(carId=${carId}, userName=${#authentication.principal.username})}|" class="text-decoration-none">
+              <a th:href="|@{/myPage/carDetail(carId=${carId}, memberId=${#authentication.principal.username})}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">back</button>
               </a>
             </div>
@@ -144,7 +144,7 @@
     modifyConsumableModal.show()
   }
 
-  // 모달창의 [소모품 점검 날짜 register] 처리
+  // 모달창의 [소모품 이력 등록] 처리
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
     const formObj = {
       carId:carId,
@@ -172,7 +172,6 @@
 
       // 화면 재 갱신
       self.location = '/consumable/info?carId=' + carId
-              + '&userName=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       errorResponse(e)

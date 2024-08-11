@@ -40,7 +40,7 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">포인트<a th:href="|@{/myPage/myPoint(userName=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
+            <span class="input-group-text">포인트<a th:href="|@{/myInfo/myPoint(memberId=${#authentication.principal.username})}|">(포인트 상세 내역)</a></span>
             <label>
               <input type="text" class="form-control" th:value="${userDTO.mPoint}" readonly>
             </label>
@@ -61,7 +61,7 @@
           </div>
 
           <div class="input-group mb-3">
-            <span class="input-group-text">배송 주소&nbsp;<a th:href="|@{/myPage/deliveryAddress(userName=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
+            <span class="input-group-text">배송 주소&nbsp;<a th:href="|@{/myInfo/deliveryAddress(memberId=${#authentication.principal.username})}|">(배송 주소록 관리)</a></span>
               <input type="text" class="form-control" th:value="${userDTO.billingAddress}" readonly>
           </div>
 

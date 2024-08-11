@@ -1,7 +1,7 @@
 
 // 고객의 보유 포인트 정보 get
 async function getMyPoint(formObj){
-    const response = await axios.get(`/myInfo/myPoint`, {params: formObj})
+    const response = await axios.get(`/myInfo/getMyPoint`, {params: formObj})
   //  console.log(response)
     return response.data
 }

@@ -33,9 +33,9 @@ public class UserMissionServiceImpl implements UserMissionService{
     private final RefMissionRepository refMissionRepository;
 
     @Override
-    public void insertUserMission(String userName, UserActionType userActionType, String...varCheckValue) {
+    public void insertUserMission(String memberId, UserActionType userActionType, String...varCheckValue) {
 
-        User user = userRepository.findByUserName(userName)
+        User user = userRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
         String checkValue = Arrays.stream(varCheckValue).findFirst().orElse(null);

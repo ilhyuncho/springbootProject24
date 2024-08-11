@@ -189,7 +189,7 @@
       }
 
       // 화면 재 갱신
-      self.location = '/myPage/deliveryAddress?userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myInfo/deliveryAddress?memberId=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       errorResponse(e)
@@ -262,7 +262,7 @@
       }
 
       // 화면 재 갱신
-      self.location = '/myPage/deliveryAddress?userName=' + [[${#authentication.principal.username}]]
+      self.location = '/myInfo/deliveryAddress?memberId=' + [[${#authentication.principal.username}]]
 
     }).catch(e => {
       errorResponse(e)

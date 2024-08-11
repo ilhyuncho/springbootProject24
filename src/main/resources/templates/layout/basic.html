@@ -37,12 +37,12 @@
 <!--                <li><a class="dropdown-item" href="#!">Settings</a></li>-->
                 <!-- 고객이 로그인 했다면.. 표시-->
                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
-                    <li><a class="dropdown-item" th:href="|@{/myPage/myInfo(userName=${#authentication.principal.username})}|">나의 정보</a></li>
-                    <li><a class="dropdown-item" th:href="|@{/myPage/carList(userName=${#authentication.principal.username})}|">내차 정보</a></li>
-                    <li><a class="dropdown-item" th:href="|@{/myPage/carOrderList(userName=${#authentication.principal.username})}|">차량 주문</a></li>
-                    <li><a class="dropdown-item" th:href="|@{/cart/list(userName=${#authentication.principal.username})}|">장바구니</a></li>
-                    <li><a class="dropdown-item" th:href="|@{/order/list(userName=${#authentication.principal.username})}|">주문 내역</a></li>
-                    <li><a class="dropdown-item" th:href="|@{/userCredit/info(userName=${#authentication.principal.username})}|">결제 내역</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/myInfo/info(memberId=${#authentication.principal.username})}|">나의 정보</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|">내차 정보</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/myPage/carOrderList}|">차량 주문</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/cart/list}|">장바구니</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/order/list}|">주문 내역</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/userCredit/info(memberId=${#authentication.principal.username})}|">결제 내역</a></li>
                     <li><a class="dropdown-item" th:href="|@{/logout}|">Logout</a></li>
                 </div>
                 <div th:unless="${#authorization.expression('hasRole(''USER'')')}">

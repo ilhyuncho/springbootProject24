@@ -142,11 +142,11 @@
             carNumber:modalCarNumber.value
         }
 
-        RegisterMyCar(formObj).then(result => {
+        registerMyCar(formObj).then(result => {
             if(result.carId > 0){
                 // 화면 재 갱신
                 self.location = '/myPage/carDetail?carId=' + result.carId
-                    + '&userName=' + [[${#authentication.principal.username}]]
+                    + '&memberId=' + [[${#authentication.principal.username}]]
             }
         }).catch(e => {
             console.log(e.response.data)

@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface CartService {
 
-    List<CartDetailResDTO> getCartAll(String userName);
-    Long addCart(ItemBuyReqDTO itemBuyReqDTO, String userName);
+    List<CartDetailResDTO> getCartAll(String memberId);
+    Long addCart(ItemBuyReqDTO itemBuyReqDTO, String memberId);
     void modify(ItemBuyReqDTO itemBuyReqDTO);
     Cart deleteInCart(Long cartId);
 

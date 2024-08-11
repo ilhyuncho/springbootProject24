@@ -15,10 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
-@RequestMapping("/myPage")
+@RequestMapping("/myInfo")
 @RequiredArgsConstructor
 @Log4j2
 @PreAuthorize("hasRole('USER')")
@@ -28,34 +29,29 @@ public class myInfoController {
     private final UserAddressBookService userAddressBookService;
 
     @ApiOperation(value = "[나의 정보] 조회", notes = "")
-    @GetMapping("/myInfo")
+    @GetMapping("/info")
     //@PreAuthorize("principal.username != #userName")
-    public String getMyInfo(String userName,
-                             Model model){
+    public String getMyInfo(String memberId, Model model){
 
-        UserDTO userDTO = userService.findUserDTO(userName);
+        UserDTO userDTO = userService.findUserDTO(memberId);
 
         model.addAttribute("userDTO", userDTO);
 
         return "/myPage/myInfo";
     }
 
-    @ApiOperation(value = "[나의 포인트정보] 페이지 이동", notes = "")
+    @ApiOperation(value = "[나의 포인트 정보] 페이지 이동", notes = "")
     @GetMapping("/myPoint")
-    //@PreAuthorize("principal.username != #userName")
-    public String getMyPoint(String userName, Model model){
-
-        User user = userService.findUser(userName);
-
+    public String getMyPoint(Principal principal){
         return "/myPage/myPoint";
     }
 
     @ApiOperation(value = "[배송 주소록 관리] 페이지 이동", notes = "")
     @GetMapping("/deliveryAddress")
     //@PreAuthorize("principal.username != #userName")
-    public String getMyPointInfo(String userName, Model model){
+    public String getMyPointInfo(String memberId, Model model){
 
-        User user = userService.findUser(userName);
+        User user = userService.findUser(memberId);
 
         List<UserAddressBookResDTO> listUserAddressBook = userAddressBookService.getAllUserAddressBookInfo(user);
 

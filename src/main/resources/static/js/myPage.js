@@ -18,7 +18,7 @@ async function updateCarKm(formObj) {
 }
 
 
-async function RegisterMyCar(formObj) {
+async function registerMyCar(formObj) {
      //console.log(formObj)
 
     const response = await axios.post(`/myPage/carRegister`,formObj)

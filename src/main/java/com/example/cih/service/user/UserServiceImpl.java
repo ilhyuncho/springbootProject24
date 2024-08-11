@@ -7,6 +7,7 @@ import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserGradeType;
 import com.example.cih.domain.user.UserRepository;
+import com.example.cih.dto.member.MemberJoinDTO;
 import com.example.cih.dto.user.UserAddressReqDTO;
 import com.example.cih.dto.user.UserDTO;
 import com.example.cih.dto.user.UserPasswordReqDTO;
@@ -30,9 +31,10 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public Long registerUser(String userName) {
+    public Long registerUser(MemberJoinDTO memberJoinDTO) {
         User user = User.builder()
-                .userName(userName)
+                .userName(memberJoinDTO.getMemberName())    // 유저 이름
+                .memberId(memberJoinDTO.getMemberId())
                 .mPoint(0)
                 .mGrade(UserGradeType.GRADE_A)
                 .build();
@@ -41,23 +43,23 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO findUserDTO(String userName){
-        User user = userRepository.findByUserName(userName)
+    public UserDTO findUserDTO(String memberId){
+        User user = userRepository.findByMemberId(memberId)
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
 
         return entityToDTO(user);
     }
 
     @Override
-    public User findUser(String userName) {
-        return userRepository.findByUserName(userName)
+    public User findUser(String memberId) {
+        return userRepository.findByMemberId(memberId)
                 .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
     }
 
     @Override
-    public User registerMainAddress(String userName, UserAddressReqDTO userAddressReqDTO) {
+    public User registerMainAddress(String memberId, UserAddressReqDTO userAddressReqDTO) {
 
-        User user = findUser(userName);
+        User user = findUser(memberId);
 
         user.registerMainAddress(userAddressReqDTO);
 
@@ -65,9 +67,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void changePassword(String userName, UserPasswordReqDTO userPasswordReqDTO) {
+    public void changePassword(String memberId, UserPasswordReqDTO userPasswordReqDTO) {
 
-        Member member = memberRepository.findById(userName)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberExceptions.NOT_FOUND::get);
 
         boolean matches = passwordEncoder.matches(userPasswordReqDTO.getCurrentPassword(), member.getMemberPw());
@@ -86,6 +88,7 @@ public class UserServiceImpl implements UserService{
         return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
+                .memberId(user.getMemberId())
                 .address(user.getAddress() != null ? user.getAddress().fullAddress() : null)
                 .billingAddress(user.getBillingAddress() != null ? user.getBillingAddress().fullAddress() : null)
                 .mPoint(user.getMPoint())
