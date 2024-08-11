@@ -7,10 +7,9 @@ import com.example.cih.dto.user.UserDTO;
 import com.example.cih.dto.user.UserPasswordReqDTO;
 
 public interface UserService {
-
-    Long registerUser(MemberJoinDTO memberJoinDTO);
-    UserDTO findUserDTO(String memberId);
     User findUser(String memberId);
+    UserDTO findUserDTO(String memberId);
+    Long registerUser(MemberJoinDTO memberJoinDTO);
     User registerMainAddress(String memberId, UserAddressReqDTO userAddressReqDTO);
     void changePassword(String memberId, UserPasswordReqDTO userPasswordReqDTO);
 }

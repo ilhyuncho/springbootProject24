@@ -19,6 +19,13 @@
         <div class="card-body">
 
           <div class="input-group mb-3">
+            <span class="input-group-text">고객 ID</span>
+            <label>
+              <input type="text" class="form-control" th:value="${userDTO.memberId}" readonly>
+            </label>
+          </div>
+
+          <div class="input-group mb-3">
             <span class="input-group-text">고객 이름</span>
             <label>
               <input type="text" class="form-control" th:value="${userDTO.userName}" readonly>

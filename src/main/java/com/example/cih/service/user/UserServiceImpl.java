@@ -25,11 +25,20 @@ import javax.transaction.Transactional;
 @Transactional
 public class UserServiceImpl implements UserService{
 
-    private final MemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-
+    @Override
+    public User findUser(String memberId) {
+        return userRepository.findByMemberId(memberId)
+                .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
+    }
+    @Override
+    public UserDTO findUserDTO(String memberId){
+        User user = findUser(memberId);
+        return entityToDTO(user);
+    }
     @Override
     public Long registerUser(MemberJoinDTO memberJoinDTO) {
         User user = User.builder()
@@ -41,21 +50,6 @@ public class UserServiceImpl implements UserService{
 
         return userRepository.save(user).getUserId();
     }
-
-    @Override
-    public UserDTO findUserDTO(String memberId){
-        User user = userRepository.findByMemberId(memberId)
-                .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
-
-        return entityToDTO(user);
-    }
-
-    @Override
-    public User findUser(String memberId) {
-        return userRepository.findByMemberId(memberId)
-                .orElseThrow(()-> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
-    }
-
     @Override
     public User registerMainAddress(String memberId, UserAddressReqDTO userAddressReqDTO) {
 
@@ -81,10 +75,7 @@ public class UserServiceImpl implements UserService{
             throw MemberExceptions.PASSWORD_NOT_SAME.get();
         }
     }
-
-
     private static UserDTO entityToDTO(User user) {
-
         return UserDTO.builder()
                 .userID(user.getUserId())
                 .userName(user.getUserName())
