@@ -49,7 +49,7 @@ public class myInfoController {
     @ApiOperation(value = "[배송 주소록 관리] 페이지 이동", notes = "")
     @GetMapping("/deliveryAddress")
     //@PreAuthorize("principal.username != #userName")
-    public String getMyPointInfo(String memberId, Model model){
+    public String getDeliveryAddress(String memberId, Model model){
 
         User user = userService.findUser(memberId);
 

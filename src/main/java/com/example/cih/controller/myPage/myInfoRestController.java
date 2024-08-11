@@ -41,8 +41,6 @@ public class myInfoRestController {
                                                                UserMissionReqDTO userMissionReqDTO,
                                                                Principal principal){
 
-        log.error("나의 포인트 정보 조회 : " + userMissionReqDTO);
-
         User user = userService.findUser(principal.getName());
 
         return userMissionService.getListUserMission(pageRequestDTO, user, userMissionReqDTO);

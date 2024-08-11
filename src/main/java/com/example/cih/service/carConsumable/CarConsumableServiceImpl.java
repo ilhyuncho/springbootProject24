@@ -36,6 +36,7 @@ public class CarConsumableServiceImpl implements CarConsumableService {
                 .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
     }
 
+    @Override
     public RefCarConsumable getRefCarConsumableInfo(Long refConsumableId){
         return refCarConsumableRepository.findById(refConsumableId)
                 .orElseThrow(() -> new NoSuchElementException("해당 소모품 정보가 존재하지않습니다"));

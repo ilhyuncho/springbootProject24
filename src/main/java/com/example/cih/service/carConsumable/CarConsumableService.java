@@ -1,6 +1,7 @@
 package com.example.cih.service.carConsumable;
 
 import com.example.cih.domain.carConsumable.ConsumableType;
+import com.example.cih.domain.reference.RefCarConsumable;
 import com.example.cih.dto.car.CarConsumableResDTO;
 import com.example.cih.dto.car.CarConsumableDetailResDTO;
 import com.example.cih.dto.car.CarConsumableRegDTO;
@@ -15,6 +16,7 @@ public interface CarConsumableService {
     void modifyConsumable(CarConsumableRegDTO carConsumableRegDTO);
     void removeConsumable(Long consumableId);
 
+    RefCarConsumable getRefCarConsumableInfo(Long refConsumableId);
     List<CarConsumableResDTO> getListConsumableInfo(Long carId);
     List<HistoryCarResDTO> getListHistory(Long carId, List<ConsumableType> listConsumableType);
 //    List<HistoryCarResDTO> getListHistory(Long carId, ConsumableType consumableType);

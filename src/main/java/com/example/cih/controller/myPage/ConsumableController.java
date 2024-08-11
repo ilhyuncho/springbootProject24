@@ -1,8 +1,6 @@
 package com.example.cih.controller.myPage;
 
-import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.reference.RefCarConsumable;
-import com.example.cih.domain.reference.RefCarConsumableRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.car.CarConsumableResDTO;
 import com.example.cih.dto.car.CarConsumableDetailResDTO;
@@ -25,7 +23,6 @@ import java.util.List;
 @PreAuthorize("hasRole('USER')")
 public class ConsumableController {
 
-    private final RefCarConsumableRepository refCarConsumableRepository;
     private final CarConsumableService carConsumableService;
     private final UserService userService;
 
@@ -47,15 +44,13 @@ public class ConsumableController {
 
         User user = userService.findUser(memberId);
 
-        RefCarConsumable refCarConsumable = refCarConsumableRepository.findById(refConsumableId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("해당 소모품 정보가 존재하지않습니다"));
+        RefCarConsumable refCarConsumable =
+                carConsumableService.getRefCarConsumableInfo(refConsumableId);
 
         List<CarConsumableDetailResDTO> listDTO = carConsumableService.getConsumableDetail(carId, refConsumableId);
 
-        log.error(listDTO);
-
         model.addAttribute("listDTO", listDTO);
-        model.addAttribute("RepairName", refCarConsumable.getName());
+        model.addAttribute("repairName", refCarConsumable.getName());
 
         return "/consumable/history";
     }
