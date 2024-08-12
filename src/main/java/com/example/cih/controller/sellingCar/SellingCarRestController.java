@@ -41,6 +41,8 @@ public class SellingCarRestController {
             throw new BindException(bindingResult);
         }
 
+        User user = userService.findUser(principal.getName());
+
         sellingCarService.registerSellingCar(principal.getName(), sellingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
@@ -55,41 +57,32 @@ public class SellingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        SellingCarResDTO sellingCarResDTO = sellingCarService.getSellingCarInfo(sellingCarId, user);
-
-        return sellingCarResDTO;
+        return sellingCarService.getSellingCarInfo(user, sellingCarId);
     }
 
     @ApiOperation(value = "판매 취소 or 완료 처리", notes = "판매 중이던 차량")
     @PostMapping("/modify")
     public Map<String,String> postModifySellingCar(@Valid @RequestBody SellingCarRegDTO sellingCarRegDTO,
                                                  BindingResult bindingResult,
-                                                 Principal principal ) throws BindException {
-        log.error("postModifySellingCar post...." + sellingCarRegDTO.getCarId());
-
+                                                 Principal principal) throws BindException {
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);
         }
+        User user = userService.findUser(principal.getName());
 
-        sellingCarService.updateSellingCar(principal.getName(), sellingCarRegDTO);
+        sellingCarService.updateSellingCar(sellingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
-
-
 
     @ApiOperation(value = "추천 차량 정보 전달", notes = "메인 화면")
     @GetMapping("/recommend")
     public List<SellingCarResDTO> getRecommendSellingCar(){
 
-        List<SellingCarResDTO> recommendList = sellingCarService.getRecommendList();
-
-        log.error(recommendList);
-        return recommendList;
+        return sellingCarService.getListRecommend();
     }
 
     @ApiOperation(value = "최근 본 차량 정보 전달", notes = "메인 화면")
@@ -119,7 +112,6 @@ public class SellingCarRestController {
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-
         return resultMap;
     }
 }

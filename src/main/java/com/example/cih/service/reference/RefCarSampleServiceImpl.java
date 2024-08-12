@@ -26,8 +26,7 @@ public class RefCarSampleServiceImpl implements RefCarSampleService {
             List<RefCarSample> all = refCarSampleRepository.findAll();
 
             int skipIndex = new Random().nextInt(all.size() - 1);
-            RefCarSample refCarSample = all.stream().skip(skipIndex).findFirst().get();
-            return refCarSample;
+            return all.stream().skip(skipIndex).findFirst().get();
         }
         else{
             Optional<RefCarSample> byCarNumber = refCarSampleRepository.findByCarNumber(carNumber);

@@ -29,20 +29,19 @@ import java.util.stream.Collectors;
 public class UserMissionServiceImpl implements UserMissionService{
 
     private final UserMissionRepository userMissionRepository;
-    private final UserRepository userRepository;
     private final RefMissionRepository refMissionRepository;
+    private final UserService userService;
 
     @Override
     public void insertUserMission(String memberId, UserActionType userActionType, String...varCheckValue) {
 
-        User user = userRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다"));
+        User user = userService.findUser(memberId);
 
         String checkValue = Arrays.stream(varCheckValue).findFirst().orElse(null);
 
         RefMission refMission = checkMissionIncomplete(user, userActionType, checkValue);
 
-        if( refMission != null){
+        if(refMission != null){
             log.error("refMission.getRefMissionId() : " + refMission.getRefMissionId().toString());
             log.error("RefMissionType.fromValue() : " + RefMissionType.fromValue(refMission.getRefMissionId()));
 

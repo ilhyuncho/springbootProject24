@@ -34,28 +34,19 @@ public class CartServiceImpl implements CartService {
     private final UserService userService;
     private final NotificationService notificationService;
 
-
     @Override
     public List<CartDetailResDTO> getCartAll(String memberId) {
         User user = userService.findUser(memberId);
         // 이벤트 체크
-        EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
+        final EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
-        List<Cart> result = cartRepository.findByUser(user);
+        // 장바구니 리스트 get
+        List<Cart> listCart = cartRepository.findByUser(user);
 
-        List<CartDetailResDTO> listDTO = result.stream()
+        return listCart.stream()
                 .filter(Cart::getIsActive)  // 유효한 정보 만..
                 .map(cart -> {
-                    CartDetailResDTO cartDTO = CartDetailResDTO.builder()
-                            .cartId(cart.getCartId())
-                            .shopItemId(cart.getShopItem().getShopItemId())
-                            .itemName(cart.getShopItem().getItemName())
-                            .itemCount(cart.getItemCount())
-                            .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
-                            .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
-                            .isFreeDelivery(cart.getShopItem().isFreeDelivery())
-                            .build();
-
+                    CartDetailResDTO cartDTO = entityToDTO(user, cart, event);
                     // 아이템 옵션 set
                     cartDTO.getListItemOption().addAll(itemOptionService.getListItemOptionInfo(cart.getListOptionId()));
 
@@ -70,8 +61,6 @@ public class CartServiceImpl implements CartService {
 
                     return cartDTO;
         }).collect(Collectors.toList());
-
-        return listDTO;
     }
     @Override
     public Long addCart(ItemBuyReqDTO itemBuyReqDTO, String memberId) {
@@ -128,5 +117,18 @@ public class CartServiceImpl implements CartService {
 
         cartRepository.delete(cart);
         return cart;
+    }
+    private static CartDetailResDTO entityToDTO(User user, Cart cart, EventNotification event) {
+
+        return CartDetailResDTO.builder()
+                .cartId(cart.getCartId())
+                .shopItemId(cart.getShopItem().getShopItemId())
+                .itemName(cart.getShopItem().getItemName())
+                .itemCount(cart.getItemCount())
+                .itemPrice(cart.getShopItem().getItemPrice().getOriginalPrice())
+                .discountPrice(CommonUtils.calcDiscountPrice(user, cart.getShopItem(), event))
+                .isFreeDelivery(cart.getShopItem().isFreeDelivery())
+                .build();
+
     }
 }

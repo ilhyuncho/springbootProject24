@@ -21,16 +21,13 @@ public class UserSearchCarHistoryServiceImpl implements UserSearchCarHistoryServ
 
     private final UserSearchCarHistoryRepository userSearchCarHistoryRepository;
 
-
     @Override
     public void insertSearchCarHistory(User user, SellingCar sellingCar) {
 
         Optional<UserSearchCarHistory> result = userSearchCarHistoryRepository.findByUserAndSellingCar(user, sellingCar);
 
         if(result.isPresent()){
-            UserSearchCarHistory userSearchCarHistory = result.get();
-
-            userSearchCarHistory.plusSearchCount();
+            result.get().plusSearchCount();
         }
         else{
             UserSearchCarHistory userSearchCarHistory = UserSearchCarHistory.builder()
