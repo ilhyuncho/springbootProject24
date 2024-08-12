@@ -24,6 +24,10 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
 
     private final UserAddressBookRepository userAddressBookRepository;
 
+    public UserAddressBook getUserAddressBook(Long userAddressBookId){
+        return userAddressBookRepository.findById(userAddressBookId)
+                .orElseThrow(() -> new OwnerCarNotFoundException("해당 주소록 정보가 존재하지않습니다"));
+    }
     @Override
     public List<UserAddressBook> getListUserAddressBook(User user) {
 
@@ -31,12 +35,10 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
                 .filter(UserAddressBook::getIsActive)
                 .collect(Collectors.toList());
     }
-
     @Override
     public UserAddressBookResDTO getUserAddressBookInfo(Long userAddressBookId) {
 
-        UserAddressBook userAddressBook = userAddressBookRepository.findById(userAddressBookId)
-                .orElseThrow(() -> new OwnerCarNotFoundException("해당 주소록 정보가 존재하지않습니다"));
+        UserAddressBook userAddressBook = getUserAddressBook(userAddressBookId);
 
         return entityToDTO(userAddressBook);
     }
@@ -98,11 +100,7 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     @Override
     public void modifyAddressBook(User user, UserAddressBookReqDTO userAddressBookReqDTO) {
 
-        UserAddressBook userAddressBook = userAddressBookRepository.findById(userAddressBookReqDTO.getUserAddressBookId())
-                .orElseThrow(() -> new NoSuchElementException("해당 배송 주소 정보가 존재하지않습니다"));
-
         List<UserAddressBook> listUserAddressBook = getListUserAddressBook(user);
-
         // [배송지명] 체크
         if(isSameDeliveryName(listUserAddressBook, userAddressBookReqDTO)) {
             throw new OwnerCarNotFoundException("이미 같은 배송지명이 존재 합니다");
@@ -112,9 +110,11 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
             // 기존 [기본 배송지] 미지정 상태로 변경
             initMainAddress(listUserAddressBook);
         }
+
+
+        UserAddressBook userAddressBook = getUserAddressBook(userAddressBookReqDTO.getUserAddressBookId());
         // 수정 대상이 [기본 배송지] 인데 미지정 상태로 변경을 원할 경우
         if(userAddressBook.getIsMainAddress() && !userAddressBookReqDTO.getMainAddressCheck()) {
-
             // 최초 등록된 주소로 기본 배송지 지정
             changeMainAddress(listUserAddressBook, userAddressBookReqDTO.getUserAddressBookId());
         }
@@ -125,20 +125,16 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
 
     @Override
     public void deleteAddressBook(User user, Long userAddressBookId) {
+        UserAddressBook userAddressBook = getUserAddressBook(userAddressBookId);
 
-        UserAddressBook userAddressBook = userAddressBookRepository.findById(userAddressBookId)
-                .orElseThrow(() -> new NoSuchElementException("해당 배송 주소 정보가 존재하지않습니다"));
+        userAddressBook.setActive(false);
 
         // 삭제 하려는 주소가 [기본 배송지] 라면
         if(userAddressBook.getIsMainAddress()) {
-
             List<UserAddressBook> listUserAddressBook = getListUserAddressBook(user);
-
             // 최초 등록된 주소로 기본 배송지 지정
             changeMainAddress(listUserAddressBook, userAddressBookId);
         }
-
-        userAddressBook.setActive(false);
     }
 
     private static void changeMainAddress(List<UserAddressBook> listUserAddressBook, Long userAddressBookId){
@@ -153,11 +149,12 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     }
 
     private static void initMainAddress(List<UserAddressBook> listUserAddressBook){
-        // 기존 [기본 배송지] 설정 false로 변경
+        // 기존 [기본 배송지] 설정을 false로 변경
         listUserAddressBook.stream()
                 .filter(UserAddressBook::getIsMainAddress)
                 .forEach(userAddressBook -> {
-                    userAddressBook.setMainAddress(false);});
+                    userAddressBook.setMainAddress(false);}
+                );
     }
 
     private static Boolean isSameDeliveryName(List<UserAddressBook> listUserAddressBook,
