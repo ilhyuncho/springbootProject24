@@ -11,7 +11,6 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.*;
 import com.example.cih.service.reference.RefCarSampleService;
 import com.example.cih.service.user.UserMissionService;
-import com.example.cih.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserCarServiceImpl implements UserCarService {
 
-    private final UserService userService;
     private final CarService carService;
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
@@ -81,7 +79,6 @@ public class UserCarServiceImpl implements UserCarService {
         boolean isRegister = userCarList.stream().anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
         if(isRegister){
             throw new AlreadyRegisterException("이미 등록된 차량입니다.");
-           // return 0L;
         }
 
         // 등록 하려는 차 정보 get
@@ -96,7 +93,7 @@ public class UserCarServiceImpl implements UserCarService {
                         .carKm(0L)
                         .isActive(true)
                         .user(user)
-                .build();
+                        .build();
 
         userMissionService.insertUserMission(user.getMemberId(),
                 UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
