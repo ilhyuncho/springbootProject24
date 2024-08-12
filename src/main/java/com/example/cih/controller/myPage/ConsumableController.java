@@ -60,8 +60,6 @@ public class ConsumableController {
     public String modify(@ModelAttribute("consumableId") Long consumableId,
                           Model model){
 
-        log.error("consumableId : " + consumableId);
-
         CarConsumableDetailResDTO consumableInfo = carConsumableService.getConsumableInfo(consumableId);
 
         model.addAttribute("responseDTO", consumableInfo);

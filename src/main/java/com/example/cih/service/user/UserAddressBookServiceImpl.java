@@ -24,38 +24,6 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
 
     private final UserAddressBookRepository userAddressBookRepository;
 
-
-    private static void initMainAddress(List<UserAddressBook> listUserAddressBook){
-        // 기존 [기본 배송지] 설정 false로 변경
-        listUserAddressBook.stream()
-                .filter(UserAddressBook::getIsMainAddress)
-                .forEach(userAddressBook -> {
-                    userAddressBook.setMainAddress(false);});
-    }
-
-    private static void changeMainAddress(List<UserAddressBook> listUserAddressBook){
-
-        // 최초 등록된 주소로 지정
-        listUserAddressBook.forEach(log::error);
-
-        if(listUserAddressBook.size() > 0){
-            listUserAddressBook.stream()
-                    .min(Comparator.comparing(UserAddressBook::getUserAddressBookId))
-                    .get()
-                    .setMainAddress(true);
-        }
-
-        listUserAddressBook.forEach(log::error);
-    }
-
-    private static Boolean isSameDeliveryName(List<UserAddressBook> listUserAddressBook,
-                                             UserAddressBookReqDTO userAddressBookReqDTO){
-
-        return listUserAddressBook.stream()
-                .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(), userAddressBookReqDTO.getUserAddressBookId()))
-                .anyMatch(addressBook -> addressBook.getDeliveryName().equals(userAddressBookReqDTO.getDeliveryName()));
-    }
-
     @Override
     public List<UserAddressBook> getListUserAddressBook(User user) {
 
@@ -75,20 +43,16 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
     @Override
     public UserAddressBookResDTO getMainAddressInfo(User user) {
 
-        UserAddressBookResDTO userAddressBookResDTO = userAddressBookRepository.findByUser(user).stream()
-                .filter(userAddressBook -> userAddressBook.getIsMainAddress() && userAddressBook.getIsActive())
+        return getListUserAddressBook(user).stream()
+                .filter(UserAddressBook::getIsMainAddress)
                 .map(UserAddressBookServiceImpl::entityToDTO)
                 .findFirst().orElse(null);
-
-        return userAddressBookResDTO;
     }
 
     @Override
     public List<UserAddressBookResDTO> getAllUserAddressBookInfo(User user) {
 
-        List<UserAddressBook> listUserAddressBook = getListUserAddressBook(user);
-
-        return listUserAddressBook.stream()
+        return getListUserAddressBook(user).stream()
                 .sorted(Comparator.comparing(UserAddressBook::getIsMainAddress).reversed()) // [기본 배송지] 맨 위로
                 .map(UserAddressBookServiceImpl::entityToDTO).collect(Collectors.toList());
     }
@@ -151,11 +115,8 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
         // 수정 대상이 [기본 배송지] 인데 미지정 상태로 변경을 원할 경우
         if(userAddressBook.getIsMainAddress() && !userAddressBookReqDTO.getMainAddressCheck()) {
 
-            List<UserAddressBook> listExceptDeleteAddress = listUserAddressBook.stream()
-                    .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(), userAddressBookReqDTO.getUserAddressBookId()))
-                    .collect(Collectors.toList());
-
-            changeMainAddress(listExceptDeleteAddress);
+            // 최초 등록된 주소로 기본 배송지 지정
+            changeMainAddress(listUserAddressBook, userAddressBookReqDTO.getUserAddressBookId());
         }
 
         userAddressBook.setAddress(userAddressBookReqDTO.generateAddress());
@@ -171,14 +132,42 @@ public class UserAddressBookServiceImpl implements UserAddressBookService{
         // 삭제 하려는 주소가 [기본 배송지] 라면
         if(userAddressBook.getIsMainAddress()) {
 
-            List<UserAddressBook> listExceptDeleteAddress = getListUserAddressBook(user).stream()
-                    .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(), userAddressBookId))
-                    .collect(Collectors.toList());
+            List<UserAddressBook> listUserAddressBook = getListUserAddressBook(user);
 
-            changeMainAddress(listExceptDeleteAddress);
+            // 최초 등록된 주소로 기본 배송지 지정
+            changeMainAddress(listUserAddressBook, userAddressBookId);
         }
 
         userAddressBook.setActive(false);
+    }
+
+    private static void changeMainAddress(List<UserAddressBook> listUserAddressBook, Long userAddressBookId){
+        // 최초 등록된 주소로 기본 배송지 지정
+        if(listUserAddressBook.size() > 0) {
+            listUserAddressBook.stream()
+                    .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(), userAddressBookId))
+                    .min(Comparator.comparing(UserAddressBook::getUserAddressBookId))
+                    .get()
+                    .setMainAddress(true);
+        }
+    }
+
+    private static void initMainAddress(List<UserAddressBook> listUserAddressBook){
+        // 기존 [기본 배송지] 설정 false로 변경
+        listUserAddressBook.stream()
+                .filter(UserAddressBook::getIsMainAddress)
+                .forEach(userAddressBook -> {
+                    userAddressBook.setMainAddress(false);});
+    }
+
+    private static Boolean isSameDeliveryName(List<UserAddressBook> listUserAddressBook,
+                                              UserAddressBookReqDTO userAddressBookReqDTO){
+
+        // UserAddressBookId() 가 다르면서 배송지명이 같은게 있는지 체크
+        return listUserAddressBook.stream()
+                .filter(addressBook -> !Objects.equals(addressBook.getUserAddressBookId(),
+                        userAddressBookReqDTO.getUserAddressBookId()))
+                .anyMatch(addressBook -> addressBook.getDeliveryName().equals(userAddressBookReqDTO.getDeliveryName()));
     }
 
     private static UserAddressBookResDTO entityToDTO(UserAddressBook userAddressBook) {
