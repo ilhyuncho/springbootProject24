@@ -386,6 +386,7 @@
     const formObj = {
       offerType:'proposeChangePrice',
       carId:carId,
+      sellingCarId:sellingCarId,
       requestPrice: modifyPrice.value.replaceAll(",","")
     }
     sendUpdateOffer(formObj)
@@ -397,6 +398,7 @@
     const formObj = {
       offerType:'proposeCancel',
       carId:carId,
+      sellingCarId:sellingCarId,
       requestPrice:0
     }
     sendUpdateOffer(formObj)

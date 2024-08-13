@@ -4,8 +4,6 @@ import com.example.cih.common.exception.OwnerCarNotFoundException;
 import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.buyingCar.BuyingCar;
 import com.example.cih.domain.buyingCar.BuyingCarRepository;
-import com.example.cih.domain.car.Car;
-import com.example.cih.domain.car.CarRepository;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarRepository;
 import com.example.cih.domain.user.User;
@@ -13,7 +11,6 @@ import com.example.cih.dto.buyingCar.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
-import com.example.cih.service.car.CarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -34,8 +31,24 @@ import java.util.stream.Collectors;
 public class BuyingCarServiceImpl implements BuyingCarService {
     private final SellingCarRepository sellingCarRepository;
     private final BuyingCarRepository buyingCarRepository;
-    private final CarRepository carRepository;
-    private final CarService carService;
+
+    @Override
+    public BuyingCar getBuyingCarInfo(User user, SellingCar sellingCar){
+        // 판매 차량을 사려고 하는 고객의 구매 정보 get
+        return buyingCarRepository.findBySellingCarAndUserAndIsActive(sellingCar, user, true)
+                .orElse(null);
+    }
+
+    @Override
+    public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) {
+        return buyingCarRepository.findByUser(user).stream()
+                .map(BuyingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+    }
+
+    private SellingCar getSellingCarInfo(Long sellingCarId){
+        return sellingCarRepository.findById(sellingCarId)
+                .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
+    }
 
     @Override
     public BuyingCarListResDTO<BuyingCarViewDTO> getPageBuyingCarInfo(PageRequestDTO pageRequestDTO, Long sellingCarId) {
@@ -63,8 +76,8 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     @Override
     public BuyingCarViewDTO getHighProposalBuyingCar(Long sellingCarId) {
 
-        SellingCar sellingCar = sellingCarRepository.findById(sellingCarId)
-                .orElseThrow(() -> new NoSuchElementException("해당 차 판매 정보가 존재하지않습니다"));
+        // 구매하려는 차량 정보
+        SellingCar sellingCar = getSellingCarInfo(sellingCarId);
 
         BuyingCar highProposalPriceInfo = buyingCarRepository.findHighProposalPriceInfo(sellingCarId);
         if(highProposalPriceInfo != null)
@@ -77,21 +90,12 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     }
 
     @Override
-    public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) {
-
-        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarRepository.findByUser(user).stream()
-                .map(BuyingCarServiceImpl::entityToDTO).collect(Collectors.toList());
-
-        return listBuyingCarViewDTO;
-    }
-
-    @Override
     public void registerBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
         // 구매하려는 차량 정보
-        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
+        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO.getSellingCarId());
 
         if(getBuyingCarInfo(user, sellingCar) != null){
             throw new OwnerCarNotFoundException("이미 구매 신청 정보가 존재합니다");
@@ -110,14 +114,16 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     @Override
     public void updateBuyingCar(User user, BuyingCarRegDTO buyingCarRegDTO) {
 
-        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO);
+        // 구매하려는 차량 정보
+        SellingCar sellingCar = getSellingCarInfo(buyingCarRegDTO.getSellingCarId());
 
+        // 구매 신청 내역 get
         BuyingCar buyingCar = getBuyingCarInfo(user, sellingCar);
         Objects.requireNonNull(buyingCar, () -> {   // requireNonNull은 해당 참조가 null일 경우 즉시 개발자에게 알리는 것이 목적
             throw new OwnerCarNotFoundException("구매 신청 정보가 존재 하지 않습니다"); });
 
+        // 신청 상태 변경
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
-
         buyingCar.changeBuyCarStatus(buyCarStatus);
 
         if(buyCarStatus == BuyCarStatus.PROPOSE_CHANGE_PRICE){
@@ -125,22 +131,9 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         }
     }
 
-    public SellingCar getSellingCarInfo(BuyingCarRegDTO buyingCarRegDTO){
-
-        Car car = carService.getCarInfo(buyingCarRegDTO.getCarId());
-
-        return sellingCarRepository.findById(car.getSellingCar().getSellingCarId())
-                .orElseThrow(() -> new OwnerCarNotFoundException("차 판매 정보가 존재하지않습니다"));
-    }
-
-    public BuyingCar getBuyingCarInfo(User user, SellingCar sellingCar){    // 판매 차량을 사려고 하는 고객의 구매 정보 get
-
-        return buyingCarRepository.findBySellingCarAndUserAndIsActive(sellingCar, user, true)
-                .orElse(null);
-    }
-
     private static BuyingCarViewDTO entityToDTO(BuyingCar buyingCar) {
-        BuyingCarViewDTO buyingCarViewDTO = BuyingCarViewDTO.builder( )
+
+        return BuyingCarViewDTO.builder( )
                 .proposalPrice(buyingCar.getProposalPrice())
                 .registerTime(buyingCar.getRegisterTime())
                 .userName(buyingCar.getUser().getUserName())
@@ -149,8 +142,6 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .carModel(buyingCar.getSellingCar().getCar().getCarModel())
                 .carId(buyingCar.getSellingCar().getCar().getCarId())
                 .build();
-
-        return buyingCarViewDTO;
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class BuyingCarRegDTO {
     private Long carId;
+    private Long sellingCarId;
     private int requestPrice;
     private String phoneNumber;
     private String offerType;

@@ -177,6 +177,7 @@
     const formObj = {
       offerType:'requestCancel',
       carId:carId,
+      sellingCarId:sellingCarId,
     }
 
     updateOffer(formObj).then(result => {
@@ -199,6 +200,7 @@
     const formObj = {
       offerType:"requestConsult",
       carId:carId,
+      sellingCarId:sellingCarId,
       phoneNumber:phoneNumber.value
     }
 
