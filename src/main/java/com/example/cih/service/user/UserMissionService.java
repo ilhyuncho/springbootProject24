@@ -13,6 +13,7 @@ public interface UserMissionService {
 
     void insertUserMission(String memberId, UserActionType userActionType, String... varCheckValue);
 
+    RefMission checkMissionIncompleteNew(User user, UserActionType userActionType, String checkValue);
     RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue);
 
     UserMissionListResDTO<UserMissionResDTO> getListUserMission(PageRequestDTO pageRequestDTO, User user, UserMissionReqDTO userMissionReqDTO);

@@ -37,9 +37,9 @@ public class UserMissionServiceImpl implements UserMissionService{
 
         User user = userService.findUser(memberId);
 
-        String checkValue = Arrays.stream(varCheckValue).findFirst().orElse(null);
+        String checkValue = Arrays.stream(varCheckValue).findFirst().orElse(null);  // 예) 차량 판매 시 판매 하는 차량 번호
 
-        RefMission refMission = checkMissionIncomplete(user, userActionType, checkValue);
+        RefMission refMission = checkMissionIncompleteNew(user, userActionType, checkValue);
 
         if(refMission != null){
             log.error("refMission.getRefMissionId() : " + refMission.getRefMissionId().toString());
@@ -54,6 +54,67 @@ public class UserMissionServiceImpl implements UserMissionService{
                     .checkValue(checkValue)
                     .build());
         }
+    }
+
+    @Override
+    public RefMission checkMissionIncompleteNew(User user, UserActionType userActionType, String checkValue ) {
+
+        List<UserMission> listUserMission = userMissionRepository.findByUser(user);
+
+        RefMissionType refMissionType =  RefMissionType.MISSION_NONE;
+
+        if(userActionType.equals(UserActionType.ACTION_LOGIN)){
+            if( listUserMission.size() == 0){
+                refMissionType = RefMissionType.FIRST_LOGIN;
+                log.error("최초 로그인");
+            }
+            else{
+                long count = listUserMission.stream()
+                        .filter(mission -> mission.getRefMissionType().equals(RefMissionType.DAILY_LOGIN)
+                                || mission.getRefMissionType().equals(RefMissionType.FIRST_LOGIN))
+                        .filter(mission -> mission.getRegDate().toLocalDate().equals(LocalDate.now()))
+                        .count();
+
+                if(count == 0){
+                    refMissionType = RefMissionType.DAILY_LOGIN;
+                    log.error("오늘 출석");
+                }
+            }
+        }
+        else if(userActionType.equals(UserActionType.ACTION_REG_MY_CAR) ||
+                userActionType.equals(UserActionType.ACTION_REG_SELLING_CAR) ){
+
+            if(checkValue != null){
+                RefMissionType missionType = convertRefMissionType(userActionType);
+
+                long count = listUserMission.stream()
+                        .filter(mission -> mission.getRefMissionType().equals(missionType))
+                        .filter(mission -> mission.getCheckValue().equals(checkValue)).count();
+
+                if(count == 0){
+                    refMissionType = missionType;
+                }
+            }
+        }
+
+        if(refMissionType == RefMissionType.MISSION_NONE){
+            return null;
+        }
+
+        return refMissionRepository.findById(refMissionType.getType())
+                .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
+    }
+
+    public static RefMissionType convertRefMissionType(UserActionType userActionType){
+
+        if(userActionType == UserActionType.ACTION_REG_MY_CAR){
+            return RefMissionType.REGISTER_CAR;
+        }
+        else if(userActionType == UserActionType.ACTION_REG_SELLING_CAR){
+            return RefMissionType.SELL_CAR;
+        }
+
+        return RefMissionType.MISSION_NONE;
     }
 
     @Override
