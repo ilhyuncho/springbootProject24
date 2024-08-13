@@ -47,7 +47,7 @@ public class MyPageController {
 
         User user = userService.findUser(memberId);
 
-        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(user, pageRequestDTO);
+        List<CarViewResDTO> listCarDTO = userCarService.readMyCarList(user);
 
         model.addAttribute("list", listCarDTO);
 

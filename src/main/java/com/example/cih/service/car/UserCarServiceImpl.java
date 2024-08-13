@@ -26,47 +26,32 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserCarServiceImpl implements UserCarService {
 
+    private final CarRepository carRepository;
     private final CarService carService;
     private final UserMissionService userMissionService;
     private final RefCarSampleService refCarSampleService;
-    private final CarRepository carRepository;
 
     @Override
-    public List<CarViewResDTO> readMyCarList(User user, PageRequestDTO pageRequestDTO){
+    public List<CarViewResDTO> readMyCarList(User user){
+        // 보유 Car list
+        List<Car> listOwnCar = user.getOwnCars();
 
-        // 전체 보유 Car list
-        List<Car> ownCarList = user.getOwnCars();
-
-        List<CarViewResDTO> listCarViewDTO = ownCarList.stream().
-                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
-
-        // 대표 이미지만 필터링 ( ImageOrder = 0 )
-        for (CarViewResDTO car : listCarViewDTO) {
-            car.getFileNames().stream()
-                    .filter(carImage -> carImage.getImageOrder() != 0)
-                    .collect(Collectors.toList())
-                    .forEach(x-> car.getFileNames().remove(x));
-        }
-
-        return listCarViewDTO;
+        return listOwnCar.stream()
+                        .filter(Car::getIsActive)       // 판매 차량 제외
+                        .map(UserCarServiceImpl::entityToDTO)
+                        .collect(Collectors.toList());
     }
 
     @Override
     public CarViewResDTO readMyCarDetailInfo(User user, Long carId) {
-
-        // 전체 보유 Car list
-        List<Car> ownCarList = user.getOwnCars();
-
-        List<CarViewResDTO> listCarViewDTO = ownCarList.stream().
-                map(UserCarServiceImpl::entityToDTO).collect(Collectors.toList());
+        // 보유 Car list
+        List<CarViewResDTO> listCarViewDTO = readMyCarList(user);
 
         // 요청된 carId 정보만 필터
         CarViewResDTO carViewResDTO = listCarViewDTO.stream()
                 .filter(car -> Objects.equals(car.getCarId(), carId))
                 .findFirst()
                 .orElse(null);
-
-        log.error("carViewResDTO : " + carViewResDTO);
 
         return carViewResDTO;
     }
@@ -76,7 +61,9 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 유저의 기존 등록 차 정보 get
         List<Projection.CarSummary> userCarList = carRepository.findByUser(user);
-        boolean isRegister = userCarList.stream().anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
+        boolean isRegister = userCarList.stream()
+                                .anyMatch(carSummary -> carSummary.getCarNumber().equals(carNumber));
+
         if(isRegister){
             throw new AlreadyRegisterException("이미 등록된 차량입니다.");
         }
@@ -86,15 +73,16 @@ public class UserCarServiceImpl implements UserCarService {
 
         // 차 등록
         Car car = Car.builder().carNumber(refCarSample.getCarNumber())
+                        .user(user)
                         .carColors(refCarSample.getCarColor())
                         .carModel(refCarSample.getCarModel())
                         .carYears(refCarSample.getCarYear())
                         .carGrade(refCarSample.getCarGrade())
                         .carKm(0L)
                         .isActive(true)
-                        .user(user)
                         .build();
 
+        // 미션 등록
         userMissionService.insertUserMission(user.getMemberId(),
                 UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
 
@@ -105,17 +93,11 @@ public class UserCarServiceImpl implements UserCarService {
 
         Car car = carService.getCarInfo(carInfoReqDTO.getCarId());
 
-        car.change(carInfoReqDTO.getCarKm(), carInfoReqDTO.getCarYears(), carInfoReqDTO.getCarColors());
+        // 차량 스펙 업데이트
+        car.changeSpec(carInfoReqDTO.getCarKm(), carInfoReqDTO.getCarYears(), carInfoReqDTO.getCarColors());
 
-        // 첨부파일 처리
-        car.clearImages();
-
-        if(carInfoReqDTO.getFileNames() != null){
-            carInfoReqDTO.getFileNames().forEach(fileName -> {
-                String[] index = fileName.split("_");
-                car.addImage(index[0], index[1], carInfoReqDTO.getMainImageFileName().equals(index[1]) );
-            });
-        }
+        // 차량 이미지 파일 재설정
+        car.resetImages(carInfoReqDTO.getFileNames(), carInfoReqDTO.getMainImageFileName());
 
         carRepository.save(car);
     }

@@ -16,7 +16,6 @@ import java.util.List;
 public class CarInfoReqDTO {
 
     private Long    carId;
-    //private Long    userId;
     @NotNull
     private int     carYears;
     @NotEmpty

@@ -21,12 +21,12 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">carNumber</th>
-                <th scope="col">carColors</th>
-                <th scope="col">carGrade</th>
-                <th scope="col">carKm</th>
-                <th scope="col">carModel</th>
-                <th scope="col">carYears</th>
+                <th scope="col">차량 항목</th>
+                <th scope="col">모델명</th>
+                <th scope="col">연식</th>
+                <th scope="col">등급</th>
+                <th scope="col">차량 Color</th>
+                <th scope="col">누적거리</th>
               </tr>
             </thead>
 
@@ -47,13 +47,12 @@
                     <img th:src="|/view/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="150"
                          th:data-src="${dto.getMainImage().uuid}" onclick="window.open(this.src)">
                   </div>
-
                 </th>
-                <td>[[${dto.carColors}]]</td>
-                <td>[[${dto.carGrade}]]</td>
-                <td>[[${dto.carKm}]]</td>
                 <td>[[${dto.carModel}]]</td>
                 <td>[[${dto.carYears}]]</td>
+                <td>[[${dto.carGrade}]]</td>
+                <td>[[${dto.carColors}]]</td>
+                <td>[[${dto.carKm}]]</td>
               </tr>
               </tbody>
           </table>

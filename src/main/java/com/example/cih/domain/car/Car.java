@@ -15,10 +15,7 @@ import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -93,6 +90,17 @@ public class Car extends BaseEntity {
     }
 
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
+
+    public void resetImages(List<String> fileNames, String mainImageFileName){
+        clearImages();
+
+        if(fileNames.size() > 0){
+            fileNames.forEach(fileName -> {
+                String[] index = fileName.split("_");
+                addImage(index[0], index[1], mainImageFileName.equals(index[1]) );
+            });
+        }
+    }
     public void addImage(String uuid, String fileName, Boolean isMainImage){
         CarImage carImage = CarImage.builder()
                 .uuid(uuid)
@@ -135,15 +143,13 @@ public class Car extends BaseEntity {
         else if(sellingCarStatus.equals(SellingCarStatus.COMPLETE)){ // 판매 완료
             this.isActive = false;
         }
-
     }
 
-    public void change( Long carKm, int carYears, String carColors ){
+    public void changeSpec( Long carKm, int carYears, String carColors ){
         this.carKm = carKm;
         this.carYears = carYears;
         this.carColors = carColors;
     }
-
     public void changeKm(Long carKm){
         this.carKm = carKm;
     }
