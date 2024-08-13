@@ -179,7 +179,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
                 .requiredPrice(sellingCar.getRequiredPrice())
-                .sellingCarStatus(sellingCar.getSellingCarStatus())
+                .sellingCarStatusText(sellingCar.getSellingCarStatus().getName())
                 .expiredDate(sellingCar.getExpiredDate())
                 .carNumber(sellingCar.getCar().getCarNumber())
                 .carModel(sellingCar.getCar().getCarModel())

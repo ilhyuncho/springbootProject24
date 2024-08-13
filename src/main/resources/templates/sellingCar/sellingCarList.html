@@ -53,12 +53,11 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">carNumber</th>
-                  <th scope="col">carModel</th>
-                  <th scope="col">carYears</th>
-                  <th scope="col">sellingCarStatus</th>
+                  <th scope="col">차량 항목</th>
+                  <th scope="col">모델명</th>
+                  <th scope="col">연식</th>
                   <th scope="col">희망 가격</th>
-                  <th scope="col">expiredDate</th>
+                  <th scope="col">판매 종료 일자</th>
                 </tr>
               </thead>
 
@@ -66,7 +65,10 @@
                 <tr th:each="dto:${responseDTO.dtoList}">
                   <th scope="row">
                     <a th:href="|@{'/sellingCar/view/' + ${dto.sellingCarId}}|"
-                       class="text-decoration-none"> [[${dto.carNumber}]]</a>
+                       class="text-decoration-none">[[${dto.carNumber}]]
+                      <span class="badge progress-bar-success"
+                            style="background-color: #0a53be">[[${dto.sellingCarStatusText}]]</span>
+                    </a>
                     <div>
                       <img th:src="|/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}|" th:width="150"
                            th:data-src="${dto.mainImage.uuid}" onclick="window.open(this.src)">
@@ -74,7 +76,6 @@
                   </th>
                   <td>[[${dto.carModel}]]</td>
                   <td>[[${dto.carYears}]]</td>
-                  <td>[[${dto.sellingCarStatus}]]</td>
                   <td>[[${dto.requiredPrice}]]</td>
                   <td>[[${ #temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
                 </tr>

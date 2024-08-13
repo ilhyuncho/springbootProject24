@@ -106,7 +106,6 @@
    }
 
     function printMainView(page,size){
-
        // 추천 차 정보 요청
         getRecommendSellingCar({page, size}).then(data=> {
             printList(data, RecommendCarList) // 목록 처리
@@ -132,14 +131,17 @@
 
                str += `<div class="col-md-4 margin">
                             <div class="card">
-                                <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
-                                    <img src="/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >
-                                     <div class="card-body">
+                             <div><span class="badge progress-bar-success"
+                                style="background-color: #0a53be">${dto.sellingCarStatusText}<span>
+                             </div>
+                             <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
+                                <img src="/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >
+                                 <div class="card-body">
                                       <h4 class="card-title">${dto.carModel}</h4>
                                       <h3 class="card-title text-danger">${requiredPrice}</h3>
-                                    </div>
-                                </a>
-                            </div>
+                                </div>
+                             </a>
+                             </div>
                         </div>`
            }
        }

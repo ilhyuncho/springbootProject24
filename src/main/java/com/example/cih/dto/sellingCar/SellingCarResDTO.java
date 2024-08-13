@@ -24,7 +24,7 @@ public class SellingCarResDTO extends ImageListDTO {
     private Long sellingCarId;
     private Integer viewCount;
     private BuyCarStatus buyCarStatus;
-    private SellingCarStatus sellingCarStatus;
+    private String sellingCarStatusText;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;

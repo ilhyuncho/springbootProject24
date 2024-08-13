@@ -47,13 +47,13 @@
         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
       </div>
 
-      <div class="my-4" th:with="buyCarStatus = ${responseDTO.buyCarStatus ==
+      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}" th:with="buyCarStatus = ${responseDTO.buyCarStatus ==
                                 T(com.example.cih.domain.buyingCar.BuyCarStatus).REQUEST_CONSULT ? 'REQUEST_CONSULT' : ''}">
 
-        <button type="submit" th:if="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary requestConsultBtn"
-                th:text="|상담 요청 취소|" data-bs-target="requestCancel"></button>
-        <button type="submit" th:unless="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary requestConsultBtn"
-                th:text="|상담 요청|" data-bs-target="requestConsult"></button>
+        <button type="submit" th:if="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary"
+                th:text="|상담 요청 취소|" data-bs-target="requestCancel" th:onclick="requestSellCar(this)"></button>
+        <button type="submit" th:unless="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary"
+                th:text="|상담 요청|" data-bs-target="requestConsult" th:onclick="requestSellCar(this)"></button>
       </div>
 
       <div class="h4" th:text="${responseDTO.buyCarStatus}"></div>
@@ -138,12 +138,8 @@
   }
 
   // 상담 요청 or 취소 -버튼 클릭
-  document.querySelector(".requestConsultBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    const target = e.target
-    const offerType = target.getAttribute("data-bs-target")
+  function requestSellCar(obj){
+    const offerType = obj.getAttribute("data-bs-target")
 
     if( offerType === 'requestConsult'){
       requestConsultModal.show()
@@ -152,11 +148,9 @@
       if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
         return
       }
-
       requestCancel()
     }
-
-  }, false)
+  }
 
   function sellingCarLike(isLike){
     const formObj = {

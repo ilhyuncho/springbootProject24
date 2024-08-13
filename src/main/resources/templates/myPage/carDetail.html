@@ -135,7 +135,7 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">희망 가격</span>
-            <input type="text" class="form-control requiredPrice" th:value="1000000">
+            <input type="number" class="form-control requiredPrice" th:value="1000000">
           </div>
         </div>
         <div class="modal-footer" th:data-num="sellingCar">
@@ -157,12 +157,12 @@
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">판매 최소가격</span>
-            <input type="text" class="form-control" id="modalRequiredPrice">
+            <span class="input-group-text">판매 희망 가격</span>
+            <input type="number" class="form-control" id="modalRequiredPrice" readonly>
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">판매 마감 시간</span>
-            <input type="text" class="form-control" id="modalExpiredDate">
+            <input type="text" class="form-control" id="modalExpiredDate" readonly>
           </div>
         </div>
         <div class="modal-footer" th:data-num="sellingCarShow">
@@ -211,7 +211,7 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">현재 km</span>
-            <input type="text" class="form-control initChild updateKmValue">
+            <input type="number" class="form-control initChild updateKmValue">
           </div>
         </div>
         <div class="modal-footer" th:data-num="updateKm">

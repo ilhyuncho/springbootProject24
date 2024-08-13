@@ -48,16 +48,18 @@ public class UserSearchCarHistoryServiceImpl implements UserSearchCarHistoryServ
         return listHistory.stream()
                 .sorted(Comparator.comparing(UserSearchCarHistory::getModDate))
                 .map(UserSearchCarHistory::getSellingCar)
-                .filter(sellingCar -> sellingCar.getSellingCarStatus() == SellingCarStatus.PROCESSING)
+                .filter(sellingCar -> sellingCar.getSellingCarStatus() == SellingCarStatus.PROCESSING
+                     || sellingCar.getSellingCarStatus() == SellingCarStatus.COMPLETE)
                 .map(SellingCarServiceImpl::entityToDTO)
-                .map(SellingCarResDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
-                    SellingCarResDTO.getFileNames().stream()
+                .map(sellingCarResDTO -> {     // 대표 이미지만 필터링 ( ImageOrder = 0 )
+                    sellingCarResDTO.getFileNames().stream()
                             .filter(carImage -> !carImage.getIsMainImage())
                             .collect(Collectors.toList())
-                            .forEach(x -> SellingCarResDTO.getFileNames().remove(x));
-                    return SellingCarResDTO;
+                            .forEach(x -> sellingCarResDTO.getFileNames().remove(x));
+                    return sellingCarResDTO;
                 })
                 .limit(5)
+                .peek(log::error)
                 .collect(Collectors.toList());
     }
 
