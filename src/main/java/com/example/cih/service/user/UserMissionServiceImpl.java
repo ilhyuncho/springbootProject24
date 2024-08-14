@@ -1,6 +1,5 @@
 package com.example.cih.service.user;
 
-import com.example.cih.common.exception.UserNotFoundException;
 import com.example.cih.domain.reference.RefMission;
 import com.example.cih.domain.reference.RefMissionRepository;
 import com.example.cih.domain.user.*;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,7 +37,7 @@ public class UserMissionServiceImpl implements UserMissionService{
 
         String checkValue = Arrays.stream(varCheckValue).findFirst().orElse(null);  // 예) 차량 판매 시 판매 하는 차량 번호
 
-        RefMission refMission = checkMissionIncompleteNew(user, userActionType, checkValue);
+        RefMission refMission = checkMissionIncomplete(user, userActionType, checkValue);
 
         if(refMission != null){
             log.error("refMission.getRefMissionId() : " + refMission.getRefMissionId().toString());
@@ -57,129 +55,42 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public RefMission checkMissionIncompleteNew(User user, UserActionType userActionType, String checkValue ) {
+    public RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue) {
 
-        List<UserMission> listUserMission = userMissionRepository.findByUser(user);
+        // 총 성공 미션 갯수 get
+        int countUserMission = userMissionRepository.getCountUserMission(user);
 
-        RefMissionType refMissionType =  RefMissionType.MISSION_NONE;
+        if(countUserMission == 0 && userActionType.equals(UserActionType.ACTION_LOGIN)){
 
-        if(userActionType.equals(UserActionType.ACTION_LOGIN)){
-            if( listUserMission.size() == 0){
-                refMissionType = RefMissionType.FIRST_LOGIN;
-                log.error("최초 로그인");
-            }
-            else{
-                long count = listUserMission.stream()
-                        .filter(mission -> mission.getRefMissionType().equals(RefMissionType.DAILY_LOGIN)
-                                || mission.getRefMissionType().equals(RefMissionType.FIRST_LOGIN))
-                        .filter(mission -> mission.getRegDate().toLocalDate().equals(LocalDate.now()))
-                        .count();
+            return refMissionRepository.findById(RefMissionType.FIRST_LOGIN.getType())
+                    .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
+        }
+        else{
+            // UserActionType -> RefMissionType
+            RefMissionType refMissionType = convertRefMissionType(userActionType);
 
-                if(count == 0){
-                    refMissionType = RefMissionType.DAILY_LOGIN;
-                    log.error("오늘 출석");
-                }
+            List<UserMission> listUserMission = userMissionRepository.getListUserMissionByActionType(user, refMissionType, checkValue);
+            if(listUserMission.size() == 0){
+
+                return refMissionRepository.findById(refMissionType.getType())
+                        .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
             }
         }
-        else if(userActionType.equals(UserActionType.ACTION_REG_MY_CAR) ||
-                userActionType.equals(UserActionType.ACTION_REG_SELLING_CAR) ){
-
-            if(checkValue != null){
-                RefMissionType missionType = convertRefMissionType(userActionType);
-
-                long count = listUserMission.stream()
-                        .filter(mission -> mission.getRefMissionType().equals(missionType))
-                        .filter(mission -> mission.getCheckValue().equals(checkValue)).count();
-
-                if(count == 0){
-                    refMissionType = missionType;
-                }
-            }
-        }
-
-        if(refMissionType == RefMissionType.MISSION_NONE){
-            return null;
-        }
-
-        return refMissionRepository.findById(refMissionType.getType())
-                .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
+        return null;
     }
 
     public static RefMissionType convertRefMissionType(UserActionType userActionType){
 
-        if(userActionType == UserActionType.ACTION_REG_MY_CAR){
-            return RefMissionType.REGISTER_CAR;
+        switch (userActionType) {
+            case ACTION_LOGIN:
+                return RefMissionType.DAILY_LOGIN;
+            case ACTION_REG_MY_CAR:
+                return RefMissionType.REGISTER_CAR;
+            case ACTION_REG_SELLING_CAR:
+                return RefMissionType.SELL_CAR;
+            default:
+                return RefMissionType.MISSION_NONE;
         }
-        else if(userActionType == UserActionType.ACTION_REG_SELLING_CAR){
-            return RefMissionType.SELL_CAR;
-        }
-
-        return RefMissionType.MISSION_NONE;
-    }
-
-    @Override
-    public RefMission checkMissionIncomplete(User user, UserActionType userActionType, String checkValue ) {
-
-        List<UserMission> userMission = userMissionRepository.findByUser(user);
-
-        RefMission refMission = null;
-
-        if(userActionType.equals(UserActionType.ACTION_LOGIN)){
-            if( userMission.size() == 0){
-               
-                refMission = refMissionRepository.findById(RefMissionType.FIRST_LOGIN.getType())
-                        .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
-                log.error("최초 로그인");
-            }
-            else{
-                long count = userMission.stream()
-                        .filter(mission -> mission.getRefMissionType().equals(RefMissionType.DAILY_LOGIN)
-                                || mission.getRefMissionType().equals(RefMissionType.FIRST_LOGIN))
-                        .filter(mission -> mission.getRegDate().toLocalDate().equals(LocalDate.now()))
-                        .count();
-
-                if(count == 0){
-                    refMission = refMissionRepository.findById(RefMissionType.DAILY_LOGIN.getType())
-                            .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
-                    log.error("오늘 출석");
-                }
-            }
-        }
-        else if(userActionType.equals(UserActionType.ACTION_REG_MY_CAR)){
-
-            if(checkValue == null){
-                return null;
-            }
-            long count = userMission.stream()
-                    .filter(mission -> mission.getRefMissionType().equals(RefMissionType.REGISTER_CAR))
-                    .filter(mission -> mission.getCheckValue().equals(checkValue)).count();
-
-            if(count == 0){
-                refMission = refMissionRepository.findById(RefMissionType.REGISTER_CAR.getType())
-                        .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
-            }
-            else{
-                log.error("이미 미션 포인트를 받은 차량 등록 임!!");
-            }
-        }
-        else if(userActionType.equals(UserActionType.ACTION_REG_SELLING_CAR)){
-            if(checkValue == null){
-                return null;
-            }
-            long count = userMission.stream()
-                    .filter(mission -> mission.getRefMissionType().equals(RefMissionType.SELL_CAR))
-                    .filter(mission -> mission.getCheckValue().equals(checkValue)).count();
-
-            if(count == 0){
-                refMission = refMissionRepository.findById(RefMissionType.SELL_CAR.getType())
-                        .orElseThrow(() -> new NoSuchElementException("해당 미션 정보가 존재하지않습니다"));
-            }
-            else{
-                log.error("이미 미션 포인트를 받은 차량 판매 임!!");
-            }
-        }
-
-        return refMission;
     }
 
     @Override

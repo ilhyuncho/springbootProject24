@@ -2,6 +2,8 @@ package com.example.cih.domain.user.search;
 
 import com.example.cih.common.util.Util;
 import com.example.cih.domain.user.QUserMission;
+import com.example.cih.domain.user.RefMissionType;
+import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserMission;
 import com.example.cih.dto.user.UserMissionReqDTO;
 import com.querydsl.jpa.JPQLQuery;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,6 +53,33 @@ public class UserMissionSearchImpl extends QuerydslRepositorySupport implements 
         return new PageImpl<>(userMissionList, pageable, count);
     }
 
+    @Override
+    public List<UserMission> getListUserMissionByActionType(User user, RefMissionType refMissionType, String checkValue) {
 
+        QUserMission userMission = QUserMission.userMission;
+        JPQLQuery<UserMission> query = from(userMission);
+
+        query.where(userMission.user.eq(user));
+        query.where(userMission.refMissionType.eq(refMissionType));
+
+        if(refMissionType.equals(RefMissionType.DAILY_LOGIN)){
+            LocalDate now = LocalDate.now();
+
+            LocalDateTime start = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),0,0,0);
+            LocalDateTime end = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),23,59,59);
+
+            query.where(userMission.regDate.between(start, end));
+        }
+        else if(refMissionType.equals(RefMissionType.REGISTER_CAR) || refMissionType.equals(RefMissionType.SELL_CAR)){
+            query.where(userMission.checkValue.eq(checkValue));
+        }
+
+        List<UserMission> userMissionList = query.fetch();
+        long count = query.fetchCount();
+
+        userMissionList.forEach(log::error);
+
+        return userMissionList;
+    }
 
 }
