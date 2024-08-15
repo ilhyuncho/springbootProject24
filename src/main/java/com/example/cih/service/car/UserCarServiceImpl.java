@@ -7,10 +7,9 @@ import com.example.cih.domain.car.Projection;
 import com.example.cih.domain.reference.RefCarSample;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
-import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.car.*;
 import com.example.cih.service.reference.RefCarSampleService;
-import com.example.cih.service.user.UserMissionService;
+import com.example.cih.service.user.UserPointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class UserCarServiceImpl implements UserCarService {
 
     private final CarRepository carRepository;
     private final CarService carService;
-    private final UserMissionService userMissionService;
+    private final UserPointHistoryService userPointHistoryService;
     private final RefCarSampleService refCarSampleService;
 
     @Override
@@ -82,9 +81,9 @@ public class UserCarServiceImpl implements UserCarService {
                         .isActive(true)
                         .build();
 
-        // 미션 등록
-        userMissionService.insertUserMission(user.getMemberId(),
-                UserActionType.ACTION_REG_MY_CAR, car.getCarNumber() );
+        // 포인트 획득 처리
+        userPointHistoryService.gainUserPoint(user.getMemberId(),
+                UserActionType.ACTION_REG_MY_CAR, car.getCarNumber());
 
         return carRepository.save(car).getCarId();
     }

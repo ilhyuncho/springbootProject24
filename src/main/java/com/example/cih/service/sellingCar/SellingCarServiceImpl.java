@@ -17,7 +17,7 @@ import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.CarService;
-import com.example.cih.service.user.UserMissionService;
+import com.example.cih.service.user.UserPointHistoryService;
 import com.example.cih.service.user.UserSearchCarHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +38,7 @@ public class SellingCarServiceImpl implements SellingCarService {
     private final SellingCarRepository sellingCarRepository;
     private final UserLikeRepository userLikeRepository;
     private final UserSearchCarHistoryService userSearchCarHistoryService;
-    private final UserMissionService userMissionService;
+    private final UserPointHistoryService userPointHistoryService;
     private final BuyingCarService buyingCarService;
     private final CarService carService;
 
@@ -138,7 +138,8 @@ public class SellingCarServiceImpl implements SellingCarService {
 
         car.registerSellingCar(sellingCarRegDTO.getRequiredPrice());
 
-        userMissionService.insertUserMission(memberId, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
+        // 포인트 획득 처리
+        userPointHistoryService.gainUserPoint(memberId, UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
     }
     @Override
     public void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO) {

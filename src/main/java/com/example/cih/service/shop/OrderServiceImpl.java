@@ -8,6 +8,7 @@ import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.EventType;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
+import com.example.cih.domain.user.UserActionType;
 import com.example.cih.domain.user.UserAddressBook;
 import com.example.cih.domain.user.UserAddressBookRepository;
 import com.example.cih.dto.PageRequestDTO;
@@ -16,6 +17,7 @@ import com.example.cih.dto.order.*;
 import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
+import com.example.cih.service.user.UserPointHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final ItemOptionService itemOptionService;
     private final NotificationService notificationService;
+    private final UserPointHistoryService userPointHistoryService;
 
     @Override
     public Order getOrderInfo(Long orderId){
@@ -207,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ItemNotFoundException("배송 주소 정보가 존재하지않습니다"));
 
         if(orderReqDTO.getUseMPoint() > 0
-                && orderReqDTO.getUseMPoint() < user.getMPoint()){
+                && orderReqDTO.getUseMPoint() > user.getMPoint()){
             throw new IllegalArgumentException("사용 포인트 값이 잘못 되었습니다");
         }
 
@@ -233,6 +236,12 @@ public class OrderServiceImpl implements OrderService {
         // Order 생성
         Order order = Order.createOrder(user, userAddressBook, orderReqDTO, listOrderItem);
         orderRepository.save(order);
+
+        // 포인트 사용 이력 저장
+        if(orderReqDTO.getUseMPoint() > 0){
+            userPointHistoryService.consumeUserPoint(user.getMemberId(), UserActionType.ACTION_BUY_ITEM_WITH_POINT,
+                    orderReqDTO.getUseMPoint());
+        }
 
         return order.getOrderId();
     }

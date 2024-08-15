@@ -43,7 +43,7 @@ public class UserRepositoryTest {
     MemberRepository memberRepository;
 
     @Autowired
-    RefMissionRepository refMissionRepository;
+    RefPointSituationRepository RefPointSituationRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -137,44 +137,44 @@ public class UserRepositoryTest {
         refCarConsumableRepository.save(refCarConsumable1);
         /////////////////////////////////
 
-        List<RefMission> listRefMission = new ArrayList<>();
-        RefMission refMission = RefMission.builder()
-                .missionName("첫로그인")
-                .missionDesc("첫로그인 설명")
+        List<RefPointSituation> listRefPointSituation = new ArrayList<>();
+        RefPointSituation refPointSituation = RefPointSituation.builder()
+                .situationName("첫로그인")
+                .situationDesc("첫로그인 설명")
                 .AccumCycle(AccumCycle.FIRST_TIME)
                 .gainPoint(1000)
                 .viewOrder(1)
                 .build();
-        listRefMission.add(refMission);
+        listRefPointSituation.add(refPointSituation);
 
-        RefMission refMission1 = RefMission.builder()
-                .missionName("매일 로그인")
-                .missionDesc("매일 로그인 설명")
+        RefPointSituation refPointSituation1 = RefPointSituation.builder()
+                .situationName("매일 로그인")
+                .situationDesc("매일 로그인 설명")
                 .AccumCycle(AccumCycle.EVERYDAY)
                 .gainPoint(50)
                 .viewOrder(2)
                 .build();
-        listRefMission.add(refMission1);
+        listRefPointSituation.add(refPointSituation1);
 
-        RefMission refMission2 = RefMission.builder()
-                .missionName("내차 등록")
-                .missionDesc("내차 등록 설명")
+        RefPointSituation refPointSituation2 = RefPointSituation.builder()
+                .situationName("내차 등록")
+                .situationDesc("내차 등록 설명")
                 .AccumCycle(AccumCycle.EACH_ITEM)
                 .gainPoint(500)
                 .viewOrder(3)
                 .build();
-        listRefMission.add(refMission2);
+        listRefPointSituation.add(refPointSituation2);
 
-        RefMission refMission3 = RefMission.builder()
-                .missionName("차 판매 등록")
-                .missionDesc("차 판매 등록 설명")
+        RefPointSituation refPointSituation3 = RefPointSituation.builder()
+                .situationName("차 판매 등록")
+                .situationDesc("차 판매 등록 설명")
                 .AccumCycle(AccumCycle.EACH_ITEM)
                 .gainPoint(400)
                 .viewOrder(4)
                 .build();
-        listRefMission.add(refMission3);
+        listRefPointSituation.add(refPointSituation3);
 
-        refMissionRepository.saveAll(listRefMission);
+        RefPointSituationRepository.saveAll(listRefPointSituation);
 
 
         /////////////////////////////////

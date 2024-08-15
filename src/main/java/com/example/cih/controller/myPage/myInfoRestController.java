@@ -7,7 +7,7 @@ import com.example.cih.dto.order.OrderDeliveryResDTO;
 import com.example.cih.dto.user.*;
 import com.example.cih.service.shop.OrderService;
 import com.example.cih.service.user.UserAddressBookService;
-import com.example.cih.service.user.UserMissionService;
+import com.example.cih.service.user.UserPointHistoryService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,22 +29,23 @@ import java.util.Map;
 @Log4j2
 @PreAuthorize("hasRole('USER')")
 public class myInfoRestController {
-
-    private final UserMissionService userMissionService;
+    private final UserPointHistoryService userPointHistoryService;
     private final UserAddressBookService userAddressBookService;
     private final UserService userService;
     private final OrderService orderService;
 
     @ApiOperation(value = "나의 포인트 정보 조회", notes = "")
     @GetMapping("/getMyPoint")
-    public UserMissionListResDTO<UserMissionResDTO> getMyPoint(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
-                                                               UserMissionReqDTO userMissionReqDTO,
-                                                               Principal principal){
+    public UserListPointHistoryResDTO<UserPointHistoryResDTO>
+                        getMyPoint(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+                                   UserPointHistoryReqDTO userPointHistoryReqDTO,
+                                   Principal principal){
 
         User user = userService.findUser(principal.getName());
 
-        return userMissionService.getListUserMission(pageRequestDTO, user, userMissionReqDTO);
+        return userPointHistoryService.getListUserPointHistory(pageRequestDTO, user, userPointHistoryReqDTO);
     }
+
     @ApiOperation(value = "배송 주소 정보 get", notes = "")
     @GetMapping("/addressInfo")
     //@PreAuthorize("principal.username != #userName")

@@ -8,16 +8,16 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="refMissions")
+@Table(name="RefPointSituations")
 @ToString
-public class RefMission {
+public class RefPointSituation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="REF_MISSION_ID")
-    private Long refMissionId;
-    private String missionName;
-    private String missionDesc;
+    @Column(name="REF_POINT_SITUATION_ID")
+    private Long RefPointSituationId;
+    private String situationName;
+    private String situationDesc;
     private AccumCycle AccumCycle;      // 적립 사이클 ( 매일, 최초 한번, 임의 )
     private Integer gainPoint;
     private Integer viewOrder;

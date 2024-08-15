@@ -7,6 +7,8 @@ import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.*;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.*;
+import com.example.cih.domain.reference.RefPointSituation;
+
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,7 @@ public class ProjectSettingTest {
     MemberRepository memberRepository;
 
     @Autowired
-    RefMissionRepository refMissionRepository;
+    RefPointSituationRepository refPointSituationRepository;
 
     @Autowired
     RefCarSampleRepository refCarSampleRepository;
@@ -218,45 +220,54 @@ public class ProjectSettingTest {
         refCarConsumableRepository.save(refCarConsumable1);
         /////////////////////////////////
 
-        // refMission 생성
-        List<RefMission> listRefMission = new ArrayList<>();
-        RefMission refMission = RefMission.builder()
-                .missionName("첫로그인")
-                .missionDesc("첫로그인 설명")
+        // RefPointSituation 생성
+        List<RefPointSituation> listRefPointSituation = new ArrayList<>();
+        RefPointSituation refPointSituation = RefPointSituation.builder()
+                .situationName("첫로그인")
+                .situationDesc("첫로그인 설명")
                 .AccumCycle(AccumCycle.FIRST_TIME)
                 .gainPoint(1000)
                 .viewOrder(1)
                 .build();
-        listRefMission.add(refMission);
+        listRefPointSituation.add(refPointSituation);
 
-        RefMission refMission1 = RefMission.builder()
-                .missionName("매일 로그인")
-                .missionDesc("매일 로그인 설명")
+        RefPointSituation refPointSituation1 = RefPointSituation.builder()
+                .situationName("매일 로그인")
+                .situationDesc("매일 로그인 설명")
                 .AccumCycle(AccumCycle.EVERYDAY)
                 .gainPoint(50)
                 .viewOrder(2)
                 .build();
-        listRefMission.add(refMission1);
+        listRefPointSituation.add(refPointSituation1);
 
-        RefMission refMission2 = RefMission.builder()
-                .missionName("내차 등록")
-                .missionDesc("내차 등록 설명")
+        RefPointSituation RefPointSituation2 = RefPointSituation.builder()
+                .situationName("내차 등록")
+                .situationDesc("내차 등록 설명")
                 .AccumCycle(AccumCycle.EACH_ITEM)
                 .gainPoint(500)
                 .viewOrder(3)
                 .build();
-        listRefMission.add(refMission2);
+        listRefPointSituation.add(RefPointSituation2);
 
-        RefMission refMission3 = RefMission.builder()
-                .missionName("차 판매 등록")
-                .missionDesc("차 판매 등록 설명")
+        RefPointSituation refPointSituation3 = RefPointSituation.builder()
+                .situationName("차 판매 등록")
+                .situationDesc("차 판매 등록 설명")
                 .AccumCycle(AccumCycle.EACH_ITEM)
                 .gainPoint(400)
                 .viewOrder(4)
                 .build();
-        listRefMission.add(refMission3);
+        listRefPointSituation.add(refPointSituation3);
 
-        refMissionRepository.saveAll(listRefMission);
+        RefPointSituation refPointSituation4 = RefPointSituation.builder()
+                .situationName("차 판매 등록")
+                .situationDesc("차 판매 등록 설명")
+                .AccumCycle(AccumCycle.EACH_ITEM)
+                .gainPoint(400)
+                .viewOrder(5)
+                .build();
+        listRefPointSituation.add(refPointSituation4);
+
+        refPointSituationRepository.saveAll(listRefPointSituation);
 
 
         /////////////////////////////////

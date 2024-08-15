@@ -2,7 +2,6 @@ package com.example.cih.domain.user;
 
 
 import com.example.cih.domain.common.BaseEntity;
-import com.example.cih.domain.reference.RefMission;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,19 +12,19 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "user")
-@Table(name="userMissions")
-public class UserMission extends BaseEntity {
+@Table(name="userPointHistorys")
+public class UserPointHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="userMissionId")
-    private Long userMissionId;
+    @Column(name="userPointHistoryId")
+    private Long userPointHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="uId")
     private User user;
 
-    private RefMissionType refMissionType;
-    private Integer gainPoint;
+    private PointSituation pointSituation;
+    private Integer pointValue;
     private String checkValue;
 
 }

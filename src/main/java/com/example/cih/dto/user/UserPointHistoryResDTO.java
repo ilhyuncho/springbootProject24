@@ -6,12 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserMissionReqDTO {
-    private String fromDay;
-    private String toDay;
+public class UserPointHistoryResDTO {
+
+    private String situationName;
+    private Integer pointValue;
+    private LocalDate regDate;
+
 }
