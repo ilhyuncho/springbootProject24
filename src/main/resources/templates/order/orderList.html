@@ -48,9 +48,15 @@
                                         [[${dto.deliveryStatus}]]
                                     </div>
                                 </td>
-                                <td><a th:if="${dto.deliveryStatus == '배송 준비중'}">
-                                    <button type="button" class="btn btn-primary "
-                                            th:onclick="cancelOrder([[${dto.orderId}]], this)">구매 취소</button></a>
+                                <td>
+                                    <a th:if="${dto.deliveryStatus == '배송 준비중'}">
+                                        <button type="button" class="btn btn-primary "
+                                                th:onclick="cancelOrder([[${dto.orderId}]], this)">구매 취소</button>
+                                    </a>
+                                    <a th:if="${dto.deliveryStatus == '배송 완료'}">
+                                        <button type="button" class="btn btn-primary "
+                                                th:onclick="writeReview([[${dto.orderId}]], this)">리뷰 쓰기</button>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
@@ -147,6 +153,10 @@
             errorResponse(e)
         })
     }
+    function writeReview(orderId, object){
+        alert('리뷰 작성')
+    }
+
 
     // 배송 현황 팝업창 보기
     function showDeliveryStatus(orderId, object){
