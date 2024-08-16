@@ -19,7 +19,9 @@
 
           <div class="input-group mb-3">
             <span class="input-group-text">나의 포인트</span>
-            <input type="text" class="form-control myMPoint" readonly>
+            <span>
+              <input type="text" class="form-control myMPoint" readonly>
+            </span>
           </div>
 
         </div><!-- <div class="card-body">-->
@@ -108,7 +110,13 @@
     const beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
     const nowDate = new Date();
     // const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
-    const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toLocaleDateString('en-CA')
+    const startDate = new Date(nowDate.getTime() - ((beforeDay-1) *24*60*60*1000)).toLocaleDateString('en-CA')
+
+    // const d = new Date();
+    // const day = d.getDate();
+    // console.log(new Date(new Date().setDate(day - 7)));   // 7일전 날짜 구하기 다른 방법
+    // console.log(new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)))
+
     const endDate = new Date().toLocaleDateString('en-CA')
 
     // 날짜 input 값 설정
