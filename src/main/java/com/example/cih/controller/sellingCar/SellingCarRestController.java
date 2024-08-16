@@ -43,7 +43,7 @@ public class SellingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        sellingCarService.registerSellingCar(principal.getName(), sellingCarRegDTO);
+        sellingCarService.registerSellingCar(user, sellingCarRegDTO);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");

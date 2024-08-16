@@ -14,7 +14,7 @@ public interface SellingCarService {
     PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestDTO pageRequestDTO);
     List<SellingCarResDTO> getListRecommend();
 
-    void registerSellingCar(String memberId, SellingCarRegDTO sellingCarRegDTO);
+    void registerSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);
     void likeSellingCar(User user, SellingCarRegDTO sellingCarRegDTO);
     void updateSellingCar(SellingCarRegDTO sellingCarRegDTO);
 }

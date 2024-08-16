@@ -82,8 +82,7 @@ public class UserCarServiceImpl implements UserCarService {
                         .build();
 
         // 포인트 획득 처리
-        userPointHistoryService.gainUserPoint(user.getMemberId(),
-                UserActionType.ACTION_REG_MY_CAR, car.getCarNumber());
+        userPointHistoryService.gainUserPoint(user.getMemberId(), UserActionType.ACTION_REG_MY_CAR, car.getCarNumber());
 
         return carRepository.save(car).getCarId();
     }

@@ -2,6 +2,7 @@ package com.example.cih.common.handler;
 
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.service.user.UserPointHistoryService;
+import com.example.cih.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;

@@ -31,27 +31,37 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          나의 포인트 적립 내역
+          나의 포인트 내역
         </div>
         <div class="card-body">
 
           <div class="row mt-3">
             <div class="col">
               <div class="opt-box">
-                <strong class="opt-tit">기간</strong>
-                <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
-                  <option value="7">7일</option>
-                  <option value="30">30일</option>
-                  <option value="90" selected>90일</option>
-                </select>
-                <span class="inp-t inp-date" style="width: 150px;">
-					<input type="date" title="날짜" id="fromDay" >
-                </span>
-                <span class="form-t">~</span>
-                <span class="inp-t inp-date" style="width: 150px;">
-                    <input type="date" title="날짜" id="toDay">
-                </span>
-                <button type="button" class="btn btn-primary searchBtn" id="btnSearch" style="width: 80px;"><span>조회</span></button>
+                <div>
+                  <strong class="opt-tit">타입</strong>
+                  <select class="sel-tp01" id="searchType" style="width:100px;">
+                    <option value="gc" selected>All</option>
+                    <option value="g">획득</option>
+                    <option value="c">소비</option>
+                  </select>
+                </div>
+                <div>
+                  <select class="sel-tp01" id="searchPeriod" onchange="changePeriodSelect()" style="width:100px;">
+                    <option value="7">7일</option>
+                    <option value="30">30일</option>
+                    <option value="90" selected>90일</option>
+                  </select>
+
+                  <span class="inp-t inp-date" style="width: 150px;">
+                      <input type="date" title="날짜" id="fromDay" >
+                  </span>
+                  <span class="form-t">~</span>
+                  <span class="inp-t inp-date" style="width: 150px;">
+                      <input type="date" title="날짜" id="toDay">
+                  </span>
+                  <button type="button" class="btn btn-primary searchBtn" id="btnSearch" style="width: 80px;"><span>조회</span></button>
+                </div>
               </div>
             </div>
           </div>
@@ -60,9 +70,9 @@
             <table id="tableMyPoint_temp">
               <thead>
               <tr>
-                <th scope="col">획득 경로</th>
-                <th scope="col">획득 포인트</th>
-                <th scope="col">이용 시간</th>
+                <th scope="col">항목</th>
+                <th scope="col">포인트</th>
+                <th scope="col">적용날짜</th>
               </tr>
               </thead>
               <tbody id="tableMyPoint">
@@ -85,6 +95,7 @@
   const fromDay = document.querySelector('#fromDay');
   const toDay = document.querySelector('#toDay');
   const searchPeriod = document.querySelector('#searchPeriod');
+  const searchType = document.querySelector('#searchType');
   const tableMyPoint = document.getElementById("tableMyPoint");
   const myMPoint = document.querySelector('.myMPoint');
 
@@ -104,6 +115,7 @@
     fromDay.value = startDate
     toDay.value = endDate
   }
+
   // 포인트 조회 요청 처리
   document.querySelector(".searchBtn").addEventListener("click", function(e){
     getMyPointInfo()
@@ -112,6 +124,7 @@
   function getMyPointInfo(){
 
     const formObj = {
+      type:searchType.value,
       fromDay:fromDay.value,
       toDay:toDay.value
     }

@@ -3,6 +3,7 @@ package com.example.cih.domain.user.search;
 import com.example.cih.common.util.Util;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.user.UserPointHistoryReqDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,24 @@ public class UserPointHistorySearchImpl extends QuerydslRepositorySupport implem
         JPQLQuery<UserPointHistory> query = from(userPointHistory);
 
         query.where(userPointHistory.regDate.after(searchStartTime).and(userPointHistory.regDate.before(searchEndTime)));
+
+        // 포인트 소비 or 획득 or 모두
+        if (types != null && types.length > 0) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            for (String type : types) {
+                switch (type) {
+                    case "g":
+                        booleanBuilder.or(userPointHistory.pointType.eq(PointType.GAIN));
+                        break;
+                    case "c":
+                        booleanBuilder.or(userPointHistory.pointType.eq(PointType.CONSUME));
+                        break;
+                }
+            }
+            query.where(booleanBuilder);
+        }
+
+
         query.orderBy(userPointHistory.regDate.desc());
 
         //paging

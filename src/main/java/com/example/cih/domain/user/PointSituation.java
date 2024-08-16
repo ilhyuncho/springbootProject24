@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 public enum PointSituation {
-    MISSION_NONE(0L, "없음"),
+    SITUATION_NONE(0L, "없음"),
     FIRST_LOGIN(1L, "첫 로그인"),
     DAILY_LOGIN(2L, "매일 로그인"),
     REGISTER_CAR(3L, "내차 등록"),

@@ -28,6 +28,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
     private final RefPointSituationRepository refPointSituationRepository;
     private final UserService userService;
 
+
     @Override
     public void gainUserPoint(String memberId, UserActionType userActionType, String...varCheckValue) {
 
@@ -45,11 +46,14 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
 
             userPointHistoryRepository.save(UserPointHistory.builder()
                     .user(user)
+                    .pointType(PointType.GAIN)
                     .pointSituation(PointSituation.fromValue(refPointSituation.getRefPointSituationId()))
                     .pointValue(refPointSituation.getGainPoint())
                     .checkValue(checkValue)
                     .build());
         }
+
+
     }
 
     @Override
@@ -59,8 +63,9 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
 
         userPointHistoryRepository.save(UserPointHistory.builder()
                 .user(user)
+                .pointType(PointType.CONSUME)
                 .pointSituation(PointSituation.BUY_ITEM_WITH_POINT)
-                .pointValue(consumePoint)
+                .pointValue(consumePoint * -1)
                 .build());
     }
 
@@ -133,7 +138,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
             case ACTION_REG_SELLING_CAR:
                 return PointSituation.SELL_CAR;
             default:
-                return PointSituation.MISSION_NONE;
+                return PointSituation.SITUATION_NONE;
         }
     }
 

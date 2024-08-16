@@ -23,6 +23,7 @@ public class UserPointHistory extends BaseEntity {
     @JoinColumn(name="uId")
     private User user;
 
+    private PointType pointType;            // 획득 or 소비
     private PointSituation pointSituation;
     private Integer pointValue;
     private String checkValue;
