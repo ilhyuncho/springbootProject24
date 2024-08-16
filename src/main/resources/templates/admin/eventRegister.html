@@ -247,11 +247,12 @@
   // 에러 처리 부분 end ----------------------------
 
   // (테스트용) 기본 날짜 셋팅
-  eventStartDate.value = new Date().toISOString().substring(0, 10);
+  // eventStartDate.value = new Date().toISOString().substring(0, 10);
+  eventStartDate.value = new Date().toLocaleDateString('en-CA')
 
   const now = new Date();
   const oneMonthLater = new Date(now.setDate(now.getDate() + 5));	 // 5일 후
-  eventEndDate.value =  oneMonthLater.toISOString().substring(0, 10)
+  eventEndDate.value =  oneMonthLater.toLocaleDateString('en-CA')
 
 
   document.querySelector(".uploadFileBtn").addEventListener("click", function (e){

@@ -96,8 +96,9 @@
   function changePeriodSelect(){
     const beforeDay = searchPeriod.value;  // 페이지 이동시 기본 현재 날짜 기준 90일 전 부터 조회
     const nowDate = new Date();
-    const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
-    const endDate = new Date().toISOString().substring(0, 10)
+    // const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toISOString().substring(0, 10)
+    const startDate = new Date(nowDate.getTime() - (beforeDay*24*60*60*1000)).toLocaleDateString('en-CA')
+    const endDate = new Date().toLocaleDateString('en-CA')
 
     // 날짜 input 값 설정
     fromDay.value = startDate
