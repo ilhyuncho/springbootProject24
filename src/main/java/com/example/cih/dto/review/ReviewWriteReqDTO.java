@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class ReviewWriteReqDTO {
     private Long orderId;
+    private Long orderItemId;
     private Long shopItemId;
     private String reviewText;
 

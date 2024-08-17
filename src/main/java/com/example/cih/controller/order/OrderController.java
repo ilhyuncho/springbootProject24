@@ -52,7 +52,7 @@ public class OrderController {
     @GetMapping("/orderPage/{orderTemporaryId}")
     public String orderPage(@PathVariable(name="orderTemporaryId") Long orderTemporaryId,
                        Model model, RedirectAttributes redirectAttributes,
-                       Principal principal ){
+                       Principal principal){
 
         User user = userService.findUser(principal.getName());
 
@@ -73,9 +73,11 @@ public class OrderController {
     @ApiOperation(value = "주문 내역 상세 조회", notes = "주문 내역을 자세히")
     @GetMapping("/orderDetail/{orderId}")
     public String orderDetail(@PathVariable(name="orderId") Long orderId,
-                              Model model){
+                              Model model, Principal principal){
 
-        List<OrderItemResDTO> listOrderItemResDTO = orderService.getOrderDetail(orderId);
+        User user = userService.findUser(principal.getName());
+
+        List<OrderItemResDTO> listOrderItemResDTO = orderService.getOrderDetail(user, orderId);
 
         model.addAttribute("responseDTO", listOrderItemResDTO);
         return "/order/orderDetail";

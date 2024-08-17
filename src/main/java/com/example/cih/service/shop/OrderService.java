@@ -12,7 +12,7 @@ import java.util.List;
 public interface OrderService {
     Order getOrderInfo(Long orderId);
     PageResponseDTO<OrderListResDTO> getOrderAll(User user, PageRequestDTO pageRequestDTO);
-    List<OrderItemResDTO> getOrderDetail(Long orderId);
+    List<OrderItemResDTO> getOrderDetail(User user, Long orderId);
     OrderTemporaryResDTO getOrderTemporary(Long orderTemporaryId);
     OrderDeliveryResDTO getOrderDeliveryProcess(Long orderId);
 

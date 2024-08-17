@@ -12,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="Reviews")
+@ToString
 public class Review extends BaseEntity {
 
     @Id
@@ -23,6 +24,9 @@ public class Review extends BaseEntity {
     private String reviewer;
 
     private int score;
+
+    private Long orderId;
+    private Long orderItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)   // 일단 @ManyToOne 단방향
     @JoinColumn(name="SHOP_ITEM_ID")

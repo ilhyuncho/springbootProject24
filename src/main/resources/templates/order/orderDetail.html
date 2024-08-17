@@ -40,8 +40,15 @@
                             <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.orderPrice * dto.orderCount}]]</td>
                             <td>
-                                <button type="button" class="btn btn-primary"
-                                th:onclick="writeReview([[${dto.orderId}]],[[${dto.shopItemId}]])">리뷰 쓰기</button>
+                                <div th:if="${dto.isReviewWrite == false}">
+                                    <button type="button" class="btn btn-primary"
+                                     th:onclick="writeReview([[${dto.orderId}]],[[${dto.orderItemId}]],[[${dto.shopItemId}]])">리뷰 쓰기
+                                    </button>
+                                </div>
+                                <div th:unless="${dto.isReviewWrite == false}">
+                                    <button type="button" class="btn btn-primary" disabled>작성 완료
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
@@ -59,6 +66,7 @@
             <div class="modal-content">
 
                 <input type="hidden" class="form-control selectOrderId">
+                <input type="hidden" class="form-control selectOrderItemId">
                 <input type="hidden" class="form-control selectShopItemId">
 
                 <div class="modal-header">
@@ -92,12 +100,14 @@
 
      const reviewText = document.querySelector(".reviewText")
      const selectOrderId = document.querySelector(".selectOrderId")
+     const selectOrderItemId = document.querySelector(".selectOrderItemId")
      const selectShopItemId = document.querySelector(".selectShopItemId")
 
-    function writeReview(orderId, orderItemId){
+    function writeReview(orderId, orderItemId, shopItemId){
 
         selectOrderId.value = orderId
-        selectShopItemId.value = orderItemId
+        selectOrderItemId.value = orderItemId
+        selectShopItemId.value = shopItemId
 
         writeReviewModal.show()
     }
@@ -113,6 +123,7 @@
 
         const formObj = {
             orderId:selectOrderId.value,
+            orderItemId:selectOrderItemId.value,
             shopItemId:selectShopItemId.value,
             reviewText:reviewText.value,
         }

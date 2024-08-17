@@ -28,6 +28,7 @@ public class OrderItemResDTO extends ImageListDTO {
     private int orderPrice;
     private int discountPrice;
     private LocalDate orderDate;
+    private Boolean isReviewWrite;      // 리뷰 작성 유무
 
     @Builder.Default
     private List<ItemOptionResDTO> listItemOption = new ArrayList<>();

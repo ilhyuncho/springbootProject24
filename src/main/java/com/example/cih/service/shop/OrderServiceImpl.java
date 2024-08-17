@@ -6,6 +6,8 @@ import com.example.cih.domain.cart.Cart;
 import com.example.cih.domain.cart.CartRepository;
 import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.EventType;
+import com.example.cih.domain.review.Review;
+import com.example.cih.domain.review.ReviewRepository;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
@@ -43,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final UserAddressBookRepository userAddressBookRepository;
     private final OrderTemporaryRepository orderTemporaryRepository;
+    private final ReviewRepository reviewRepository;
 
     private final ItemOptionService itemOptionService;
     private final NotificationService notificationService;
@@ -114,13 +117,16 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
     @Override
-    public List<OrderItemResDTO> getOrderDetail(Long orderId) {
+    public List<OrderItemResDTO> getOrderDetail(User user, Long orderId) {
 
         Order order = getOrderInfo(orderId);
 
         List<OrderItem> listOrderItem = orderItemRepository.findByOrder(order);
 
         List<OrderItemResDTO> listOrderItemResDTO = listOrderItem.stream().map(orderItem -> {
+            // 리뷰 작성 유무 확인
+            Optional<Review> review = reviewRepository.findByOrderItemIdAndReviewer(orderItem.getOrderItemId(), user.getMemberId());
+
             OrderItemResDTO itemDTO = OrderItemResDTO.builder()
                     .orderId(orderItem.getOrder().getOrderId())
                     .orderItemId(orderItem.getOrderItemId())
@@ -130,6 +136,7 @@ public class OrderServiceImpl implements OrderService {
                     .orderPrice(orderItem.getOrderPrice())
                     .deliveryStatus(order.getDeliveryStatus().getName())
                     .orderDate(order.getOrderTime().toLocalDate())
+                    .isReviewWrite(review.isPresent())
                     .build();
 
             // 아이템 옵션 set
@@ -146,6 +153,8 @@ public class OrderServiceImpl implements OrderService {
 
             return itemDTO;
         }).collect(Collectors.toList());
+
+        listOrderItemResDTO.forEach(log::error);
 
         return listOrderItemResDTO;
     }

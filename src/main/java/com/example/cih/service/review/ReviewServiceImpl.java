@@ -32,7 +32,13 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = Review.builder()
                 .reviewer(user.getMemberId())
                 .reviewText(reviewWriteReqDTO.getReviewText())
+
+                // 수정 해야 함
                 .score(5)
+
+
+                .orderId(reviewWriteReqDTO.getOrderId())
+                .orderItemId(reviewWriteReqDTO.getOrderItemId())
                 .shopItem(shopItem)
                 .build();
 
