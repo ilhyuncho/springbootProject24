@@ -20,6 +20,7 @@
                             <th scope="col">주문 갯수</th>
                             <th scope="col">주문 가격</th>
                             <th scope="col">총 주문 가격</th>
+                            <th scope="col">리뷰</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -38,7 +39,10 @@
                             <td>[[${dto.orderCount}]]</td>
                             <td>[[${dto.orderPrice}]]</td>
                             <td>[[${dto.orderPrice * dto.orderCount}]]</td>
-
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                th:onclick="writeReview([[${dto.orderId}]],[[${dto.shopItemId}]])">리뷰 쓰기</button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -49,8 +53,84 @@
         </div>
     </div>
 
+    <!-- 리뷰 쓰기 모달창-->
+    <div class="modal writeReviewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <input type="hidden" class="form-control selectOrderId">
+                <input type="hidden" class="form-control selectShopItemId">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">리뷰 쓰기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">리뷰 작성</span>
+                        <input type="text" class="form-control reviewText">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark reviewRegisterBtn">등록</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 배송 현황 모달창-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/order.js"></script>
+    <script src="/js/util.js"></script>
+
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+     const writeReviewModal = new bootstrap.Modal(document.querySelector(".writeReviewModal"))
+
+     const reviewText = document.querySelector(".reviewText")
+     const selectOrderId = document.querySelector(".selectOrderId")
+     const selectShopItemId = document.querySelector(".selectShopItemId")
+
+    function writeReview(orderId, orderItemId){
+
+        selectOrderId.value = orderId
+        selectShopItemId.value = orderItemId
+
+        writeReviewModal.show()
+    }
+
+    // [리뷰 작성] 전송
+    document.querySelector(".reviewRegisterBtn").addEventListener("click", function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        console.log(selectOrderId.value)
+        console.log(selectShopItemId.value)
+        console.log(reviewText.value)
+
+        const formObj = {
+            orderId:selectOrderId.value,
+            shopItemId:selectShopItemId.value,
+            reviewText:reviewText.value,
+        }
+
+        sendReview(formObj).then(result => {
+
+            writeReviewModal.hide()
+
+            if(result.result === 'fail'){
+                alert(result.message)
+                return
+            }
+
+        }).catch(e => {
+            errorResponse(e)
+            writeReviewModal.hide()
+        })
+
+    }, false)
 
 </script>

@@ -30,3 +30,12 @@ async function addOrderTemporary(formObj) {
     console.log(response)
     return response.data
 }
+
+async function sendReview(formObj) {
+    console.log(formObj)
+
+    const response = await axios.post(`/review/write`, formObj);
+
+    console.log(response)
+    return response.data
+}
