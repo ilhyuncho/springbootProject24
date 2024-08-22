@@ -1,8 +1,12 @@
 package com.example.cih.controller.shop;
 
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.shop.ShopItemExtandDTO;
 import com.example.cih.dto.shop.ShopItemResDTO;
+import com.example.cih.service.review.ReviewService;
 import com.example.cih.service.shop.ShopItemService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +30,7 @@ public class ShopController {
 
     private final UserService userService;
     private final ShopItemService shopItemService;
+    private final ReviewService reviewService;
 
     @ApiOperation(value = "악세서리 샵 메인", notes = "회원, 비회원 접근 가능")
     @GetMapping("/main")
@@ -45,8 +50,10 @@ public class ShopController {
 
     @ApiOperation(value = "악세서리 샵 아이템 선택시", notes = "회원, 비회원 접근 가능")
     @GetMapping("/itemDetail/{shopItemId}")
-    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId, Model model,
-             Principal principal){
+    public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
+                                 PageRequestDTO pageRequestDTO,
+                                 Model model,
+                                 Principal principal){
 
         User user = null;
         if( principal != null){
@@ -54,7 +61,14 @@ public class ShopController {
         }
 
         ShopItemExtandDTO itemDTO = shopItemService.getItemInfo(shopItemId, user);    // 악세서리 아이템 상세
+
+
+        PageResponseDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
+
+        log.error(listReview);
+
         model.addAttribute("responseDTO", itemDTO);
+        model.addAttribute("reviewDTO", listReview);
 
         return "/shop/itemDetail";
     }

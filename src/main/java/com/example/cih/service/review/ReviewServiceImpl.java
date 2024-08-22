@@ -7,10 +7,18 @@ import com.example.cih.domain.review.ReviewRepository;
 import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.review.ReviewWriteReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Log4j2
@@ -20,6 +28,32 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ShopItemRepository shopItemRepository;
+
+    @Override
+    public PageResponseDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId) {
+
+        ShopItem shopItem = shopItemRepository.findById(shopItemId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
+
+        Pageable pageable = pageRequestDTO.getPageable("reviewId");
+
+        Page<Review> result = reviewRepository.findByShopItem(shopItem, pageable);
+
+        List<ReviewResDTO> listReviewDTO = result.getContent().stream().map(review ->
+                ReviewResDTO.builder()
+                        .reviewer(review.getReviewer())
+                        .reviewText(review.getReviewText())
+                        .score(review.getScore())
+                        .build()).collect(Collectors.toList());
+
+        listReviewDTO.forEach(log::error);
+
+        return PageResponseDTO.<ReviewResDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(listReviewDTO)
+                .total((int)result.getTotalElements()) // 수정 해야 함!!!
+                .build();
+    }
 
     @Override
     public void writeReview(User user, ReviewWriteReqDTO reviewWriteReqDTO) {

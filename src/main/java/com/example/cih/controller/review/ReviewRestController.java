@@ -46,5 +46,13 @@ public class ReviewRestController {
         return resultMap;
     }
 
+//    @GetMapping("/get")
+//    public List<ReviewResDTO> getReview(Long shopItemId){
+//
+//        List<ReviewResDTO> listReview = reviewService.getListReview(shopItemId);
+//
+//        return listReview;
+//    }
+
 
 }
