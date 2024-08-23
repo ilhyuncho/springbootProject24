@@ -21,7 +21,6 @@
                             <th scope="col">상품 이름's</th>
                             <th scope="col">주문 가격</th>
                             <th scope="col">결제 가격</th>
-                            <th scope="col">총 주문 가격</th>
                             <th scope="col">배송 상태</th>
                         </tr>
                         </thead>
@@ -50,12 +49,8 @@
                                 </td>
                                 <td>
                                     <a th:if="${dto.deliveryStatus == '배송 준비중'}">
-                                        <button type="button" class="btn btn-primary "
+                                        <button type="button" class="btn btn-primary"
                                                 th:onclick="cancelOrder([[${dto.orderId}]], this)">구매 취소</button>
-                                    </a>
-                                    <a th:if="${dto.deliveryStatus == '배송 완료'}">
-                                        <button type="button" class="btn btn-primary "
-                                                th:onclick="writeReview([[${dto.orderId}]], this)">리뷰 쓰기</button>
                                     </a>
                                 </td>
                             </tr>
@@ -176,26 +171,6 @@
             errorResponse(e)
         })
     }
-
-    // 페이지 버튼 클릭 이벤트 begin ------------------
-    // document.querySelector(".pagination").addEventListener("click", function(e){
-    //     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-    //     e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
-    //
-    //     const target = e.target   // a 태그
-    //     if(target.tagName !== 'A'){
-    //         return
-    //     }
-    //
-    //     const num = target.getAttribute("data-num")
-    //     const formObj = document.querySelector("form")
-    //
-    //     formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    //     formObj.submit();
-    //
-    // }, false)
-    // 페이지 버튼 클릭 이벤트 end ------------------
-
 
 
 </script>

@@ -70,11 +70,19 @@ public class ReviewServiceImpl implements ReviewService {
                 // 수정 해야 함
                 .score(5)
 
-
                 .orderId(reviewWriteReqDTO.getOrderId())
                 .orderItemId(reviewWriteReqDTO.getOrderItemId())
                 .shopItem(shopItem)
                 .build();
+
+        // 리뷰 이미지 set
+        if(reviewWriteReqDTO.getFileNames() != null){
+            reviewWriteReqDTO.getFileNames().forEach(fileName ->{
+                String[] arr = fileName.split("_");
+
+                review.addImage(arr[0], arr[1], false);
+            });
+        }
 
         reviewRepository.save(review);
     }

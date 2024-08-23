@@ -3,6 +3,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic.html}">
 
+<!--<th:block layout:fragment="css">-->
+<!--    <style>-->
+<!--        .modal-fullsize {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--        }-->
+<!--    </style>-->
+<!--</th:block>-->
+
 <div layout:fragment="content">
     <div class="row mt-3">
         <div class="col">
@@ -62,7 +73,7 @@
 
     <!-- 리뷰 쓰기 모달창-->
     <div class="modal writeReviewModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg" >
             <div class="modal-content">
 
                 <input type="hidden" class="form-control selectOrderId">
@@ -71,12 +82,26 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">리뷰 쓰기</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeRegisterBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">리뷰 작성</span>
                         <input type="text" class="form-control reviewText">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">상품 이미지</span>
+                        <div class="float-end uploadHidden">
+                            <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                        </div>
+                    </div>
+
+                    <!--    첨부파일 썸네일 보여줄 부분-->
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -88,21 +113,97 @@
         </div>
     </div> <!-- 배송 현황 모달창-->
 
+    <!--    첨부파일 추가를 위한 모달창-->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close closeUploadBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control files" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  <!--    uploadModal-->
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/order.js"></script>
     <script src="/js/util.js"></script>
+    <script src="/js/upload.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
 
      const writeReviewModal = new bootstrap.Modal(document.querySelector(".writeReviewModal"))
+     const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+
+     const uploadResult = document.querySelector(".uploadResult")   // 이미지 파일 업로드 결과 화면
 
      const reviewText = document.querySelector(".reviewText")
      const selectOrderId = document.querySelector(".selectOrderId")
      const selectOrderItemId = document.querySelector(".selectOrderItemId")
      const selectShopItemId = document.querySelector(".selectShopItemId")
 
+     // [리뷰 쓰기] 모달창 닫기
+     document.querySelectorAll(".closeRegisterBtn").forEach(function (item,idx){
+         // 갯수 차감
+         item.addEventListener('click', function(){
+
+             const fileInput = document.querySelector("input[name='files']")
+             initModalFileUpload(fileInput)  // 파일 업로드 모달 창 입력 값 초기화
+
+             initUploadResult(uploadResult)
+             reviewText.value = ''
+
+             writeReviewModal.hide()
+         })
+
+     }, false)
+
+     // [모달창] 이미지 업로드 모달창 view - 버튼 클릭
+     document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
+         e.stopPropagation()
+         e.preventDefault()
+
+         uploadModal.show()
+     }, false)
+
+     // [파일 업로드 모달창]의 파일 업로드 처리
+     document.querySelector(".uploadBtn").addEventListener("click", function(e){
+         const formObj = new FormData();
+
+         const fileInput = document.querySelector("input[name='files']")
+         const files = fileInput.files
+
+         for(let i = 0; i < files.length;i++){
+             formObj.append("files", files[i]);
+         }
+
+         uploadToServer(formObj).then(result => {
+
+             const uploadFiles = uploadResult.querySelectorAll("img")
+
+             let temp = uploadFiles.length
+             for(const uploadResult of result){
+                 showUploadFile(uploadResult, true, temp++ )
+             }
+
+             uploadModal.hide()
+         }).catch(e => {
+             uploadModal.hide()
+         })
+     }, false)
+
+    // [리뷰 쓰기] 버튼 클릭
     function writeReview(orderId, orderItemId, shopItemId){
 
         selectOrderId.value = orderId
@@ -117,25 +218,36 @@
         e.preventDefault()
         e.stopPropagation()
 
-        console.log(selectOrderId.value)
-        console.log(selectShopItemId.value)
-        console.log(reviewText.value)
+        // console.log(selectOrderId.value)
+        // console.log(selectShopItemId.value)
+        // console.log(reviewText.value)
+
+        // 업로드될 파일 이름 리스트 가져오기
+        const fileNameList = getUploadFileNames()
+        if(fileNameList.length === 0){
+            alert('상품의 이미지를 추가해야 합니다!!')
+            return;
+        }
 
         const formObj = {
             orderId:selectOrderId.value,
             orderItemId:selectOrderItemId.value,
             shopItemId:selectShopItemId.value,
             reviewText:reviewText.value,
+            fileNames:fileNameList,
         }
 
         sendReview(formObj).then(result => {
-
-            writeReviewModal.hide()
 
             if(result.result === 'fail'){
                 alert(result.message)
                 return
             }
+
+            writeReviewModal.hide()
+
+            // 화면 재 갱신
+            self.location = '/order/orderDetail/' + selectOrderId.value
 
         }).catch(e => {
             errorResponse(e)

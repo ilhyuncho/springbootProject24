@@ -132,3 +132,25 @@ function errorResponse(e){
     }
 }
 
+// [모달창] 파일 업로드 닫기
+document.querySelectorAll(".closeUploadBtn").forEach(function (item,idx){
+    item.addEventListener('click', function(){
+
+        const fileInput = document.querySelector("input[name='files']")
+        console.log('closeUploadBtn click!!!!!!!!')
+
+        initModalFileUpload(fileInput)  // 파일 업로드 모달 창 입력 값 초기화
+        uploadModal.hide()
+    })
+}, false)
+
+function initModalFileUpload(files){
+    files.value = ''
+    console.log('files.value init')
+}
+
+function initUploadResult(uploadResult){
+    uploadResult.innerHTML = ''
+    console.log('uploadResult.innerHTML')
+}
+
