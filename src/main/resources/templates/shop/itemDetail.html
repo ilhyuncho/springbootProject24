@@ -164,8 +164,8 @@
     <table class="table" th:width="100px">
       <thead>
         <tr>
-          <th scope="col">리뷰</th>
           <th scope="col">작성자</th>
+          <th scope="col">리뷰</th>
         </tr>
       </thead>
       <tbody id="tableReview">
@@ -231,32 +231,23 @@
 
   function printReview(dtoList){
 
-    while (tableReview.firstChild) {
-      tableReview.removeChild(tableReview.firstChild);
-    }
+    var content = '';
 
     if(dtoList && dtoList.length > 0) {
       dtoList.forEach(function (e, i) {
-        const arr = []
-        makeReviewData(arr, e)
 
-        let newRow = tableReview.insertRow(-1);
+        content += `<tr class="memList">`;
+        content += `<th scope="row" class="col-md-3">`
+        content += `<span>${e.reviewer}</span>`
+        content +=  `<div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
+        content += `</td>`
+        content += `<td>${e.reviewText}</td>`
 
-        for (let j = 0, k = 0; j < arr.length; j++){
-          if(arr[j] !== ''){
-            let newCell = newRow.insertCell(k);
-            let newText = document.createTextNode(arr[j]);
-            newCell.appendChild(newText);
-            k++;
-          }
-        }
+        content += `</tr>`;
       })
     }
-  }
 
-  function makeReviewData(arr, dtoData){
-    arr[0] = dtoData.reviewText
-    arr[1] = dtoData.reviewer
+    tableReview.innerHTML = content
   }
 
   function printReviewPage(data){

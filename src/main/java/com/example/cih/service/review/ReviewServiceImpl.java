@@ -39,12 +39,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> result = reviewRepository.findByShopItem(shopItem, pageable);
 
-        List<ReviewResDTO> listReviewDTO = result.getContent().stream().map(review ->
-                ReviewResDTO.builder()
-                        .reviewer(review.getReviewer())
-                        .reviewText(review.getReviewText())
-                        .score(review.getScore())
-                        .build()).collect(Collectors.toList());
+        List<ReviewResDTO> listReviewDTO = result.getContent().stream()
+                .map(ReviewServiceImpl::entityToDTO)
+                .collect(Collectors.toList());
 
         listReviewDTO.forEach(log::error);
 
@@ -85,5 +82,22 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         reviewRepository.save(review);
+    }
+
+    private static ReviewResDTO entityToDTO(Review review) {
+
+        ReviewResDTO reviewResDTO = ReviewResDTO.builder()
+                .reviewer(review.getReviewer())
+                .reviewText(review.getReviewText())
+                .score(review.getScore())
+                .build();
+
+        // 차 이미지 파일 정보 매핑
+        review.getReviewImageSet().forEach(reviewImage -> {
+            reviewResDTO.addImage(reviewImage.getReviewImageId(), reviewImage.getUuid(), reviewImage.getFileName(),
+                    reviewImage.getImageOrder(), reviewImage.getIsMainImage());
+        });
+
+        return reviewResDTO;
     }
 }

@@ -1,13 +1,16 @@
 package com.example.cih.dto.review;
 
+import com.example.cih.dto.ImageListDTO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ReviewResDTO {
+public class ReviewResDTO extends ImageListDTO {
     private String reviewer;
     private String reviewText;
     private int score;
