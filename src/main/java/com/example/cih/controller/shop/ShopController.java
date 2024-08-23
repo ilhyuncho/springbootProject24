@@ -51,7 +51,6 @@ public class ShopController {
     @ApiOperation(value = "악세서리 샵 아이템 선택시", notes = "회원, 비회원 접근 가능")
     @GetMapping("/itemDetail/{shopItemId}")
     public String shopItemDetail(@PathVariable("shopItemId") Long shopItemId,
-                                 PageRequestDTO pageRequestDTO,
                                  Model model,
                                  Principal principal){
 
@@ -62,13 +61,7 @@ public class ShopController {
 
         ShopItemExtandDTO itemDTO = shopItemService.getItemInfo(shopItemId, user);    // 악세서리 아이템 상세
 
-
-        PageResponseDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
-
-        log.error(listReview);
-
         model.addAttribute("responseDTO", itemDTO);
-        model.addAttribute("reviewDTO", listReview);
 
         return "/shop/itemDetail";
     }

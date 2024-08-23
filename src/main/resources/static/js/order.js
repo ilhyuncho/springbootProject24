@@ -39,3 +39,12 @@ async function sendReview(formObj) {
     console.log(response)
     return response.data
 }
+
+async function getReview({shopItemId, page, size}) {
+
+    const response = await axios.get(`/review/`, {params: {shopItemId, page, size}})
+
+    console.log(response)
+    return response.data
+
+}

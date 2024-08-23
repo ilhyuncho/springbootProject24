@@ -157,10 +157,10 @@
 
   <hr class="my-4">
   <!------------------------------리뷰 표시--------------------------------->
+  <div class="h3 text-danger text-left">
+    <span th:text="|리뷰|"></span>
+  </div>
   <div class="row mt-3">
-  <form th:action="@{/shop/itemDetail}" method="get" id="f1">
-    <button type="button" class="btn btn-danger btn-lg">리뷰</button>
-
     <table class="table" th:width="100px">
       <thead>
         <tr>
@@ -168,36 +168,16 @@
           <th scope="col">작성자</th>
         </tr>
       </thead>
-      <tbody>
-        <tr th:each="review:${reviewDTO.dtoList}">
-          <th scope="row">[[${review.reviewText}]]</th>
-          <td>[[${review.reviewer}]]</td>
-        </tr>
+      <tbody id="tableReview">
       </tbody>
     </table>
 
     <!-- 페이지 번호 출력-->
     <div class="float-start">
       <ul class="pagination flex-wrap">
-
-        <li class="page-item" th:if="${reviewDTO.prev}">
-          <a class="page-link" th:data-num="${reviewDTO.start - 1}">Previous</a>
-        </li>
-
-        <th:block th:each="i: ${#numbers.sequence(reviewDTO.start, reviewDTO.end)}">
-          <li th:class="${reviewDTO.page == i} ? 'page-item active' : 'page-item' ">
-            <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-          </li>
-        </th:block>
-
-        <li class="page-item" th:if="${reviewDTO.next}">
-          <a class="page-link" th:data-num="${reviewDTO.end + 1}">Next</a>
-        </li>
-
       </ul>
     </div>
     <!-- 페이지 번호 출력-->
-  </form>
   </div>
 
 
@@ -228,8 +208,104 @@
   const pDeliveryFee = document.querySelector(".pDeliveryFee")
   const pIsFreeDelivery = document.querySelector(".pIsFreeDelivery")
 
+  const tableReview = document.getElementById("tableReview");
+  const pagination = document.querySelector(".pagination");
+
+  const reviewViewCount = 5    // 한번에 보여줄 댓글 갯수
 
   reCalculation()
+
+  resetReview(1, reviewViewCount)
+
+
+  function resetReview(page, size){
+    getReview({shopItemId, page, size}).then(data => {
+
+      printReview(data.dtoList)
+      printReviewPage(data)
+
+    }).catch(e => {
+      console.log(e)
+    })
+  }
+
+  function printReview(dtoList){
+
+    while (tableReview.firstChild) {
+      tableReview.removeChild(tableReview.firstChild);
+    }
+
+    if(dtoList && dtoList.length > 0) {
+      dtoList.forEach(function (e, i) {
+        const arr = []
+        makeReviewData(arr, e)
+
+        let newRow = tableReview.insertRow(-1);
+
+        for (let j = 0, k = 0; j < arr.length; j++){
+          if(arr[j] !== ''){
+            let newCell = newRow.insertCell(k);
+            let newText = document.createTextNode(arr[j]);
+            newCell.appendChild(newText);
+            k++;
+          }
+        }
+      })
+    }
+  }
+
+  function makeReviewData(arr, dtoData){
+    arr[0] = dtoData.reviewText
+    arr[1] = dtoData.reviewer
+  }
+
+  function printReviewPage(data){
+
+    var content = '';
+
+    if(data.prev === true){
+      content = `<li class="page-item">`
+      content += `<a class="page-link" data-num="${data.start - 1}">Previous</a>`
+      content += `</li>`
+    }
+
+    for(var index = data.start; index <= data.end; index++){
+      if( data.page === index){
+        content += `<li class="page-item active">`
+      }
+      else{
+        content += `<li class="page-item">`
+      }
+      content += `<a class="page-link" data-num="${index}">${index}</a>`
+      content += `</li>`
+    }
+
+    if(data.next === true){
+      content += `<li class="page-item">`
+      content += `<a class="page-link" data-num="${data.end + 1}">Next</a>`
+      content += `</li>`
+    }
+
+    pagination.innerHTML = content;
+  }
+
+  // 페이지 버튼 클릭 이벤트 begin ------------------
+  document.querySelector(".pagination").addEventListener("click", function(e){
+
+    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
+    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
+
+    const target = e.target   // a 태그
+    if(target.tagName !== 'A'){
+      return
+    }
+    const num = target.getAttribute("data-num")
+
+    resetReview(num, reviewViewCount)
+
+  }, false)
+  // 페이지 버튼 클릭 이벤트 end ------------------
+
 
   // 수량 변경
   document.querySelector(".pItemCount").addEventListener("change", function (e){
@@ -331,24 +407,5 @@
     })
   }, false)
 
-  // 페이지 버튼 클릭 이벤트 begin ------------------
-  document.querySelector(".pagination").addEventListener("click", function(e){
-
-    e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-    e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
-
-    const target = e.target   // a 태그
-    if(target.tagName !== 'A'){
-      return
-    }
-
-    const num = target.getAttribute("data-num")
-    const formObj = document.querySelector("#myForm1")
-
-    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    formObj.submit();
-
-  }, false)
-  // 페이지 버튼 클릭 이벤트 end ------------------
 
 </script>

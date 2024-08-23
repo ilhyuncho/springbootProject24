@@ -2,6 +2,9 @@ package com.example.cih.controller.review;
 
 
 import com.example.cih.domain.user.User;
+import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.review.ReviewWriteReqDTO;
 import com.example.cih.service.review.ReviewService;
 import com.example.cih.service.user.UserService;
@@ -25,6 +28,14 @@ public class ReviewRestController {
     private final ReviewService reviewService;
     private final UserService userService;
 
+    @GetMapping
+    public PageResponseDTO<ReviewResDTO> getReview(PageRequestDTO pageRequestDTO, Long shopItemId){
+
+        PageResponseDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
+
+        log.error(listReview);
+        return listReview;
+    }
 
     @ApiOperation(value = "리뷰 등록", notes = "구매자가 요청")
     @PostMapping("/write")
@@ -45,14 +56,4 @@ public class ReviewRestController {
         resultMap.put("result", "success");
         return resultMap;
     }
-
-//    @GetMapping("/get")
-//    public List<ReviewResDTO> getReview(Long shopItemId){
-//
-//        List<ReviewResDTO> listReview = reviewService.getListReview(shopItemId);
-//
-//        return listReview;
-//    }
-
-
 }
