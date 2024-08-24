@@ -167,6 +167,7 @@
           <th scope="col"></th>
           <th scope="col">리뷰</th>
           <th scope="col">작성자</th>
+          <th scope="col">작성일자</th>
         </tr>
       </thead>
       <tbody id="tableReview">
@@ -240,6 +241,9 @@
 
         const maskingReviewer = maskingName(e.reviewer)
 
+        const reviewText = e.reviewText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+
+
         content += `<tr class="memList">`;
         content += `  <th scope="row" class="col-md-3">`
 
@@ -250,8 +254,9 @@
           content += `    <div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
         }
         content += `  </th>`
-        content += `  <td>${e.reviewText}</td>`
+        content += `  <td>${reviewText}</td>`
         content += `  <td>${maskingReviewer}</td>`
+        content += `  <td>${e.regDate}</td>`
         content += `</tr>`;
       })
     }

@@ -87,7 +87,9 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">리뷰 작성</span>
-                        <input type="text" class="form-control reviewText">
+                        <label>
+                            <textarea cols="50" rows="3" class="form-control reviewText"></textarea>
+                        </label>
                     </div>
 
                     <div class="input-group mb-3">
@@ -96,34 +98,34 @@
                         <input type="hidden" id="checkCount" class="form-control" th:value="0">
 
                         <span id="checkRegular1" style="display: inline">
-                          <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(1, true, this)"></i>
+                          <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
                         </span>
                         <span id="checkSolid1" style="display: none">
-                          <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(1, false, this)"></i>
+                          <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
                         </span>
                         <span id="checkRegular2" style="display: inline">
-                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(2, true, this)"></i>
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
                         </span>
                         <span id="checkSolid2" style="display: none">
-                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(2, false, this)"></i>
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
                         </span>
                         <span id="checkRegular3" style="display: inline">
-                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(3, true, this)"></i>
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
                         </span>
                         <span id="checkSolid3" style="display: none">
-                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(3, false, this)"></i>
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
                         </span>
                         <span id="checkRegular4" style="display: inline">
-                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(4, true, this)"></i>
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
                         </span>
                         <span id="checkSolid4" style="display: none">
-                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(4, false, this)"></i>
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
                         </span>
                         <span id="checkRegular5" style="display: inline">
-                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(5, true, this)"></i>
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(true)"></i>
                         </span>
                         <span id="checkSolid5" style="display: none">
-                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(5, false, this)"></i>
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(false)"></i>
                         </span>
 
                     </div>
@@ -212,6 +214,7 @@
 
      function selectStar(selected){
          if(selected === true){
+             console.log('selected true')
              if( checkRegular.length > parseInt(checkCount.value) ){
                  checkRegular[parseInt(checkCount.value)].style.display = 'none'
                  checkSolid[parseInt(checkCount.value)].style.display = 'inline'
@@ -220,6 +223,8 @@
              }
          }
          else{
+             console.log('selected false')
+
              if( checkCount.value > 0 ){
                  checkCount.value = parseInt(checkCount.value) - 1
 

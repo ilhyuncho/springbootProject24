@@ -87,6 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .reviewer(review.getReviewer())
                 .reviewText(review.getReviewText())
                 .score(review.getScore())
+                .regDate(review.getRegDate().toLocalDate())
                 .build();
 
         // 차 이미지 파일 정보 매핑
