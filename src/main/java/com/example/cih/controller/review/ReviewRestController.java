@@ -42,7 +42,6 @@ public class ReviewRestController {
     public Map<String,String> postWriteReview(@Valid @RequestBody ReviewWriteReqDTO reviewWriteReqDTO,
                                                      BindingResult bindingResult,
                                                      Principal principal ) throws BindException {
-
         if(bindingResult.hasErrors()){
             log.error("has errors.....");
             throw new BindException(bindingResult);

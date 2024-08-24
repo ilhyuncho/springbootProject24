@@ -89,6 +89,45 @@
                         <span class="input-group-text">리뷰 작성</span>
                         <input type="text" class="form-control reviewText">
                     </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">만족도</span>
+
+                        <input type="hidden" id="checkCount" class="form-control" th:value="0">
+
+                        <span id="checkRegular1" style="display: inline">
+                          <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(1, true, this)"></i>
+                        </span>
+                        <span id="checkSolid1" style="display: none">
+                          <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(1, false, this)"></i>
+                        </span>
+                        <span id="checkRegular2" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(2, true, this)"></i>
+                        </span>
+                        <span id="checkSolid2" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(2, false, this)"></i>
+                        </span>
+                        <span id="checkRegular3" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(3, true, this)"></i>
+                        </span>
+                        <span id="checkSolid3" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(3, false, this)"></i>
+                        </span>
+                        <span id="checkRegular4" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(4, true, this)"></i>
+                        </span>
+                        <span id="checkSolid4" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(4, false, this)"></i>
+                        </span>
+                        <span id="checkRegular5" style="display: inline">
+                              <i class="fa-regular fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(5, true, this)"></i>
+                        </span>
+                        <span id="checkSolid5" style="display: none">
+                              <i class="fa-solid fa-star"  style="cursor:pointer" th:onclick="javascript:selectStar(5, false, this)"></i>
+                        </span>
+
+                    </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text">상품 이미지</span>
                         <div class="float-end uploadHidden">
@@ -152,6 +191,43 @@
      const selectOrderId = document.querySelector(".selectOrderId")
      const selectOrderItemId = document.querySelector(".selectOrderItemId")
      const selectShopItemId = document.querySelector(".selectShopItemId")
+
+     // 리뷰 만족도 별 체크
+     const checkSolid = new Array(5)
+     checkSolid[0] = document.getElementById("checkSolid1");
+     checkSolid[1] = document.getElementById("checkSolid2");
+     checkSolid[2] = document.getElementById("checkSolid3");
+     checkSolid[3] = document.getElementById("checkSolid4");
+     checkSolid[4] = document.getElementById("checkSolid5");
+
+     const checkRegular = new Array(5)
+     checkRegular[0] = document.getElementById("checkRegular1");
+     checkRegular[1] = document.getElementById("checkRegular2");
+     checkRegular[2] = document.getElementById("checkRegular3");
+     checkRegular[3] = document.getElementById("checkRegular4");
+     checkRegular[4] = document.getElementById("checkRegular5");
+
+     const checkCount = document.getElementById("checkCount");
+
+
+     function selectStar(selected){
+         if(selected === true){
+             if( checkRegular.length > parseInt(checkCount.value) ){
+                 checkRegular[parseInt(checkCount.value)].style.display = 'none'
+                 checkSolid[parseInt(checkCount.value)].style.display = 'inline'
+
+                 checkCount.value = parseInt(checkCount.value) + 1
+             }
+         }
+         else{
+             if( checkCount.value > 0 ){
+                 checkCount.value = parseInt(checkCount.value) - 1
+
+                 checkSolid[parseInt(checkCount.value)].style.display = 'none'
+                 checkRegular[parseInt(checkCount.value)].style.display = 'inline'
+             }
+         }
+     }
 
      // [리뷰 쓰기] 모달창 닫기
      document.querySelectorAll(".closeRegisterBtn").forEach(function (item,idx){
@@ -218,10 +294,6 @@
         e.preventDefault()
         e.stopPropagation()
 
-        // console.log(selectOrderId.value)
-        // console.log(selectShopItemId.value)
-        // console.log(reviewText.value)
-
         // 업로드될 파일 이름 리스트 가져오기
         const fileNameList = getUploadFileNames()
         if(fileNameList.length === 0){
@@ -235,6 +307,7 @@
             shopItemId:selectShopItemId.value,
             reviewText:reviewText.value,
             fileNames:fileNameList,
+            score:checkCount.value,
             mainImageFileName:getMainImageFileName()
         }
 

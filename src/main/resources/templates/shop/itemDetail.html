@@ -164,8 +164,9 @@
     <table class="table" th:width="100px">
       <thead>
         <tr>
-          <th scope="col">작성자</th>
+          <th scope="col"></th>
           <th scope="col">리뷰</th>
+          <th scope="col">작성자</th>
         </tr>
       </thead>
       <tbody id="tableReview">
@@ -187,6 +188,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/cart.js"></script>
   <script src="/js/order.js"></script>
+  <script src="/js/util.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -231,18 +233,25 @@
 
   function printReview(dtoList){
 
-    var content = '';
+    let content = '';
 
     if(dtoList && dtoList.length > 0) {
-      dtoList.forEach(function (e, i) {
+        dtoList.forEach(function (e, i) {
+
+        const maskingReviewer = maskingName(e.reviewer)
 
         content += `<tr class="memList">`;
-        content += `<th scope="row" class="col-md-3">`
-        content += `<span>${e.reviewer}</span>`
-        content +=  `<div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
-        content += `</td>`
-        content += `<td>${e.reviewText}</td>`
+        content += `  <th scope="row" class="col-md-3">`
 
+        for(var index = 1 ; index <= e.score; index++){
+          content += `    <i class="fa-solid fa-star" style="color: blueviolet"></i>`
+        }
+        if(e.mainImage !== null){
+          content += `    <div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
+        }
+        content += `  </th>`
+        content += `  <td>${e.reviewText}</td>`
+        content += `  <td>${maskingReviewer}</td>`
         content += `</tr>`;
       })
     }

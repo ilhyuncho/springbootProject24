@@ -15,6 +15,7 @@ public class ReviewWriteReqDTO {
     private Long orderItemId;
     private Long shopItemId;
     private String reviewText;
+    private int score;              // 만족도 별 갯수
 
     @Builder.Default
     private List<String> fileNames= new ArrayList<>();

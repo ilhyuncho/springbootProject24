@@ -154,3 +154,16 @@ function initUploadResult(uploadResult){
     console.log('uploadResult.innerHTML')
 }
 
+// 모달창의 [기본 배송지 설정] 체크 박스 클릭시
+function checkMain(isCheck){
+    if(isCheck === true){
+        checkSolid.style.display = 'inline'
+        checkRegular.style.display = 'none'
+        modalMainAddressCheck.value = 'true'
+    }
+    else if(isCheck === false){
+        checkSolid.style.display = 'none'
+        checkRegular.style.display = 'inline'
+        modalMainAddressCheck.value = 'false'
+    }
+}

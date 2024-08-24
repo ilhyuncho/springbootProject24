@@ -63,10 +63,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = Review.builder()
                 .reviewer(user.getMemberId())
                 .reviewText(reviewWriteReqDTO.getReviewText())
-
-                // 수정 해야 함
-                .score(5)
-
+                .score(reviewWriteReqDTO.getScore())
                 .orderId(reviewWriteReqDTO.getOrderId())
                 .orderItemId(reviewWriteReqDTO.getOrderItemId())
                 .shopItem(shopItem)
@@ -75,8 +72,8 @@ public class ReviewServiceImpl implements ReviewService {
         // 리뷰 이미지 set
         if(reviewWriteReqDTO.getFileNames() != null){
             reviewWriteReqDTO.getFileNames().forEach(fileName ->{
-                String[] arr = fileName.split("_");
 
+                String[] arr = fileName.split("_");
                 review.addImage(arr[0], arr[1], arr[1].equals(reviewWriteReqDTO.getMainImageFileName()));
             });
         }
