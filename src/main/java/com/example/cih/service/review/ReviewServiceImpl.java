@@ -77,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
             reviewWriteReqDTO.getFileNames().forEach(fileName ->{
                 String[] arr = fileName.split("_");
 
-                review.addImage(arr[0], arr[1], false);
+                review.addImage(arr[0], arr[1], arr[1].equals(reviewWriteReqDTO.getMainImageFileName()));
             });
         }
 

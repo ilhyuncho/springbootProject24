@@ -19,4 +19,6 @@ public class ReviewWriteReqDTO {
     @Builder.Default
     private List<String> fileNames= new ArrayList<>();
 
+    String mainImageFileName;
+
 }
