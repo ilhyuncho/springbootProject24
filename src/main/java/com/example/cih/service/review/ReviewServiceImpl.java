@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
@@ -53,6 +54,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public ReviewResDTO getReview(Long reviewId) {
+
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NoSuchElementException("해당 리뷰 정보가 존재하지않습니다"));
+
+        return entityToDTO(review);
+    }
+
+    @Override
     public void writeReview(User user, ReviewWriteReqDTO reviewWriteReqDTO) {
 
         Long shopItemId = reviewWriteReqDTO.getShopItemId();
@@ -84,6 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
     private static ReviewResDTO entityToDTO(Review review) {
 
         ReviewResDTO reviewResDTO = ReviewResDTO.builder()
+                .reviewId(review.getReviewId())
                 .reviewer(review.getReviewer())
                 .reviewText(review.getReviewText())
                 .score(review.getScore())

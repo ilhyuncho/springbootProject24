@@ -38,7 +38,7 @@ public class HistoryRestController {
     }
     @ApiOperation(value = "내차 주유 or 소모품 정비 화면", notes = "")
     @GetMapping("/historyList/{targetId}/{carId}")
-    public List<HistoryCarResDTO> getListHistory( @PathVariable(name="targetId") String targetId,
+    public List<HistoryCarResDTO> getListHistory(@PathVariable(name="targetId") String targetId,
                                                   @PathVariable(name="carId") Long carId,
                                                   Principal principal){
 

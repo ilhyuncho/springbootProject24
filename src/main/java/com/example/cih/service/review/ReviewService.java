@@ -10,5 +10,6 @@ import com.example.cih.dto.review.ReviewWriteReqDTO;
 
 public interface ReviewService {
     PageResponseDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId);
+    ReviewResDTO getReview(Long reviewId);
     void writeReview(User user, ReviewWriteReqDTO reviewWriteReqDTO);
 }

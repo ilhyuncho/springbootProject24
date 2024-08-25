@@ -28,13 +28,17 @@ public class ReviewRestController {
     private final ReviewService reviewService;
     private final UserService userService;
 
-    @GetMapping
-    public PageResponseDTO<ReviewResDTO> getReview(PageRequestDTO pageRequestDTO, Long shopItemId){
+    @GetMapping("/list")
+    public PageResponseDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId){
 
         PageResponseDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
 
         log.error(listReview);
         return listReview;
+    }
+    @GetMapping("/{reviewId}")
+    public ReviewResDTO getReview(@PathVariable(name="reviewId") Long reviewId){
+        return reviewService.getReview(reviewId);
     }
 
     @ApiOperation(value = "리뷰 등록", notes = "구매자가 요청")

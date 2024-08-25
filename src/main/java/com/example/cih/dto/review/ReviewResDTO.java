@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class ReviewResDTO extends ImageListDTO {
+    private Long reviewId;
     private String reviewer;
     private String reviewText;
     private int score;

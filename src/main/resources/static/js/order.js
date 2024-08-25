@@ -32,7 +32,6 @@ async function addOrderTemporary(formObj) {
 }
 
 async function sendReview(formObj) {
-    console.log(formObj)
 
     const response = await axios.post(`/review/write`, formObj);
 
@@ -40,11 +39,18 @@ async function sendReview(formObj) {
     return response.data
 }
 
-async function getReview({shopItemId, page, size}) {
+async function getListReview({shopItemId, page, size}) {
 
-    const response = await axios.get(`/review/`, {params: {shopItemId, page, size}})
+    const response = await axios.get(`/review/list`, {params: {shopItemId, page, size}})
 
     console.log(response)
     return response.data
+}
 
+async function getReview({reviewId}) {
+
+    const response = await axios.get(`/review/${reviewId}`)
+
+    console.log(response)
+    return response.data
 }

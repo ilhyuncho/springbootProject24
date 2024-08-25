@@ -183,6 +183,38 @@
   </div>
 
 
+  <!-- 리뷰 상세 정보 모달창-->
+  <div class="modal modalReviewDetail" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">상세 리뷰</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalReviewScore">
+          </div>
+          <span class="modalReviewer"></span>
+          <div>
+            <span class="modalRegDate" style="display: block; text-align:right;"></span>
+          </div>
+
+          <hr class="my-4">
+          <pre class="lead modalReviewText"></pre>
+          <hr class="my-4">
+          <div class="modalReviewImg">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark modalReviewDetailCloseBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div> <!-- 리뷰 상세 정보 모달창-->
+
+
 
 
   <!--    axios 라이브러리 추가-->
@@ -194,6 +226,8 @@
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
+
+  const modalReviewDetail = new bootstrap.Modal(document.querySelector(".modalReviewDetail"))
 
   const shopItemId = [[${responseDTO.shopItemId}]]
   const itemName = [[${responseDTO.itemName}]]
@@ -214,7 +248,15 @@
   const tableReview = document.getElementById("tableReview");
   const pagination = document.querySelector(".pagination");
 
+  const modalReviewImg = document.querySelector(".modalReviewImg");
+  const modalReviewText = document.querySelector(".modalReviewText");
+  const modalReviewScore = document.querySelector(".modalReviewScore");
+  const modalReviewer = document.querySelector(".modalReviewer");
+  const modalRegDate = document.querySelector(".modalRegDate");
+
   const reviewViewCount = 5    // 한번에 보여줄 댓글 갯수
+  ///////////////////////////////////////////////////////////////////
+
 
   reCalculation()
 
@@ -222,7 +264,7 @@
 
 
   function resetReview(page, size){
-    getReview({shopItemId, page, size}).then(data => {
+    getListReview({shopItemId, page, size}).then(data => {
 
       printReview(data.dtoList)
       printReviewPage(data)
@@ -240,21 +282,20 @@
         dtoList.forEach(function (e, i) {
 
         const maskingReviewer = maskingName(e.reviewer)
-
+        // 문장 개행 처리
         const reviewText = e.reviewText.replace(/(?:\r\n|\r|\n)/g, '<br />');
-
 
         content += `<tr class="memList">`;
         content += `  <th scope="row" class="col-md-3">`
 
-        for(var index = 1 ; index <= e.score; index++){
+        for(let index = 1 ; index <= e.score; index++){
           content += `    <i class="fa-solid fa-star" style="color: blueviolet"></i>`
         }
         if(e.mainImage !== null){
           content += `    <div><img src="/view/${e.mainImage.uuid}_${e.mainImage.fileName}" width=150></div>`
         }
         content += `  </th>`
-        content += `  <td>${reviewText}</td>`
+        content += `<td><a onclick="javascript:showReviewModal('${e.reviewId}')" style="cursor:pointer" class="text-decoration-none">${reviewText}</a></td>`
         content += `  <td>${maskingReviewer}</td>`
         content += `  <td>${e.regDate}</td>`
         content += `</tr>`;
@@ -264,9 +305,39 @@
     tableReview.innerHTML = content
   }
 
+  function showReviewModal(reviewId){
+
+    getReview({reviewId}).then(data => {
+      setReviewDetailValue(data)  // 리뷰 상세 창 내용 설정
+      modalReviewDetail.show()
+    }).catch(e => {
+      console.log(e)
+    })
+
+  }
+  function setReviewDetailValue(data){
+
+    modalReviewText.textContent = data.reviewText
+    modalReviewer.textContent = '작성자 : ' + data.reviewer
+    modalRegDate.textContent = data.regDate
+
+    // 리뷰 별점수
+    let scoreContents = ''
+    for(let index = 1 ; index <= data.score; index++){
+      scoreContents += `<i class="fa-solid fa-star" style="color: blueviolet"></i>`
+    }
+    modalReviewScore.innerHTML = scoreContents
+
+    // 리뷰 이미지
+    let imageContents = ''
+    data.fileNames.forEach(function(file){
+      imageContents += `<img width="400" src="/view/${file.uuid}_${file.fileName}" class="rounded mgb-15">`
+    })
+    modalReviewImg.innerHTML = imageContents
+  }
   function printReviewPage(data){
 
-    var content = '';
+    let content = '';
 
     if(data.prev === true){
       content = `<li class="page-item">`
