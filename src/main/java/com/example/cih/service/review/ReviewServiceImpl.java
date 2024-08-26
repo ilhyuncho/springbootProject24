@@ -8,7 +8,7 @@ import com.example.cih.domain.shop.ShopItem;
 import com.example.cih.domain.shop.ShopItemRepository;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.review.ReviewListResDTO;
 import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.review.ReviewWriteReqDTO;
 import lombok.RequiredArgsConstructor;
@@ -31,26 +31,30 @@ public class ReviewServiceImpl implements ReviewService {
     private final ShopItemRepository shopItemRepository;
 
     @Override
-    public PageResponseDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId) {
+    public ReviewListResDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId) {
 
         ShopItem shopItem = shopItemRepository.findById(shopItemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
 
         Pageable pageable = pageRequestDTO.getPageable("reviewId");
 
+        // 리뷰 리스트 get
         Page<Review> result = reviewRepository.findByShopItem(shopItem, pageable);
 
         List<ReviewResDTO> listReviewDTO = result.getContent().stream()
                 .map(ReviewServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
 
-        listReviewDTO.forEach(log::error);
+        // 리뷰 평균 별 점수 get
+        float reviewAvgScore = reviewRepository.getReviewAvgScore(shopItemId);
 
-        return PageResponseDTO.<ReviewResDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(listReviewDTO)
-                .total((int)result.getTotalElements()) // 수정 해야 함!!!
-                .build();
+
+        log.error(reviewAvgScore);
+
+        return new ReviewListResDTO<ReviewResDTO>(pageRequestDTO
+                ,listReviewDTO
+                ,(int)result.getTotalElements() // 수정 해야 함!!!
+                ,reviewAvgScore);
     }
 
     @Override

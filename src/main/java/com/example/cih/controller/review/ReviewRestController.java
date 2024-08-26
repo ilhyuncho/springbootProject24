@@ -3,7 +3,7 @@ package com.example.cih.controller.review;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
+import com.example.cih.dto.review.ReviewListResDTO;
 import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.review.ReviewWriteReqDTO;
 import com.example.cih.service.review.ReviewService;
@@ -29,9 +29,9 @@ public class ReviewRestController {
     private final UserService userService;
 
     @GetMapping("/list")
-    public PageResponseDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId){
+    public ReviewListResDTO<ReviewResDTO> getListReview(PageRequestDTO pageRequestDTO, Long shopItemId){
 
-        PageResponseDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
+        ReviewListResDTO<ReviewResDTO> listReview = reviewService.getListReview(pageRequestDTO, shopItemId);
 
         log.error(listReview);
         return listReview;

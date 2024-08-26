@@ -159,7 +159,12 @@
   <!------------------------------리뷰 표시--------------------------------->
   <div class="h3 text-danger text-left">
     <span th:text="|리뷰|"></span>
+    &nbsp;
+    <span class="reviewCount" style="font-size : 17pt; color:royalblue"></span>
+    &nbsp;
+    <span class="reviewAvgScore" style="font-size : 13pt; color:blueviolet"></span>
   </div>
+
   <div class="row mt-3">
     <table class="table" th:width="100px">
       <thead>
@@ -247,6 +252,8 @@
 
   const tableReview = document.getElementById("tableReview");
   const pagination = document.querySelector(".pagination");
+  const reviewCount = document.querySelector(".reviewCount");
+  const reviewAvgScore = document.querySelector(".reviewAvgScore");
 
   const modalReviewImg = document.querySelector(".modalReviewImg");
   const modalReviewText = document.querySelector(".modalReviewText");
@@ -265,6 +272,9 @@
 
   function resetReview(page, size){
     getListReview({shopItemId, page, size}).then(data => {
+
+      reviewCount.textContent = data.total
+      reviewAvgScore.textContent = '( 별점 평균 : ' + data.reviewAvgScore + ' )'
 
       printReview(data.dtoList)
       printReviewPage(data)
