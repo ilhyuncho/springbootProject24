@@ -70,6 +70,9 @@
         </div>
 
         <div class="card-body">
+          <input type="hidden" name="sellType" th:value="${carViewDTO.sellType}">
+
+
 
           <div class="input-group mb-3">
             <span class="input-group-text">고객 제안 가격</span>
@@ -79,6 +82,8 @@
             <span class="input-group-text">최고 제안 가격</span>
             <input type="text" class="form-control highProposalPrice" readonly>
           </div>
+
+
 
           <div class="row mt-3" th:if="${#authentication.principal != null}"
                th:with="user=${#authentication.principal}">
@@ -90,20 +95,12 @@
           </div>
 
           <div class="row mt-5">
-            <h5 class="card-title">가격 제안 List</h5>
-          </div>
-
-          <div class="row mt-3">
+            <h5 class="card-title">제안 List</h5>
             <ul class="list-group buyingCarList">
               <!-- 리스트 영역-->
             </ul>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col">
-              <ul class="pagination buyingCarListPaging">
-                <!--                 페이징 처리-->
-              </ul>
+            <div class="pagination mt-3 buyingCarListPaging">
+              <!-- 페이징 처리-->
             </div>
           </div>
 
@@ -239,9 +236,9 @@
     let str = '';
     let btnType = 'new'
 
-    console.log('printList')
-    console.log(carOwner)
-    console.log(currentUser)
+    // console.log('printList')
+    // console.log(carOwner)
+    // console.log(currentUser)
 
     if(carOwner === currentUser){ // 해당 차 소유자 일 경우
       btnType = 'hidden'
@@ -254,8 +251,8 @@
         let registerTime = stringToDateFormat(dto.registerTime)
 
         // 해당 차에 가격 제안을 했다면
-        if(Object.is(dto.userName, currentUser)){
-            userProposalPrice.value = proposalPrice
+        if(Object.is(dto.memberId, currentUser)){
+          userProposalPrice.value = proposalPrice
 
             btnType = 'modify'
         }

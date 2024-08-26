@@ -1,5 +1,6 @@
 package com.example.cih.dto.car;
 
+import com.example.cih.domain.sellingCar.SellType;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.dto.ImageListDTO;
 import lombok.*;
@@ -40,6 +41,7 @@ public class CarViewResDTO extends ImageListDTO {        // 내차 정보 로딩
 
     private Long sellingCarId;
     private SellingCarStatus sellingCarStatus;
+    private SellType sellType;                      // 차량 판매 방식
 
     @Builder(builderMethodName = "writeCarViewNewDTOBuilder")
     public CarViewResDTO(Long carId, String userName, String memberId, String carNumber, String carGrade, String carModel, int carYears,

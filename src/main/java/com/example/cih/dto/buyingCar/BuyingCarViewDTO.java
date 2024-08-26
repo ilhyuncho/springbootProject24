@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class BuyingCarViewDTO {
 
     private String userName;
+    private String memberId;
     private int proposalPrice;
     private BuyCarStatus buyCarStatus;
     private String carNumber;
