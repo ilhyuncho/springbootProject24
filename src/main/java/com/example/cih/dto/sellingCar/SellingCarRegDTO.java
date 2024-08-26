@@ -12,6 +12,7 @@ public class SellingCarRegDTO {
 
     private Long carId;
     private int requiredPrice;
+    private int sellType;
     private Boolean isLike;
     private SellingCarStatus sellingCarStatus;   // 판매 중인 차량 취소 or 완료 전달
 }

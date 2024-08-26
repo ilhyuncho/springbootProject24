@@ -251,7 +251,7 @@
       for(const dto of dtoList){
 
         let proposalPrice = makePriceCurrency(dto.proposalPrice)
-        let registerDate = stringToDateFormat(dto.registerDate)
+        let registerTime = stringToDateFormat(dto.registerTime)
 
         // 해당 차에 가격 제안을 했다면
         if(Object.is(dto.userName, currentUser)){
@@ -267,7 +267,7 @@
                     <span class="col-2">${dto.carNumber}</span>
                     <span class="col-1">${dto.carModel}</span>
                     <span class="col-2">${dto.buyCarStatus}</span>
-                    <span class="col-4" data-rno="${dto.userName}">${registerDate}</span>
+                    <span class="col-4" data-rno="${dto.userName}">${registerTime}</span>
                </li>`
       }
     }

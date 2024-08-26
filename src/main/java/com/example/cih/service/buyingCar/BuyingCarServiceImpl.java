@@ -57,9 +57,11 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         String keyword = pageRequestDTO.getKeyword();
         Pageable pageable = pageRequestDTO.getPageable("proposalPrice");
 
+        // 해당 차의 구매 요청 리스트 get
         Page<BuyingCarViewDTO> resultDTO = buyingCarRepository.getBuyingCarInfo(sellingCarId, pageable);
         List<BuyingCarViewDTO> listBuyingCarViewDTO = resultDTO.getContent();
 
+        // 구매 희망 최고 가격 get
         int maxProposalPrice = 0;
         if(listBuyingCarViewDTO.size() > 0){
             // stream max, Comparator 활용

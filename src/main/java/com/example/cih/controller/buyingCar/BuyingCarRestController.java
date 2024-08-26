@@ -73,6 +73,7 @@ public class BuyingCarRestController {
 
         return buyingCarService.getPageBuyingCarInfo(pageRequestDTO, sellingCarId);
     }
+
     @ApiOperation(value = "구매 희망 최고 가격", notes = "")
     @GetMapping("/highProposalPrice")
     public BuyingCarViewDTO getHighProposalPrice(Long sellingCarId){

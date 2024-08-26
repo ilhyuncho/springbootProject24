@@ -75,6 +75,8 @@ public class SellingCarServiceImpl implements SellingCarService {
         // 검색 기록 save ( 임시로 이 위치 - 위 if문으로 들어가야 함 )
         userSearchCarHistoryService.insertSearchCarHistory(user, sellingCar);
 
+        log.error(sellingCarResDTO);
+
         return sellingCarResDTO;
     }
 
@@ -136,7 +138,7 @@ public class SellingCarServiceImpl implements SellingCarService {
             throw new OwnerCarNotFoundException("차량 판매시 최소 한장의 대표 사진을 등록해야 합니다!!");
         }
 
-        car.registerSellingCar(sellingCarRegDTO.getRequiredPrice());
+        car.registerSellingCar(sellingCarRegDTO);
 
         // 포인트 획득 처리
         userPointHistoryService.gainUserPoint(user.getMemberId(), UserActionType.ACTION_REG_SELLING_CAR, car.getCarNumber());
@@ -187,6 +189,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carYears(sellingCar.getCar().getCarYears())
                 .sellingCarId(sellingCar.getSellingCarId())
                 .viewCount(sellingCar.getViewCount())
+                .sellTypeText(sellingCar.getSellType().getTypeName())
                 .isLike(false)
                 .build();
 

@@ -8,6 +8,7 @@ import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
@@ -76,19 +77,18 @@ public class Car extends BaseEntity {
         this.user = user;
     }
 
-    public void registerSellingCar(int RequiredPrice){
+    public void registerSellingCar(SellingCarRegDTO sellingCarRegDTO){
 
         this.sellingCar = SellingCar.builder()
                 .car(this)
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
-                .sellType(SellType.SELL_AUCTION) // 임시로
-                .RequiredPrice(RequiredPrice)
+                .sellType(SellType.fromValue(sellingCarRegDTO.getSellType()))
+                .RequiredPrice(sellingCarRegDTO.getRequiredPrice())
                 .likeCount(0)
                 .viewCount(0)
                 .user(this.user)
                 .build();
     }
-
     //car 엔티티 에서 carImage 엔티티 객체들을 모두 관리  begin---------------
 
     public void resetImages(List<String> fileNames, String mainImageFileName){
