@@ -83,9 +83,9 @@
           <div class="row mt-3" th:if="${#authentication.principal != null}"
                th:with="user=${#authentication.principal}">
             <div class="float-end">
-              <a th:if="${user != null && user.username == carViewDTO.userName}">
+<!--              <a th:if="${user != null && user.username == carViewDTO.userName}">-->
                  <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
-              </a>
+<!--              </a>-->
             </div>
           </div>
 
@@ -177,7 +177,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
   const carId = [[${carViewDTO.carId}]]
-  const carOwner = [[${carViewDTO.userName}]]
+  const carOwner = [[${carViewDTO.memberId}]]
   const sellingCarId = [[${carViewDTO.sellingCarId}]]
 
   // 삭제 할지 정하자..
@@ -203,6 +203,8 @@
   printBuyingCarList(page,size)
 
   function initOfferBtn(data) {
+
+    console.log('initOfferBtn : ' + data)
 
     if(data === 'hidden'){
       purchaseOfferBtn.setAttribute("hidden", true)
@@ -237,9 +239,13 @@
     let str = '';
     let btnType = 'new'
 
-    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
-    //   btnType = 'hidden'
-    // }
+    console.log('printList')
+    console.log(carOwner)
+    console.log(currentUser)
+
+    if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+      btnType = 'hidden'
+    }
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){

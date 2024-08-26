@@ -48,13 +48,12 @@ public class ReviewServiceImpl implements ReviewService {
         // 리뷰 평균 별 점수 get
         float reviewAvgScore = reviewRepository.getReviewAvgScore(shopItemId);
 
-
-        log.error(reviewAvgScore);
-
-        return new ReviewListResDTO<ReviewResDTO>(pageRequestDTO
-                ,listReviewDTO
-                ,(int)result.getTotalElements() // 수정 해야 함!!!
-                ,reviewAvgScore);
+        return ReviewListResDTO.<ReviewResDTO>withSuper()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(listReviewDTO)
+                .total((int)result.getTotalElements()) // 수정 해야 함!!!
+                .reviewAvgScore(reviewAvgScore)
+                .build();
     }
 
     @Override

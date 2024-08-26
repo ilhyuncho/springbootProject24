@@ -118,6 +118,7 @@ public class UserCarServiceImpl implements UserCarService {
         CarViewResDTO carViewResDTO = CarViewResDTO.writeCarViewNewDTOBuilder()
                 .carId(car.getCarId())
                 .userName(car.getUser().getUserName())
+                .memberId(car.getUser().getMemberId())
                 .carNumber(car.getCarNumber())
                 .carColors(car.getCarColors())
                 .carKm(car.getCarKm())

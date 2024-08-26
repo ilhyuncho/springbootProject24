@@ -68,9 +68,12 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                     .get().getProposalPrice();
         }
 
-        return new BuyingCarListResDTO<BuyingCarViewDTO>(
-                pageRequestDTO, listBuyingCarViewDTO,
-               (int)resultDTO.getTotalElements(), maxProposalPrice);
+        return BuyingCarListResDTO.<BuyingCarViewDTO>withSuper()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(listBuyingCarViewDTO)
+                .total((int)resultDTO.getTotalElements())
+                .highProposalPrice(maxProposalPrice)
+                .build();
     }
 
     @Override

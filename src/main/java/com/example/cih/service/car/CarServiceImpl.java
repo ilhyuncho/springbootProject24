@@ -43,6 +43,7 @@ public class CarServiceImpl implements CarService {
                 .carModel(car.getCarModel())
                 .carYears(car.getCarYears())
                 .userName(car.getUser().getUserName())
+                .memberId(car.getUser().getMemberId())
                 .build();
 
         // 판매 진행 상황 매핑

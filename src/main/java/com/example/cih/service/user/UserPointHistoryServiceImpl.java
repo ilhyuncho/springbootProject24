@@ -119,14 +119,15 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService {
         // 하지만 list안이 객체라면 수정 가능 하다..( 주의 해서 사용해야 함 )
         //unModifyCartDTOList.get(0).setItemName("update Temp");
 
-        return new UserListPointHistoryResDTO<UserPointHistoryResDTO>(
-                pageRequestDTO, dtoList,
-                (int)result.getTotalElements(), user.getMPoint());
-//        return PageResponseDTO.<UserMissionResDTO>withAll()
-//                .pageRequestDTO(pageRequestDTO)
-//                .dtoList(dtoList)
-//                .total((int)result.getTotalElements())
-//                .build();
+//        return new UserListPointHistoryResDTO<UserPointHistoryResDTO>(
+//                pageRequestDTO, dtoList,
+//                (int)result.getTotalElements(), user.getMPoint());
+        return UserListPointHistoryResDTO.<UserPointHistoryResDTO>withSuper()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .totalMPoint(user.getMPoint())
+                .build();
     }
 
     public static PointSituation convertPointSituation(UserActionType userActionType){

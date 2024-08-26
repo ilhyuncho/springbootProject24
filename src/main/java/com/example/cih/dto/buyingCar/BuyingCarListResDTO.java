@@ -2,6 +2,7 @@ package com.example.cih.dto.buyingCar;
 
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -13,6 +14,7 @@ public class BuyingCarListResDTO<E> extends PageResponseDTO<E> {
 
     int highProposalPrice;
 
+    @Builder(builderMethodName = "withSuper")
     public BuyingCarListResDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total,
                                int highProposalPrice ) {
         super(pageRequestDTO, dtoList, total);
