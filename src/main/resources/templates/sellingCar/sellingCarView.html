@@ -100,7 +100,7 @@
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">휴대 전화</span>
-            <input type="text" class="form-control phoneNumber" placeholder="010-0000-0000" value="01012345678">
+            <input type="text" class="form-control phoneNumber" placeholder="연락처를 입력하세요" value="01012345678">
           </div>
 
         </div>
@@ -162,6 +162,38 @@
   // 좋아요 표시 결정
   viewCarLike([[${responseDTO.isLike}]])
 
+
+
+  // [상담 요청] 전송
+  document.querySelector(".sendConsultRequestBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    const formObj = {
+      offerType:"consultRequest",
+      phoneNumber:phoneNumber.value
+    }
+    offerRequest(formObj)
+
+    requestConsultModal.hide()
+
+  }, false)
+
+  // [경매 요청] 전송
+  document.querySelector(".sendAuctionRequestBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    const formObj = {
+      offerType:"auctionRequest",
+      requestPrice:auctionHopePrice.value
+    }
+    offerRequest(formObj)
+
+    requestAuctionModal.hide()
+
+  }, false)
+
   // 상담 요청 or 취소 -버튼 클릭
   function requestSellingCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
@@ -176,75 +208,29 @@
       if(!confirm("정말로 취소 하겠습니까?")){
         return
       }
-      updateRequest(offerType)
+
+      const formObj = {
+        offerType:offerType
+      }
+      offerRequest(formObj)
     }
   }
 
-  function updateRequest(offerType){
-    const formObj = {
-      offerType:offerType,
+  function offerRequest(addFormObj){  // 구매 관련 등록 or 변경 요청
+    let formObj = {
       carId:carId,
       sellingCarId:sellingCarId,
     }
 
-    updateOffer(formObj).then(result => {
-
-      alert('상담 요청이 취소 되었습니다')
-
-      // 화면 재 갱신
-      self.location = '/sellingCar/view/' +  sellingCarId
-
-    }).catch(e => {
-      errorResponse(e)
-    })
-  }
-
-  function offerRequest(formObj){
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
 
     requestBuyingCar(formObj).then(result => {
-
-      requestConsultModal.hide()
-
       // 화면 재 갱신
       self.location = '/sellingCar/view/' +  sellingCarId
-
     }).catch(e => {
       errorResponse(e)
     })
   }
-
-  // [상담 요청] 전송
-  document.querySelector(".sendConsultRequestBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    const formObj = {
-      offerType:"consultRequest",
-      carId:carId,
-      sellingCarId:sellingCarId,
-      phoneNumber:phoneNumber.value
-    }
-
-    offerRequest(formObj)
-
-  }, false)
-
-  // [경매 요청] 전송
-  document.querySelector(".sendAuctionRequestBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    const formObj = {
-      offerType:"auctionRequest",
-      carId:carId,
-      sellingCarId:sellingCarId,
-      requestPrice:auctionHopePrice.value
-    }
-
-    offerRequest(formObj)
-
-  }, false)
-
-
 
 </script>

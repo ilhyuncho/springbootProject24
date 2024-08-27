@@ -9,17 +9,6 @@ async function requestBuyingCar(formObj) {
     return response.data
 }
 
-async function updateOffer(formObj) {
-
-    console.log("updateOffer....................")
-    console.log(formObj)
-
-    const response = await axios.post(`/buyingCar/update`, formObj)
-
-    //console.log(response)
-    return response.data
-}
-
 async function getList({sellingCarId, page, size}){
 
     const result = await axios.get(`/buyingCar/list`, {params: {sellingCarId, page, size}})

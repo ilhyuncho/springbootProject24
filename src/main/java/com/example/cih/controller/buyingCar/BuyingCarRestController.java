@@ -1,5 +1,6 @@
 package com.example.cih.controller.buyingCar;
 
+import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
@@ -28,7 +29,7 @@ public class BuyingCarRestController {
     private final BuyingCarService buyingCarService;
     private final UserService userService;
 
-    @ApiOperation(value = "차량 구매 제안 or 차량 구매 상담 요청", notes = "")
+    @ApiOperation(value = "차량 구매 제안 or 취소", notes = "")
     @PostMapping("/offer")
     public Map<String,String> postOffer(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
                                                  BindingResult bindingResult,
@@ -40,27 +41,16 @@ public class BuyingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
-        buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
+        // 신청 상태 get
+        BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return resultMap;
-    }
-
-    @ApiOperation(value = "차량 구매( or 상담 요청 ) 취소", notes = "")
-    @PostMapping("/update")
-    public Map<String,String> postCancel(@Valid @RequestBody BuyingCarRegDTO buyingCarRegDTO,
-                                    BindingResult bindingResult,
-                                    Principal principal ) throws BindException {
-
-        if(bindingResult.hasErrors()){
-            log.error("has errors.....");
-            throw new BindException(bindingResult);
+        if( buyCarStatus.equals(BuyCarStatus.AUCTION_REQUEST) ||
+                buyCarStatus.equals(BuyCarStatus.CONSULT_REQUEST) ){
+            buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
         }
-
-        User user = userService.findUser(principal.getName());
-
-        buyingCarService.updateBuyingCar(user, buyingCarRegDTO);
+        else{
+            buyingCarService.updateBuyingCar(user, buyingCarRegDTO);
+        }
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
