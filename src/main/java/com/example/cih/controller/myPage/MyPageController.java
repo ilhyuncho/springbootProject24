@@ -8,7 +8,6 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.dto.car.CarInfoReqDTO;
 import com.example.cih.dto.car.CarViewResDTO;
-import com.example.cih.dto.user.UserDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
 import com.example.cih.service.car.UserCarService;
 import com.example.cih.service.user.UserService;

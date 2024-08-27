@@ -19,7 +19,7 @@ public class BuyingCarViewDTO {
     private String carNumber;
     private String carModel;
     private Long carId;
-
+    private Long sellingCarId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registerTime;

@@ -146,6 +146,7 @@ public class BuyingCarServiceImpl implements BuyingCarService {
                 .carNumber(buyingCar.getSellingCar().getCar().getCarNumber())
                 .carModel(buyingCar.getSellingCar().getCar().getCarModel())
                 .carId(buyingCar.getSellingCar().getCar().getCarId())
+                .sellingCarId(buyingCar.getSellingCar().getSellingCarId())
                 .build();
     }
 

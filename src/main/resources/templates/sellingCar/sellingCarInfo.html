@@ -66,11 +66,13 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          구매 희망 가격
+          구매 제안 정보
         </div>
 
         <div class="card-body">
           <input type="hidden" name="sellType" th:value="${carViewDTO.sellType}">
+
+
 
 
 
@@ -82,6 +84,8 @@
             <span class="input-group-text">최고 제안 가격</span>
             <input type="text" class="form-control highProposalPrice" readonly>
           </div>
+
+
 
 
 
@@ -176,8 +180,6 @@
   const carId = [[${carViewDTO.carId}]]
   const carOwner = [[${carViewDTO.memberId}]]
   const sellingCarId = [[${carViewDTO.sellingCarId}]]
-
-  // 삭제 할지 정하자..
   const currentUser = [[${#authentication.principal.username}]]
 
   const purchaseOfferModal = new bootstrap.Modal(document.querySelector(".purchaseOfferModal"))

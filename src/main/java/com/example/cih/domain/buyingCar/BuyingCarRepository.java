@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,7 @@ public interface BuyingCarRepository extends JpaRepository<BuyingCar, Long>, Buy
 //            "where b.user.userId = u.userId and b.sellingCar.sellingCarId=?1")
 //    Iterable<BuyingCarViewDTO> getBuyingCarInfo1(Long sellingCarId);
 
-    @Query(value="select new com.example.cih.dto.buyingCar.BuyingCarViewDTO(u.userName, u.memberId, b.proposalPrice, b.buyCarStatus, c.carNumber, c.carModel, c.carId, b.registerTime) " +
+    @Query(value="select new com.example.cih.dto.buyingCar.BuyingCarViewDTO(u.userName, u.memberId, b.proposalPrice, b.buyCarStatus, c.carNumber, c.carModel, c.carId, b.sellingCar.sellingCarId, b.registerTime) " +
                  "from BuyingCar b, User u, Car c where b.user.userId = u.userId " +
             "and b.sellingCar.car.carId = c.carId and b.sellingCar.sellingCarId=?1 and b.isActive = true and b.sellingCar.sellType = 1",
 

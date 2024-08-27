@@ -68,6 +68,8 @@
                        class="text-decoration-none">[[${dto.carNumber}]]
                       <span class="badge progress-bar-success"
                             style="background-color: #0a53be">[[${dto.sellingCarStatusText}]]</span>
+                      <span class="badge progress-bar-success"
+                            style="background-color:forestgreen">[[${dto.sellTypeText}]]</span>
                     </a>
                     <div>
                       <img th:src="|/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}|" th:width="150"

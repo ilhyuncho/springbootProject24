@@ -29,12 +29,16 @@
                             <th scope="row">[[${dto.carNumber}]]</th>
                             <td>[[${dto.carModel}]]</td>
                             <td>[[${dto.proposalPrice}]]</td>
+
                             <td>[[${dto.buyCarStatus}]]</td>
                             <td>
                                 <a th:href="|@{'/sellingCar/' + ${dto.carId}}|" class="text-decoration-none">조회</a>
                             </td>
                             <td>
-                                <a th:onclick="javascript:sendCancelOffer([[${dto.carId}]])" style="cursor:pointer ">신청 취소</a>
+                                <a th:if="${#strings.endsWith(dto.buyCarStatus, 'CANCEL') == false}">
+                                    <button type="button" class="btn btn-primary"
+                                            th:onclick="sendCancelOffer([[${dto.carId}]],[[${dto.sellingCarId}]])">신청 취소</button>
+                                </a>
                             </td>
                         </tr>
                         </tbody>
@@ -55,16 +59,17 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    function sendCancelOffer(carId){
+    function sendCancelOffer(carId, sellingCarId){
         console.log(carId)
 
         const formObj = {
-            offerType:'cancel',
+            offerType:'requestCancel',
             carId:carId,
-            requestPrice:0
+            requestPrice:0,
+            sellingCarId:sellingCarId,
         }
 
-        cancelOffer(formObj).then(result=>{
+        updateOffer(formObj).then(result=>{
             alert('정상적으로 삭제 되었습니다')
 
             self.location = '/order/list' // 자바스크립트로 다른 url 호출
