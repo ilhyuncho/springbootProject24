@@ -48,13 +48,22 @@
         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
       </div>
 
-      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}" th:with="buyCarStatus = ${responseDTO.buyCarStatus ==
-                                T(com.example.cih.domain.buyingCar.BuyCarStatus).REQUEST_CONSULT ? 'REQUEST_CONSULT' : ''}">
+      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}"
+           th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
 
-        <button type="submit" th:if="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary"
-                th:text="|상담 요청 취소|" data-bs-target="requestCancel" th:onclick="requestSellCar(this)"></button>
-        <button type="submit" th:unless="${buyCarStatus == 'REQUEST_CONSULT'}" class="btn btn-primary"
-                th:text="|상담 요청|" data-bs-target="requestConsult" th:onclick="requestSellCar(this)"></button>
+        <div th:if="${#strings.equals(responseDTO.sellTypeText, '상담')}">
+            <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                    th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellCar(this)"></button>
+            <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
+                    th:text="|상담 요청|" data-bs-target="consultRequest" th:onclick="requestSellCar(this)"></button>
+        </div>
+        <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
+            <button type="submit" th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}" class="btn btn-primary"
+                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="auctionParticipate(this)"></button>
+            <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}" class="btn btn-primary"
+                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="auctionParticipate(this)"></button>
+        </div>
+
       </div>
 
       <div class="h4" th:text="${responseDTO.buyCarStatus}"></div>
@@ -79,9 +88,32 @@
     </div>
 
 
-
   <!-- 상담 요청 모달창-->
   <div class="modal requestConsultModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">상담 신청</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">휴대 전화</span>
+            <input type="text" class="form-control phoneNumber" placeholder="010-0000-0000" value="01012345678">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger sendRequestBtn">신청</button>
+          <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>  <!-- 상담 요청 모달창-->
+
+  <!-- 경매 참여 모달창-->
+  <div class="modal requestAuctionModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -115,9 +147,10 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+  const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
+  const requestAuctionModal = new bootstrap.Modal(document.querySelector(".requestAuctionModal"))
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
-  const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
   const phoneNumber = document.querySelector(".phoneNumber")
 
   const checkSolid = document.getElementById("checkSolid");
@@ -142,14 +175,29 @@
   function requestSellCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
 
-    if( offerType === 'requestConsult'){
+    if( offerType === 'consultRequest'){
       requestConsultModal.show()
     }
     else{
       if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
         return
       }
-      requestCancel()
+      consultCancel()
+    }
+  }
+
+  // 경매 참여
+  function auctionParticipate(obj){
+    const offerType = obj.getAttribute("data-bs-target")
+
+    if( offerType === 'consultRequest'){
+      requestAuctionModal.show()
+    }
+    else{
+      if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
+        return
+      }
+      consultCancel()
     }
   }
 
@@ -168,9 +216,9 @@
     })
   }
 
-  function requestCancel(){
+  function consultCancel(){
     const formObj = {
-      offerType:'requestCancel',
+      offerType:'consultCancel',
       carId:carId,
       sellingCarId:sellingCarId,
     }
@@ -193,7 +241,7 @@
     e.preventDefault()
 
     const formObj = {
-      offerType:"requestConsult",
+      offerType:"consultRequest",
       carId:carId,
       sellingCarId:sellingCarId,
       phoneNumber:phoneNumber.value

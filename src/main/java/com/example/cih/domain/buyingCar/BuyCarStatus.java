@@ -14,8 +14,11 @@ public enum BuyCarStatus {
     GET_CAR("getCar",4), // 구매 성공
     FAIL_CAR("failCar", 5), // 구매 실패
 
-    REQUEST_CONSULT("requestConsult",6), // 상담 신청
-    REQUEST_CANCEL("requestCancel",7); // 상담 신청 취소
+    CONSULT_REQUEST("consultRequest",6), // 상담 신청
+    CONSULT_CANCEL("consultCancel",7), // 상담 신청 취소
+
+    AUCTION_REQUEST("auctionRequest",8), // 경매 참여
+    AUCTION_CANCEL("auctionCancel",9); // 경매 참여 취소
 
     private final static Map<String, BuyCarStatus> valueMap = Arrays.stream(BuyCarStatus.values())
             .collect(Collectors.toMap(BuyCarStatus::getName, Function.identity()));

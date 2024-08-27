@@ -52,7 +52,9 @@ public class BuyingCar {
 
     public void changeBuyCarStatus(BuyCarStatus buyCarStatus){
 
-        if(buyCarStatus == BuyCarStatus.PROPOSE_CANCEL || buyCarStatus == BuyCarStatus.REQUEST_CANCEL)
+        if(buyCarStatus == BuyCarStatus.PROPOSE_CANCEL
+                || buyCarStatus == BuyCarStatus.CONSULT_CANCEL
+                || buyCarStatus == BuyCarStatus.AUCTION_CANCEL )
         {
             isActive = false;
         }
