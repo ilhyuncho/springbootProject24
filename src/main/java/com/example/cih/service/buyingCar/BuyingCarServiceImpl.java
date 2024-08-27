@@ -107,12 +107,12 @@ public class BuyingCarServiceImpl implements BuyingCarService {
         }
 
         BuyingCar buyingCar = BuyingCar.builder()
-                .proposalPrice(buyingCarRegDTO.getRequestPrice())
-                .phoneNumber(buyingCarRegDTO.getPhoneNumber())
                 .user(user)
                 .sellingCar(sellingCar)
                 .buyCarStatus(buyCarStatus)
                 .isActive(true)
+                .proposalPrice(buyingCarRegDTO.getRequestPrice())   // 경매 시 요청 가격
+                .phoneNumber(buyingCarRegDTO.getPhoneNumber())      // 상담 시 전달한 전화번호
                 .build();
         buyingCarRepository.save(buyingCar);
     }

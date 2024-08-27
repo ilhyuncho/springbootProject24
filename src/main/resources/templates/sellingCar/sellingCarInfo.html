@@ -326,7 +326,7 @@
 
   function sendPurchaseOffer(formObj) {
 
-    createOffer(formObj).then(result => {
+    requestBuyingCar(formObj).then(result => {
 
       printBuyingCarList(1,10)
       initModalDisplay(formObj)

@@ -167,3 +167,29 @@ function checkMain(isCheck){
         modalMainAddressCheck.value = 'false'
     }
 }
+
+function sellingCarLike(isLike){
+    const formObj = {
+        carId:carId,
+        isLike:isLike,
+    }
+
+    sendLike(formObj).then(result => {
+
+        viewCarLike(isLike)
+
+    }).catch(e => {
+        errorResponse(e)
+    })
+}
+
+function viewCarLike(isLike){
+    if(isLike === true){
+        checkSolid.style.display = 'inline'
+        checkRegular.style.display = 'none'
+    }
+    else if(isLike === false){
+        checkSolid.style.display = 'none'
+        checkRegular.style.display = 'inline'
+    }
+}

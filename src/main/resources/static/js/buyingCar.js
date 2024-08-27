@@ -1,6 +1,6 @@
-async function createOffer(formObj) {
+async function requestBuyingCar(formObj) {
 
-    console.log("createOffer....................")
+    console.log("requestBuyingCar....................")
     console.log(formObj)
 
     const response = await axios.post(`/buyingCar/offer`, formObj)

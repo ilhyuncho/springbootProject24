@@ -53,15 +53,15 @@
 
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '상담')}">
             <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
-                    th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellCar(this)"></button>
+                    th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this)"></button>
             <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
-                    th:text="|상담 요청|" data-bs-target="consultRequest" th:onclick="requestSellCar(this)"></button>
+                    th:text="|상담 요청|" data-bs-target="consultRequest" th:onclick="requestSellingCar(this)"></button>
         </div>
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
             <button type="submit" th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}" class="btn btn-primary"
-                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="auctionParticipate(this)"></button>
+                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
             <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}" class="btn btn-primary"
-                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="auctionParticipate(this)"></button>
+                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
         </div>
 
       </div>
@@ -105,7 +105,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendRequestBtn">신청</button>
+          <button type="button" class="btn btn-danger sendConsultRequestBtn">신청</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
         </div>
       </div>
@@ -118,18 +118,18 @@
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">상담 신청</h5>
+          <h5 class="modal-title">경매 참여</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">휴대 전화</span>
-            <input type="text" class="form-control phoneNumber" placeholder="010-0000-0000" value="01012345678">
+            <span class="input-group-text">희망 가격</span>
+            <input type="text" class="form-control auctionHopePrice" placeholder="경매 희망 가격을 기입하세요" value="1000000">
           </div>
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendRequestBtn">신청</button>
+          <button type="button" class="btn btn-danger sendAuctionRequestBtn">신청</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
         </div>
       </div>
@@ -149,9 +149,12 @@
 
   const requestConsultModal = new bootstrap.Modal(document.querySelector(".requestConsultModal"))
   const requestAuctionModal = new bootstrap.Modal(document.querySelector(".requestAuctionModal"))
+
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
+
   const phoneNumber = document.querySelector(".phoneNumber")
+  const auctionHopePrice = document.querySelector(".auctionHopePrice")
 
   const checkSolid = document.getElementById("checkSolid");
   const checkRegular = document.getElementById("checkRegular");
@@ -159,66 +162,27 @@
   // 좋아요 표시 결정
   viewCarLike([[${responseDTO.isLike}]])
 
-
-  function viewCarLike(isLike){
-    if(isLike === true){
-      checkSolid.style.display = 'inline'
-      checkRegular.style.display = 'none'
-    }
-    else if(isLike === false){
-      checkSolid.style.display = 'none'
-      checkRegular.style.display = 'inline'
-    }
-  }
-
   // 상담 요청 or 취소 -버튼 클릭
-  function requestSellCar(obj){
+  function requestSellingCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
 
     if( offerType === 'consultRequest'){
       requestConsultModal.show()
     }
-    else{
-      if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
-        return
-      }
-      consultCancel()
-    }
-  }
-
-  // 경매 참여
-  function auctionParticipate(obj){
-    const offerType = obj.getAttribute("data-bs-target")
-
-    if( offerType === 'consultRequest'){
+    else if(offerType === 'auctionRequest'){
       requestAuctionModal.show()
     }
     else{
-      if(!confirm("정말로 상담 요청을 취소 하겠습니까?")){
+      if(!confirm("정말로 취소 하겠습니까?")){
         return
       }
-      consultCancel()
+      updateRequest(offerType)
     }
   }
 
-  function sellingCarLike(isLike){
+  function updateRequest(offerType){
     const formObj = {
-      carId:carId,
-      isLike:isLike,
-    }
-
-    sendLike(formObj).then(result => {
-
-      viewCarLike(isLike)
-
-    }).catch(e => {
-      errorResponse(e)
-    })
-  }
-
-  function consultCancel(){
-    const formObj = {
-      offerType:'consultCancel',
+      offerType:offerType,
       carId:carId,
       sellingCarId:sellingCarId,
     }
@@ -235,8 +199,22 @@
     })
   }
 
+  function offerRequest(formObj){
+
+    requestBuyingCar(formObj).then(result => {
+
+      requestConsultModal.hide()
+
+      // 화면 재 갱신
+      self.location = '/sellingCar/view/' +  sellingCarId
+
+    }).catch(e => {
+      errorResponse(e)
+    })
+  }
+
   // [상담 요청] 전송
-  document.querySelector(".sendRequestBtn").addEventListener("click", function (e){
+  document.querySelector(".sendConsultRequestBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
 
@@ -247,18 +225,26 @@
       phoneNumber:phoneNumber.value
     }
 
-    createOffer(formObj).then(result => {
-
-      requestConsultModal.hide()
-
-      // 화면 재 갱신
-      self.location = '/sellingCar/view/' +  sellingCarId
-
-    }).catch(e => {
-      errorResponse(e)
-    })
+    offerRequest(formObj)
 
   }, false)
+
+  // [경매 요청] 전송
+  document.querySelector(".sendAuctionRequestBtn").addEventListener("click", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+
+    const formObj = {
+      offerType:"auctionRequest",
+      carId:carId,
+      sellingCarId:sellingCarId,
+      requestPrice:auctionHopePrice.value
+    }
+
+    offerRequest(formObj)
+
+  }, false)
+
 
 
 </script>
