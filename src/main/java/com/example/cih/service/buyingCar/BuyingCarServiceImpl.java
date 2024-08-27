@@ -40,9 +40,13 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     }
 
     @Override
-    public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) {
-        return buyingCarRepository.findByUser(user).stream()
-                .map(BuyingCarServiceImpl::entityToDTO).collect(Collectors.toList());
+    public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) { // 차량 구매 내역 조회
+        List<BuyingCarViewDTO> result  = buyingCarRepository.findByUser(user).stream()
+                .filter(BuyingCar::getIsActive)     // Active 한 상태만 조회
+                .map(BuyingCarServiceImpl::entityToDTO)
+                .collect(Collectors.toList());
+
+        return result;
     }
 
     private SellingCar getSellingCarInfo(Long sellingCarId){

@@ -70,9 +70,9 @@
         }
 
         requestBuyingCar(formObj).then(result=>{
-            alert('정상적으로 삭제 되었습니다')
+            alert('정상적으로 처리 되었습니다')
 
-            self.location = '/order/list' // 자바스크립트로 다른 url 호출
+            self.location = '/myPage/carOrderList'
 
         }).catch(e=>{
             errorResponse(e)

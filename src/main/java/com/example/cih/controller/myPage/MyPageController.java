@@ -113,7 +113,7 @@ public class MyPageController {
         return "carRead";
     }
 
-    @ApiOperation(value = "차 주문 내역 조회", notes = "")
+    @ApiOperation(value = "차 구매 진행 내역 조회", notes = "")
     @GetMapping("/carOrderList")
     public String carOrderList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                        Model model, Principal principal ){

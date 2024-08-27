@@ -23,9 +23,11 @@ public class SellingCarResDTO extends ImageListDTO {
     private Integer requiredPrice;
     private Long sellingCarId;
     private Integer viewCount;
+
     private BuyCarStatus buyCarStatus;
     private String sellingCarStatusText;
     private String sellTypeText;
+    private Integer proposalPrice;          // 경매 응찰한 가격
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiredDate;

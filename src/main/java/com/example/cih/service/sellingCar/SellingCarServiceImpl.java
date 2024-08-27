@@ -59,6 +59,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 BuyingCar buyingCarInfo = buyingCarService.getBuyingCarInfo(user, sellingCar);
                 if(buyingCarInfo != null){
                     sellingCarResDTO.setBuyCarStatus(buyingCarInfo.getBuyCarStatus());
+                    sellingCarResDTO.setProposalPrice(buyingCarInfo.getProposalPrice());
                 }
            // }
             // 좋아요 상태 전송

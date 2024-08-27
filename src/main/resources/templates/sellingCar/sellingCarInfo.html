@@ -4,7 +4,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>차량 구매</title>
+  <title>판매 차량 정보</title>
 </head>
 
 <div layout:fragment="content">
@@ -13,7 +13,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          Car Info!!
+          관심 차량 간단 정보
         </div>
         <div class="card-body">
           <input type="hidden" name="sellingCarId" th:value="${carViewDTO.sellingCarId}">
@@ -66,7 +66,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          구매 제안 정보
+          경매 현황
         </div>
 
         <div class="card-body">
@@ -242,9 +242,10 @@
     // console.log(carOwner)
     // console.log(currentUser)
 
-    if(carOwner === currentUser){ // 해당 차 소유자 일 경우
-      btnType = 'hidden'
-    }
+    // 임시
+    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+    //   btnType = 'hidden'
+    // }
 
     if(dtoList && dtoList.length > 0){
       for(const dto of dtoList){

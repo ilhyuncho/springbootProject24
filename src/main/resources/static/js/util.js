@@ -193,3 +193,32 @@ function viewCarLike(isLike){
         checkRegular.style.display = 'inline'
     }
 }
+
+// input text 숫자  ',' 추가----begin-------------------------
+// 새로운 응찰가격 입력시 콤마 추가
+function newPriceKepUp(obj){
+    // input text 숫자  ',' 추가
+    numberAddComma(obj);
+}
+
+function numberAddComma(obj){
+    const num = getNumber(obj.value);
+
+    if(num === 0){
+        obj.value = '';
+    }else{
+        obj.value = num.toLocaleString();
+    }
+}
+
+function getNumber(strNumber){
+    const arr = strNumber.split('');
+    const out = [];
+    for(let cnt=0;cnt<arr.length;cnt++){
+        if(isNaN(arr[cnt])===false){
+            out.push(arr[cnt]);
+        }
+    }
+    return Number(out.join(''));
+}
+// input text 숫자  ',' 추가----end-------------------------
