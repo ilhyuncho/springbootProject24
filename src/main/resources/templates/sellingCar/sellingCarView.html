@@ -58,44 +58,47 @@
           <div class="h6 text-primary" >
             <span th:text="|경매 마감 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
           </div>
+
           <hr class="my-4">
-          <div class="h3 text-primary" > <!-- h3 글자 크기-->
+          <div class="h3 text-primary" >
             <span th:text="|경매 시작가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
           </div>
+          <!--         경매 참여를 한 상태-->
+          <div th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
+                                        or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
 
-          <button type="submit" th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
-                        ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
-                  class="btn btn-primary"
-                  th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
+            <button type="submit" class="btn btn-primary"
+                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
 
+            <hr class="my-4">
 
-          <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
-                        ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
-                  class="btn btn-primary"
-                  th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
+            <div class="h4 text-warning" >
+              <input type="hidden" class="form-control userProposalPrice" th:value="${responseDTO.proposalPrice}">
+              <span th:text="|당신의 응찰가 : ${#numbers.formatCurrency(responseDTO.proposalPrice)}원|"></span>
+            </div>
 
+            <div class="input-group mb-3">
+              <span class="input-group-text">새로운 응찰 가격</span>
+              <label>
+                <input type="text" class="form-control newProposalPrice" step="10000" th:onkeyup="newPriceKepUp(this)">
+              </label>
+            </div>
 
-          <hr class="my-4">
-          <div class="h4 text-warning" > <!-- h4 글자 크기-->
-            <input type="hidden" class="form-control userProposalPrice" th:value="${responseDTO.proposalPrice}">
-            <span th:text="|당신의 응찰가 : ${#numbers.formatCurrency(responseDTO.proposalPrice)}원|"></span>
+            <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
+                    th:onclick="requestSellingCar(this)"></button>
+
           </div>
+          <!--         경매 참여를 하지 않은 상태-->
+          <div th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
+                                           or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
 
-          <div class="input-group mb-3">
-            <span class="input-group-text">새로운 응찰 가격</span>
-            <label>
-              <input type="text" class="form-control newProposalPrice" step="10000" th:onkeyup="newPriceKepUp(this)">
-            </label>
+            <button type="submit"
+                    class="btn btn-primary"
+                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
           </div>
-          <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
-                  th:onclick="requestSellingCar(this)"></button>
-
         </div>
 
-      </div>
-
-      <div class="h4" th:text="${responseDTO.buyCarStatus}"></div>
-      <hr class="my-4">
+      </div><!--      <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">-->
 
     </div>
   </div><!-- <div class="d-flex">-->
