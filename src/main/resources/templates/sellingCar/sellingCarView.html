@@ -42,11 +42,6 @@
           <i class="fa-regular fa-heart" style="cursor:pointer"
                  th:onclick="javascript:sellingCarLike(true)" th:data-num="${responseDTO.sellingCarId}"></i>
         </span>
-        <hr class="my-4">
-        <!--      경매 종료 시간 표시-->
-        <div class="h6 text-primary" >
-          <span th:text="|경매 종료 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
-        </div>
       </div>
 
       <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}"
@@ -59,7 +54,11 @@
                     th:text="|상담 요청|" data-bs-target="consultRequest" th:onclick="requestSellingCar(this)"></button>
         </div>
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
-
+          <!--      경매 마감 시간 표시-->
+          <div class="h6 text-primary" >
+            <span th:text="|경매 마감 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
+          </div>
+          <hr class="my-4">
           <div class="h3 text-primary" > <!-- h3 글자 크기-->
             <span th:text="|경매 시작가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
           </div>

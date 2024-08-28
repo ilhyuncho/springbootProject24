@@ -79,13 +79,15 @@ public class Car extends BaseEntity {
     }
 
     public void registerSellingCar(SellingCarRegDTO sellingCarRegDTO){
+        SellType sellType = SellType.fromValue(sellingCarRegDTO.getSellType());
 
         this.sellingCar = SellingCar.builder()
                 .car(this)
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
-                .sellType(SellType.fromValue(sellingCarRegDTO.getSellType()))
+                .sellType(sellType)
                 .RequiredPrice(sellingCarRegDTO.getRequiredPrice())
-                .expiredDate(LocalDateTime.now().plusWeeks(1))
+                // 판매 종료에 따라 종료 날짜 설정  ( 경매 : 일주일, 상담 : 1년 )
+                .expiredDate(sellType.equals(SellType.SELL_AUCTION) ? LocalDateTime.now().plusWeeks(1) : LocalDateTime.now().plusYears(1))
                 .likeCount(0)
                 .viewCount(0)
                 .user(this.user)
