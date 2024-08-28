@@ -127,12 +127,15 @@
   <div class="modal sellingCarModal" tabindex="-1">
     <div class="modal-dialog" th:data-num="sellingCar">
       <div class="modal-content">
-
         <div class="modal-header">
           <h5 class="modal-title">차량 판매 방식</h5>
           <button type="button" class="btn-close closeSellingCarModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <div class="h6 text-primary" >
+            <span th:text="|(차량 판매 기간은 7일 동안 진행 됩니다)|"></span>
+          </div>
+
           <div class="input-group mb-3">
             <span class="input-group-text">판매 방식</span>
             <label>
@@ -140,7 +143,6 @@
               <input type="radio" name="sellType" value='consultType'>상담</input>
             </label>
           </div>
-
           <div class="input-group mb-3" id="auctionOnly" >
             <span class="input-group-text">경매 최소 가격</span>
             <label>

@@ -59,6 +59,11 @@ public class Util {
 //                                now.getHour(), now.getMinute(), now.getSecond() );
     }
 
+    public static String convertLocalDateTimeToString(LocalDateTime localDateTime){
+
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss"));
+    }
+
     // 두 날짜 사이의 날짜 구하기
     public static List<LocalDate> getDatesBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
 

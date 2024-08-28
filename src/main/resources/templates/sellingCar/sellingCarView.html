@@ -42,10 +42,11 @@
           <i class="fa-regular fa-heart" style="cursor:pointer"
                  th:onclick="javascript:sellingCarLike(true)" th:data-num="${responseDTO.sellingCarId}"></i>
         </span>
-      </div>
-
-      <div class="h3 text-primary" > <!-- h3 글자 크기-->
-        <span th:text="|경매 시작가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+        <hr class="my-4">
+        <!--      경매 종료 시간 표시-->
+        <div class="h6 text-primary" >
+          <span th:text="|경매 종료 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
+        </div>
       </div>
 
       <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}"
@@ -59,19 +60,20 @@
         </div>
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
 
+          <div class="h3 text-primary" > <!-- h3 글자 크기-->
+            <span th:text="|경매 시작가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+          </div>
+
+          <button type="submit" th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
+                        ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
+                  class="btn btn-primary"
+                  th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
 
 
-            <button type="submit" th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
-                          ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
-                    class="btn btn-primary"
-                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
-
-
-            <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
-                          ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
-                    class="btn btn-primary"
-                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
-
+          <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')} or
+                        ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}"
+                  class="btn btn-primary"
+                  th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
 
 
           <hr class="my-4">

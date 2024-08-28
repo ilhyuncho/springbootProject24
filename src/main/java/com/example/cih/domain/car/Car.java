@@ -16,6 +16,7 @@ import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -84,6 +85,7 @@ public class Car extends BaseEntity {
                 .sellingCarStatus(SellingCarStatus.PROCESSING)
                 .sellType(SellType.fromValue(sellingCarRegDTO.getSellType()))
                 .RequiredPrice(sellingCarRegDTO.getRequiredPrice())
+                .expiredDate(LocalDateTime.now().plusWeeks(1))
                 .likeCount(0)
                 .viewCount(0)
                 .user(this.user)

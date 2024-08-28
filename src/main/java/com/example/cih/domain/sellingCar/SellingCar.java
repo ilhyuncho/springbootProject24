@@ -7,8 +7,6 @@ import com.example.cih.domain.common.BaseEntity;
 import com.example.cih.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,10 +31,6 @@ public class SellingCar extends BaseEntity {
 
     private int RequiredPrice;
 
-    @CreationTimestamp
-    @ColumnTransformer(     // db 저장,불러올때 값 변환
-            write = "date_add(?, interval 7 DAY)"   // db 함수를 지정
-    )
     private LocalDateTime expiredDate;
 
     @OneToOne(mappedBy = "sellingCar")  // SellingCar DB 테이블에는 Car정보는 없음
