@@ -125,27 +125,32 @@
 
   <!-- 내차 판매를 위한 모달창-->
   <div class="modal sellingCarModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="sellingCar">
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">차량 판매 결정</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">차량 판매 방식</h5>
+          <button type="button" class="btn-close closeSellingCarModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
             <span class="input-group-text">판매 방식</span>
             <label>
-              <input type="radio" name="sellType" checked value='1'>경매</input>
-              <input type="radio" name="sellType" value='2'>상담</input>
+              <input type="radio" name="sellType" checked value='auctionType'>경매</input>
+              <input type="radio" name="sellType" value='consultType'>상담</input>
             </label>
           </div>
-          <div class="input-group mb-3">
+
+          <div class="input-group mb-3" id="auctionOnly" >
             <span class="input-group-text">경매 최소 가격</span>
-            <input type="number" class="form-control requiredPrice" th:value="1000000">
+            <label>
+              <input type="text" class="form-control modalAuctionPrice" th:onkeyup="newPriceKepUp(this)"
+                 value="1,000,000" >
+            </label>
           </div>
+
         </div>
-        <div class="modal-footer" th:data-num="sellingCar">
+        <div class="modal-footer" >
           <button type="button" class="btn btn-primary registerBtn">판매 등록</button>
           <button type="button" class="btn btn-outline-dark closeSellingCarModalBtn">Close</button>
         </div>
@@ -155,12 +160,12 @@
 
   <!--   판매 현황 모달창-->
   <div class="modal sellingCarShowModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="sellingCarShow">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">판매 현황</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeShowModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -176,7 +181,7 @@
             <input type="text" class="form-control" id="modalExpiredDate" readonly>
           </div>
         </div>
-        <div class="modal-footer" th:data-num="sellingCarShow">
+        <div class="modal-footer">
             <button type="button" class="btn btn-primary currentSituationBtn">구매 희망 리스트</button>
             <button type="button" class="btn btn-success sellingCompleteBtn">판매 완료</button>
             <button type="button" class="btn btn-danger sellingCancelBtn">판매 취소</button>
@@ -188,21 +193,21 @@
 
   <!--   판매 수정 모달창-->
   <div class="modal sellingModifyModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="sellingCancel">
       <div class="modal-content">
 
         <input type="hidden" class="sellingStatus">
 
         <div class="modal-header">
           <h5 class="modal-title">판매 진행 수정</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeCancelModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
             <input type="text" class="form-control modifyCarName" readonly>
           </div>
         </div>
-        <div class="modal-footer" th:data-num="sellingCancel">
+        <div class="modal-footer">
           <button type="button" class="btn btn-danger sendModifyBtn">취소</button>
           <button type="button" class="btn btn-outline-dark closeCancelModalBtn">닫기</button>
         </div>
@@ -212,12 +217,12 @@
 
   <!--   누적 주행거리 갱신 모달창-->
   <div class="modal updateKmModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="updateKm">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">누적 주행거리 갱신</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeUpdateKmModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -225,7 +230,7 @@
             <input type="number" class="form-control initChild updateKmValue">
           </div>
         </div>
-        <div class="modal-footer" th:data-num="updateKm">
+        <div class="modal-footer" >
           <button type="button" class="btn btn-danger sendUpdateKmBtn">갱신</button>
           <button type="button" class="btn btn-outline-dark closeUpdateKmModalBtn">Close</button>
         </div>
@@ -249,12 +254,16 @@
   const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
   const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
 
-  const requiredPrice = document.querySelector(".requiredPrice")
+  const modalAuctionPrice = document.querySelector(".modalAuctionPrice")
   const modifyCarName = document.querySelector(".modifyCarName")
   const currCarKm = document.querySelector(".currCarKm")
   const updateKmValue = document.querySelector(".updateKmValue")
   const sendModifyBtn = document.querySelector(".sendModifyBtn")
   const sellingStatus = document.querySelector(".sellingStatus")
+  const sellTypeRadios = document.querySelectorAll("input[name='sellType']");
+
+  const auctionOnly = document.getElementById("auctionOnly")
+
 
   //const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
@@ -263,39 +272,51 @@
   const listFileNames = [[${responseDTO.fileNames}]]
 
 
+
+  // [모달창] 차량 판매 방식 라디오 버튼 클릭시
+  sellTypeRadios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      const current = e.currentTarget;
+      if(current.checked){
+        if(current.value === 'auctionType'){
+          auctionOnly.style.display = ''
+        }
+        if(current.value === 'consultType'){
+           auctionOnly.style.display = 'none'
+        }
+      }
+    });
+  });
+
   function hideModal(target){
 
-    const footer = target.closest(".modal-footer")
+    console.log('hideModal()')
 
-    if( footer.getAttribute("data-num") === 'sellingCar'){
-      requiredPrice.value = ''
+    const dialog = target.closest(".modal-dialog")
+
+    if(dialog.getAttribute("data-num") === 'sellingCar'){
+      modalAuctionPrice.value = '1,000,000'
       sellingCarModal.hide()
     }
-    else if( footer.getAttribute("data-num") === 'updateKm'){
+    else if(dialog.getAttribute("data-num") === 'updateKm'){
       updateKmValue.value = ''
       updateKmModal.hide()
     }
-    else if( footer.getAttribute("data-num") === 'sellingCarShow') {
+    else if(dialog.getAttribute("data-num") === 'sellingCarShow') {
       sellingCarShowModal.hide()
     }
-    else if( footer.getAttribute("data-num") === 'sellingCancel') {
+    else if(dialog.getAttribute("data-num") === 'sellingCancel') {
       sellingModifyModal.hide()
     }
   }
 
-  document.querySelector(".closeShowModalBtn").addEventListener("click", function (e){
-    hideModal(e.target)
+  // [모달창] 닫기 버튼 클릭시
+  document.querySelectorAll(".closeSellingCarModalBtn, .closeUpdateKmModalBtn, .closeShowModalBtn .closeCancelModalBtn")
+          .forEach(function (item,idx){
+              item.addEventListener('click', function(e){
+                hideModal(e.target)
+              })
   }, false)
-  document.querySelector(".closeUpdateKmModalBtn").addEventListener("click", function (e){
-    hideModal(e.target)
-  }, false)
-  document.querySelector(".closeSellingCarModalBtn").addEventListener("click", function (e){
-    hideModal(e.target)
-  }, false)
-  document.querySelector(".closeCancelModalBtn").addEventListener("click", function (e){
-    hideModal(e.target)
-  }, false)
-
 
   // [판매 현황] 버튼 클릭
   document.querySelector(".sellingCarShowBtn").addEventListener("click", function (e){
@@ -330,17 +351,23 @@
   // 모달창의 [판매 등록] 처리
   document.querySelector(".registerBtn").addEventListener("click", function(e){
 
-    if( listFileNames.length === 0 ){
+    const sellTypeValue = document.querySelector('input[name="sellType"]:checked').value;
+
+    if(listFileNames.length === 0){
       alert('차량 판매시 최소 한장의 대표 사진을 등록해야 합니다')
       return
     }
-
-    const sellTypeValue = document.querySelector('input[name="sellType"]:checked').value;
+    if(sellTypeValue === 'auctionType' && modalAuctionPrice.value < 10000)
+    {
+      alert('경매 최소 가격은 10000원 이상입니다')
+      return
+    }
+    const requiredPrice = sellTypeValue === 'auctionType' ? modalAuctionPrice.value.replaceAll(",","") : 0
 
     const formObj = {
       carId:carId,
       sellType:sellTypeValue,
-      requiredPrice:requiredPrice.value
+      requiredPrice: requiredPrice
     }
 
     registerSellingCar(formObj).then(result => {
