@@ -20,11 +20,6 @@
 
           <!--            dto 값 출력 부분-->
           <div class="input-group mb-3">
-            <span class="input-group-text">CarID</span>
-            <label><input type="text" class="form-control" th:value="${carViewDTO.carId}" readonly></label>
-          </div>
-
-          <div class="input-group mb-3">
             <span class="input-group-text">CarNumber</span>
             <label><input type="text" class="form-control" th:value="${carViewDTO.carNumber}" readonly></label>
           </div>
@@ -64,49 +59,49 @@
   <div class="row mt-3">
 
     <div class="col">
-      <div class="card">
+      <div class="card" th:with="sellType=${carViewDTO.sellType}">
+        <input type="hidden" name="sellType" th:value="${sellType}">
+
         <div class="card-header">
-          경매 현황 ( 수정 해야 함- 해당 차량은 상담 차량인데.. 해당 내용이 표시 됨 )
+         [[${sellType.getTypeName()}]] 현황
         </div>
 
         <div class="card-body">
-          <input type="hidden" name="sellType" th:value="${carViewDTO.sellType}">
 
+          <div th:if="${#strings.equals(sellType, 'SELL_AUCTION')}">
+            <div class="input-group mb-3">
+              <span class="input-group-text">현재 최고 응찰 가격</span>
+              <label> <input type="text" class="form-control highProposalPrice" readonly></label>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">고객님 응찰 가격</span>
+              <label><input type="text" class="form-control userProposalPrice" th:value="0원" readonly></label>
+            </div>
 
+            <div class="row mt-3" th:if="${#authentication.principal != null}"
+                 th:with="user=${#authentication.principal}">
+              <div class="float-end">
+  <!--              <a th:if="${user != null && user.username == carViewDTO.userName}">-->
+                   <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
+  <!--              </a>-->
+              </div>
+            </div>
 
-
-          <div class="input-group mb-3">
-            <span class="input-group-text">현재 최고 응찰 가격</span>
-            <label> <input type="text" class="form-control highProposalPrice" readonly></label>
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">고객님 응찰 가격</span>
-            <label><input type="text" class="form-control userProposalPrice" th:value="0원" readonly></label>
-          </div>
-
-
-
-
-
-
-          <div class="row mt-3" th:if="${#authentication.principal != null}"
-               th:with="user=${#authentication.principal}">
-            <div class="float-end">
-<!--              <a th:if="${user != null && user.username == carViewDTO.userName}">-->
-                 <button type="button" class="btn btn-primary purchaseOfferBtn" th:btn-type="new">가격 제안</button>
-<!--              </a>-->
+            <div class="row mt-5">
+              <h5 class="card-title">응찰 List</h5>
+              <ul class="list-group buyingCarList">
+                <!-- 리스트 영역-->
+              </ul>
+              <div class="pagination mt-3 buyingCarListPaging">
+                <!-- 페이징 처리-->
+              </div>
             </div>
           </div>
+          <div th:if="${#strings.equals(sellType, 'SELL_CONSULT')}">
+            <h5 class="card-title">상담</h5>
 
-          <div class="row mt-5">
-            <h5 class="card-title">제안 List</h5>
-            <ul class="list-group buyingCarList">
-              <!-- 리스트 영역-->
-            </ul>
-            <div class="pagination mt-3 buyingCarListPaging">
-              <!-- 페이징 처리-->
-            </div>
           </div>
+
 
         </div><!-- <div class="card-body">-->
       </div>

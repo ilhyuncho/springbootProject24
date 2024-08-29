@@ -65,7 +65,7 @@ public class SellingCarController {
 
         model.addAttribute("carViewDTO", carViewResDTO);
 
-        return "/sellingCar/sellingCarInfo";
+        return "/sellingCar/auctionDetail";
     }
     @ApiOperation(value = "[판매 차량 정보 요청]", notes = "판매 차량 정보만 전달")
     @GetMapping("/view/{sellingCarId}")

@@ -122,6 +122,8 @@ public class MyPageController {
 
         List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getListBuyingCarInfo(user);
 
+        listBuyingCarViewDTO.forEach(log::error);
+
         model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
 
         return "/myPage/carOrderList";
