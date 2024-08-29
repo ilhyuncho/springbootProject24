@@ -21,22 +21,22 @@
           <!--            dto 값 출력 부분-->
           <div class="input-group mb-3">
             <span class="input-group-text">CarID</span>
-            <input type="text" class="form-control" th:value="${carViewDTO.carId}" readonly>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.carId}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">CarNumber</span>
-            <input type="text" class="form-control" th:value="${carViewDTO.carNumber}" readonly>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.carNumber}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">carGrade</span>
-            <input type="text" class="form-control" th:value="${carViewDTO.carGrade}" readonly>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.carGrade}" readonly></label>
           </div>
 
           <div class="input-group mb-3">
             <span class="input-group-text">userName(확인용)</span>
-            <input type="text" class="form-control" th:value="${carViewDTO.userName}" readonly>
+            <label><input type="text" class="form-control" th:value="${carViewDTO.userName}" readonly></label>
           </div>
 
           <div class="row mt-3">
@@ -75,15 +75,15 @@
 
 
 
+          <div class="input-group mb-3">
+            <span class="input-group-text">현재 최고 응찰 가격</span>
+            <label> <input type="text" class="form-control highProposalPrice" readonly></label>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">고객님 응찰 가격</span>
+            <label><input type="text" class="form-control userProposalPrice" th:value="0원" readonly></label>
+          </div>
 
-          <div class="input-group mb-3">
-            <span class="input-group-text">고객 제안 가격</span>
-            <input type="text" class="form-control userProposalPrice" th:value="0원" readonly>
-          </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text">최고 제안 가격</span>
-            <input type="text" class="form-control highProposalPrice" readonly>
-          </div>
 
 
 
@@ -119,12 +119,12 @@
       <div class="modal-content">
 
         <div class="modal-header">
-          <h5 class="modal-title">구매 요청</h5>
+          <h5 class="modal-title">경매 응찰 진행</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">희망 가격</span>
+            <span class="input-group-text">응찰 가격</span>
             <input type="text" class="form-control requestPrice" th:value="${#numbers.formatInteger(100000,3,'COMMA')}"
                    th:oninput="|transComma(this);|"
             >
@@ -149,18 +149,18 @@
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
-            <span class="input-group-text">기존 가격</span>
+            <span class="input-group-text">기존 응찰 가격</span>
             <input type="text" class="form-control userCurrentPrice" readonly>
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text">희망 가격</span>
+            <span class="input-group-text">새로운 응찰 가격</span>
             <input type="text" class="form-control modifyPrice" step='100000' th:value="1000000"
                    th:oninput="|transComma(this);|">
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary sendModifyBtn">가격 수정</button>
-          <button type="button" class="btn btn-danger cancelBtn">구매 취소</button>
+          <button type="button" class="btn btn-danger cancelBtn">경매 응찰 취소</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
         </div>
       </div>
@@ -200,6 +200,8 @@
   let size = 5
 
   printBuyingCarList(page,size)
+
+
 
   function initOfferBtn(data) {
 
@@ -264,9 +266,6 @@
                     <span class="col-1">${dto.userName}</span>
                     <span class="col-1">${maskingName(dto.userName)}</span>
                     <span class="col-2">${proposalPrice}</span>
-                    <span class="col-2">${dto.carNumber}</span>
-                    <span class="col-1">${dto.carModel}</span>
-                    <span class="col-2">${dto.buyCarStatus}</span>
                     <span class="col-4" data-rno="${dto.userName}">${registerTime}</span>
                </li>`
       }
@@ -293,17 +292,7 @@
     buyingCarListPaging.innerHTML = pageStr
   }
 
-  function transComma(e){
 
-    let value = e.value;
-    value = Number(value.replaceAll(',', ''));
-    if(isNaN(value)) {
-      e.value = 0;
-    }else {
-      const formatValue = value.toLocaleString('ko-KR');
-      e.value = formatValue;
-    }
-  }
 
 
   // 구매 제안 버튼 클릭
@@ -352,7 +341,7 @@
 
   function initModalDisplay(formObj) {
 
-    if(formObj.offerType === 'propose'){
+    if(formObj.offerType === 'auctionRequest'){
       requestPrice.value= ''
       purchaseOfferModal.hide()
     }
@@ -374,8 +363,9 @@
   document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
 
     const formObj = {
-      offerType:'propose',
+      offerType:'auctionRequest',
       carId:carId,
+      sellingCarId:sellingCarId,
       requestPrice: requestPrice.value.replaceAll(",","")
     }
     sendPurchaseOffer(formObj)
@@ -398,11 +388,11 @@
     sendUpdateOffer(formObj)
   }, false)
 
-  // 모달창의 구매 제안 취소 처리
+  // 모달창의 경매 응찰 취소 처리
   document.querySelector(".cancelBtn").addEventListener("click", function(e){
 
     const formObj = {
-      offerType:'proposeCancel',
+      offerType:'auctionCancel',
       carId:carId,
       sellingCarId:sellingCarId,
       requestPrice:0

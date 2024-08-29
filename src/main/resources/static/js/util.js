@@ -195,6 +195,19 @@ function viewCarLike(isLike){
 }
 
 // input text 숫자  ',' 추가----begin-------------------------
+
+function transComma(e){
+
+    let value = e.value;
+    value = Number(value.replaceAll(',', ''));
+    if(isNaN(value)) {
+        e.value = 0;
+    }else {
+        const formatValue = value.toLocaleString('ko-KR');
+        e.value = formatValue;
+    }
+}
+
 // 새로운 응찰가격 입력시 콤마 추가
 function newPriceKepUp(obj){
     // input text 숫자  ',' 추가

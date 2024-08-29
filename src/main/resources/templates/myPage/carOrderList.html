@@ -19,7 +19,7 @@
                             <th scope="col">차 번호</th>
                             <th scope="col">차 모델</th>
                             <th scope="col">구매 희망 가격</th>
-                            <th scope="col">진행</th>
+                            <th scope="col">현재 상태</th>
                             <th scope="col">상세</th>
                             <th scope="col">처리</th>
                         </tr>
@@ -30,11 +30,12 @@
                             <td>[[${dto.carModel}]]</td>
                             <td>[[${dto.proposalPrice}]]</td>
 
-                            <td>[[${dto.buyCarStatus}]]</td>
+                            <td>[[${dto.buyCarStatus.statusDesc}]]</td>
                             <td>
                                 <a th:href="|@{'/sellingCar/' + ${dto.carId}}|" class="text-decoration-none">조회</a>
                             </td>
                             <td>
+                            <!-- 수정 해야 함-->
                                 <a th:if="${#strings.endsWith(dto.buyCarStatus, 'CANCEL') == false}">
                                     <button type="button" class="btn btn-primary"
                                             th:onclick="sendCancelOffer([[${dto.carId}]],[[${dto.sellingCarId}]])">신청 취소</button>
