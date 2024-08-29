@@ -199,103 +199,11 @@
   let page = 1
   let size = 5
 
-  printBuyingCarList(page,size)
+  // 경매 현황 가져오기
+  getListAuctionBuyingCar(page,size)
 
 
-
-  function initOfferBtn(data) {
-
-    console.log('initOfferBtn : ' + data)
-
-    if(data === 'hidden'){
-      purchaseOfferBtn.setAttribute("hidden", true)
-    }
-    else if(data === 'new'){
-      console.log('btn-> new')
-      purchaseOfferBtn.innerHTML = '가격 제안'
-      purchaseOfferBtn.setAttribute("btn-type", "new")
-    }
-    else{
-      console.log('btn-> modify')
-      purchaseOfferBtn.innerHTML = '가격 수정'
-      purchaseOfferBtn.setAttribute("btn-type", "modify")
-    }
-  }
-
-  function printBuyingCarList(page,size){
-    getList({sellingCarId, page, size}).then(data=> {
-        printList(data.dtoList) // 목록 처리
-        printPages(data)        // 페이지 처리
-
-        // 최고 가격 set
-        highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
-
-    }).catch(e=>{
-      console.error(e)
-    })
-  }
-
-  // 목록 출력
-  function printList(dtoList){
-    let str = '';
-    let btnType = 'new'
-
-    // console.log('printList')
-    // console.log(carOwner)
-    // console.log(currentUser)
-
-    // 임시
-    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
-    //   btnType = 'hidden'
-    // }
-
-    if(dtoList && dtoList.length > 0){
-      for(const dto of dtoList){
-
-        let proposalPrice = makePriceCurrency(dto.proposalPrice)
-        let registerTime = stringToDateFormat(dto.registerTime)
-
-        // 해당 차에 가격 제안을 했다면
-        if(Object.is(dto.memberId, currentUser)){
-          userProposalPrice.value = proposalPrice
-
-            btnType = 'modify'
-        }
-
-        str += `<li class="list-group-item d-flex carItem">
-                    <span class="col-1">${dto.userName}</span>
-                    <span class="col-1">${maskingName(dto.userName)}</span>
-                    <span class="col-2">${proposalPrice}</span>
-                    <span class="col-4" data-rno="${dto.userName}">${registerTime}</span>
-               </li>`
-      }
-    }
-
-    initOfferBtn(btnType)
-
-    buyingCarList.innerHTML = str
-  }
-
-  // 목록 페이지 출력
-  function printPages(data){
-    let pageStr = '';
-
-    if(data.prev){
-      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
-    }
-    for(let i = data.start; i <= data.end; i++){
-      pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
-    }
-    if(data.next){
-      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
-    }
-    buyingCarListPaging.innerHTML = pageStr
-  }
-
-
-
-
-  // 구매 제안 버튼 클릭
+  // [구매 제안] 버튼 클릭
   document.querySelector(".purchaseOfferBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
@@ -314,23 +222,56 @@
     }
   }, false)
 
-  function sendPurchaseOffer(formObj) {
 
-    requestBuyingCar(formObj).then(result => {
+  // 모달창의 [구매 제안] 처리
+  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
 
-      printBuyingCarList(1,10)
-      initModalDisplay(formObj)
+    const formObj = {
+      offerType:'auctionRequest',
+      requestPrice: requestPrice.value.replaceAll(",","")
+    }
 
-    }).catch(e => {
-      errorResponse(e)
-      initModalDisplay(formObj)
-    })
-  }
-  function sendUpdateOffer(formObj) {
+    sendRequestToServer(formObj)
+  }, false)
 
-    requestBuyingCar(formObj).then(result => {
+  // 모달창의 [가격 수정] 제안 처리
+  document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
 
-      printBuyingCarList(1,10)
+    if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
+      alert('기존 가격과 같습니다')
+      return
+    }
+
+    const formObj = {
+      offerType:'proposeChangePrice',
+      requestPrice: modifyPrice.value.replaceAll(",","")
+    }
+    sendRequestToServer(formObj)
+  }, false)
+
+  // 모달창의 [경매 응찰 취소] 처리
+  document.querySelector(".cancelBtn").addEventListener("click", function(e){
+
+    const formObj = {
+      offerType:'auctionCancel',
+      requestPrice:0
+    }
+    sendRequestToServer(formObj)
+  }, false)
+
+
+  function sendRequestToServer(addFormObj) {
+    let formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+    }
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
+    // 고객 요청 전송
+    requestBuyingCar(formObj).then(result => {  // axios 호출
+      // 경매 현황 가져오기
+      getListAuctionBuyingCar(1,10)
+
       initModalDisplay(formObj)
 
     }).catch(e => {
@@ -359,49 +300,27 @@
     }
   }
 
-  // 모달창의 구매 제안 처리
-  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+  function initOfferBtn(data) {
 
-    const formObj = {
-      offerType:'auctionRequest',
-      carId:carId,
-      sellingCarId:sellingCarId,
-      requestPrice: requestPrice.value.replaceAll(",","")
+    console.log('initOfferBtn : ' + data)
+
+    if(data === 'hidden'){
+      purchaseOfferBtn.setAttribute("hidden", true)
     }
-    sendPurchaseOffer(formObj)
-  }, false)
-
-  // 모달창의 가격 수정 제안 처리
-  document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
-
-    if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
-      alert('기존 가격과 같습니다')
-      return
+    else if(data === 'new'){
+      console.log('btn-> new')
+      purchaseOfferBtn.innerHTML = '가격 제안'
+      purchaseOfferBtn.setAttribute("btn-type", "new")
     }
-
-    const formObj = {
-      offerType:'proposeChangePrice',
-      carId:carId,
-      sellingCarId:sellingCarId,
-      requestPrice: modifyPrice.value.replaceAll(",","")
+    else{
+      console.log('btn-> modify')
+      purchaseOfferBtn.innerHTML = '가격 수정'
+      purchaseOfferBtn.setAttribute("btn-type", "modify")
     }
-    sendUpdateOffer(formObj)
-  }, false)
+  }
 
-  // 모달창의 경매 응찰 취소 처리
-  document.querySelector(".cancelBtn").addEventListener("click", function(e){
-
-    const formObj = {
-      offerType:'auctionCancel',
-      carId:carId,
-      sellingCarId:sellingCarId,
-      requestPrice:0
-    }
-    sendUpdateOffer(formObj)
-  }, false)
 
   buyingCarListPaging.addEventListener("click", function(e){
-
     e.preventDefault()
     e.stopPropagation()
 
@@ -410,8 +329,77 @@
       return
     }
     page = target.getAttribute("data-page")
-    printBuyingCarList(page,size)
+
+    // 경매 현황 가져오기
+    getListAuctionBuyingCar(page,size)
 
   },false)
+
+  // 경매 현황 가져오기
+  function getListAuctionBuyingCar(page,size){
+    getListBuyingCar({sellingCarId, page, size}).then(data=> {
+      printListAuction(data.dtoList) // 목록 처리
+      printPagesAuction(data)        // 페이지 처리
+
+      // 현재 최고 응찰 가격 지정
+      highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
+
+    }).catch(e=>{
+      console.error(e)
+    })
+  }
+
+  // 경매 현황 출력
+  function printListAuction(dtoList){
+    // 임시
+    // if(carOwner === currentUser){ // 해당 차 소유자 일 경우
+    //   btnType = 'hidden'
+    // }
+
+    let str = '';
+    let btnType = 'new'
+
+    if(dtoList && dtoList.length > 0){
+      for(const dto of dtoList){
+
+        let proposalPrice = makePriceCurrency(dto.proposalPrice)
+        let registerTime = stringToDateFormat(dto.registerTime)
+
+        // 해당 차에 가격 제안을 했다면
+        if(Object.is(dto.memberId, currentUser)){
+          userProposalPrice.value = proposalPrice
+
+          btnType = 'modify'
+        }
+
+        str += `<li class="list-group-item d-flex carItem">
+                    <span class="col-1">${dto.userName}</span>
+                    <span class="col-1">${maskingName(dto.userName)}</span>
+                    <span class="col-2">${proposalPrice}</span>
+                    <span class="col-4" data-rno="${dto.userName}">${registerTime}</span>
+               </li>`
+      }
+    }
+
+    initOfferBtn(btnType)
+
+    buyingCarList.innerHTML = str
+  }
+
+  // 경매 현황 페이지 출력
+  function printPagesAuction(data){
+    let pageStr = '';
+
+    if(data.prev){
+      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+    }
+    for(let i = data.start; i <= data.end; i++){
+      pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+    }
+    if(data.next){
+      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
+    }
+    buyingCarListPaging.innerHTML = pageStr
+  }
 
 </script>

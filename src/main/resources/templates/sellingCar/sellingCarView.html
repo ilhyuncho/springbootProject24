@@ -241,6 +241,25 @@
 
   }, false)
 
+  function offerBuyingCarRequest(addFormObj){  // 구매 관련 등록 or 변경 요청
+    let formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+    }
+
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
+
+    // 고객 요청 전송
+    requestBuyingCar(formObj).then(result => {  // axios 호출
+      // 화면 재 갱신
+      self.location = '/sellingCar/view/' +  sellingCarId
+    }).catch(e => {
+      errorResponse(e)
+    })
+
+  }
+
   // 상담 요청 or 취소 -버튼 클릭
   function requestSellingCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
@@ -281,21 +300,6 @@
     }
   }
 
-  function offerBuyingCarRequest(addFormObj){  // 구매 관련 등록 or 변경 요청
-    let formObj = {
-      carId:carId,
-      sellingCarId:sellingCarId,
-    }
 
-    // 객체 merge
-    Object.assign(formObj, addFormObj)
-
-    requestBuyingCar(formObj).then(result => {
-      // 화면 재 갱신
-      self.location = '/sellingCar/view/' +  sellingCarId
-    }).catch(e => {
-      errorResponse(e)
-    })
-  }
 
 </script>

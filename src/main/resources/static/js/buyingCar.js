@@ -1,6 +1,5 @@
 async function requestBuyingCar(formObj) {
 
-    console.log("requestBuyingCar....................")
     console.log(formObj)
 
     const response = await axios.post(`/buyingCar/offer`, formObj)
@@ -9,7 +8,7 @@ async function requestBuyingCar(formObj) {
     return response.data
 }
 
-async function getList({sellingCarId, page, size}){
+async function getListBuyingCar({sellingCarId, page, size}){
 
     const result = await axios.get(`/buyingCar/list`, {params: {sellingCarId, page, size}})
 

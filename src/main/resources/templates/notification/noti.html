@@ -118,7 +118,7 @@
 
     console.log([[${targetId}]])
 
-    getList('#' + [[${targetId}]])
+    getListNoti('#' + [[${targetId}]])
 
     const triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
     triggerTabList.forEach(function (triggerEl) {
@@ -130,12 +130,12 @@
             const target = event.target
             const targetId = target.getAttribute("data-bs-target")
 
-            getList(targetId)
+            getListNoti(targetId)
 
             tabTrigger.show()
         })
     })
-    function getList(targetId){
+    function getListNoti(targetId){
 
         const formObj = {
             targetId:targetId,

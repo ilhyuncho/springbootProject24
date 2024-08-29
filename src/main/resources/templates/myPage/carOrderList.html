@@ -70,7 +70,7 @@
             sellingCarId:sellingCarId,
         }
 
-        requestBuyingCar(formObj).then(result=>{
+        requestBuyingCar(formObj).then(result=>{    // axios 호출
             alert('정상적으로 처리 되었습니다')
 
             self.location = '/myPage/carOrderList'
@@ -79,62 +79,5 @@
             errorResponse(e)
         })
     }
-
-    // document.querySelector(".buyingCarList").addEventListener("click", function(e){
-    //
-    //     console.log("clearBtn.click()~~~~")
-    //
-    //     console.log('buyingCarList click~~~~~~~~')
-    //     const target = e.target
-    //
-    //     if(!target || target.tagName !== 'SPAN'){
-    //         return
-    //     }
-    //
-    //     const cartId = target.getAttribute("data-cartId")
-    //     const itemCount = target.getAttribute("data-itemCount")
-    //
-    //     if(!cartId || itemCount <= 0){
-    //         return
-    //     }
-    //
-    //     cartIdText.value = cartId
-    //     cartItemCount.value = itemCount
-    //
-    //     cancelModal.show()
-    // },false)
-
-    // clear 버튼 클릭 이벤트 begin ------------------
-    // document.querySelector(".clearBtn").addEventListener("click", function(e){
-    //
-    //     console.log("clearBtn.click()~~~~")
-    //
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //
-    //     self.location = '/dashBoard/carList'
-    // },false)
-    // clear 버튼 클릭 이벤트 end ------------------
-
-    // 페이지 버튼 클릭 이벤트 begin ------------------
-    // document.querySelector(".pagination").addEventListener("click", function(e){
-    //
-    //     e.preventDefault()  // a태그 나 submit태그의 고유 동작을 중단
-    //     e.stopPropagation() // 상위 엘리먼트들로의 이벤트 전파를 중단시킨다.
-    //
-    //     const target = e.target   // a 태그
-    //     if(target.tagName !== 'A'){
-    //         return
-    //     }
-    //
-    //     const num = target.getAttribute("data-num")
-    //     const formObj = document.querySelector("form")
-    //
-    //     formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    //     formObj.submit();
-    //
-    // }, false)
-    // 페이지 버튼 클릭 이벤트 begin ------------------
-
 
 </script>
