@@ -66,7 +66,7 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          경매 현황
+          경매 현황 ( 수정 해야 함- 해당 차량은 상담 차량인데.. 해당 내용이 표시 됨 )
         </div>
 
         <div class="card-body">
@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+          <button type="button" class="btn btn-primary sendRegisterBtn" data-bs-target="auctionRequest">Register</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
         </div>
       </div>
@@ -159,8 +159,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary sendModifyBtn">가격 수정</button>
-          <button type="button" class="btn btn-danger cancelBtn">경매 응찰 취소</button>
+          <button type="button" class="btn btn-primary sendModifyBtn" data-bs-target="proposeChangePrice">가격 수정</button>
+          <button type="button" class="btn btn-danger cancelBtn" data-bs-target="auctionCancel">경매 응찰 취소</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
         </div>
       </div>
@@ -203,7 +203,7 @@
   getListAuctionBuyingCar(page,size)
 
 
-  // [구매 제안] 버튼 클릭
+  // [모달창] 선택해서 보여주기
   document.querySelector(".purchaseOfferBtn").addEventListener("click", function (e){
     e.stopPropagation()
     e.preventDefault()
@@ -223,45 +223,48 @@
   }, false)
 
 
-  // 모달창의 [구매 제안] 처리
-  document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+  // 모달창의 [구매 제안], [경매 응찰 취소], [가격 수정] 처리
+  document.querySelectorAll(".cancelBtn, .sendRegisterBtn, .sendModifyBtn").forEach(function(item,idx){
+    item.addEventListener("click", function (e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      const offerType = e.target.getAttribute("data-bs-target")
+
+      makeFormAndSendToServer(offerType)
+    })
+  }, false)
+
+  function makeFormAndSendToServer(offerType){
+
+    console.log('makeFormAndSendToServer : ' + offerType)
 
     const formObj = {
-      offerType:'auctionRequest',
-      requestPrice: requestPrice.value.replaceAll(",","")
+      offerType: offerType
+    }
+
+    if (offerType === "auctionCancel") {
+      Object.assign(formObj, {requestPrice: 0})
+    }
+    else if(offerType === "auctionRequest"){
+      Object.assign(formObj, {requestPrice: requestPrice.value.replaceAll(",","")})
+    }
+    else if(offerType === "proposeChangePrice"){
+      if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
+        alert('기존 가격과 같습니다')
+        return
+      }
+
+      Object.assign(formObj, {requestPrice: modifyPrice.value.replaceAll(",","")})
     }
 
     sendRequestToServer(formObj)
-  }, false)
-
-  // 모달창의 [가격 수정] 제안 처리
-  document.querySelector(".sendModifyBtn").addEventListener("click", function(e){
-
-    if(modifyPrice.value.replaceAll("원","") === userCurrentPrice.value.replaceAll("원","")){
-      alert('기존 가격과 같습니다')
-      return
-    }
-
-    const formObj = {
-      offerType:'proposeChangePrice',
-      requestPrice: modifyPrice.value.replaceAll(",","")
-    }
-    sendRequestToServer(formObj)
-  }, false)
-
-  // 모달창의 [경매 응찰 취소] 처리
-  document.querySelector(".cancelBtn").addEventListener("click", function(e){
-
-    const formObj = {
-      offerType:'auctionCancel',
-      requestPrice:0
-    }
-    sendRequestToServer(formObj)
-  }, false)
+  }
 
 
+  // 서버로 요청 전송
   function sendRequestToServer(addFormObj) {
-    let formObj = {
+    const formObj = {
       carId:carId,
       sellingCarId:sellingCarId,
     }
@@ -270,16 +273,17 @@
     // 고객 요청 전송
     requestBuyingCar(formObj).then(result => {  // axios 호출
       // 경매 현황 가져오기
-      getListAuctionBuyingCar(1,10)
-
-      initModalDisplay(formObj)
+      getListAuctionBuyingCar(1, 10)
 
     }).catch(e => {
       errorResponse(e)
+    }).finally(e =>{
+
       initModalDisplay(formObj)
     })
   }
 
+  // 모달창 및 input value 초기화
   function initModalDisplay(formObj) {
 
     if(formObj.offerType === 'auctionRequest'){
@@ -290,12 +294,12 @@
       modifyPrice.value= ''
       modifyOfferModal.hide()
     }
-    else{   // cancel
+    else if(formObj.offerType === 'auctionCancel'){
       userCurrentPrice.value= ''
       userProposalPrice.value=''
 
-      initOfferBtn('new')
 
+      initOfferBtn('new')
       modifyOfferModal.hide()
     }
   }

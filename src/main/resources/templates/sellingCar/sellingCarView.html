@@ -51,7 +51,7 @@
             <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
                     th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this)"></button>
             <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
-                    th:text="|상담 요청|" data-bs-target="consultRequest" th:onclick="requestSellingCar(this)"></button>
+                    th:text="|상담 요청|" data-bs-target="modalConsultRequest" th:onclick="requestSellingCar(this)"></button>
         </div>
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
           <!--      경매 마감 시간 표시-->
@@ -99,7 +99,7 @@
 
             <button type="submit"
                     class="btn btn-primary"
-                    th:text="|경매 참여|" data-bs-target="auctionRequest" th:onclick="requestSellingCar(this)"></button>
+                    th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this)"></button>
           </div>
 
         </div><!--      <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">-->
@@ -142,7 +142,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendConsultRequestBtn">신청</button>
+          <button type="button" class="btn btn-danger sendConsultRequestBtn" data-bs-target="consultRequest">신청</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
         </div>
       </div>
@@ -167,7 +167,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger sendAuctionRequestBtn">신청</button>
+          <button type="button" class="btn btn-danger sendAuctionRequestBtn" data-bs-target="auctionRequest">신청</button>
           <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
         </div>
       </div>
@@ -209,69 +209,48 @@
     self.location = '/sellingCar/' +  carId
   }
 
-  // [상담 요청] 전송
-  document.querySelector(".sendConsultRequestBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
+  // [상담 요청], [경매 요청] 전송
+  document.querySelectorAll(".sendConsultRequestBtn, .sendAuctionRequestBtn").forEach(function(item,idx){
+    item.addEventListener("click", function (e) {
+      e.stopPropagation()
+      e.preventDefault()
 
-    const formObj = {
-      offerType:"consultRequest",
-      phoneNumber:phoneNumber.value
-    }
+      const offerType = e.target.getAttribute("data-bs-target")
 
-    offerBuyingCarRequest(formObj)
-
-    requestConsultModal.hide()
-
+      makeFormAndSendToServer(offerType)
+     })
   }, false)
-
-  // [경매 요청] 전송
-  document.querySelector(".sendAuctionRequestBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    const formObj = {
-      offerType:"auctionRequest",
-      requestPrice:auctionProposePrice.value.replaceAll(",","")
-    }
-
-    offerBuyingCarRequest(formObj)
-
-    requestAuctionModal.hide()
-
-  }, false)
-
-  function offerBuyingCarRequest(addFormObj){  // 구매 관련 등록 or 변경 요청
-    let formObj = {
-      carId:carId,
-      sellingCarId:sellingCarId,
-    }
-
-    // 객체 merge
-    Object.assign(formObj, addFormObj)
-
-    // 고객 요청 전송
-    requestBuyingCar(formObj).then(result => {  // axios 호출
-      // 화면 재 갱신
-      self.location = '/sellingCar/view/' +  sellingCarId
-    }).catch(e => {
-      errorResponse(e)
-    })
-
-  }
 
   // 상담 요청 or 취소 -버튼 클릭
   function requestSellingCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
 
-    if(offerType === 'consultRequest'){
+    if(offerType === 'modalConsultRequest'){
       requestConsultModal.show()
     }
-    else if(offerType === 'auctionRequest'){
+    else if(offerType === 'modalAuctionRequest'){
       requestAuctionModal.show()
     }
-    else if(offerType === 'proposeChangePrice'){
+    else{
+      makeFormAndSendToServer(offerType)
+    }
+  }
 
+  function makeFormAndSendToServer(offerType){
+
+    console.log('makeFormAndSendToServer : ' + offerType)
+
+    const formObj = {
+      offerType: offerType
+    }
+
+    if (offerType === "auctionRequest") {
+      Object.assign(formObj, {requestPrice: auctionProposePrice.value.replaceAll(",", "")})
+    }
+    else if (offerType === "consultRequest") {
+      Object.assign(formObj, {phoneNumber: phoneNumber.value})
+    }
+    else if(offerType === 'proposeChangePrice'){
       const originPrice = userProposalPrice.value
       const newPrice = newProposalPrice.value.replaceAll(",","")
 
@@ -280,26 +259,49 @@
         return
       }
 
-      const formObj = {
-        offerType:offerType,
-        requestPrice:newProposalPrice.value.replaceAll(",","")
-      }
-
-      offerBuyingCarRequest(formObj)
+      Object.assign(formObj, {requestPrice:newProposalPrice.value.replaceAll(",","")})
     }
-    else{
+    else if(offerType === 'auctionCancel' || offerType === 'consultCancel' ){
       if(!confirm("정말로 취소 하겠습니까?")){
         return
       }
-
-      const formObj = {
-        offerType:offerType
-      }
-
-      offerBuyingCarRequest(formObj)
     }
+    else{
+      alert('서버 오류 입니다~!')
+      return
+    }
+
+    sendRequestToServer(formObj)
   }
 
+  // 서버로 요청 전송
+  function sendRequestToServer(addFormObj){
+    const formObj = {
+      carId:carId,
+      sellingCarId:sellingCarId,
+    }
+    // 객체 merge
+    Object.assign(formObj, addFormObj)
+    // 고객 요청 전송
+    requestBuyingCar(formObj).then(result => {  // axios 호출
+    // 화면 재 갱신
+    self.location = '/sellingCar/view/' +  sellingCarId
+    }).catch(e => {
+      errorResponse(e)
+    }).finally(e => {
 
+      initModalDisplay(formObj)
+    })
+  }
+
+  // 모달창 및 input value 초기화
+  function initModalDisplay(formObj) {
+    if(formObj.offerType === 'auctionRequest'){
+      requestAuctionModal.hide()
+    }
+    else if(formObj.offerType === 'consultRequest'){
+      requestConsultModal.hide()
+    }
+  }
 
 </script>
