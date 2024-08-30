@@ -190,6 +190,8 @@
 
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
+  const requiredPrice = [[${responseDTO.requiredPrice}]]    // 경매 시작가
+
 
   const phoneNumber = document.querySelector(".phoneNumber")
   const auctionProposePrice = document.querySelector(".auctionProposePrice")
@@ -221,7 +223,7 @@
      })
   }, false)
 
-  // 상담 요청 or 취소 -버튼 클릭
+  // 모달창 오픈 요청
   function requestSellingCar(obj){
     const offerType = obj.getAttribute("data-bs-target")
 
@@ -238,13 +240,17 @@
 
   function makeFormAndSendToServer(offerType){
 
-    console.log('makeFormAndSendToServer : ' + offerType)
-
     const formObj = {
       offerType: offerType
     }
 
     if (offerType === "auctionRequest") {
+      const userPrice = auctionProposePrice.value.replaceAll(",","")
+      if(requiredPrice > userPrice){
+        alert('경매 시작가 보다 높은 가격을 응찰해야 합니다')
+        return
+      }
+
       Object.assign(formObj, {requestPrice: auctionProposePrice.value.replaceAll(",", "")})
     }
     else if (offerType === "consultRequest") {

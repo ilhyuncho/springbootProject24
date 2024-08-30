@@ -28,7 +28,7 @@
                         <tr th:each="dto:${listBuyingCarDTO}">
                             <th scope="row">[[${dto.carNumber}]]</th>
                             <td>[[${dto.carModel}]]</td>
-                            <td>[[${dto.proposalPrice}]]</td>
+                            <td>[[${#numbers.formatInteger(dto.proposalPrice,3,'COMMA')}]]원</td>
                             <td>[[${dto.buyCarStatus.statusDesc}]]</td>
                             <td>
                                 <a th:href="|@{'/sellingCar/' + ${dto.carId}}|" class="text-decoration-none">조회</a>
