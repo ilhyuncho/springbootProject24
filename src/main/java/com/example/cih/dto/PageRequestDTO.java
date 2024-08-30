@@ -6,8 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 
 @Builder
@@ -52,11 +52,7 @@ public class PageRequestDTO {
             }
 
             if (keyword != null) {
-                try{
-                    sb.append("&keyword=" + URLEncoder.encode(this.keyword,"UTF-8"));
-                }catch(UnsupportedEncodingException e){
-
-                }
+                sb.append("&keyword=" + URLEncoder.encode(this.keyword, StandardCharsets.UTF_8));
             }
             this.link = sb.toString();
         }

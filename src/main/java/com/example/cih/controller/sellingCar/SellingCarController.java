@@ -4,6 +4,7 @@ package com.example.cih.controller.sellingCar;
 
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageRequestExtDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.car.CarViewResDTO;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
@@ -36,12 +37,14 @@ public class SellingCarController {
     @ApiOperation(value = "판매 차량 리스트 전달", notes = "[판매 차량 조회] 클릭시")
     @GetMapping("/list")
     //@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회, @PreAuthorize("hasRole('USER')") 과 다름
-    public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+    public String getSellingCarList(@ModelAttribute("pageRequestDto") PageRequestExtDTO pageRequestExtDT,
                               Model model){
 
-        log.error(pageRequestDTO);
+        log.error(pageRequestExtDT);
 
-        PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestDTO);
+        PageResponseDTO<SellingCarResDTO> listSellingCar = sellingCarService.getListSellingCar(pageRequestExtDT);
+
+        log.error(listSellingCar);
 
         model.addAttribute("responseDTO", listSellingCar);
 

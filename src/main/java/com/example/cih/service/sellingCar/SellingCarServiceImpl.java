@@ -12,6 +12,7 @@ import com.example.cih.domain.user.UserActionType;
 import com.example.cih.domain.user.UserLike;
 import com.example.cih.domain.user.UserLikeRepository;
 import com.example.cih.dto.PageRequestDTO;
+import com.example.cih.dto.PageRequestExtDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import com.example.cih.dto.sellingCar.SellingCarResDTO;
@@ -82,17 +83,18 @@ public class SellingCarServiceImpl implements SellingCarService {
     }
 
     @Override
-    public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<SellingCarResDTO> getListSellingCar(PageRequestExtDTO pageRequestExtDT) {
 
-        String[] types = pageRequestDTO.getTypes();
-        String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("regDate");
+        String[] types = pageRequestExtDT.getTypes();
+        String[] typeExts = pageRequestExtDT.getTypeExts();
+        String keyword = pageRequestExtDT.getKeyword();
+        Pageable pageable = pageRequestExtDT.getPageable("regDate");
 
 //        Page<SellingCar> sellingCars =
 //                sellingCarRepository.findAllBySellingCarStatus(SellingCarStatus.PROCESSING, pageable);      // 진행 중인 것만 get
 
         // 검색 기능 추가 버전 ( querydsl
-        Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, pageable);
+        Page<SellingCar> sellingCars = sellingCarRepository.searchAll(types, keyword, typeExts, pageable);
 
         List<SellingCarResDTO> listSellingCarResDTO = sellingCars.getContent().stream()
                 .map(SellingCarServiceImpl::entityToDTO)
@@ -108,7 +110,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .collect(Collectors.toList());
 
         return PageResponseDTO.<SellingCarResDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
+                .pageRequestDTO(pageRequestExtDT)
                 .dtoList(listSellingCarResDTO)
                 .total((int)sellingCars.getTotalElements())
                 .build();

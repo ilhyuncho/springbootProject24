@@ -1,6 +1,7 @@
 package com.example.cih.domain.sellingCar.search;
 
 import com.example.cih.domain.sellingCar.QSellingCar;
+import com.example.cih.domain.sellingCar.SellType;
 import com.example.cih.domain.sellingCar.SellingCar;
 import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.querydsl.core.BooleanBuilder;
@@ -21,7 +22,7 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
 
 
     @Override
-    public Page<SellingCar> searchAll(String[] types, String keyword, Pageable pageable) {
+    public Page<SellingCar> searchAll(String[] types, String keyword, String[] typeExts, Pageable pageable) {
 
         QSellingCar sellingCar = QSellingCar.sellingCar;
         JPQLQuery<SellingCar> query = from(sellingCar);
@@ -34,13 +35,28 @@ public class SellingCarSearchImpl extends QuerydslRepositorySupport implements S
                         booleanBuilder.or(sellingCar.car.carModel.contains(keyword));
                         break;
                     case "y":
-                        log.error("keyword" + keyword);
+                        log.error("keyword: " + keyword);
                         booleanBuilder.or(sellingCar.car.carYears.eq(Integer.valueOf(keyword)));
                         break;
                 }
             }
             query.where(booleanBuilder);
         }
+        if (typeExts != null && typeExts.length > 0) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            for (String type : typeExts) {
+                switch (type) {
+                    case "a":
+                        booleanBuilder.or(sellingCar.sellType.eq(SellType.SELL_AUCTION));
+                        break;
+                    case "c":
+                        booleanBuilder.or(sellingCar.sellType.eq(SellType.SELL_CONSULT));
+                        break;
+                }
+            }
+            query.where(booleanBuilder);
+        }
+
         query.where(sellingCar.sellingCarStatus.eq(SellingCarStatus.PROCESSING));   // 판매 중 인것만 표시
 
         this.getQuerydsl().applyPagination(pageable, query);

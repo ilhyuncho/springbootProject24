@@ -28,6 +28,14 @@
                     <input type="hidden" name="size" th:value="${pageRequestDto.size}">
                     <div class="input-group">
                       <div class="input-group-prepend">
+                        <select class="form-select" name="typeExt">
+                          <option value="">-----</option>
+                          <option value="a" th:selected="${pageRequestDto.typeExt == 'a'}">경매</option>
+                          <option value="c" th:selected="${pageRequestDto.typeExt == 'c'}">상담</option>
+                          <option value="ac" th:selected="${pageRequestDto.typeExt == 'ac'}">경매,상담</option>
+                        </select>
+                      </div>
+                      <div class="input-group-prepend">
                         <select class="form-select" name="type">
                           <option value="">-----</option>
                           <option value="m" th:selected="${pageRequestDto.type == 'm'}">모델명</option>
@@ -35,7 +43,6 @@
                           <option value="my" th:selected="${pageRequestDto.type == 'my'}">모델명,연식</option>
                         </select>
                       </div>
-
                       <input type="text" class="form-control" name="keyword" th:value="${pageRequestDto.keyword}">
 
                       <div class="input-group-append">
