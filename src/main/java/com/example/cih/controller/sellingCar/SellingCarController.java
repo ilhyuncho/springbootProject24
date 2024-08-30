@@ -65,7 +65,18 @@ public class SellingCarController {
 
         model.addAttribute("carViewDTO", carViewResDTO);
 
-        return "/sellingCar/auctionDetail";
+        String urlPage = null;
+        if(carViewResDTO.getSellType().getType().equals("auctionType")){
+            urlPage = "auctionDetail";
+        }
+        else if(carViewResDTO.getSellType().getType().equals("consultType")){
+            urlPage = "consultDetail";
+        }
+        else{
+            // 에러 처리
+            return "redirect:/myPage/carOrderList";
+        }
+        return "/sellingCar/" + urlPage;
     }
     @ApiOperation(value = "[판매 차량 정보 요청]", notes = "판매 차량 정보만 전달")
     @GetMapping("/view/{sellingCarId}")
