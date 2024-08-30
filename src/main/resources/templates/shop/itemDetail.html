@@ -53,13 +53,13 @@
       <div class="text-right">
         <div class="h4 text-danger text-left">
           <input type="hidden" th:value="${responseDTO.originalPrice}" class="pOriginalPrice">
-          <span th:text="${responseDTO.originalPrice}"></span>원
+          <span th:text="${#numbers.formatInteger(responseDTO.originalPrice,3,'COMMA')}"></span>원
         </div>
 
-        <div class="h4 text-danger text-left">
+        <div class="h5 text-danger text-left">
           <span th:text="|할인 금액 : |"></span>
           <input type="hidden" th:value="${responseDTO.discountPrice}" class="pDiscountPrice">
-          <span th:text="${responseDTO.discountPrice}"></span>원
+          <span th:text="${#numbers.formatInteger(responseDTO.discountPrice,3,'COMMA')}"></span>원
         </div>
 
         <div class="input-group w-50 mb-3">
@@ -412,10 +412,10 @@
     // 배송비 계산
     const deliveryPrice = (isFreeDelivery === 'true' || totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
 
-    pOrderPrice.value = totalOriginalPrice
-    pDeliveryFee.value = deliveryPrice
-    pTotalDiscountPrice.value = totalDiscountPrice
-    pExpectedPrice.value = totalPrice + deliveryPrice   // 결제 예정 금액
+    pOrderPrice.value = totalOriginalPrice.toLocaleString('ko-KR')
+    pDeliveryFee.value = deliveryPrice.toLocaleString('ko-KR')
+    pTotalDiscountPrice.value = totalDiscountPrice.toLocaleString('ko-KR')
+    pExpectedPrice.value = (totalPrice + deliveryPrice).toLocaleString('ko-KR')   // 결제 예정 금액
   }
 
   function checkItemSelect(){

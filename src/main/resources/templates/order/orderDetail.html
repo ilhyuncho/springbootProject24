@@ -48,8 +48,8 @@
 
                             <td>[[${dto.getOptionDesc()}]]</td>
                             <td>[[${dto.orderCount}]]</td>
-                            <td>[[${dto.orderPrice}]]</td>
-                            <td>[[${dto.orderPrice * dto.orderCount}]]</td>
+                            <td>[[${#numbers.formatInteger(dto.orderPrice,3,'COMMA')}]]원</td>
+                            <td>[[${#numbers.formatInteger(dto.orderPrice * dto.orderCount,3,'COMMA')}]]원</td>
                             <td>
                                 <div th:if="${dto.isReviewWrite == false}">
                                     <button type="button" class="btn btn-primary"

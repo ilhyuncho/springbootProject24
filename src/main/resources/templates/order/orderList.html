@@ -36,8 +36,8 @@
                                 <td><a th:href="|@{'/order/orderDetail/' + ${dto.orderId}}|"
                                        class="text-decoration-none"> [[${dto.itemName}]]</a>
                                 </td>
-                                <td>[[${dto.orderPrice}]]</td>
-                                <td>[[${dto.paymentPrice}]]</td>
+                                <td>[[${#numbers.formatInteger(dto.orderPrice,3,'COMMA')}]]원</td>
+                                <td>[[${#numbers.formatInteger(dto.paymentPrice,3,'COMMA')}]]원</td>
                                 <td>
                                     <div th:if="${dto.deliveryStatus != '주문 취소'}">
                                         <a th:onclick="showDeliveryStatus([[${dto.orderId}]], this)" style="cursor:pointer"

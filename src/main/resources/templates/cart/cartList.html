@@ -51,11 +51,11 @@
                                 <img th:src="|/view/s_${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" style="width:100px"
                                      class="rounded itemMainImg">
                             </td>
-                            <td><input type="text" th:name="p_price+${stat.index}"  id="p_price" size="8" maxlength="10" readonly
-                                       class="p_price" th:value="${dto.itemPrice}">
+                            <td><input type="hidden" th:name="p_price+${stat.index}" id="p_price" class="p_price" th:value="${dto.itemPrice}">
+                                [[${#numbers.formatInteger(dto.itemPrice,3,'COMMA')}]]
                             </td>
-                            <td><input type="text" th:name="p_discountPrice+${stat.index}" id="p_discountPrice" size="8"
-                                       maxlength="10" readonly class="p_discountPrice" th:value="${dto.discountPrice}">
+                            <td><input type="hidden" th:name="p_discountPrice+${stat.index}" id="p_discountPrice" class="p_discountPrice" th:value="${dto.discountPrice}">
+                                [[${#numbers.formatInteger(dto.discountPrice,3,'COMMA')}]]
                             </td>
 
                             <td><div class="upDownCount">
@@ -109,7 +109,7 @@
                                 <div class="card-body">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">보유 포인트</span>
-                                        <input type="text" class="form-control" id="totalMPoint" th:value="${mPoint}" readonly>
+                                        <input type="text" class="form-control" id="totalMPoint" th:value="${#numbers.formatInteger(mPoint,3,'COMMA')}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <input type="number" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
@@ -485,10 +485,10 @@
         // 배송비 계산
         const deliveryPrice = (freeDelivery === true || totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
 
-        orderPrice.value = totalOriginalPrice
-        deliveryFee.value = deliveryPrice
-        discountPrice.value = totalDiscountPrice
-        expectedPrice.value = totalPrice + deliveryPrice - useMPoint.value
+        orderPrice.value = totalOriginalPrice.toLocaleString('ko-KR')
+        deliveryFee.value = deliveryPrice.toLocaleString('ko-KR')
+        discountPrice.value = totalDiscountPrice.toLocaleString('ko-KR')
+        expectedPrice.value = (totalPrice + deliveryPrice - useMPoint.value).toLocaleString('ko-KR')
     }
 
     // 상품 삭제

@@ -19,7 +19,7 @@
 
                 <div class="card-body">
                   <h4 class="card-title">[[${item.itemTitle}]]</h4>
-                  <h3 class="card-title text-danger">[[${item.originalPrice}]]원 </h3>
+                  <h3 class="card-title text-danger">[[${#numbers.formatInteger(item.originalPrice,3,'COMMA')}]]원</h3>
                   <h6 class="card-title text-black">구매 [[${item.purchaseCount}]]</h6>
                   <h6 class="card-title text-black" th:if="${item.isFreeDelivery}">무료배송</h6>
                 </div>
