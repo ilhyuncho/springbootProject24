@@ -143,10 +143,10 @@
               <input type="radio" name="sellType" value='consultType'>상담</input>
             </label>
           </div>
-          <div class="input-group mb-3" id="auctionOnly" >
-            <span class="input-group-text">경매 최소 가격</span>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="priceTagText">경매 시작 가격</span>
             <label>
-              <input type="text" class="form-control modalAuctionPrice" th:onkeyup="newPriceKepUp(this)"
+              <input type="text" class="form-control modalRequirePrice" th:onkeyup="newPriceKepUp(this)"
                  value="1,000,000" >
             </label>
           </div>
@@ -256,7 +256,7 @@
   const sellingCarShowModal = new bootstrap.Modal(document.querySelector(".sellingCarShowModal"))
   const updateKmModal = new bootstrap.Modal(document.querySelector(".updateKmModal"))
 
-  const modalAuctionPrice = document.querySelector(".modalAuctionPrice")
+  const modalRequirePrice = document.querySelector(".modalRequirePrice")
   const modifyCarName = document.querySelector(".modifyCarName")
   const currCarKm = document.querySelector(".currCarKm")
   const updateKmValue = document.querySelector(".updateKmValue")
@@ -264,7 +264,7 @@
   const sellingStatus = document.querySelector(".sellingStatus")
   const sellTypeRadios = document.querySelectorAll("input[name='sellType']");
 
-  const auctionOnly = document.getElementById("auctionOnly")
+  const priceTagText = document.getElementById("priceTagText")
 
 
   //const userName = [[${userName}]]
@@ -281,10 +281,10 @@
       const current = e.currentTarget;
       if(current.checked){
         if(current.value === 'auctionType'){
-          auctionOnly.style.display = ''
+          priceTagText.innerHTML = '경매 시작 가격'
         }
         if(current.value === 'consultType'){
-           auctionOnly.style.display = 'none'
+          priceTagText.innerHTML = '판매 희망 가격'
         }
       }
     });
@@ -297,7 +297,7 @@
     const dialog = target.closest(".modal-dialog")
 
     if(dialog.getAttribute("data-num") === 'sellingCar'){
-      modalAuctionPrice.value = '1,000,000'
+      modalRequirePrice.value = '1,000,000'
       sellingCarModal.hide()
     }
     else if(dialog.getAttribute("data-num") === 'updateKm'){
@@ -359,12 +359,12 @@
       alert('차량 판매시 최소 한장의 대표 사진을 등록해야 합니다')
       return
     }
-    if(sellTypeValue === 'auctionType' && modalAuctionPrice.value < 10000)
+    if(sellTypeValue === 'auctionType' && modalRequirePrice.value < 10000)
     {
       alert('경매 최소 가격은 10000원 이상입니다')
       return
     }
-    const requiredPrice = sellTypeValue === 'auctionType' ? modalAuctionPrice.value.replaceAll(",","") : 0
+    const requiredPrice = modalRequirePrice.value.replaceAll(",","")
 
     const formObj = {
       carId:carId,
@@ -409,7 +409,6 @@
     sendModifyBtn.innerHTML='완료'
     sellingModifyModal.show()
   }, false)
-
 
 
   // 모달창의 [판매 취소 or 완료] 전송 버튼 클릭

@@ -64,7 +64,7 @@
                   <th scope="col">모델명</th>
                   <th scope="col">연식</th>
                   <th scope="col">희망 가격</th>
-                  <th scope="col">판매 종료 일자</th>
+                  <th scope="col">판매 종료 시간</th>
                 </tr>
               </thead>
 
@@ -85,7 +85,8 @@
                   </th>
                   <td>[[${dto.carModel}]]</td>
                   <td>[[${dto.carYears}]]</td>
-                  <td>[[${dto.requiredPrice}]]</td>
+                  <td>[[${#numbers.formatInteger(dto.requiredPrice,3,'COMMA')}]]</td>
+
                   <td>[[${#temporals.format(dto.expiredDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
                 </tr>
                 </tbody>

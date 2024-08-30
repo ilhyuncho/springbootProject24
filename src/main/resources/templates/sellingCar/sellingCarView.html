@@ -46,15 +46,22 @@
 
       <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}"
            th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
+        <hr class="my-4">
+        <div class="h3 text-primary" >
+         <span th:text="|판매가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+        </div>
+        <hr class="my-4">
 
+        <!--        상담 -->
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '상담')}">
             <button type="submit" th:if="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
                     th:text="|상담 요청 취소|" data-bs-target="consultCancel" th:onclick="requestSellingCar(this)"></button>
             <button type="submit" th:unless="${#strings.equals(buyCarStatus, 'CONSULT_REQUEST')}" class="btn btn-primary"
                     th:text="|상담 요청|" data-bs-target="modalConsultRequest" th:onclick="requestSellingCar(this)"></button>
         </div>
+
+        <!--        경매 -->
         <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">
-          <!--      경매 마감 시간 표시-->
           <div class="h6 text-primary" >
             <span th:text="|경매 마감 시간 : ${#temporals.format(responseDTO.expiredDate, 'yyyy-MM-dd HH:mm:ss')}|"></span>
           </div>
