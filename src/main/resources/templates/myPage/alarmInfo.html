@@ -47,13 +47,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const alarmsListPaging = document.querySelector('.alarmsListPaging')  // 페이지 목록 DOM
     const tableAlarms = document.getElementById("tableAlarms");
+    const alarmsListPaging = document.querySelector('.alarmsListPaging')  // 페이지 목록 DOM
 
     // 페이지 번호 클릭
     let page = 1
@@ -66,7 +67,7 @@
         getAlarmList({page, size}).then(data => {
 
             printAlarmList(data.dtoList, tableAlarms) // 목록 처리
-            printPagesAlarm(data)
+            printPages(data, alarmsListPaging)
 
         }).catch(e=>{
             console.error(e)
@@ -132,20 +133,5 @@
         getListAlarms(page,size)
 
     },false)
-
-    function printPagesAlarm(data){
-        let pageStr = '';
-
-        if(data.prev){
-            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
-        }
-        for(let i = data.start; i <= data.end; i++){
-            pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
-        }
-        if(data.next){
-            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
-        }
-        alarmsListPaging.innerHTML = pageStr
-    }
 
 </script>

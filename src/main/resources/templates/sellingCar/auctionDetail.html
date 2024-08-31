@@ -156,6 +156,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/buyingCar.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -328,7 +329,7 @@
   function getListAuctionBuyingCar(page,size){
     getListBuyingCar({sellingCarId, page, size}).then(data=> {
       printListAuction(data.dtoList) // 목록 처리
-      printPagesAuction(data)        // 페이지 처리
+      printPages(data, buyingCarListPaging)        // 페이지 처리
 
       // 현재 최고 응찰 가격 지정
       highProposalPrice.value = makePriceCurrency(data.highProposalPrice)
@@ -374,20 +375,5 @@
     buyingCarList.innerHTML = str
   }
 
-  // 경매 현황 페이지 출력
-  function printPagesAuction(data){
-    let pageStr = '';
-
-    if(data.prev){
-      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
-    }
-    for(let i = data.start; i <= data.end; i++){
-      pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
-    }
-    if(data.next){
-      pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
-    }
-    buyingCarListPaging.innerHTML = pageStr
-  }
 
 </script>
