@@ -52,6 +52,9 @@ public class ProjectSettingTest {
     UserAddressBookRepository userAddressBookRepository;
 
     @Autowired
+    UserAlarmRepository userAlarmRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     String hangul[] = {"가", "강", "건", "경", "고", "관", "광", "구", "규", "근", "기", "길", "나", "남", "노", "누", "다",
@@ -136,6 +139,13 @@ public class ProjectSettingTest {
                     .isActive(true)
                     .build();
             userAddressBookRepository.save(userAddressBook);
+
+            // 알림 추가
+            UserAlarm userAlarm = UserAlarm.builder()
+                    .user(user)
+                    .alarmText("회원가입을 축하드립니다")
+                    .build();
+            userAlarmRepository.save(userAlarm);
         });
         
         // 배송 주소록 생성

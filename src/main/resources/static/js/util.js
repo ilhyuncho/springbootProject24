@@ -1,3 +1,4 @@
+
 function stringToDateFormat(stringData){
     let date = new Date(stringData)
 

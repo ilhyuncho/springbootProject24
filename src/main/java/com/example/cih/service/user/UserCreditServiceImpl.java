@@ -29,7 +29,7 @@ public class UserCreditServiceImpl implements UserCreditService {
                 .bankAccount(userCreditDTO.getBankAccount())
                 .build();
 
-        return userCreditRepository.save(userCredit).getUserCreditsId();
+        return userCreditRepository.save(userCredit).getUserCreditId();
     }
     @Override
     public UserCreditDTO readCreditInfo(User user){
@@ -40,7 +40,7 @@ public class UserCreditServiceImpl implements UserCreditService {
             UserCredit userCredit = result.get();
 
             return UserCreditDTO.builder()
-                    .userCreditID(userCredit.getUserCreditsId())
+                    .userCreditID(userCredit.getUserCreditId())
                     .userId(userCredit.getUser().getUserId())
                     .bankAccount(userCredit.getBankAccount())
                     .bankName(userCredit.getBankName())

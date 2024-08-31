@@ -59,10 +59,10 @@
                             </td>
 
                             <td><div class="upDownCount">
-                                    <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
+                                    <span><i class="fas fa-arrow-alt-circle-down down" style="cursor:pointer"></i></span>
                                     <input type="text" th:name="p_itemCount+${stat.index}"  id="p_itemCount" size="2" maxlength="4"
                                            class="itemCount" th:value="${dto.itemCount}">
-                                    <span><i class="fas fa-arrow-alt-circle-up up"></i></span>
+                                    <span><i class="fas fa-arrow-alt-circle-up up" style="cursor:pointer"></i></span>
                                 </div>
                             </td>
                             <td><input type="hidden" th:name="p_ItemOptionIds+${stat.index}" th:value="${dto.getOptionIds()}">

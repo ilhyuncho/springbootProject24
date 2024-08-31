@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>alarms</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    내 알림함
+                </div>
+                <div class="card-body">
+
+                    <div class="row mt-3">
+                        <table id="tableAlarmsId">
+                            <thead>
+                            <tr>
+                                <th scope="col">번호</th>
+                                <th scope="col">내용</th>
+                                <th scope="col">등록 날짜</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableAlarms">
+                            </tbody>
+                        </table>
+
+                        <div class="pagination mt-3 alarmsListPaging">
+                            <!-- 페이징 처리-->
+                        </div>
+                    </div>
+
+                </div><!-- <div class="card-body">-->
+            </div>
+        </div>
+    </div>
+
+
+    <!--    axios 라이브러리 추가-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
+
+</div> <!--<div layout:fragment="content">-->
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const alarmsListPaging = document.querySelector('.alarmsListPaging')  // 페이지 목록 DOM
+    const tableAlarms = document.getElementById("tableAlarms");
+
+    // 페이지 번호 클릭
+    let page = 1
+    let size = 5
+
+    getListAlarms(page, size)
+
+    function getListAlarms(page, size){
+
+        getAlarmList({page, size}).then(data => {
+
+            printAlarmList(data.dtoList, tableAlarms) // 목록 처리
+            printPagesAlarm(data)
+
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
+
+    function makeAlarmData(arr, dtoData){
+        arr[0] = dtoData.userAlarmID
+        arr[1] = dtoData.alarmText
+        arr[2] = stringToDateFormat(dtoData.regDate)
+    }
+
+    function printAlarmList(dtoList, tableRef) {    // 목록 출력
+        // 기존 행 삭제
+        while (tableRef.firstChild) {
+            tableRef.removeChild(tableRef.firstChild);
+        }
+
+        if(dtoList && dtoList.length > 0) {
+            dtoList.forEach(function (e, i) {
+
+                const arr = []
+
+                makeAlarmData(arr, e)
+
+                let newRow = tableRef.insertRow(-1);
+
+                for (let j = 0, k = 0; j < arr.length; j++){
+                    if(arr[j] !== ''){
+
+                        let newCell = newRow.insertCell(k);
+                        let newText = document.createTextNode(arr[j]);
+
+                        // if( j === 1 ){
+                        //     const url="/notification/show/" + pathName + "/" + arr[0];
+                        //     const link = document.createElement("a");
+                        //     link.setAttribute("href",url);
+                        //     link.appendChild(newText);
+                        //
+                        //     newCell.appendChild(link);
+                        // }
+                        // else{
+                            newCell.appendChild(newText);
+                        //}
+                        k++;
+                    }
+                }
+            })
+        }
+    }
+
+    alarmsListPaging.addEventListener("click", function(e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        if(!target || target.tagName !== 'A'){
+            return
+        }
+        page = target.getAttribute("data-page")
+
+        // 알림 현황 가져오기
+        getListAlarms(page,size)
+
+    },false)
+
+    function printPagesAlarm(data){
+        let pageStr = '';
+
+        if(data.prev){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+        }
+        for(let i = data.start; i <= data.end; i++){
+            pageStr += `<li class="page-item ${i == data.page ? "active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+        }
+        if(data.next){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end+1}">NEXT</a></li>`
+        }
+        alarmsListPaging.innerHTML = pageStr
+    }
+
+</script>

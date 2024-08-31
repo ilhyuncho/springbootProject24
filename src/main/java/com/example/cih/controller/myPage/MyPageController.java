@@ -129,4 +129,22 @@ public class MyPageController {
         return "/myPage/carOrderList";
     }
 
+    @ApiOperation(value = "차 구매 진행 내역 조회", notes = "")
+    @GetMapping("/alarmInfo")
+    public String alarmInfo(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
+                               Model model, Principal principal ){
+
+        User user = userService.findUser(principal.getName());
+
+        List<BuyingCarViewDTO> listBuyingCarViewDTO = buyingCarService.getListBuyingCarInfo(user);
+
+        listBuyingCarViewDTO.forEach(log::error);
+
+        model.addAttribute("listBuyingCarDTO", listBuyingCarViewDTO);
+
+        return "/myPage/alarmInfo";
+    }
+
+
+
 }

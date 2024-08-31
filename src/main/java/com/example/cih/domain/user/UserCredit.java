@@ -16,8 +16,8 @@ import javax.persistence.*;
 public class UserCredit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="userCreditsId")
-    private Long userCreditsId;
+    @Column(name="userCreditId")
+    private Long userCreditId;
 
 //    @Column(name="uId")
 //    private Long userId;
