@@ -161,14 +161,6 @@
   //첨부 파일 삭제 임시 저장
   const removeFileList = []
 
-  // 이미지 업로드 모달
-  document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    uploadModal.show()
-  }, false)
-
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
     const formObj = new FormData();

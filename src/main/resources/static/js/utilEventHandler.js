@@ -46,7 +46,17 @@ document.querySelectorAll(".closeModalBtn").forEach(function (item,idx){
     })
 }, false)
 
+// [모달창] 이미지 업로드 모달창 view - 버튼 클릭
 
+document.querySelectorAll(".uploadFileBtn").forEach(function (item,idx){
+    item.addEventListener('click', function(e){
+        e.stopPropagation()
+        e.preventDefault()
+
+        alert('uploadFileBtn')
+        uploadModal.show()
+    })
+}, false)
 
 
 

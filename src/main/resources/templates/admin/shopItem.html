@@ -226,14 +226,6 @@
   }
   // 에러 처리 부분 end ----------------------------
 
-
-  document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    uploadModal.show()
-  }, false)
-
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
     const formObj = new FormData();

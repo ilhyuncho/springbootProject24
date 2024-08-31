@@ -183,6 +183,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+
+  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal")) // 이미지 업로드 모달
   const expiredDate = document.querySelector('.expiredDate');
 
   // 사용자 인증 정보 확인 begin ----------------------
@@ -207,16 +209,6 @@
   }
   // 에러 처리 부분 end ----------------------------
 
-
-  // 이미지 업로드 모달
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
-
-  document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
-    e.stopPropagation()
-    e.preventDefault()
-
-    uploadModal.show()
-  }, false)
 
   // 모달창의 파일 업로드 처리
   document.querySelector(".uploadBtn").addEventListener("click", function(e){
