@@ -45,14 +45,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(ReviewServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
 
+
         // 리뷰 평균 별 점수 get
-        float reviewAvgScore = reviewRepository.getReviewAvgScore(shopItemId);
+        Float reviewAvgScore = reviewRepository.getReviewAvgScore(shopItemId);
 
         return ReviewListResDTO.<ReviewResDTO>withSuper()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(listReviewDTO)
                 .total((int)result.getTotalElements()) // 수정 해야 함!!!
-                .reviewAvgScore(reviewAvgScore)
+                .reviewAvgScore(reviewAvgScore == null ? 0 : reviewAvgScore)
                 .build();
     }
 

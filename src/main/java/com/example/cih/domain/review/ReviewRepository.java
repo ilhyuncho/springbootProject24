@@ -22,7 +22,7 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query("select round(avg(coalesce(r.score,0)),1)" +
             " from Review r" +
             " where r.shopItem.shopItemId = :shopItemId ")
-    float getReviewAvgScore(@Param("shopItemId") Long shopItemId);
+    Float getReviewAvgScore(@Param("shopItemId") Long shopItemId);
 
 
 }
