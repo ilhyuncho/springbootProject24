@@ -157,6 +157,7 @@
   <script src="/js/buyingCar.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/utilViewHtml.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -208,18 +209,6 @@
     }
   }, false)
 
-
-  // 모달창의 [구매 제안], [경매 응찰 취소], [가격 수정] 처리
-  document.querySelectorAll(".cancelBtn, .sendRegisterBtn, .sendModifyBtn").forEach(function(item,idx){
-    item.addEventListener("click", function (e) {
-      e.stopPropagation()
-      e.preventDefault()
-
-      const offerType = e.target.getAttribute("data-bs-target")
-
-      makeFormAndSendToServer(offerType)
-    })
-  }, false)
 
   function makeFormAndSendToServer(offerType){
 
