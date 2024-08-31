@@ -431,7 +431,7 @@
         }
 
         const formObj = {
-            deliveryFee: deliveryFee.value,
+            deliveryFee: deliveryFee.value.replaceAll(",",""),
             userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
             totalDiscountPrice: totalDiscountPrice,
