@@ -134,12 +134,12 @@
 
   <!-- 상담 요청 모달창-->
   <div class="modal requestConsultModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="consultCloseBtn">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">상담 신청</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -150,7 +150,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendConsultRequestBtn" data-bs-target="consultRequest">신청</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">취소</button>
         </div>
       </div>
     </div>
@@ -158,12 +158,12 @@
 
   <!-- 경매 참여 모달창-->
   <div class="modal requestAuctionModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="auctionCloseBtn">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">경매 참여</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -175,7 +175,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendAuctionRequestBtn" data-bs-target="auctionRequest">신청</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">취소</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">취소</button>
         </div>
       </div>
     </div>
@@ -304,6 +304,21 @@
       requestAuctionModal.hide()
     }
     else if(formObj.offerType === 'consultRequest'){
+      requestConsultModal.hide()
+    }
+  }
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('deliveryAddress.html - initModalData()!!!!')
+
+    const target = obj.target
+    const dialog = target.closest(".modal-dialog")
+
+    if(dialog.getAttribute("data-num") === 'auctionCloseBtn'){
+      requestAuctionModal.hide()
+    }
+    else if(dialog.getAttribute("data-num") === 'consultCloseBtn'){
       requestConsultModal.hide()
     }
   }

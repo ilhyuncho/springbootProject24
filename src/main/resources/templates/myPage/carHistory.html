@@ -110,12 +110,12 @@
 
   <!--   주유 기록 추가 모달창-->
   <div class="modal addGasHistoryModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="gasCloseBtn">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">주유 기록</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -142,7 +142,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendGasHistoryBtn">추가</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
     </div>
@@ -150,12 +150,12 @@
 
   <!--   정비 기록 추가 모달창-->
   <div class="modal addRepairHistoryModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" th:data-num="repairCloseBtn">
       <div class="modal-content">
 
         <div class="modal-header">
           <h5 class="modal-title">정비 기록</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
 
@@ -196,7 +196,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger sendRepairHistoryBtn">추가</button>
-          <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+          <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
         </div>
       </div>
     </div>
@@ -206,6 +206,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/history.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/utilEventHandler.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -442,6 +443,21 @@
         }
 
       })
+    }
+  }
+
+  // 모달 창 값 초기화
+  function initModalData(obj){
+    console.log('carHistory.html - initModalData()!!!!')
+
+    const target = obj.target
+    const dialog = target.closest(".modal-dialog")
+
+    if(dialog.getAttribute("data-num") === 'gasCloseBtn'){
+      addGasHistoryModal.hide()
+    }
+    else if(dialog.getAttribute("data-num") === 'repairCloseBtn'){
+      addRepairHistoryModal.hide()
     }
   }
 

@@ -82,7 +82,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">리뷰 쓰기</h5>
-                    <button type="button" class="btn-close closeRegisterBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
@@ -148,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark reviewRegisterBtn">등록</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -236,23 +236,6 @@
          }
      }
 
-     // [리뷰 쓰기] 모달창 닫기
-     document.querySelectorAll(".closeRegisterBtn").forEach(function (item,idx){
-         // 갯수 차감
-         item.addEventListener('click', function(){
-
-             const fileInput = document.querySelector("input[name='files']")
-
-             initModalFileUpload(fileInput)  // 파일 업로드 모달 창 입력 값 초기화
-
-             initUploadResult(uploadResult)
-             reviewText.value = ''
-
-             writeReviewModal.hide()
-         })
-
-     }, false)
-
      // [모달창] 이미지 업로드 모달창 view - 버튼 클릭
      document.querySelector(".uploadFileBtn").addEventListener("click", function (e){
          e.stopPropagation()
@@ -337,5 +320,18 @@
         })
 
     }, false)
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('initModalData()!!!!')
+
+        const fileInput = document.querySelector("input[name='files']")
+        initModalFileUpload(fileInput)  // 파일 업로드 모달 창 입력 값 초기화
+
+        initUploadResult(uploadResult)
+        reviewText.value = ''
+
+        writeReviewModal.hide()
+    }
 
 </script>

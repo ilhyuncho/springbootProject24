@@ -75,13 +75,13 @@ function appendNotShownData(){
 // 파일 업로드 모달창 내용 초기화
 function initModalFileUpload(files){
     files.value = ''
-    console.log('files.value init')
+    console.log('initModalFileUpload()!!')
 }
 
 // 파일 업로드 내용 표시 부분 초기화
 function initUploadResult(uploadResult){
     uploadResult.innerHTML = ''
-    console.log('uploadResult.innerHTML')
+    console.log('initUploadResult()!!!')
 }
 
 function getUploadFileNames(){

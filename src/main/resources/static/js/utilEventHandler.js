@@ -37,6 +37,14 @@ document.querySelectorAll(".closeUploadBtn").forEach(function (item,idx){
 }, false)
 
 
+// [모달창] 닫기
+document.querySelectorAll(".closeModalBtn").forEach(function (item,idx){
+    item.addEventListener('click', function(e){
+        console.log('closeModalBtn()!!!!!!! e: ' + e)
+
+        initModalData(e)    // 모달창 초기화
+    })
+}, false)
 
 
 

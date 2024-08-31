@@ -206,7 +206,7 @@
                 <div class="modal-header">
                     <input type="hidden" class="form-control" id="modalType">
                     <h5 class="modal-title" id="modalTitle" th:value="|배송지 추가|"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
@@ -262,7 +262,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary sendRegisterBtn">배송지 추가</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -275,6 +275,7 @@
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
     <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -667,5 +668,12 @@
 
         reCalculation()
     }, false)
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('cartList.html - initModalData()!!!!')
+
+        modalAddressRegister.hide()
+    }
 
 </script>

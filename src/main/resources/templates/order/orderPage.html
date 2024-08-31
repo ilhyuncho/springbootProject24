@@ -139,13 +139,13 @@
     </div>
 
     <!-- 배송지 리스트 모달창-->
-    <div class="modal modalAddressList" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal addressListModal" tabindex="-1">
+        <div class="modal-dialog" th:data-num="listCloseBtn">
             <div class="modal-content">
 
                 <div class="modal-header">
                     <h5 class="modal-title">배송지 변경</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
@@ -163,7 +163,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary modalSelectBtn">선택</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -171,14 +171,14 @@
 
 
     <!-- 주소록 등록을 위한 모달창-->
-    <div class="modal modalAddressRegister" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal addressRegisterModal" tabindex="-1">
+        <div class="modal-dialog" th:data-num="registerCloseBtn">
             <div class="modal-content">
 
                 <div class="modal-header">
                     <input type="hidden" class="form-control modalType">
                     <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
@@ -238,7 +238,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -251,12 +251,13 @@
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
     <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
 
-    const modalAddressList = new bootstrap.Modal(document.querySelector(".modalAddressList"))
-    const modalAddressRegister = new bootstrap.Modal(document.querySelector(".modalAddressRegister"))
+    const addressListModal = new bootstrap.Modal(document.querySelector(".addressListModal"))
+    const addressRegisterModal = new bootstrap.Modal(document.querySelector(".addressRegisterModal"))
 
     const tableAddressList = document.getElementById("tableAddressList");
 
@@ -453,11 +454,11 @@
             let newCell = newRow.insertCell(0);
             newCell.appendChild(dialog);
 
-            modalAddressList.show()
+            addressListModal.show()
 
         }).catch(e => {
             errorResponse(e)
-            modalAddressList.hide()
+            addressListModal.hide()
         })
     }
 
@@ -471,7 +472,7 @@
         checkRegular.style.display='inline'
         modalMainAddressCheck.value='false'
 
-        modalAddressRegister.show()
+        addressRegisterModal.show()
     }
 
     // [모달창] 배송지 선택
@@ -484,7 +485,7 @@
             }
         })
 
-        modalAddressList.hide()
+        addressListModal.hide()
     }, false)
 
 
@@ -507,7 +508,7 @@
 
         sendDeliveryAddress(formObj).then(result => {
 
-            modalAddressRegister.hide()
+            addressRegisterModal.hide()
 
             if(result.result === 'fail'){
                 alert(result.message)
@@ -519,7 +520,7 @@
 
         }).catch(e => {
             errorResponse(e)
-            modalAddressRegister.hide()
+            addressRegisterModal.hide()
         })
     }, false)
 
@@ -550,6 +551,21 @@
             errorResponse(e)
             updateModal.hide()
         })
+    }
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('orderPage.html - initModalData()!!!!')
+
+        const target = obj.target
+        const dialog = target.closest(".modal-dialog")
+
+        if(dialog.getAttribute("data-num") === 'registerCloseBtn'){
+            addressRegisterModal.hide()
+        }
+        else if(dialog.getAttribute("data-num") === 'listCloseBtn'){
+            addressListModal.hide()
+        }
     }
 
 </script>

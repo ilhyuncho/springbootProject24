@@ -91,7 +91,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">배송 현황</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -123,6 +123,7 @@
     <script src="/js/order.js"></script>
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
 </div>
 
 
@@ -172,5 +173,11 @@
         })
     }
 
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('orderList.html - initModalData()!!!!')
+
+        deliveryProcessModal.hide()
+    }
 
 </script>
