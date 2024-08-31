@@ -27,23 +27,16 @@ public class NotificationRestController {
 
     @ApiOperation(value = "[공지사항] 이벤트 리스트 전달", notes = "고객 접근")
     @GetMapping("/event")
-    public PageResponseDTO<NotiEventResDTO> getEventList(PageRequestDTO pageRequestDTO,
-                                         String targetId, Model model){
+    public PageResponseDTO<NotiEventResDTO> getEventList(PageRequestDTO pageRequestDTO){
 
-        log.error("pageRequestDTO  : " + pageRequestDTO);
-        pageRequestDTO.setType("u");
-        PageResponseDTO<NotiEventResDTO> listEventInfo = notificationService.getListEventInfo(pageRequestDTO);
-        return listEventInfo;
+        return notificationService.getListEventInfo(pageRequestDTO);
     }
 
     @ApiOperation(value = "[공지사항] 뉴스 리스트 전달", notes = "고객 접근")
     @GetMapping("/news")
-    public PageResponseDTO<NotiNewsResDTO> getNewsList(PageRequestDTO pageRequestDTO,
-                                         String targetId, Model model){
+    public PageResponseDTO<NotiNewsResDTO> getNewsList(PageRequestDTO pageRequestDTO){
 
-        log.error("pageRequestDTO  : " + pageRequestDTO);
-        PageResponseDTO<NotiNewsResDTO> listNewsInfo = notificationService.getListNewsInfo(pageRequestDTO);
-        return listNewsInfo;
+        return notificationService.getListNewsInfo(pageRequestDTO);
     }
 
 
