@@ -1,9 +1,6 @@
 package com.example.cih.controller.shop;
 
 import com.example.cih.domain.user.User;
-import com.example.cih.dto.PageRequestDTO;
-import com.example.cih.dto.PageResponseDTO;
-import com.example.cih.dto.review.ReviewResDTO;
 import com.example.cih.dto.shop.ShopItemExtandDTO;
 import com.example.cih.dto.shop.ShopItemResDTO;
 import com.example.cih.service.review.ReviewService;
@@ -40,6 +37,7 @@ public class ShopController {
         log.error(shopItemService);
 
         List<ShopItemResDTO> listDTO = shopItemService.getAllItemsForShop();
+
         model.addAttribute("itemList", listDTO);
 
         for (ShopItemResDTO shopItemResDTO : listDTO) {

@@ -5,7 +5,7 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>noti Detail</title>
+  <title>noti Detail!</title>
 </head>
 
 <div layout:fragment="content">
@@ -19,8 +19,9 @@
         <div class="card-body">
 
               <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-                <th:block th:each="fileName:${responseDTO.fileNames}">
-                      <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
+                <th:block th:each="fileName:${responseDTO.getListAllImage()}">
+                      <img th:src="|/view/${fileName.uuid}_${fileName.fileName}|" style="width: 1000px"
+                           th:data-src="${fileName.uuid}" >
                 </th:block>
               </div>
 
@@ -35,7 +36,7 @@
             </div>
           </div>
 
-        <a th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|" c
+<!--        <a th:href="|@{/myPage/carList(memberId=${#authentication.principal.username})}|" ></a>-->
 
 
         </div><!-- <div class="card-body">-->
