@@ -279,6 +279,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private NotiResDTO entityToNotiResDTO(Notification notification) {
 
+        // 매핑을 할 때 변수명과 컬럼명이 일치하지 않을 수 있을 경우를 고려
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
 
         NotiResDTO notiResDTO;
@@ -306,6 +307,7 @@ public class NotificationServiceImpl implements NotificationService {
             notiResDTO.addImage(image.getNotificationImageId(), image.getUuid(), image.getFileName(),
                     image.getImageOrder(), image.getIsMainImage());
         });
+
 
         return notiResDTO;
     }
