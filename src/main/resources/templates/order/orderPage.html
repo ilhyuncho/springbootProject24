@@ -80,7 +80,7 @@
                                             <button type="button" class="btn btn-success btn-sm"
                                              th:onclick="selectAddress()" >변경</button>
                                             <button type="button" class="btn btn-primary btn-sm"
-                                                    th:onclick="registerDeliveryAddress()">추가</button>
+                                                    th:onclick="showDeliveryAddress()">추가</button>
                                         </div>
                                     </div>
 
@@ -188,7 +188,7 @@
 
                 <div class="modal-header">
                     <input type="hidden" class="form-control modalType">
-                    <h5 class="modal-title modalTitle" th:value="|배송지 추가|"></h5>
+                    <h5 class="modal-title modalTitle"></h5>
                     <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -248,7 +248,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sendRegisterBtn">Register</button>
+                    <button type="button" class="btn btn-primary sendAddressRegBtn">Register</button>
                     <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
                 </div>
             </div>
@@ -483,18 +483,6 @@
         })
     }
 
-    // 배송지 추가하기
-    function registerDeliveryAddress() {
-
-        modalTitle.innerHTML = '배송지 추가'
-        modalType.value = 'register'
-
-        checkSolid.style.display='none'
-        checkRegular.style.display='inline'
-        modalMainAddressCheck.value='false'
-
-        addressRegisterModal.show()
-    }
 
     // [모달창] 배송지 선택
     document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
@@ -511,7 +499,7 @@
 
 
     // [배송지 추가] 요청 처리
-    document.querySelector(".sendRegisterBtn").addEventListener("click", function(e){
+    document.querySelector(".sendAddressRegBtn").addEventListener("click", function(e){
 
         const formObj = {
             deliveryName:modalDeliveryName.value,

@@ -125,4 +125,15 @@ function viewCarLike(isLike){
     }
 }
 
+// 배송지 추가하기 모달창 셋팅
+function showDeliveryAddress() {
 
+    modalTitle.innerHTML = '배송지 추가'
+    modalMainAddressCheck.value='false'
+
+    checkSolid.style.display='none'
+    checkRegular.style.display='inline'
+    modalType.value = 'register'
+
+    addressRegisterModal.show()
+}
