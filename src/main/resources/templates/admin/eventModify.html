@@ -103,7 +103,7 @@
                   <th:block th:each="fileName:${responseDTO.fileNames}">
                     <div class="card col-4">
                       <div class="card-header d-flex justify-content-center">
-                        [[${fileName.fileName}]]
+                        [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
                         <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
                       </div>
                       <div class="card-body">

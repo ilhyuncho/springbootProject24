@@ -63,7 +63,7 @@
                   <th:block th:each="fileName:${responseDTO.fileNames}">
                     <div class="card col-4">
                       <div class="card-header d-flex justify-content-center">
-                        [[${fileName.fileName}]]
+                        [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
                       </div>
                       <div class="card-body">
                         <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="${fileName.uuid}" >
