@@ -103,26 +103,6 @@ public class AdminNotiController {
         return "redirect:/admin/eventDetail/" + notiId;
     }
 
-    @ApiOperation(value = "[이벤트] 삭제", notes = "관리자 접근")
-    @PostMapping("/eventDelete/{notiId}")
-    public String postEventDelete(@PathVariable("notiId") Long notiId,
-                                 NotiDeleteRegDTO notiDeleteRegDTO,
-                                 RedirectAttributes redirectAttributes){
-        log.error("eventDelete......post: " + notiId);
-
-        notificationService.deleteEventNotification(notiId);
-
-        // 첨부파일 삭제
-        List<String> fileNames = notiDeleteRegDTO.getFileNames();
-        if(fileNames != null && fileNames.size() > 0){
-            fileHandler.removeFiles(fileNames);
-        }
-
-        redirectAttributes.addFlashAttribute("result", "removed");
-
-        return "redirect:/admin/eventList";
-    }
-
 /////////////////////////////////////////////////////////////////////////////////////////
     @ApiOperation(value = "[뉴스] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsList")
@@ -136,7 +116,7 @@ public class AdminNotiController {
         return "/admin/newsRegister";
     }
 
-    @ApiOperation(value = "[이벤트] 상세, 수정 페이지 접근", notes = "관리자 접근")
+    @ApiOperation(value = "[뉴스] 상세, 수정 페이지 접근", notes = "관리자 접근")
     @GetMapping({"/newsDetail/{notiId}", "/newsModify/{notiId}"})
     public String getNewsDetailOrModify(HttpServletRequest request,
                                          @PathVariable("notiId") Long notiId,
@@ -191,14 +171,14 @@ public class AdminNotiController {
         return "redirect:/admin/newsDetail/" + notiId;
     }
 
-    @ApiOperation(value = "[뉴스] 삭제", notes = "관리자 접근")
-    @PostMapping("/newsDelete/{notiId}")
-    public String postNewsDelete(@PathVariable("notiId") Long notiId,
+    @ApiOperation(value = "[뉴스] & [이벤트] 삭제", notes = "관리자 접근")
+    @PostMapping("/notiDelete/{notiType}/{notiId}")
+    public String postNotiDelete(@PathVariable("notiType") String notiType,
+                                 @PathVariable("notiId") Long notiId,
                                  NotiDeleteRegDTO notiDeleteRegDTO,
-                                RedirectAttributes redirectAttributes){
-        log.error("newsDelete......post: " + notiId);
+                                 RedirectAttributes redirectAttributes){
 
-        notificationService.deleteNewsNotification(notiId);
+        notificationService.deleteNotification(notiType, notiId);
 
         // 첨부파일 삭제
         List<String> fileNames = notiDeleteRegDTO.getFileNames();
@@ -208,7 +188,7 @@ public class AdminNotiController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:/admin/newsList";
+        return "redirect:/admin/" + notiType + "List";
     }
 
     ///////////////////////////////////////////////////////////////

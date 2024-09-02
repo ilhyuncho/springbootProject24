@@ -104,10 +104,10 @@
             <div class="my-4">
               <div class="float-end">
                 <a th:href="|@{/admin/eventList}|" class="text-decoration-none">
-                  <button type="button" class="btn btn-primary">List</button>
+                  <button type="button" class="btn btn-secondary">List</button>
                 </a>
                 <a th:href="|@{'/admin/eventModify/' + ${responseDTO.notiId}}|" class="text-decoration-none">
-                  <button type="button" class="btn btn-secondary">이벤트 정보 수정</button>
+                  <button type="button" class="btn btn-primary">이벤트 정보 수정</button>
                 </a>
                 <a th:href="|@{'/admin/notiImageOrderModify/event/' + ${responseDTO.notiId}}|" class="text-decoration-none">
                   <button type="button" class="btn btn-warning">이미지 순서 수정</button>

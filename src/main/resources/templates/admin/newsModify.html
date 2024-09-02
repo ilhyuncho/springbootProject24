@@ -87,9 +87,9 @@
             <div class="my-4">
               <div class="float-end">
                 <a th:href="|@{/admin/newsList}|" class="text-decoration-none">
-                  <button type="button" class="btn btn-primary">List</button>
+                  <button type="button" class="btn btn-secondary">List</button>
                 </a>
-                <button type="button" class="btn btn-secondary saveBtn">Save</button>
+                <button type="button" class="btn btn-primary saveBtn">수정 완료</button>
                 <button type="button" class="btn btn-danger removeBtn">Remove</button>
               </div>
             </div>
@@ -212,7 +212,7 @@
     // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
     appendNotShownData()
 
-    formObj.action = `/admin/newsDelete/${notiId}`
+    formObj.action = `/admin/notiDelete/news/${notiId}`
     formObj.method = 'post'
     formObj.submit()
 

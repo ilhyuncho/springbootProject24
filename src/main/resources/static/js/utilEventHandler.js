@@ -53,7 +53,6 @@ document.querySelectorAll(".uploadFileBtn").forEach(function (item,idx){
         e.stopPropagation()
         e.preventDefault()
 
-        alert('uploadFileBtn')
         uploadModal.show()
     })
 }, false)

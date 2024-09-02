@@ -127,13 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Optional<Notification> result = notificationRepository.findById(notiId);
 
-        if(result.isPresent()){
-            NotiResDTO notiResDTO = entityToNotiResDTO(result.get());
-
-            //log.error("notiNewsResDTO : " + notiNewsResDTO);
-            return notiResDTO;
-        }
-        return null;
+        return result.map(this::entityToNotiResDTO).orElse(null);
     }
 
     public Boolean isEventDuplication(EventType eventType, LocalDate regStartDate, LocalDate regEndDate){
@@ -229,22 +223,21 @@ public class NotificationServiceImpl implements NotificationService {
         // 첨부 파일 갱신
         newsNotification.updateImages(dto);
     }
-
     @Override
-    public void deleteEventNotification(Long notiId) {
-        EventNotification result = eventNotificationRepository.findById(notiId)
-                .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
+    public void deleteNotification(String notiType, Long notiId) {
 
-        eventNotificationRepository.delete(result);
-    }
+        if(notiType.equals("event")){
+            EventNotification result = eventNotificationRepository.findById(notiId)
+                    .orElseThrow(() -> new NoSuchElementException("해당 이벤트 정보가 존재하지않습니다"));
 
-    @Override
-    public void deleteNewsNotification(Long notiId) {
+            eventNotificationRepository.delete(result);
+        }
+        else if(notiType.equals("news")){
+            NewsNotification result = newsNotificationRepository.findById(notiId)
+                    .orElseThrow(() -> new NoSuchElementException("해당 뉴스 정보가 존재하지않습니다"));
 
-        NewsNotification result = newsNotificationRepository.findById(notiId)
-                .orElseThrow(() -> new NoSuchElementException("해당 뉴스 정보가 존재하지않습니다"));
-
-        newsNotificationRepository.delete(result);
+            newsNotificationRepository.delete(result);
+        }
     }
 
     @Override
