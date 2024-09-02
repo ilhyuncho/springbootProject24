@@ -132,3 +132,16 @@ function getNumber(strNumber){
     return Number(out.join(''));
 }
 // input text 숫자  ',' 추가----end-------------------------
+
+
+// [포인트 전액 사용] 버튼 클릭
+function useAllPoint(){
+
+    console.log('useAllPoint()~')
+
+    const expectedPriceValue = parseInt(expectedPrice.value.replaceAll(",",""))
+    const totalMPointValue = parseInt(totalMPoint.value.replaceAll(",",""))
+    useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue : expectedPriceValue
+
+    reCalculation()
+}

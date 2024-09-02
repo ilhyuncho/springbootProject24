@@ -66,6 +66,7 @@ public class OrderController {
 
         model.addAttribute("responseDTO", orderTemporaryResDTO);
         model.addAttribute("mainAddressInfo", mainAddressInfo);
+        model.addAttribute("mPoint", user.getMPoint());
 
         return "/order/orderPage";
     }

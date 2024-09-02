@@ -96,6 +96,27 @@ document.querySelectorAll(".modBtn").forEach(function (item,idx){
 
 
 
+// [포인트 사용] 수동 입력
+document.querySelectorAll("#useMPoint").forEach(function (item,idx){
+    item.addEventListener('change', function(e) {
+        e.stopPropagation()
+        e.preventDefault()
+
+        const totalMPointValue = parseInt(totalMPoint.value.replaceAll(",", ""))
+        const useMPointValue = parseInt(useMPoint.value.replaceAll(",", ""))
+
+        if (useMPointValue > totalMPointValue) {
+            useMPoint.value = totalMPointValue
+        }
+        if (useMPointValue < 0) {
+            useMPoint.value = 0
+        }
+
+        reCalculation()
+    })
+
+}, false)
+
 
 
 

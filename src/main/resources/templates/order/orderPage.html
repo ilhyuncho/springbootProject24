@@ -88,6 +88,17 @@
                                     <div id="fullAddress" th:text="|${mainAddressInfo != null ? mainAddressInfo.fullAddress : ''}|"></div>
                                 </div><!-- <div class="card-body">-->
 
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">보유 포인트</span>
+                                        <input type="text" class="form-control" id="totalMPoint" th:value="${mPoint > 0 ? #numbers.formatInteger(mPoint,3,'COMMA') : 0}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
+                                        <button type="button" class="btn btn-success btn-sm" th:onclick="useAllPoint()" >전액 사용</button>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="col-md-8">
@@ -346,12 +357,19 @@
         e.preventDefault()
         e.stopPropagation()
 
-        const itemPriceTemp = selItemPrice.value
-        const discountPriceTemp = selDiscountPrice.value
+        const itemPriceTemp = selItemPrice.value.replaceAll(",","")
+        const discountPriceTemp = selDiscountPrice.value.replaceAll(",","")
         const orderCountTemp = selOrderCount.value
 
         const totalPrice = itemPriceTemp * orderCountTemp;
         const totalDiscountPrice = discountPriceTemp * orderCountTemp;
+
+        let totalPaymentPrice = 0
+        // 총 결제 금액 = 제품별 구매 금액 + 배송비 - 사용 포인트
+        totalPaymentPrice += (totalPrice - totalDiscountPrice)
+        totalPaymentPrice += parseInt(deliveryFee.value.replaceAll(",",""))
+        totalPaymentPrice -= parseInt(useMPoint.value.replaceAll(",",""))
+
 
         let arrayItemInfo = [];
         const itemInfo = {
@@ -375,10 +393,12 @@
         }
 
         const formObj = {
-            deliveryFee: deliveryFee.value,
+            deliveryFee: deliveryFee.value.replaceAll(",",""),
             userAddressBookId: userAddressBookId.value,
             totalPrice: totalPrice,
             totalDiscountPrice: totalDiscountPrice,
+            totalPaymentPrice: totalPaymentPrice,
+            useMPoint : useMPoint.value,
             listOrderDetail: arrayItemInfo
         }
 
@@ -397,8 +417,8 @@
     // 결제 금액 다시 계산
     function reCalculation(){
 
-        const itemPriceTemp = selItemPrice.value
-        const discountPriceTemp = selDiscountPrice.value
+        const itemPriceTemp = selItemPrice.value.replaceAll(",","")
+        const discountPriceTemp = selDiscountPrice.value.replaceAll(",","")
         const orderCountTemp = selOrderCount.value
 
         const totalOriginalPrice = itemPriceTemp * orderCountTemp
@@ -408,10 +428,11 @@
         // 배송비 계산
         const deliveryPrice = (totalPrice === 0 || totalPrice > 15000) ? 0 : 2500
 
-        orderPrice.value = totalOriginalPrice
-        deliveryFee.value = deliveryPrice
-        discountPrice.value = totalDiscountPrice
-        expectedPrice.value = totalPrice + deliveryPrice
+        orderPrice.value = totalOriginalPrice.toLocaleString('ko-KR')
+        deliveryFee.value = deliveryPrice.toLocaleString('ko-KR')
+        discountPrice.value = totalDiscountPrice.toLocaleString('ko-KR')
+        expectedPrice.value = (totalPrice + deliveryPrice - useMPoint.value.replaceAll(",","")).toLocaleString('ko-KR')
+
     }
 
     // [배송지 변경] 버튼 클릭

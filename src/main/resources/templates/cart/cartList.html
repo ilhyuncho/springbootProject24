@@ -109,7 +109,7 @@
                                 <div class="card-body">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">보유 포인트</span>
-                                        <input type="text" class="form-control" id="totalMPoint" th:value="${#numbers.formatInteger(mPoint,3,'COMMA')}" readonly>
+                                        <input type="text" class="form-control" id="totalMPoint" th:value="${mPoint > 0 ? #numbers.formatInteger(mPoint,3,'COMMA') : 0}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <input type="number" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
@@ -394,8 +394,8 @@
             const cartIdTag = document.querySelector('input[name=p_cartId'+idx+']')
 
             if( selectedTag.checked === true){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'))
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'))
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value').replaceAll(",",""))
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value').replaceAll(",",""))
                 const itemCount = parseInt(itemCountTag.getAttribute('value'))
                 const itemId = parseInt(itemIdTag.getAttribute('value'))
                 const ItemOptionIds = ItemOptionIdsTag.getAttribute('value')
@@ -418,8 +418,8 @@
 
         // 총 결제 금액 = 제품별 구매 금액 + 배송비 - 사용 포인트
         totalPaymentPrice += (totalPrice - totalDiscountPrice)
-        totalPaymentPrice += parseInt(deliveryFee.value)
-        totalPaymentPrice -= parseInt(useMPoint.value)
+        totalPaymentPrice += parseInt(deliveryFee.value.replaceAll(",",""))
+        totalPaymentPrice -= parseInt(useMPoint.value.replaceAll(",",""))
 
         if(arrayItemInfo.length === 0){
             alert("상품을 선택하세요~!!!")
@@ -470,8 +470,8 @@
             const isFreeDeliveryTag = document.querySelector('input[name=p_isFreeDelivery'+idx+']')
 
             if(selectedTag.checked){
-                const itemPrice = parseInt(itemPriceTag.getAttribute('value'))
-                const discountPrice = parseInt(discountPriceTag.getAttribute('value'))
+                const itemPrice = parseInt(itemPriceTag.getAttribute('value').replaceAll(",",""))
+                const discountPrice = parseInt(discountPriceTag.getAttribute('value').replaceAll(",",""))
                 const itemCount = parseInt(itemCountTag.getAttribute('value'))
                 const isFreeDelivery = parseInt(isFreeDeliveryTag.getAttribute('value'))
 
@@ -490,7 +490,7 @@
         orderPrice.value = totalOriginalPrice.toLocaleString('ko-KR')
         deliveryFee.value = deliveryPrice.toLocaleString('ko-KR')
         discountPrice.value = totalDiscountPrice.toLocaleString('ko-KR')
-        expectedPrice.value = (totalPrice + deliveryPrice - useMPoint.value).toLocaleString('ko-KR')
+        expectedPrice.value = (totalPrice + deliveryPrice - useMPoint.value.replaceAll(",","")).toLocaleString('ko-KR')
     }
 
     // 상품 삭제
@@ -643,31 +643,6 @@
         })
         obj.checked = true
     }
-
-    // [포인트 전액 사용] 버튼 클릭
-    function useAllPoint(){
-        const expectedPriceValue = parseInt(expectedPrice.value)
-        const totalMPointValue = parseInt(totalMPoint.value)
-        useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue : expectedPriceValue
-
-        reCalculation()
-    }
-
-    // [포인트 사용] 수동 입력
-    document.querySelector("#useMPoint").addEventListener("change", function (e) {
-
-        const totalMPointValue = parseInt(totalMPoint.value)
-        const useMPointValue = parseInt(useMPoint.value)
-
-        if(useMPointValue > totalMPointValue){
-            useMPoint.value = totalMPointValue
-        }
-        if(useMPointValue < 0){
-            useMPoint.value = 0
-        }
-
-        reCalculation()
-    }, false)
 
     // 모달 창 값 초기화
     function initModalData(obj){
