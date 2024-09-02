@@ -79,7 +79,7 @@ public class AdminShopRestController {
                                                                   BindingResult bindingResult) throws BindException {
 
         // ImageOrder 값이 중복 되는지 체크
-        admnShopControllerValidator.validate(imageOrderReqDTO, bindingResult);
+        //admnShopControllerValidator.validate(imageOrderReqDTO, bindingResult);
 
         if(bindingResult.hasErrors()) {
             log.error("bindingResult.hasErrors()~~~");
