@@ -1,7 +1,6 @@
 package com.example.cih.controller.admin;
 
 import com.example.cih.common.handler.FileHandler;
-import com.example.cih.common.util.Util;
 import com.example.cih.domain.notification.EventType;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
@@ -24,7 +23,7 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Log4j2
-public class NotiManageController {
+public class AdminNotiController {
     private final NotificationService notificationService;
     private final FileHandler fileHandler;
     private final NotiControllerValidator notiControllerValidator;
@@ -121,6 +120,17 @@ public class NotiManageController {
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/admin/eventList";
+    }
+
+    @ApiOperation(value = "[이벤트] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")
+    @GetMapping("/eventImageOrderModify/{notiId}")
+    public String getEventImageOrderModify(@PathVariable("notiId") Long notiId, Model model){
+
+        NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
+
+        model.addAttribute("responseDTO", eventInfo);
+
+        return "/admin/eventOrderModify";
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////

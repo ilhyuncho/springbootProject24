@@ -3,6 +3,8 @@ package com.example.cih.service.notification;
 import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.common.util.Util;
 import com.example.cih.domain.notification.*;
+import com.example.cih.dto.ImageDTO;
+import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
@@ -17,6 +19,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final EventNotificationRepository eventNotificationRepository;
     private final NotificationRepository notificationRepository;
 
+    private final NotificationImageRepository notificationImageRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -358,4 +362,25 @@ public class NotificationServiceImpl implements NotificationService {
         
         return newsNotification;
     }
+
+    @Override
+    public void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO) {
+
+        Optional<Notification> result = notificationRepository.findById(imageOrderReqDTO.getObjectId());
+
+        if(result.isPresent()){
+            // 관리자가 재설정한 image order
+            Map<Long, Integer> mapImageDTO = imageOrderReqDTO.getImageOrderList().stream()
+                    .collect(Collectors.toMap(ImageDTO::getImageId, ImageDTO::getImageOrder));
+
+            // DB에 등록된 image order 데이터 get
+            List<NotificationImage> listItemImage = notificationImageRepository.findByNotification(result.get());
+
+            listItemImage.forEach(itemImage -> {
+                itemImage.changeImageOrder(mapImageDTO.get(itemImage.getNotificationImageId()));
+            });
+        }
+
+    }
+
 }

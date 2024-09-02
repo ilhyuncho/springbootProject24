@@ -2,6 +2,7 @@ package com.example.cih.service.notification;
 
 import com.example.cih.domain.notification.EventNotification;
 import com.example.cih.domain.notification.EventType;
+import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.notification.*;
@@ -28,6 +29,8 @@ public interface NotificationService {
     NotiEventResDTO getRandomPopupEventInfo();
 
     EventNotification getNowDoingEventInfo(EventType eventType);
+
+    void modifyImageOrder(ImageOrderReqDTO imageOrderReqDTO);
 
 
 }

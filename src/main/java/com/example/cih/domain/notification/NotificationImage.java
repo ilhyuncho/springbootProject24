@@ -36,4 +36,8 @@ public class NotificationImage {
         this.notification = notification;
     }
 
+    public void changeImageOrder(int imageOrder){
+        this.imageOrder = imageOrder;
+    }
+
 }
