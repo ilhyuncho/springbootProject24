@@ -73,7 +73,7 @@
                     <div class="card col-4">
                       <div class="card-header d-flex justify-content-center">
                         [[${fileName.fileName}]] &nbsp; (order: [[${fileName.imageOrder}]])
-                        <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, this)">X</button>
+                        <button class="btn-sm btn-danger" th:onclick="removeFileData([[${fileName.uuid}]], [[${fileName.fileName}]], false, false, this)">X</button>
                       </div>
                       <div class="card-body">
                         <img th:src="|/view/s_${fileName.uuid}_${fileName.fileName}|" th:data-src="|${fileName.uuid}_${fileName.fileName}|" >

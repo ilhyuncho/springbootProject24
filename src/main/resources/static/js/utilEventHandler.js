@@ -59,7 +59,41 @@ document.querySelectorAll(".uploadFileBtn").forEach(function (item,idx){
 }, false)
 
 
+// 이미지 순서 수정 요청
+document.querySelectorAll(".modBtn").forEach(function (item,idx){
+    item.addEventListener('click', function(e){
+        e.stopPropagation()
+        e.preventDefault()
 
+        const imageOrder = uploadResult.querySelectorAll('.inputOrder')
+        const notiId = e.target.getAttribute("data-num")
+        const imageOrderList = []
+
+        for(let i= 0; i < imageOrder.length;i++){
+            const inputValue = imageOrder[i]
+            const imageId = inputValue.getAttribute("data-src")
+
+            imageOrderList.push({imageId:imageId, imageOrder:inputValue.value})
+        }
+
+        const formObj = {
+            objectId:notiId,
+            imageOrderList:imageOrderList
+        }
+
+        modifyImageOrder(formObj).then(result => {
+            console.log(result)
+
+        }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+            console.log(e.response.data.message)
+            alert('catch: ' + e.response.data.message)
+        }).finally(e=>{
+            // 화면 재 갱신
+            resetlocation(notiId)
+        })
+
+    })
+}, false)
 
 
 

@@ -80,7 +80,10 @@
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
                 <a th:href="|@{'/admin/newsModify/' + ${responseDTO.notiId}}|" class="text-decoration-none">
-                  <button type="button" class="btn btn-secondary">Modify</button>
+                  <button type="button" class="btn btn-secondary">뉴스 정보 수정</button>
+                </a>
+                <a th:href="|@{'/admin/newsImageOrderModify/' + ${responseDTO.notiId}}|" class="text-decoration-none">
+                  <button type="button" class="btn btn-warning">이미지 순서 수정</button>
                 </a>
               </div>
             </div>

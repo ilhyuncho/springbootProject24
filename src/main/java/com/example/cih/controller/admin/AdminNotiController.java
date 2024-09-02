@@ -46,6 +46,7 @@ public class AdminNotiController {
                                  @PathVariable("notiId") Long notiId,
                                  Model model){
 
+
         NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
 
         model.addAttribute("responseDTO", eventInfo);
@@ -130,7 +131,7 @@ public class AdminNotiController {
 
         model.addAttribute("responseDTO", eventInfo);
 
-        return "/admin/eventOrderModify";
+        return "/admin/eventImageOrderModify";
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -219,5 +220,16 @@ public class AdminNotiController {
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/admin/newsList";
+    }
+
+    @ApiOperation(value = "[뉴스] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")
+    @GetMapping("/newsImageOrderModify/{notiId}")
+    public String getNewsImageOrderModify(@PathVariable("notiId") Long notiId, Model model){
+
+        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
+
+        model.addAttribute("responseDTO", newsInfo);
+
+        return "/admin/newsImageOrderModify";
     }
 }

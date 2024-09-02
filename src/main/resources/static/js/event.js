@@ -9,9 +9,7 @@ async function getNotiList(formObj){
 async function modifyImageOrder(formObj) {
     //console.log(formObj)
 
-    const response = await axios.post(`/admin/modifyEventImageOrder`,formObj)
-    console.log("response: " + response)
-    console.log("response.data: " + response.data)
+    const response = await axios.post(`/admin/modifyNotiImageOrder`,formObj)
 
     return response.data
 }

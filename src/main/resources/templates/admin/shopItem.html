@@ -338,7 +338,7 @@
       const imgLink = uploadFile.getAttribute("data-src")
       const ArrayFileName = imgLink.split('_')    // uuid, fileName 으로 분리
 
-      removeFileData(ArrayFileName[0], ArrayFileName[1], true, uploadFile)
+      removeFileData(ArrayFileName[0], ArrayFileName[1], true, false, uploadFile)
     }
 
   }, false)

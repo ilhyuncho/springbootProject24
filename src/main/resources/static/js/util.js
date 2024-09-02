@@ -24,15 +24,14 @@ const maskingName = (value) => {
 }
 
 // 이미지 파일 [바로 삭제] 또는 [임시 삭제] 처리
-function removeFileData(uuid, fileName, direct, obj){
+function removeFileData(uuid, fileName, direct, checkMain, obj){
 
     const targetDiv = obj.closest('.card')
 
-    if(checkMainImage(fileName)){
+    if(checkMain && checkMainImage(fileName)){
         alert('메인 이미지는 삭제 할수 없습니다')
         return
     }
-
     if( direct === true){
         // if(!confirm("파일을 삭제!!")){
         //     return
