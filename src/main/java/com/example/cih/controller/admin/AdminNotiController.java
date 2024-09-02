@@ -123,17 +123,6 @@ public class AdminNotiController {
         return "redirect:/admin/eventList";
     }
 
-    @ApiOperation(value = "[이벤트] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")
-    @GetMapping("/eventImageOrderModify/{notiId}")
-    public String getEventImageOrderModify(@PathVariable("notiId") Long notiId, Model model){
-
-        NotiEventResDTO eventInfo = notificationService.getEventInfo(notiId);
-
-        model.addAttribute("responseDTO", eventInfo);
-
-        return "/admin/eventImageOrderModify";
-    }
-
 /////////////////////////////////////////////////////////////////////////////////////////
     @ApiOperation(value = "[뉴스] 관리 페이지 접근", notes = "관리자 접근")
     @GetMapping("/newsList")
@@ -222,14 +211,17 @@ public class AdminNotiController {
         return "redirect:/admin/newsList";
     }
 
-    @ApiOperation(value = "[뉴스] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")
-    @GetMapping("/newsImageOrderModify/{notiId}")
-    public String getNewsImageOrderModify(@PathVariable("notiId") Long notiId, Model model){
+    ///////////////////////////////////////////////////////////////
+    @ApiOperation(value = "[뉴스] & [이벤트] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")
+    @GetMapping("/notiImageOrderModify/{notiType}/{notiId}")
+    public String getNotiImageOrderModifyNew(@PathVariable("notiType") String notiType,
+                                             @PathVariable("notiId") Long notiId, Model model){
 
-        NotiNewsResDTO newsInfo = notificationService.getNewsInfo(notiId);
+        NotiResDTO notiInfo = notificationService.getNotiInfo(notiId);
 
-        model.addAttribute("responseDTO", newsInfo);
+        model.addAttribute("responseDTO", notiInfo);
 
-        return "/admin/newsImageOrderModify";
+        return "/admin/" + notiType + "ImageOrderModify";
     }
+
 }

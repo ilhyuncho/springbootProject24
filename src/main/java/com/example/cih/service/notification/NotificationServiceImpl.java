@@ -128,10 +128,10 @@ public class NotificationServiceImpl implements NotificationService {
         Optional<Notification> result = notificationRepository.findById(notiId);
 
         if(result.isPresent()){
-            NotiResDTO notiNewsResDTO = entityToNotiResDTO(result.get());
+            NotiResDTO notiResDTO = entityToNotiResDTO(result.get());
 
             //log.error("notiNewsResDTO : " + notiNewsResDTO);
-            return notiNewsResDTO;
+            return notiResDTO;
         }
         return null;
     }
