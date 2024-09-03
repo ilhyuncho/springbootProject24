@@ -42,18 +42,6 @@ public class RestExceptionAdvice extends ResponseEntityExceptionHandler {
                 request
         );
     }
-    @ExceptionHandler(value = {BoardNotFoundException.class})
-    public ResponseEntity<?> handleBoardNotFound(BoardNotFoundException e, WebRequest request){
-
-        log.error("RestExceptionAdvice - BoardNotFoundException!!! ");
-        return super.handleExceptionInternal(
-                e,
-                e.getMessage(),
-                new HttpHeaders(),
-                HttpStatus.NOT_FOUND,
-                request
-        );
-    }
 
     @ExceptionHandler(value = {ItemNotFoundException.class})
     public ResponseEntity<?> handleItemNotFound(ItemNotFoundException e, WebRequest request){
