@@ -145,3 +145,8 @@ function useAllPoint(){
 
     reCalculation()
 }
+
+// 랜덤 숫자 생성
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}

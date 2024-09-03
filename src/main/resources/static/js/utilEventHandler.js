@@ -119,16 +119,18 @@ document.querySelectorAll("#useMPoint").forEach(function (item,idx){
 
 
 // [모달창] 배송지 선택
-document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
+document.querySelectorAll(".modalSelectBtn").forEach(function (item,idx){
+    item.addEventListener('click', function(e) {
 
-    const checkboxes = document.getElementsByName("modalCheckAddress");
-    checkboxes.forEach((cb) => {
-        if(cb.checked === true){
-            // 선택된 배송지 정보 다시 요청
-            getAddressInfo(cb.getAttribute("data-bs-target"))
-        }
+        const checkboxes = document.getElementsByName("modalCheckAddress");
+        checkboxes.forEach((cb) => {
+            if (cb.checked === true) {
+                // 선택된 배송지 정보 다시 요청
+                getAddressInfo(cb.getAttribute("data-bs-target"))
+            }
+        })
+
+        addressListModal.hide()
     })
-
-    addressListModal.hide()
 }, false)
 

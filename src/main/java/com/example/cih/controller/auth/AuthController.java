@@ -55,7 +55,6 @@ public class AuthController {
             return "redirect:/auth/register";
         }catch (MemberTaskException ex){
             //log.error("MemberTaskException()~~~~~~~~~~~~~ : " + ex.getMsg() + "," + ex.getCode());
-
             redirectAttributes.addFlashAttribute("error", ex.getMsg());
             return "redirect:/auth/register";
         }

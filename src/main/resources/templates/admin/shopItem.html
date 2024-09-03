@@ -281,8 +281,14 @@
       itemOptionList.push({typePriority:2, optionType:itemOptionType2.value, optionValue:itemOptionValue2.value})
     }
 
+    // 상품 이름 null 체크해서 임의로 이름 생성
+    let shopItemName = itemName.value
+    if(shopItemName  === '' || shopItemName.length === 0){
+      shopItemName = 'item' + getRandomInt(1000)
+    }
+    
     const formObj = {
-      itemName:itemName.value,
+      itemName:shopItemName,
       itemTitle:itemTitle.value,
       itemDesc:itemDesc.value,
       originalPrice:originalPrice.value,
