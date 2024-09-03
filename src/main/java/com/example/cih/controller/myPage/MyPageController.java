@@ -41,8 +41,7 @@ public class MyPageController {
     @ApiOperation(value = "보유 차 리스트 조회", notes = "")
     @GetMapping("/carList")
     //@PreAuthorize("principal.username != #userName")
-    public String getCarList(PageRequestDTO pageRequestDTO, String memberId,
-                              Model model){
+    public String getCarList(String memberId, Model model){
 
         User user = userService.findUser(memberId);
 
@@ -50,7 +49,6 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
-        listCarDTO.forEach(log::error);
         return "/myPage/carList";
     }
     @ApiOperation(value = "차 등록 페이지로 이동", notes = "")
@@ -62,17 +60,16 @@ public class MyPageController {
     @ApiOperation(value = "차 세부 정보 페이지로 이동", notes = "")
     @GetMapping({"/carDetail", "/carModify"})
     public String getCarDetailOrModify(HttpServletRequest request,
-                                    String memberId,
-                                    @RequestParam("carId") Long carId,
-                                    //@RequestParam(required = false) Long carId,   -> 비 필수 값 지정
-                                    Model model){
+                                       String memberId,
+                                       @RequestParam("carId") Long carId,
+                                       //@RequestParam(required = false) Long carId,   -> 비 필수 값 지정
+                                       Model model){
 
         User user = userService.findUser(memberId);
 
         CarViewResDTO carViewResDTO = userCarService.readMyCarDetailInfo(user, carId);
 
         model.addAttribute("responseDTO", carViewResDTO);
-        //model.addAttribute("userName", memberId);
 
         return request.getRequestURI();
     }
@@ -82,18 +79,17 @@ public class MyPageController {
     public String postDeleteCar(CarInfoReqDTO carInfoReqDTO,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal ){
-        log.error("remove......post: " + carInfoReqDTO);
 
         userCarService.deleteMyCar(carInfoReqDTO.getCarId());
 
-        // car정보가 db에서 삭제되었다면 첨부파일 삭제
+        // car 정보가 db에서 삭제되었다면 첨부파일 삭제
         List<String> fileNames = carInfoReqDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
             fileHandler.removeFiles(fileNames);
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
-        //redirectAttributes.addAttribute("userName","user1");
+
         return "redirect:/myPage/carList?memberId=" + principal.getName();
     }
 
@@ -106,10 +102,6 @@ public class MyPageController {
         // 이미 Param에서 Car 엔티티 정보 로딩 됨.. 단 조회 용으로 만
         // 그리고 이기능은 많이 쓰이지 않는다
         //CarInfoDTO carInfoDTO = carService.readOne(car.getCarId());
-
-//        CarInfoDTO carInfoDTO = modelMapper.map(car, CarInfoDTO.class);
-//        model.addAttribute("responseDTO", carInfoDTO);
-
         return "carRead";
     }
 

@@ -89,6 +89,7 @@ public class myInfoRestController {
             log.error("has errors.....");
             throw new BindException(bindingResult);
         }
+
         User user = userService.findUser(principal.getName());
 
         userAddressBookService.modifyAddressBook(user, userAddressBookReqDTO);
