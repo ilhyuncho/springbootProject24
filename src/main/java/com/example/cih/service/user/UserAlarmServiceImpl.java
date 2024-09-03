@@ -47,7 +47,8 @@ public class UserAlarmServiceImpl implements UserAlarmService {
     private static UserAlarmDTO entityToDTO(UserAlarm userAlarm) {
         return UserAlarmDTO.builder()
                 .userAlarmID(userAlarm.getUserAlarmId())
-                .alarmText(userAlarm.getAlarmText())
+                .alarmTitle(userAlarm.getAlarmTitle())
+                .alarmContent(userAlarm.getAlarmContent())
                 .regDate(userAlarm.getRegDate())
                 .build();
     }

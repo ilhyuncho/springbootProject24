@@ -20,7 +20,8 @@ public class UserAlarm extends BaseEntity {
     @Column(name="userAlarmId")
     private Long userAlarmId;
 
-    private String alarmText;
+    private String alarmTitle;
+    private String alarmContent;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="UserId")   // pk(외래키)가 user테이블(주테이블)에 생성

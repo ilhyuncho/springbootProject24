@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserAlarmDTO {
     private Long userAlarmID;
-    private String alarmText;
+    private String alarmTitle;
+    private String alarmContent;
     private LocalDateTime regDate;
 
 }
