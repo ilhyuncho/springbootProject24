@@ -35,8 +35,8 @@ public class CartServiceImpl implements CartService {
     private final NotificationService notificationService;
 
     @Override
-    public List<CartDetailResDTO> getCartAll(String memberId) {
-        User user = userService.findUser(memberId);
+    public List<CartDetailResDTO> getCartAll(User user) {
+
         // 이벤트 체크
         final EventNotification event = notificationService.getNowDoingEventInfo(EventType.EVENT_BUY_ITEM_DISCOUNT);
 
@@ -63,9 +63,7 @@ public class CartServiceImpl implements CartService {
         }).collect(Collectors.toList());
     }
     @Override
-    public Long addCart(ItemBuyReqDTO itemBuyReqDTO, String memberId) {
-
-        User user = userService.findUser(memberId);
+    public Long addCart(ItemBuyReqDTO itemBuyReqDTO, User user) {
 
         ShopItem shopItem = shopItemRepository.findByItemName(itemBuyReqDTO.getItemName())
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지않습니다"));
@@ -86,7 +84,6 @@ public class CartServiceImpl implements CartService {
                 // 아이템 옵션 set
                 .itemOptionId1(itemBuyReqDTO.getOptionId(0))
                 .itemOptionId2(itemBuyReqDTO.getOptionId(1))
-
                 .build();
 
         return cartRepository.save(cart).getCartId();

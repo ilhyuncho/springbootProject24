@@ -35,18 +35,17 @@ public class StatisticsRestController {
                                              BindingResult bindingResult,
                                              Principal principal){
 
-        log.error("statistics-restGet : " + satisticsReqDTO.getTargetId() + "," + satisticsReqDTO.getSelectYear());
         User user = userService.findUser(principal.getName());
 
         List<StatisticsResDTO> listDto = new ArrayList<>();
 
-        if( "#consume".equals(satisticsReqDTO.getTargetId())){
+        if("#consume".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsConsume(satisticsReqDTO);
         }
-        else if( "#fuelAmount".equals(satisticsReqDTO.getTargetId())){
+        else if("#fuelAmount".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsFuelAmount(satisticsReqDTO);
         }
-        else if( "#distance".equals(satisticsReqDTO.getTargetId())){
+        else if("#distance".equals(satisticsReqDTO.getTargetId())){
             listDto = carStatisticsService.getStatisticsDistance(satisticsReqDTO);
         }
 
@@ -59,22 +58,8 @@ public class StatisticsRestController {
                                       BindingResult bindingResult,
                                       Principal principal){
 
-        log.error("statistics-totalGet : " + satisticsReqDTO.getTargetId() + "," + satisticsReqDTO.getSelectYear());
         User user = userService.findUser(principal.getName());
 
-        StatisticsTotalResDTO totalDTO = carStatisticsService.getStatisticsTotal(satisticsReqDTO);
-
-       // log.error(totalDTO.getAverageFuelEff() + ", " + totalDTO.getAccKm());
-
-
-//        StatisticsTotalResDTO dto = StatisticsTotalResDTO.builder()
-//                .repairCost(1000)
-//                .gasAmount(12222)
-//                .averageFuelEff(22221)
-//                .accKm(23232)
-//                .gasCost(3232)
-//                .build();
-
-        return totalDTO;
+        return carStatisticsService.getStatisticsTotal(satisticsReqDTO);
     }
 }

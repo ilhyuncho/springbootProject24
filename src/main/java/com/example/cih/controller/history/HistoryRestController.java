@@ -36,7 +36,7 @@ public class HistoryRestController {
 
         return carConsumableService.getListHistory(carId, ConsumableType.getListConsumableType());
     }
-    @ApiOperation(value = "내차 주유 or 소모품 정비 화면", notes = "")
+    @ApiOperation(value = "내차 주유 or 정비 기록 화면 이동시", notes = "")
     @GetMapping("/historyList/{targetId}/{carId}")
     public List<HistoryCarResDTO> getListHistory(@PathVariable(name="targetId") String targetId,
                                                   @PathVariable(name="carId") Long carId,
@@ -44,6 +44,7 @@ public class HistoryRestController {
 
         User user = userService.findUser(principal.getName());
 
+        // Collections.singletonList - 전달하는 원소의 개수가 1개인 경우 Arrays.asList 대신에
         return carConsumableService.getListHistory(carId, Collections.singletonList(ConsumableType.fromValue(targetId)));
     }
 

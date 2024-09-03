@@ -2,8 +2,10 @@ package com.example.cih.controller.cart;
 
 
 import com.example.cih.domain.cart.Cart;
+import com.example.cih.domain.user.User;
 import com.example.cih.dto.shop.ItemBuyReqDTO;
 import com.example.cih.service.cart.CartService;
+import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,19 +18,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/cartRest")
+@RequestMapping("/cart")
 @RequiredArgsConstructor
 @Log4j2
 //@PreAuthorize("hasRole('USER')")
 public class CartRestController {
     private final CartService cartService;
+    private final UserService userService;
 
     @ApiOperation(value = "장바구니 상품 넣기", notes = "아이템 add 처리")
     @PostMapping("/add")
     public Map<String,String> postAdd(@Valid @RequestBody ItemBuyReqDTO itemBuyReqDTO,
                           Principal principal){
 
-        cartService.addCart(itemBuyReqDTO, principal.getName());
+        User user = userService.findUser(principal.getName());
+
+        cartService.addCart(itemBuyReqDTO, user);
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
@@ -38,24 +43,12 @@ public class CartRestController {
 
     @ApiOperation(value = "장바구니 상품 취소", notes = "DELETE 방식으로 특정 상품 삭제")
     @DeleteMapping("/{cartId}")
-    public Map<String,Long> postRemove(@PathVariable("cartId") Long cartId ){
+    public Map<String, String> postRemove(@PathVariable("cartId") Long cartId ){
 
         Cart cart = cartService.deleteInCart(cartId);
 
-        Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("cartId", cartId);
-
-        return resultMap;
-    }
-    @ApiOperation(value="장바구니 아이템 수량 변경", notes = "PUT 방식으로")
-    @PutMapping(value="/{cartId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Long> postModify( @PathVariable("cartId") Long cartId, @RequestBody ItemBuyReqDTO itemBuyReqDTO){
-
-        itemBuyReqDTO.setCartId(cartId);
-        cartService.modify(itemBuyReqDTO);
-
-        Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("cartId", cartId);
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("result", "success");
 
         return resultMap;
     }

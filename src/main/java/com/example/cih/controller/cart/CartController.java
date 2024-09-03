@@ -35,7 +35,7 @@ public class CartController {
 
         User user = userService.findUser(principal.getName());
 
-        List<CartDetailResDTO> listDto = cartService.getCartAll(principal.getName());
+        List<CartDetailResDTO> listDto = cartService.getCartAll(user);
 
         UserAddressBookResDTO mainAddressInfo = userAddressBookService.getMainAddressInfo(user);
 

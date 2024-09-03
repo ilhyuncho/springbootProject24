@@ -494,12 +494,12 @@
 
     // 상품 삭제
     function removeCart(cartId, obj){
-        if(!confirm("해당 항목을 정말 삭제 하겠습니까??")){
+        if(!confirm("해당 상품을 정말 삭제 하겠습니까??")){
             return
         }
 
         removeCartItem(cartId).then(result=>{
-            alert(result.cartId + ' 상품이 삭제 되었습니다')
+            alert('선택한 상품이 삭제 되었습니다!')
 
             // 장바구니 페이지 다시 로딩
             self.location = '/cart/list'

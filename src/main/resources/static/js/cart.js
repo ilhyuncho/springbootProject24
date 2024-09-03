@@ -7,7 +7,7 @@
 //await : async 함수 내에서 비동기 호출하는 부분
 async function removeCartItem(cartId){
     console.log(cartId)
-    const result = await axios.delete(`/cartRest/${cartId}`)
+    const result = await axios.delete(`/cart/${cartId}`)
 
     console.log(result)
 
@@ -16,7 +16,7 @@ async function removeCartItem(cartId){
 async function addCartItem(formObj) {
     console.log(formObj)
 
-    const response = await axios.post(`/cartRest/add`, formObj);
+    const response = await axios.post(`/cart/add`, formObj);
 
     console.log(response)
     return response.data
