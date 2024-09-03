@@ -310,12 +310,11 @@
     const modalTitle = document.querySelector('#modalTitle')
     const modalType = document.querySelector('#modalType')
 
-
     const currentUser = [[${#authentication.principal.username}]]
+
 
     // 결제 금액 계산 호출
     reCalculation()
-
 
 
 
@@ -509,67 +508,6 @@
         })
     }
 
-    // [배송지 변경] 버튼 클릭
-    function selectAddress(){
-
-        const formObj = {memberId:currentUser}
-
-        getAllDeliveryAddress(formObj).then(result => {
-            // 기존 행 삭제
-            while (tableAddressList.firstChild) {
-                tableAddressList.removeChild(tableAddressList.firstChild);
-            }
-
-            let _html = `<div class="dialog">`
-
-            if(result && result.length > 0) {
-                result.forEach(function (e, i) {
-                    _html += `<div class="dialog">
-                        <div class="dialog_inner">
-                             <input type="hidden" name="modalSelectIndex">
-                             <div class="input-group mb-3">
-                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
-                                    onchange="addressSelect( ${i}, this )"/>
-                                <h5>${e.deliveryName}</h5>
-                             </div>
-                             <div class="input-group mb-3">
-                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
-                               <p>${e.fullAddress}</p>
-                             </div>
-                             <hr class="my-4">
-                        </div>`
-                })
-            }
-            _html += '</div>'
-
-            const dom = new DOMParser().parseFromString(_html, 'text/html');
-            const dialog = dom.querySelector(".dialog");
-
-            let newRow = tableAddressList.insertRow(-1);
-            let newCell = newRow.insertCell(0);
-            newCell.appendChild(dialog);
-
-            addressListModal.show()
-
-        }).catch(e => {
-            errorResponse(e)
-        })
-    }
-
-    // [모달창] 배송지 선택
-    document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
-
-        const checkboxes = document.getElementsByName("modalCheckAddress");
-        checkboxes.forEach((cb) => {
-            if(cb.checked === true){
-                // 선택된 배송지 정보 다시 요청
-                getAddressInfo(cb.getAttribute("data-bs-target"))
-            }
-        })
-
-        addressListModal.hide()
-    }, false)
-
     // [모달창] 선택된 배송지 정보 요청
     function getAddressInfo(addressBookId) {
         const formObj = {
@@ -623,15 +561,6 @@
             addressRegisterModal.hide()
         })
     }, false)
-
-    // [모달창] 배송지 선택 체크박스 클릭시
-    function addressSelect(index, obj){
-        const checkboxes = document.getElementsByName("modalCheckAddress");
-        checkboxes.forEach((cb) => {
-            cb.checked = false
-        })
-        obj.checked = true
-    }
 
     // 모달 창 값 초기화
     function initModalData(obj){

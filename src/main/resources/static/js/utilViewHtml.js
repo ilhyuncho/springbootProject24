@@ -137,3 +137,60 @@ function showDeliveryAddress() {
 
     addressRegisterModal.show()
 }
+
+// [배송지 선택 모달창] 주소 선택시 (체크박스)
+function addressSelect(index, obj){
+
+    const checkboxes = document.getElementsByName("modalCheckAddress");
+    checkboxes.forEach((cb) => {
+        cb.checked = false;
+    })
+    obj.checked = true;
+}
+
+// [배송지 변경] 버튼 클릭
+function selectAddress(){
+
+    const formObj = {memberId:currentUser}
+
+    getAllDeliveryAddress(formObj).then(result => {
+        // 기존 행 삭제
+        while (tableAddressList.firstChild) {
+            tableAddressList.removeChild(tableAddressList.firstChild);
+        }
+
+        let _html = `<div class="dialog">`
+
+        if(result && result.length > 0) {
+            result.forEach(function (e, i) {
+                _html += `<div class="dialog">
+                        <div class="dialog_inner">
+                             <input type="hidden" name="modalSelectIndex">
+                             <div class="input-group mb-3">
+                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
+                                    onchange="addressSelect( ${i}, this )"/>
+                                <h5>${e.deliveryName}</h5>
+                             </div>
+                             <div class="input-group mb-3">
+                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
+                               <p>${e.fullAddress}</p>
+                             </div>
+                             <hr class="my-4">
+                        </div>`
+            })
+        }
+        _html += '</div>'
+
+        const dom = new DOMParser().parseFromString(_html, 'text/html');
+        const dialog = dom.querySelector(".dialog");
+
+        let newRow = tableAddressList.insertRow(-1);
+        let newCell = newRow.insertCell(0);
+        newCell.appendChild(dialog);
+
+        addressListModal.show()
+
+    }).catch(e => {
+        errorResponse(e)
+    })
+}

@@ -47,7 +47,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">주문 갯수</span>
-                            <div class="updownCount">
+                            <div class="upDownCount">
                                 <span><i class="fas fa-arrow-alt-circle-down down"></i></span>
                                 <input type="text" size="2" maxlength="4"
                                        class="selOrderCount" th:value="${responseDTO.orderCount}">
@@ -328,7 +328,7 @@
     }, false)
 
     // 주문 수량 갯수 변경 ( up, down button )
-    document.querySelectorAll(".updownCount").forEach(function (item,idx){
+    document.querySelectorAll(".upDownCount").forEach(function (item,idx){
         // 갯수 차감
         item.children[0].addEventListener('click', function(){
             changeItemCount(idx, -1);
@@ -435,69 +435,6 @@
 
     }
 
-    // [배송지 변경] 버튼 클릭
-    function selectAddress(){
-
-        const formObj = {memberId:currentUser}
-
-        getAllDeliveryAddress(formObj).then(result => {
-            // 기존 행 삭제
-            while (tableAddressList.firstChild) {
-                tableAddressList.removeChild(tableAddressList.firstChild);
-            }
-
-            let _html = `<div class="dialog">`
-
-            if(result && result.length > 0) {
-                result.forEach(function (e, i) {
-                    _html += `<div class="dialog">
-                        <div class="dialog_inner">
-                             <input type="hidden" name="modalSelectIndex">
-                             <div class="input-group mb-3">
-                                <input type="checkbox" data-bs-target=${e.userAddressBookId} name="modalCheckAddress"
-                                    onchange="addressSelect( ${i}, this )"/>
-                                <h5>${e.deliveryName}</h5>
-                             </div>
-                             <div class="input-group mb-3">
-                               <p>${e.recipientName}/${e.recipientPhoneNumber}</p>
-                               <p>${e.fullAddress}</p>
-                             </div>
-                             <hr class="my-4">
-                        </div>`
-                })
-            }
-            _html += '</div>'
-
-            const dom = new DOMParser().parseFromString(_html, 'text/html');
-            const dialog = dom.querySelector(".dialog");
-
-            let newRow = tableAddressList.insertRow(-1);
-            let newCell = newRow.insertCell(0);
-            newCell.appendChild(dialog);
-
-            addressListModal.show()
-
-        }).catch(e => {
-            errorResponse(e)
-            addressListModal.hide()
-        })
-    }
-
-
-    // [모달창] 배송지 선택
-    document.querySelector(".modalSelectBtn").addEventListener("click", function (e) {
-
-        const checkboxes = document.getElementsByName("modalCheckAddress");
-        checkboxes.forEach((cb) => {
-            if(cb.checked === true){
-                getAddressInfo(cb.getAttribute("data-bs-target"))
-            }
-        })
-
-        addressListModal.hide()
-    }, false)
-
-
     // [배송지 추가] 요청 처리
     document.querySelector(".sendAddressRegBtn").addEventListener("click", function(e){
 
@@ -532,16 +469,6 @@
             addressRegisterModal.hide()
         })
     }, false)
-
-
-    // [배송지 선택 모달창] 체크박스 선택시
-    function addressSelect(index, obj){
-        const checkboxes = document.getElementsByName("modalCheckAddress");
-        checkboxes.forEach((cb) => {
-            cb.checked = false;
-        })
-        obj.checked = true;
-    }
 
     // 전달된 주소록 정보 요청 [배송지 선택]
     function getAddressInfo(addressBookId) {
