@@ -1,4 +1,4 @@
-package com.example.cih.controller.admin;
+package com.example.cih.controller.admin.validator;
 
 import com.example.cih.dto.ImageDTO;
 import com.example.cih.dto.ImageOrderReqDTO;

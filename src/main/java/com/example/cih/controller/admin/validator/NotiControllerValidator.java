@@ -1,4 +1,4 @@
-package com.example.cih.controller.admin;
+package com.example.cih.controller.admin.validator;
 
 import com.example.cih.common.util.Util;
 import com.example.cih.dto.notification.NotificationRegDTO;

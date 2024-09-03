@@ -27,23 +27,7 @@ public class AdminNotiRestController {
 
     private final NotificationService notificationService;
 
-    @PostMapping("/modifyEventImageOrder")
-    public ResponseEntity<Map<String, String>> postEventImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
-                                                                    BindingResult bindingResult) throws BindException {
-
-        if(bindingResult.hasErrors()) {
-            log.error("bindingResult.hasErrors()~~~");
-            throw new BindException(bindingResult);
-        }
-
-        notificationService.modifyImageOrder(imageOrderReqDTO);
-
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("result", "success");
-        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
-    }
-
-    @ApiOperation(value = "[이벤트 & 뉴스] 이미지 순서 변경 요청", notes = "관리자용")
+    @ApiOperation(value = "[이벤트 or 뉴스] 이미지 순서 변경 요청", notes = "관리자 접근")
     @PostMapping("/modifyNotiImageOrder")
     public ResponseEntity<Map<String, String>> postNotiImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
                                                                          BindingResult bindingResult) throws BindException {

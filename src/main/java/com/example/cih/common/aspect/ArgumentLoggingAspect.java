@@ -1,7 +1,7 @@
 package com.example.cih.common.aspect;
 
 import com.example.cih.common.exception.ArgumentInvalidException;
-import com.example.cih.controller.admin.AdmnShopControllerValidator;
+import com.example.cih.controller.admin.validator.AdmnShopControllerValidator;
 import com.example.cih.dto.ImageOrderReqDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;

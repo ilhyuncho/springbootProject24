@@ -2,6 +2,7 @@ package com.example.cih.controller.admin;
 
 
 import com.example.cih.common.util.Util;
+import com.example.cih.controller.admin.validator.AdmnShopControllerValidator;
 import com.example.cih.dto.ImageOrderReqDTO;
 import com.example.cih.dto.shop.ShopItemReqDTO;
 import com.example.cih.service.shop.ShopItemService;
@@ -25,25 +26,17 @@ import java.util.Map;
 public class AdminShopRestController {
 
     private final ShopItemService shopItemService;
-    private final AdmnShopControllerValidator admnShopControllerValidator;
 
-    @ApiOperation(value = "상품 데이터 넣기", notes = "관리자용")
+    @ApiOperation(value = "상품 데이터 넣기", notes = "관리자 접근")
     @PostMapping("/registerShopItem")
-    public ResponseEntity<Map<String, String>> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO
-            , BindingResult bindingResult) throws BindException {
+    public ResponseEntity<Map<String, String>> postRegisterShopItem(@Valid @RequestBody ShopItemReqDTO shopItemReqDTO,
+             BindingResult bindingResult) throws BindException {
 
         if(bindingResult.hasErrors()) {
             log.error("bindingResult.hasErrors()~~~");
-
-//            Map<String, String> resultMap = new HashMap<>();
-//            resultMap.put("result", "fail");
-//            resultMap.put("message", "전달 값 오류!!!");
-//            return ResponseEntity.badRequest().body(resultMap);
-
             throw new BindException(bindingResult);
         }
 
-        //admnShopControllerValidator.validate(shopItemReqDTO, bindingResult);
         if(shopItemReqDTO.getItemName().isEmpty()){
             shopItemReqDTO.setItemName(Util.createRandomName("Item"));
         }
@@ -70,16 +63,12 @@ public class AdminShopRestController {
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("result", "success");
-      //  resultMap.put("ItemId", ItemId.toString());
 
         return ResponseEntity.status(HttpStatus.OK).body(resultMap);
     }
     @PostMapping("/modifyImageOrder")
     public ResponseEntity<Map<String, String>> postImageOrderModify(@Valid @RequestBody ImageOrderReqDTO imageOrderReqDTO,
-                                                                  BindingResult bindingResult) throws BindException {
-
-        // ImageOrder 값이 중복 되는지 체크
-        //admnShopControllerValidator.validate(imageOrderReqDTO, bindingResult);
+                                                                    BindingResult bindingResult) throws BindException {
 
         if(bindingResult.hasErrors()) {
             log.error("bindingResult.hasErrors()~~~");
