@@ -43,6 +43,8 @@ public class BuyingCarServiceImpl implements BuyingCarService {
     public List<BuyingCarViewDTO> getListBuyingCarInfo(User user) { // 차량 구매 내역 조회
         List<BuyingCarViewDTO> result  = buyingCarRepository.findByUser(user).stream()
                 .filter(BuyingCar::getIsActive)     // Active 한 상태만 조회
+                // null은 제외 (테스트용)
+                //.filter(Objects::nonNull)
                 .map(BuyingCarServiceImpl::entityToDTO)
                 .collect(Collectors.toList());
 
