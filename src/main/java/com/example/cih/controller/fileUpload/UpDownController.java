@@ -107,60 +107,6 @@ public class UpDownController {
         return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_EXACT, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
     }
 
-
-
-
-
-//    @ApiOperation(value = "Upload Post", notes = "POST 방식으로 파일 등록")
-//    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public List<UploadResultDTO> upload(UploadFileDTO uploadFileDTO) {
-//        log.error("==================Upload Post=====================");
-//        log.error(uploadFileDTO);
-//
-//        List<UploadResultDTO> listResult = new ArrayList<>();
-//
-//        if (uploadFileDTO.getFiles() != null) {
-//            uploadFileDTO.getFiles().forEach(multipartFile -> {
-//                String originalFileName = multipartFile.getOriginalFilename();
-//                String uuid = UUID.randomUUID().toString();
-//
-//                // Stream.generate 활용 예제
-//                Stream<UUID> uuid1 = Util.createUUID(4);
-//                uuid1.forEach(log::error);
-//
-//                boolean bImage = false;
-//
-//                Path savePath = Paths.get(uploadPath, uuid + "_" + originalFileName);
-//
-//                try {
-//                    multipartFile.transferTo(savePath); // 파일 저장
-//
-//
-//                    // 이미지 파일 이라면 ( 썸네일 생성 )
-//                    if (Files.probeContentType(savePath).startsWith("image")) {
-//                        log.error(Files.probeContentType(savePath).toString());
-//
-//                        File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalFileName);
-//
-//                        Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);
-//
-//                        bImage = true;
-//                    }
-//
-//                    // 결과값 반환
-//                    listResult.add(UploadResultDTO.builder().uuid(uuid).fileName(originalFileName)
-//                            .img(bImage).build());
-//
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
-//
-//        return listResult;
-//    }
-
     @ApiOperation(value = "view 파일", notes = "GET방식으로 첨부파일 조회")
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> viewFileGet(@PathVariable String fileName){
@@ -183,47 +129,72 @@ public class UpDownController {
     @DeleteMapping("/remove/{fileName}")
     public ResponseEntity<Map<String, Boolean>> deleteFile(@PathVariable String fileName) {
 
+        // 임시로
+        try {
+            log.error("sleep start");
+            Thread.sleep(3000); //1초 대기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
-        Map<String, Boolean> result = new HashMap<>();
-        try{
-            log.error("file 이 존재 하지 않아도 이부분 까지 진입 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            
-            if(resource.exists()){
-                log.error("file 존재함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Optional<Map<String, Boolean>> result = removeFiles(resource);
 
+        return ResponseEntity.ok().body(result.get());
+
+      // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(test.get());
+
+//        Map<String, Boolean> result = new HashMap<>();
+//        try{
+//            log.error("file 이 존재 하지 않아도 이부분 까지 진입 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//
+//            if(resource.exists()){
+//                log.error("file 존재함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//
+//                boolean delete = resource.getFile().delete();
+//                result.put("removed", delete);
+//
+//                if(Files.probeContentType(resource.getFile().toPath()).startsWith("image")){
+//                    File thumbFile = new File(uploadPath, "s_" + resource.getFilename());
+//                    boolean deleteThumbFile = thumbFile.delete();
+//                    result.put("thumbFile removed", deleteThumbFile);
+//                }
+//
+//                return ResponseEntity.ok().body(result);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        result.put("removed", false);
+//         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+    }
+
+    Optional<Map<String, Boolean>> removeFiles(Resource resource){
+        // 예외를 발생시키는 대신에 Optional을 사용
+        Map<String, Boolean> result = new HashMap<>();
+
+        if(resource.exists()) {
+            try {
+             //   throw new IOException();
                 boolean delete = resource.getFile().delete();
                 result.put("removed", delete);
 
-                if(Files.probeContentType(resource.getFile().toPath()).startsWith("image")){
+                if (Files.probeContentType(resource.getFile().toPath()).startsWith("image")) {
                     File thumbFile = new File(uploadPath, "s_" + resource.getFilename());
                     boolean deleteThumbFile = thumbFile.delete();
                     result.put("thumbFile removed", deleteThumbFile);
                 }
 
-                return ResponseEntity.ok().body(result);
+            } catch (IOException e) {
+                result.put("removed", false);
+                //return Optional.empty();      // null 이 아닌 객체를 반환
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
-
-        result.put("removed", false);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        else{
+            result.put("removed", false);
+        }
+        return Optional.of(result);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
