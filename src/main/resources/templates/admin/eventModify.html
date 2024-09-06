@@ -224,11 +224,15 @@
     appendFileData()
 
     // 삭제대상 파일들을 삭제
-    callRemoveFiles()
+    callRemoveFiles().then(result =>{
+      if(result.length > 0){
+        alert('remove files fail!!!')
+      }
+    })
 
-    formObj.action = `/admin/eventModify/${notiId}`
-    formObj.method = 'post'
-    formObj.submit()
+     formObj.action = `/admin/eventModify/${notiId}`
+     formObj.method = 'post'
+     formObj.submit()
 
   }, false)
 
@@ -248,12 +252,6 @@
     formObj.submit()
 
   }, false)
-
-  function callRemoveFiles(){
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer(uuid, fileName)
-    })
-  }
 
 </script>
 </html>

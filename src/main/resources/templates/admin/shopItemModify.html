@@ -110,7 +110,7 @@
                 <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
                   <button type="button" class="btn btn-primary">List</button>
                 </a>
-                <button type="button" class="btn btn-secondary modBtn">수정 완료</button>
+                <button type="button" class="btn btn-secondary updateItemInfoBtn">수정 완료</button>
                 <button type="button" class="btn btn-danger removeBtn">삭제</button>
               </div>
             </div>
@@ -221,7 +221,7 @@
   }, false)
 
   // Item 수정 요청
-  document.querySelector(".modBtn").addEventListener("click", function (e) {
+  document.querySelector(".updateItemInfoBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 
@@ -238,7 +238,11 @@
     }
 
     // 삭제대상 파일들을 삭제
-    callRemoveFiles()
+    callRemoveFiles().then(result =>{
+      if(result.length > 0){
+        alert('remove files fail!!!')
+      }
+    })
 
     ////////////////////////////////////////////////////
     const eventTargetValue = document.querySelector('input[name="isEventTarget"]:checked').value;
@@ -295,13 +299,5 @@
     formObj.submit()
 
   }, false)
-
-  function callRemoveFiles(){
-
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer(uuid, fileName)
-    })
-  }
-
 
 </script>
