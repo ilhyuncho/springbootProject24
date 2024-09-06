@@ -177,7 +177,7 @@ public class AdminNotiController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:/admin/" + notiType + "List";
+        return "redirect:/admin/" + notiType + "Register";
     }
 
     @ApiOperation(value = "[뉴스] & [이벤트] 이미지 순서 수정 페이지로 이동", notes = "관리자 접근")

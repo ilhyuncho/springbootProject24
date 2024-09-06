@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
 
-          <form action="/admin/eventModify" method="post" id="myForm">
+          <form action="/admin/eventModify" method="post" id="formEventModify">
 
             <div class="input-group mb-3">
               <span class="input-group-text">이벤트 이름</span>
@@ -166,7 +166,7 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-  const formObj = document.querySelector("#myForm")
+  const formEventModify = document.querySelector("#formEventModify")
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   const uploadResult = document.querySelector(".uploadResult")
 
@@ -230,9 +230,9 @@
       }
     })
 
-     formObj.action = `/admin/eventModify/${notiId}`
-     formObj.method = 'post'
-     formObj.submit()
+    formEventModify.action = `/admin/eventModify/${notiId}`
+    formEventModify.method = 'post'
+    formEventModify.submit()
 
   }, false)
 
@@ -247,9 +247,9 @@
     // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
     appendNotShownData()
 
-    formObj.action = `/admin/notiDelete/event/${notiId}`
-    formObj.method = 'post'
-    formObj.submit()
+    formEventModify.action = `/admin/notiDelete/event/${notiId}`
+    formEventModify.method = 'post'
+    formEventModify.submit()
 
   }, false)
 

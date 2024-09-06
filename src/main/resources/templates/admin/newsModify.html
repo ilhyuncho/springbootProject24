@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
 
-          <form action="/admin/newsModify" method="post" id="myForm">
+          <form id="formNewsModify">
 
             <div class="input-group mb-3">
               <span class="input-group-text">뉴스 이름</span>
@@ -136,7 +136,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
-  const formObj = document.querySelector("#myForm")
+  const formNewsModify = document.querySelector("#formNewsModify")
   const uploadResult = document.querySelector(".uploadResult")
 
   // 에러 처리 부분 begin ----------------------------
@@ -188,7 +188,7 @@
     e.preventDefault()
     e.stopPropagation()
 
-    formObj.action = `/admin/newsModify/${notiId}`
+    formNewsModify.action = `/admin/newsModify/${notiId}`
 
     // 첨부파일을  <input type='hidden..>으로 추가
     appendFileData()
@@ -200,8 +200,8 @@
       }
     })
 
-     formObj.method = 'post'
-     formObj.submit()
+    formNewsModify.method = 'post'
+    formNewsModify.submit()
 
   }, false)
 
@@ -216,9 +216,9 @@
     // 화면에서 안 보이도록 처리된 파일들을 form 태그에 추가
     appendNotShownData()
 
-    formObj.action = `/admin/notiDelete/news/${notiId}`
-    formObj.method = 'post'
-    formObj.submit()
+    formNewsModify.action = `/admin/notiDelete/news/${notiId}`
+    formNewsModify.method = 'post'
+    formNewsModify.submit()
 
   }, false)
 
