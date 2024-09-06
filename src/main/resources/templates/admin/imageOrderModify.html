@@ -36,7 +36,7 @@
               <a th:href="|@{/admin/shopItem}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">List</button>
               </a>
-              <button type="button" class="btn btn-secondary modBtn">수정 완료</button>
+              <button type="button" class="btn btn-secondary updateImageOrderBtn">수정 완료</button>
             </div>
           </div>
         </div><!-- <div class="card-body">-->
@@ -84,7 +84,7 @@
 
 
   // 이미지 순서 수정 요청
-  document.querySelector(".modBtn").addEventListener("click", function (e) {
+  document.querySelector(".updateImageOrderBtn").addEventListener("click", function (e) {
     e.preventDefault()
     e.stopPropagation()
 

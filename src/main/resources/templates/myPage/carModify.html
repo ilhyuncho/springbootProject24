@@ -81,7 +81,7 @@
   <div class="row mt-3">
     <div class="col">
       <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap;">
-        <th:block th:each="fileName:${responseDTO.fileNames}">
+        <th:block th:each="fileName:${responseDTO.getListAllImage()}">
           <div class="card col-3">
             <div class="card-header d-flex justify-content-center">
 
@@ -159,9 +159,11 @@
 
     uploadToServer(formObj).then(result => {
 
+      //console.log('uploadToServer after')
       const uploadFiles = uploadResult.querySelectorAll("img")
       let temp = uploadFiles.length
       for(const uploadResult of result){
+        //console.log('showUploadFile')
         showUploadFile(uploadResult, false, temp++)
       }
 
@@ -169,39 +171,6 @@
     }).catch(e => {
       uploadModal.hide()
     })
-  }, false)
-
-
-  // Car 정보 수정 요청
-  document.querySelector(".saveBtn").addEventListener("click", function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    // 삭제대상 파일들을 삭제
-    callRemoveFiles()
-
-    const formObj = {
-      carId:carId.value,
-      carYears:carYears.value,
-      carColors:carColors.value,
-      carKm:carKm.value,
-      fileNames:getUploadFileNames(),              // 업로드될 파일 이름 리스트 가져오기
-      mainImageFileName: getMainImageFileName()
-    }
-
-    modifyCarInfo(formObj).then(result => {
-      console.log(result)
-
-      // 화면 재 갱신
-      self.location = '/myPage/carList?memberId=' + [[${#authentication.principal.username}]]
-
-    }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
-      alert('catch: ' + e.response.data.message)
-
-      // 화면 재 갱신
-      self.location = '/myPage/carList?memberId=' + [[${#authentication.principal.username}]]
-    })
-
   }, false)
 
   // 등록 Car 삭제 요청
@@ -221,13 +190,41 @@
 
   }, false)
 
-  function callRemoveFiles(){
 
-    removeFileList.forEach(({uuid,fileName})=>{
-      removeFileToServer(uuid, fileName)
+  // Car 정보 수정 요청
+  document.querySelector(".saveBtn").addEventListener("click", function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const formObj = {
+      carId:carId.value,
+      carYears:carYears.value,
+      carColors:carColors.value,
+      carKm:carKm.value,
+      fileNames:getUploadFileNames(),              // 업로드될 파일 이름 리스트 가져오기
+      mainImageFileName: getMainImageFileName()
+    }
+
+    // 삭제 대상 파일들을 삭제
+    callRemoveFiles().then(result => {
+
+      if(result.length > 0){
+        console.log('remove files fail!!!')
+      }
+      else{
+        // car 정보 수정 요청
+        modifyCarInfo(formObj).then(result => {
+          console.log('car 정보 수정 완료')
+        }).catch(e => { // HttpStatus.OK 가 아니면.. catch 구문을 탐
+          alert('catch: ' + e.response.data.message)
+        }).finally(e =>{
+          // 화면 재 갱신
+          self.location = '/myPage/carList?memberId=' + [[${#authentication.principal.username}]]
+        })
+      }
+
     })
-  }
 
-
+  }, false)
 
 </script>

@@ -12,8 +12,6 @@ import com.example.cih.service.common.CommonUtils;
 import com.example.cih.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -159,9 +157,18 @@ public class ShopItemServiceImpl implements ShopItemService {
         // DB에 등록된 image order 데이터 get
         List<ItemImage> listItemImage = itemImageRepository.findByShopItem(shopItem);
 
-        listItemImage.forEach(itemImage -> {
-            itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
-        });
+//        listItemImage.forEach(log::error);
+//
+//        for (Map.Entry<Long, Integer> stringListEntry : mapImageDTO.entrySet()) {
+//            log.error("key:" + stringListEntry.getKey());
+//            log.error("value:" + stringListEntry.getValue());
+//        }
+
+        listItemImage.stream().filter(itemImage -> !itemImage.getIsMainImage()) // mainImage는 제외
+                              .forEach(itemImage -> {
+                                    log.error(itemImage.getItemImageId());
+                                    itemImage.changeImageOrder(mapImageDTO.get(itemImage.getItemImageId()));
+                                });
     }
 
     @Override

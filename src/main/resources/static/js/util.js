@@ -150,3 +150,20 @@ function useAllPoint(){
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
+
+
+async function callRemoveFiles() {
+
+    const removeFailResult = []
+
+    for ({uuid, fileName} of removeFileList) {   // 비동기 처리를 위해 for...of 를 사용
+
+        await removeFileToServer(uuid, fileName).then(result => {
+
+            if (result['removed'] === false) {
+                removeFailResult.push(fileName)
+            }
+        })
+    }
+    return removeFailResult
+}

@@ -1,6 +1,5 @@
 package com.example.cih.controller.fileUpload;
 
-import com.example.cih.common.util.Util;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -142,33 +140,6 @@ public class UpDownController {
         Optional<Map<String, Boolean>> result = removeFiles(resource);
 
         return ResponseEntity.ok().body(result.get());
-
-      // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(test.get());
-
-//        Map<String, Boolean> result = new HashMap<>();
-//        try{
-//            log.error("file 이 존재 하지 않아도 이부분 까지 진입 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//
-//            if(resource.exists()){
-//                log.error("file 존재함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//
-//                boolean delete = resource.getFile().delete();
-//                result.put("removed", delete);
-//
-//                if(Files.probeContentType(resource.getFile().toPath()).startsWith("image")){
-//                    File thumbFile = new File(uploadPath, "s_" + resource.getFilename());
-//                    boolean deleteThumbFile = thumbFile.delete();
-//                    result.put("thumbFile removed", deleteThumbFile);
-//                }
-//
-//                return ResponseEntity.ok().body(result);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        result.put("removed", false);
-//         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
     }
 
     Optional<Map<String, Boolean>> removeFiles(Resource resource){
@@ -177,7 +148,7 @@ public class UpDownController {
 
         if(resource.exists()) {
             try {
-             //   throw new IOException();
+                //throw new IOException();
                 boolean delete = resource.getFile().delete();
                 result.put("removed", delete);
 
