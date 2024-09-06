@@ -47,7 +47,7 @@ function showUploadFile({uuid, fileName, link}, direct, index){
     }
 
     str += `&nbsp;&nbsp; ${fileName}
-              <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, this)" >X</button>
+              <button class="btn-sm btn-danger" onclick="javascript:removeFileData('${uuid}', '${fileName}', ${direct}, true, this)" >X</button>
             </div>
             <div class="card-body">
                 <img src="/view/${link}" data-src="${uuid+"_"+fileName}">

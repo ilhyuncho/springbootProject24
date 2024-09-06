@@ -59,7 +59,7 @@ document.querySelectorAll(".uploadFileBtn").forEach(function (item,idx){
 
 
 // 이미지 순서 수정 요청
-document.querySelectorAll(".modBtn").forEach(function (item,idx){
+document.querySelectorAll(".updateImageOrderBtn").forEach(function (item,idx){
     item.addEventListener('click', function(e){
         e.stopPropagation()
         e.preventDefault()
