@@ -41,9 +41,9 @@ public class NewsNotificationSearchImpl extends QuerydslRepositorySupport implem
         List<NewsNotification> list = query.fetch();
         long count = query.fetchCount();
 
-        for (NewsNotification event : list) {
-            log.error(event.toString());
-        }
+//        for (NewsNotification event : list) {
+//            log.error(event.toString());
+//        }
 
         return new PageImpl<>(list, pageable, count);
     }

@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
 
-          <form action="/admin/eventRegister" method="post" id="myForm">
+          <form action="/admin/eventRegister" id="formEventRegister">
 
             <input type="hidden" name="target" class="form-control" th:value="event">
 
@@ -119,69 +119,67 @@
   </div>
 
   <div class="row mt-3">
-    <form action="/admin/eventRegister" method="get" id="myForm1">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">
-            이벤트 리스트
-          </div>
-          <div class="card-body">
-            <table class="table">
-              <thead>
-              <tr>
-                <th scope="col">notiId</th>
-                <th scope="col">notiName</th>
-                <th scope="col">notiTitle</th>
-                <th scope="col">notiMessage</th>
-                <th scope="col">활성화 여부</th>
-                <th scope="col">팝업창 여부</th>
-                <th scope="col">이벤트 시작 날짜</th>
-                <th scope="col">이벤트 종료 날짜</th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <tr th:each="dto:${responseDTO.dtoList}">
-                <th scope="row">[[${dto.notiId}]]</th>
-                <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
-                        class="text-decoration-none"> [[${dto.name}]]</a></td>
-                <td>[[${dto.title}]]</td>
-                <td>[[${dto.message}]]</td>
-                <td>[[${dto.isUse}]]</td>
-                <td>[[${dto.isPopup}]]</td>
-                <td>[[${ #temporals.format(dto.eventStartDate, 'yyyy-MM-dd')}]]</td>
-                <td>[[${ #temporals.format(dto.eventEndDate, 'yyyy-MM-dd')}]]</td>
-              </tr>
-              </tbody>
-            </table>
-
-            <!-- 페이지 번호 출력-->
-            <div class="float-end">
-              <ul class="pagination flex-wrap">
-
-                <li class="page-item" th:if="${responseDTO.prev}">
-                  <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
-                </li>
-
-                <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                  <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
-                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-                  </li>
-                </th:block>
-
-                <li class="page-item" th:if="${responseDTO.next}">
-                  <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
-                </li>
-
-              </ul>
-            </div>
-            <!-- 페이지 번호 출력-->
-
-          </div><!-- <div class="card-body">-->
-
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          이벤트 리스트
         </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">notiId</th>
+              <th scope="col">notiName</th>
+              <th scope="col">notiTitle</th>
+              <th scope="col">notiMessage</th>
+              <th scope="col">활성화 여부</th>
+              <th scope="col">팝업창 여부</th>
+              <th scope="col">이벤트 시작 날짜</th>
+              <th scope="col">이벤트 종료 날짜</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto:${responseDTO.dtoList}">
+              <th scope="row">[[${dto.notiId}]]</th>
+              <td> <a th:href="|@{'/admin/eventDetail/' + ${dto.notiId}}|"
+                      class="text-decoration-none"> [[${dto.name}]]</a></td>
+              <td>[[${dto.title}]]</td>
+              <td>[[${dto.message}]]</td>
+              <td>[[${dto.isUse}]]</td>
+              <td>[[${dto.isPopup}]]</td>
+              <td>[[${ #temporals.format(dto.eventStartDate, 'yyyy-MM-dd')}]]</td>
+              <td>[[${ #temporals.format(dto.eventEndDate, 'yyyy-MM-dd')}]]</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <!-- 페이지 번호 출력-->
+          <div class="float-end">
+            <ul class="pagination flex-wrap">
+
+              <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+              </li>
+
+              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+              </th:block>
+
+              <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+              </li>
+
+            </ul>
+          </div>
+          <!-- 페이지 번호 출력-->
+
+        </div><!-- <div class="card-body">-->
+
       </div>
-    </form>
+    </div>
   </div>
 
   <!--    첨부파일 추가를 위한 모달창-->
@@ -279,6 +277,7 @@
     })
   }, false)
 
+  // 이벤트 등록 요청
   document.querySelector(".submitBtn").addEventListener("click", function(e){
     e.preventDefault()
     e.stopPropagation()
@@ -304,7 +303,10 @@
     target.innerHTML = str;
 
     // 실제 등록 처리
-    document.querySelector("#myForm").submit();
+    const formEventRegister = document.querySelector("#formEventRegister");
+    formEventRegister.method= 'post'
+    formEventRegister.submit();
+
 
   }, false)
 
@@ -322,10 +324,11 @@
     }
 
     const num = target.getAttribute("data-num")
-    const formObj = document.querySelector("#myForm1")
+    const formEventRegister = document.querySelector("#formEventRegister")
 
-    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    formObj.submit();
+    formEventRegister.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formEventRegister.method= 'get'
+    formEventRegister.submit();
 
   }, false)
   // 페이지 버튼 클릭 이벤트 end ------------------

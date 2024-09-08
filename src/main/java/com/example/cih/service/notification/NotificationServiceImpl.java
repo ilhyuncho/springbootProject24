@@ -95,7 +95,7 @@ public class NotificationServiceImpl implements NotificationService {
                             )
                             .collect(Collectors.toList());
 
-        dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
+       // dtoList.forEach(list -> log.error("getListNewsInfo: " + list));
 
         return PageResponseDTO.<NotiNewsResDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)

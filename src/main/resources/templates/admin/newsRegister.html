@@ -18,7 +18,7 @@
         </div>
         <div class="card-body">
 
-          <form action="/admin/newsRegister" method="post" id="myForm">
+          <form action="/admin/newsRegister" id="formNewsRegister">
 
             <input type="hidden" name="target" class="form-control" th:value="news">
 
@@ -89,66 +89,65 @@
   </div>
 
   <div class="row mt-3">
-    <form action="/admin/newsRegister" method="get" id="myForm1">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">
-            뉴스 리스트
-          </div>
-          <div class="card-body">
-            <table class="table">
-              <thead>
-              <tr>
-                <th scope="col">notiId</th>
-                <th scope="col">notiName</th>
-                <th scope="col">notiTitle</th>
-                <th scope="col">notiMessage</th>
-                <th scope="col">활성화 여부</th>
-                <th scope="col">팝업창 여부</th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <tr th:each="dto:${responseDTO.dtoList}">
-                <th scope="row">[[${dto.notiId}]]</th>
-                <td> <a th:href="|@{'/admin/newsDetail/' + ${dto.notiId}}|"
-                        class="text-decoration-none"> [[${dto.name}]]</a></td>
-                <td>[[${dto.title}]]</td>
-                <td>[[${dto.message}]]</td>
-                <td>[[${dto.isUse}]]</td>
-                <td>[[${dto.isPopup}]]</td>
-
-              </tr>
-              </tbody>
-            </table>
-
-            <!-- 페이지 번호 출력-->
-            <div class="float-end">
-              <ul class="pagination flex-wrap">
-
-                <li class="page-item" th:if="${responseDTO.prev}">
-                  <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
-                </li>
-
-                <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                  <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
-                    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
-                  </li>
-                </th:block>
-
-                <li class="page-item" th:if="${responseDTO.next}">
-                  <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
-                </li>
-
-              </ul>
-            </div>
-            <!-- 페이지 번호 출력-->
-
-          </div><!-- <div class="card-body">-->
-
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          뉴스 리스트
         </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">notiId</th>
+              <th scope="col">notiName</th>
+              <th scope="col">notiTitle</th>
+              <th scope="col">notiMessage</th>
+              <th scope="col">활성화 여부</th>
+              <th scope="col">팝업창 여부</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto:${responseDTO.dtoList}">
+              <th scope="row">[[${dto.notiId}]]</th>
+              <td> <a th:href="|@{'/admin/newsDetail/' + ${dto.notiId}}|"
+                      class="text-decoration-none"> [[${dto.name}]]</a></td>
+              <td>[[${dto.title}]]</td>
+              <td>[[${dto.message}]]</td>
+              <td>[[${dto.isUse}]]</td>
+              <td>[[${dto.isPopup}]]</td>
+
+            </tr>
+            </tbody>
+          </table>
+
+          <!-- 페이지 번호 출력-->
+          <div class="float-end">
+            <ul class="pagination flex-wrap">
+
+              <li class="page-item" th:if="${responseDTO.prev}">
+                <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+              </li>
+
+              <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item' ">
+                  <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                </li>
+              </th:block>
+
+              <li class="page-item" th:if="${responseDTO.next}">
+                <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+              </li>
+
+            </ul>
+          </div>
+          <!-- 페이지 번호 출력-->
+
+        </div><!-- <div class="card-body">-->
+
       </div>
-    </form>
+    </div>
+
   </div>
 
   <!--    첨부파일 추가를 위한 모달창-->
@@ -235,6 +234,7 @@
   // 이미지 파일 업로드 결과 화면
   const uploadResult = document.querySelector(".uploadResult")
 
+  // 뉴스 등록 요청
   document.querySelector(".submitBtn").addEventListener("click", function(e){
 
     e.preventDefault()
@@ -258,8 +258,9 @@
     target.innerHTML = str;
 
     // 실제 등록 처리
-    document.querySelector("#myForm").submit();
-    //document.querySelector("form").submit();
+    const formNewsRegister = document.querySelector("#formNewsRegister")
+    formNewsRegister.method= 'post'
+    formNewsRegister.submit();
 
   }, false)
 
@@ -275,10 +276,11 @@
     }
 
     const num = target.getAttribute("data-num")
-    const formObj = document.querySelector("#myForm1")
+    const formNewsRegister = document.querySelector("#formNewsRegister")
 
-    formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
-    formObj.submit();
+    formNewsRegister.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+    formNewsRegister.method='get'
+    formNewsRegister.submit();
 
   }, false)
   // 페이지 버튼 클릭 이벤트 end ------------------
