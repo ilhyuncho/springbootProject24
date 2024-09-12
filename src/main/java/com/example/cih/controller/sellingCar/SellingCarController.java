@@ -95,6 +95,8 @@ public class SellingCarController {
 
         model.addAttribute("responseDTO", sellingCarResDTO);
 
+        log.error(sellingCarResDTO);
+
         return "/sellingCar/sellingCarView";
     }
 

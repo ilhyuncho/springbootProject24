@@ -331,7 +331,7 @@
 
     getSellingCar(formObj).then(result => {
 
-      document.getElementById("modalSellType").value = result.sellTypeText
+      document.getElementById("modalSellType").value = result.sellType === 'SELL_AUCTION' ? '경매' : '상담'
       document.getElementById("modalRequiredPrice").value = result.requiredPrice
       document.getElementById("modalExpiredDate").value = result.expiredDate
 

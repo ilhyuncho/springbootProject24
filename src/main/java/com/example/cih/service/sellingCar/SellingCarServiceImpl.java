@@ -192,7 +192,7 @@ public class SellingCarServiceImpl implements SellingCarService {
                 .carYears(sellingCar.getCar().getCarYears())
                 .sellingCarId(sellingCar.getSellingCarId())
                 .viewCount(sellingCar.getViewCount())
-                .sellTypeText(sellingCar.getSellType().getTypeName())
+                .sellType(sellingCar.getSellType())
                 .isLike(false)
                 .build();
 

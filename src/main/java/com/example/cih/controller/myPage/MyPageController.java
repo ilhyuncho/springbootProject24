@@ -49,6 +49,8 @@ public class MyPageController {
 
         model.addAttribute("list", listCarDTO);
 
+        listCarDTO.forEach(log::error);
+
         return "/myPage/carList";
     }
     @ApiOperation(value = "차 등록 페이지로 이동", notes = "")

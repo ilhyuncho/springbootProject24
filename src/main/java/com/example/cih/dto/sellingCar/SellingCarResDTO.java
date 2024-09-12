@@ -1,5 +1,6 @@
 package com.example.cih.dto.sellingCar;
 import com.example.cih.domain.buyingCar.BuyCarStatus;
+import com.example.cih.domain.sellingCar.SellType;
 import com.example.cih.dto.ImageListDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -25,7 +26,8 @@ public class SellingCarResDTO extends ImageListDTO {
 
     private BuyCarStatus buyCarStatus;
     private String sellingCarStatusText;
-    private String sellTypeText;
+
+    private SellType sellType;
     private Integer proposalPrice;          // 경매 응찰한 가격
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

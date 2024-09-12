@@ -43,6 +43,11 @@
                   <span class="badge progress-bar-success" th:if="${dto.sellingCarStatus}"
                         style="background-color: #0a53be">[[${dto.sellingCarStatus.name}]]</span>
 
+                  <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_AUCTION')}"
+                        style="background-color: #611adb">[[${dto.sellType.typeName}]]</span>
+                  <span class="badge progress-bar-success" th:if="${#strings.equals(dto.sellType, 'SELL_CONSULT')}"
+                        style="background-color: #0dd52e">[[${dto.sellType.typeName}]]</span>
+
                   <div th:if="${dto.mainImage != null}">
                     <img th:src="|/view/${dto.getMainImage().uuid}_${dto.getMainImage().fileName}|" th:width="150"
                          th:data-src="${dto.getMainImage().uuid}" onclick="window.open(this.src)">

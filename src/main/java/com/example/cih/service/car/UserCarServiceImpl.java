@@ -131,6 +131,7 @@ public class UserCarServiceImpl implements UserCarService {
         if(!Objects.isNull(car.getSellingCar())){
             carViewResDTO.setSellingCarId(car.getSellingCar().getSellingCarId());
             carViewResDTO.setSellingCarStatus(car.getSellingCar().getSellingCarStatus());
+            carViewResDTO.setSellType(car.getSellingCar().getSellType());
         }
 
         // 차 이미지 파일 정보 매핑
