@@ -1,14 +1,20 @@
 package com.example.cih.domain.basicSetting;
 
 import com.example.cih.common.util.Util;
+import com.example.cih.domain.car.Car;
+import com.example.cih.domain.car.CarRepository;
+import com.example.cih.domain.car.CarSize;
 import com.example.cih.domain.member.Member;
 import com.example.cih.domain.member.MemberRepository;
 import com.example.cih.domain.member.MemberRole;
 import com.example.cih.domain.reference.*;
+import com.example.cih.domain.sellingCar.SellType;
+import com.example.cih.domain.sellingCar.SellingCarStatus;
 import com.example.cih.domain.shop.*;
 import com.example.cih.domain.user.*;
 import com.example.cih.domain.reference.RefPointSituation;
 
+import com.example.cih.dto.sellingCar.SellingCarRegDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -53,6 +60,9 @@ public class ProjectSettingTest {
 
     @Autowired
     UserAlarmRepository userAlarmRepository;
+
+    @Autowired
+    CarRepository carRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -147,9 +157,40 @@ public class ProjectSettingTest {
                     .alarmContent("회원가입을 축하드립니다!!! 블라블랑 앞으로 많이 이용해 주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     .build();
             userAlarmRepository.save(userAlarm);
+
+            if(i == 1){
+                Car car = Car.builder().carNumber("221가6323")
+                        .user(user)
+                        .carColors("빨강색")
+                        .carModel("쏘나타")
+                        .carYears(2015)
+                        .carGrade(CarSize.MIDDLE)
+                        .carKm(0L)
+                        .isActive(true)
+                        .build();
+
+                List<String> listImage = new ArrayList<>();
+                listImage.add("3333_carin.png");
+                listImage.add("4444_carin2.png");
+
+                car.resetImages(listImage, "carin.png");
+
+                // 차량 판매 등록
+               // SellType sellType = SellType.fromValue("auctionType");
+                SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                                .sellingCarStatus(SellingCarStatus.PROCESSING)
+                                .sellType("auctionType")
+                                .requiredPrice(1000000)
+                                .build();
+                car.registerSellingCar(sellingCarRegDTO);
+
+                carRepository.save(car);
+            }
         });
         
         // 배송 주소록 생성
+
+
 
 
         // ShopItem 생성

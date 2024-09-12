@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info findReqBtn">등록</button>
+                    <button type="button" class="btn btn-info carRegisterBtn">등록</button>
                     <button type="button" class="btn btn-outline-dark closeModifyBtn">최소</button>
                 </div>
 
@@ -136,8 +136,8 @@
         })
     }, false)
 
-    // [모달] 내차 확인
-    document.querySelector(".findReqBtn").addEventListener("click", function(e){
+    // [모달창] 내차 등록 요청
+    document.querySelector(".carRegisterBtn").addEventListener("click", function(e){
         const formObj = {
             carNumber:modalCarNumber.value
         }

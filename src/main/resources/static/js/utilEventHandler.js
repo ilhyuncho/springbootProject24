@@ -20,6 +20,7 @@ document.querySelectorAll(".sendConsultRequestBtn, .sendAuctionRequestBtn").forE
 
         const offerType = e.target.getAttribute("data-bs-target")
 
+
         makeFormAndSendToServer(offerType)
     })
 }, false)

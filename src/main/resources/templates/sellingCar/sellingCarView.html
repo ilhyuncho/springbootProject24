@@ -48,7 +48,9 @@
            th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
         <hr class="my-4">
         <div class="h3 text-primary" >
-         <span th:text="|판매가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+         <span th:text="${#strings.equals(responseDTO.sellTypeText, '상담')} ? '판매 가격:' : '경매 가격:' "></span>
+         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+
         </div>
         <hr class="my-4">
 
@@ -68,21 +70,13 @@
 
           <hr class="my-4">
           <div class="h3 text-primary" >
-            <span th:text="|경매 시작가: ${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
             <button type="submit" class="btn btn-primary"
                     th:text="|경매 현황 바로가기|" th:onclick="showAuctionDoing(this)"></button>
           </div>
-
           <hr class="my-4">
-
           <!--         경매 참여를 한 상태-->
           <div th:if="${#strings.equals(buyCarStatus, 'AUCTION_REQUEST')}
                                         or ${#strings.equals(buyCarStatus, 'PROPOSE_CHANGE_PRICE')}">
-
-            <button type="submit" class="btn btn-primary"
-                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)"></button>
-
-            <hr class="my-4">
 
             <div class="h4 text-warning" >
               <input type="hidden" class="form-control userProposalPrice" th:value="${responseDTO.proposalPrice}">
@@ -97,7 +91,11 @@
             </div>
 
             <button type="submit" class="btn btn-primary" th:text="|다시 응찰|" data-bs-target="proposeChangePrice"
-                    th:onclick="requestSellingCar(this)"></button>
+                    th:onclick="requestSellingCar(this)">
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    th:text="|경매 참여 취소|" data-bs-target="auctionCancel" th:onclick="requestSellingCar(this)">
+            </button>
 
           </div>
           <!--         경매 참여를 하지 않은 상태-->
@@ -106,7 +104,9 @@
 
             <button type="submit"
                     class="btn btn-primary"
-                    th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this)"></button>
+                    th:text="|경매 참여|" data-bs-target="modalAuctionRequest" th:onclick="requestSellingCar(this)">
+            </button>
+
           </div>
 
         </div><!--      <div th:if="${#strings.equals(responseDTO.sellTypeText, '경매')}">-->
