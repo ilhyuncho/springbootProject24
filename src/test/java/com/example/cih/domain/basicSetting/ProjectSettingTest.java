@@ -186,6 +186,35 @@ public class ProjectSettingTest {
 
                 carRepository.save(car);
             }
+            else if(i == 8){
+                Car car = Car.builder().carNumber("228가6323")
+                        .user(user)
+                        .carColors("노란색")
+                        .carModel("쏘나타")
+                        .carYears(2013)
+                        .carGrade(CarSize.MIDDLE)
+                        .carKm(0L)
+                        .isActive(true)
+                        .build();
+
+                List<String> listImage = new ArrayList<>();
+                listImage.add("4444_carin2.png");
+
+                car.resetImages(listImage, "carin2.png");
+
+                // 차량 판매 등록
+                // SellType sellType = SellType.fromValue("auctionType");
+                SellingCarRegDTO sellingCarRegDTO = SellingCarRegDTO.builder()
+                        .sellingCarStatus(SellingCarStatus.PROCESSING)
+                        .sellType("consultType")
+                        .requiredPrice(500_000)
+                        .build();
+                car.registerSellingCar(sellingCarRegDTO);
+
+                carRepository.save(car);
+            }
+
+
         });
         
         // 배송 주소록 생성

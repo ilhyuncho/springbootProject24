@@ -128,11 +128,12 @@
        if(dtoList && dtoList.length > 0){
            for(const dto of dtoList){
                const requiredPrice = makePriceCurrency(dto.requiredPrice)
+               const sellTypeText = dto.sellType === 'SELL_AUCTION' ? '경매' : '상담'
 
                str += `<div class="col-md-4 margin">
                             <div class="card">
                              <div><span class="badge progress-bar-success"
-                                style="background-color: #0a53be">${dto.sellingCarStatusText}<span>
+                                style="background-color: #0a53be">${sellTypeText}<span>
                              </div>
                              <a href="/sellingCar/view/${dto.sellingCarId}" class="text-decoration-none">
                                 <img src="/view/${dto.mainImage.uuid}_${dto.mainImage.fileName}" width="200" >

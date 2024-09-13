@@ -141,7 +141,7 @@ function useAllPoint(){
 
     const expectedPriceValue = parseInt(expectedPrice.value.replaceAll(",",""))
     const totalMPointValue = parseInt(totalMPoint.value.replaceAll(",",""))
-    useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue : expectedPriceValue
+    useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue.toLocaleString('ko-KR') : expectedPriceValue.toLocaleString('ko-KR')
 
     reCalculation()
 }

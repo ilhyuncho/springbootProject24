@@ -106,13 +106,16 @@ document.querySelectorAll("#useMPoint").forEach(function (item,idx){
         const totalMPointValue = parseInt(totalMPoint.value.replaceAll(",", ""))
         const useMPointValue = parseInt(useMPoint.value.replaceAll(",", ""))
 
-        if (useMPointValue > totalMPointValue) {
-            useMPoint.value = totalMPointValue
-        }
+
         if (useMPointValue < 0) {
             useMPoint.value = 0
         }
-
+        else if (useMPointValue > totalMPointValue) {
+            useMPoint.value = totalMPointValue.toLocaleString('ko-KR')
+        }
+        else{
+            useMPoint.value = useMPointValue.toLocaleString('ko-KR')
+        }
         reCalculation()
     })
 

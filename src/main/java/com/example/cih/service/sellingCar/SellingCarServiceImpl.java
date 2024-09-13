@@ -11,7 +11,6 @@ import com.example.cih.domain.user.User;
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.domain.user.UserLike;
 import com.example.cih.domain.user.UserLikeRepository;
-import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageRequestExtDTO;
 import com.example.cih.dto.PageResponseDTO;
 import com.example.cih.dto.sellingCar.SellingCarRegDTO;
@@ -185,7 +184,7 @@ public class SellingCarServiceImpl implements SellingCarService {
         SellingCarResDTO sellingCarResDTO = SellingCarResDTO.builder()
                 .carId(sellingCar.getCar().getCarId())
                 .requiredPrice(sellingCar.getRequiredPrice())
-                .sellingCarStatusText(sellingCar.getSellingCarStatus().getName())
+                .sellingCarStatus(sellingCar.getSellingCarStatus())
                 .expiredDate(sellingCar.getExpiredDate())
                 .carNumber(sellingCar.getCar().getCarNumber())
                 .carModel(sellingCar.getCar().getCarModel())

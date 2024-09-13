@@ -44,7 +44,7 @@
         </span>
       </div>
 
-      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatusText, '판매 중')}"
+      <div class="my-4" th:if="${#strings.equals(responseDTO.sellingCarStatus, 'PROCESSING')}"
            th:with="buyCarStatus = ${responseDTO.buyCarStatus}">
         <hr class="my-4">
         <div class="h3 text-primary" >

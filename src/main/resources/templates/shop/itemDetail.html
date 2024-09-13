@@ -158,7 +158,7 @@
   <hr class="my-4">
   <!------------------------------리뷰 표시--------------------------------->
   <div class="h3 text-danger text-left">
-    <span th:text="|리뷰|"></span>
+    <span th:text="|리뷰 목록|"></span>
     &nbsp;
     <span class="reviewCount" style="font-size : 17pt; color:royalblue"></span>
     &nbsp;
@@ -273,7 +273,7 @@
   function resetReview(page, size){
     getListReview({shopItemId, page, size}).then(data => {
 
-      reviewCount.textContent = data.total
+      reviewCount.textContent = 'count : ' + data.total
       reviewAvgScore.textContent = '( 별점 평균 : ' + data.reviewAvgScore + ' )'
 
       printReview(data.dtoList)

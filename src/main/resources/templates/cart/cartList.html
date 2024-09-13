@@ -112,7 +112,7 @@
                                         <input type="text" class="form-control" id="totalMPoint" th:value="${mPoint > 0 ? #numbers.formatInteger(mPoint,3,'COMMA') : 0}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="number" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
+                                        <input type="text" class="form-control" id="useMPoint" th:value="0" th:placeholder="사용">
                                         <button type="button" class="btn btn-success btn-sm" th:onclick="useAllPoint()" >전액 사용</button>
                                     </div>
                                 </div>
@@ -436,7 +436,7 @@
             totalPrice: totalPrice,
             totalDiscountPrice: totalDiscountPrice,
             totalPaymentPrice: totalPaymentPrice,
-            useMPoint : useMPoint.value,
+            useMPoint : useMPoint.value.replaceAll(",",""),
             listOrderDetail: arrayItemInfo
         }
 
