@@ -44,7 +44,7 @@ public class HistoryRestController {
 
         User user = userService.findUser(principal.getName());
 
-        // Collections.singletonList - 전달하는 원소의 개수가 1개인 경우 Arrays.asList 대신에
+        // tip : Collections.singletonList - 전달하는 원소의 개수가 1개인 경우 Arrays.asList 대신에
         return carConsumableService.getListHistory(carId, Collections.singletonList(ConsumableType.fromValue(targetId)));
     }
 
