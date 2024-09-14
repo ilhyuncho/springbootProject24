@@ -44,6 +44,18 @@ public class UserAlarmServiceImpl implements UserAlarmService {
                 .build();
     }
 
+    @Override
+    public void registerAlarm(User user, String alarmTitle, String alarmContent) {
+
+        UserAlarm userAlarm = UserAlarm.builder()
+                .user(user)
+                .alarmTitle(alarmTitle)
+                .alarmContent(alarmContent)
+                .build();
+
+        userAlarmRepository.save(userAlarm);
+    }
+
     private static UserAlarmDTO entityToDTO(UserAlarm userAlarm) {
         return UserAlarmDTO.builder()
                 .userAlarmID(userAlarm.getUserAlarmId())

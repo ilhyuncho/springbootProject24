@@ -1,5 +1,7 @@
 package com.example.cih.controller.buyingCar;
 
+import com.example.cih.common.message.MessageHandler;
+import com.example.cih.common.message.MessageCode;
 import com.example.cih.domain.buyingCar.BuyCarStatus;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarListResDTO;
@@ -7,6 +9,7 @@ import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
+import com.example.cih.service.user.UserAlarmService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,9 @@ public class BuyingCarRestController {
 
     private final BuyingCarService buyingCarService;
     private final UserService userService;
+    private final UserAlarmService userAlarmService;
+
+    private final MessageHandler messageHandler;
 
     @ApiOperation(value = "차량 구매 제안 or 취소", notes = "")
     @PostMapping("/offer")
@@ -44,9 +50,19 @@ public class BuyingCarRestController {
         // 신청 상태 get
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
-        if( buyCarStatus.equals(BuyCarStatus.AUCTION_REQUEST) ||
-                buyCarStatus.equals(BuyCarStatus.CONSULT_REQUEST) ){
+        if(buyCarStatus.equals(BuyCarStatus.AUCTION_REQUEST) ||
+                buyCarStatus.equals(BuyCarStatus.CONSULT_REQUEST)){
             buyingCarService.registerBuyingCar(user, buyingCarRegDTO);
+
+            // 알림 등록---------------------------------------
+
+            // Locale 메시지 정보 가져오기
+            List<String> listArgs = new ArrayList<>();
+            listArgs.add("테스트용");
+            listArgs.add("cih");
+
+            String message = messageHandler.getMessage(MessageCode.fromValue(buyCarStatus.getName()), listArgs);
+            userAlarmService.registerAlarm(user, message, "coments");
         }
         else{
             buyingCarService.updateBuyingCar(user, buyingCarRegDTO);
