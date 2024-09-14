@@ -3,12 +3,14 @@ package com.example.cih.controller.buyingCar;
 import com.example.cih.common.message.MessageHandler;
 import com.example.cih.common.message.MessageCode;
 import com.example.cih.domain.buyingCar.BuyCarStatus;
+import com.example.cih.domain.car.Car;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.buyingCar.BuyingCarListResDTO;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.buyingCar.BuyingCarRegDTO;
 import com.example.cih.dto.buyingCar.BuyingCarViewDTO;
 import com.example.cih.service.buyingCar.BuyingCarService;
+import com.example.cih.service.car.CarService;
 import com.example.cih.service.user.UserAlarmService;
 import com.example.cih.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +34,7 @@ public class BuyingCarRestController {
     private final BuyingCarService buyingCarService;
     private final UserService userService;
     private final UserAlarmService userAlarmService;
+    private final CarService carService;
 
     private final MessageHandler messageHandler;
 
@@ -47,6 +50,8 @@ public class BuyingCarRestController {
 
         User user = userService.findUser(principal.getName());
 
+        Car car = carService.getCarInfo(buyingCarRegDTO.getCarId());
+
         // 신청 상태 get
         BuyCarStatus buyCarStatus = BuyCarStatus.fromValue(buyingCarRegDTO.getOfferType());
 
@@ -58,11 +63,11 @@ public class BuyingCarRestController {
 
             // Locale 메시지 정보 가져오기
             List<String> listArgs = new ArrayList<>();
-            listArgs.add("테스트용");
-            listArgs.add("cih");
+            listArgs.add(car.getCarModel());
+            listArgs.add(car.getCarNumber());
 
             String message = messageHandler.getMessage(MessageCode.fromValue(buyCarStatus.getName()), listArgs);
-            userAlarmService.registerAlarm(user, message, "coments");
+            userAlarmService.registerAlarm(user, message, buyingCarRegDTO.getConsultText());
         }
         else{
             buyingCarService.updateBuyingCar(user, buyingCarRegDTO);

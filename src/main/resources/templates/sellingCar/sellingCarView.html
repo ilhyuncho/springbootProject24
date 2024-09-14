@@ -146,6 +146,12 @@
             <span class="input-group-text">휴대 전화</span>
             <input type="text" class="form-control phoneNumber" placeholder="연락처를 입력하세요" value="01012345678">
           </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">상담 내용</span>
+            <label>
+              <textarea cols="50" rows="3" class="form-control modalConsultText"></textarea>
+            </label>
+          </div>
 
         </div>
         <div class="modal-footer">
@@ -202,11 +208,12 @@
   const sellingCarId = [[${responseDTO.sellingCarId}]]
   const requiredPrice = [[${responseDTO.requiredPrice}]]    // 경매 시작가
 
-
   const phoneNumber = document.querySelector(".phoneNumber")
   const auctionProposePrice = document.querySelector(".auctionProposePrice")
   const newProposalPrice = document.querySelector(".newProposalPrice")
   const userProposalPrice = document.querySelector(".userProposalPrice")
+
+  const modalConsultText = document.querySelector(".modalConsultText")
 
   const checkSolid = document.getElementById("checkSolid");
   const checkRegular = document.getElementById("checkRegular");
@@ -252,7 +259,7 @@
       Object.assign(formObj, {requestPrice: auctionProposePrice.value.replaceAll(",", "")})
     }
     else if (offerType === "consultRequest") {
-      Object.assign(formObj, {phoneNumber: phoneNumber.value})
+      Object.assign(formObj, {phoneNumber: phoneNumber.value, consultText: modalConsultText.value})
     }
     else if(offerType === 'proposeChangePrice'){
       const originPrice = userProposalPrice.value

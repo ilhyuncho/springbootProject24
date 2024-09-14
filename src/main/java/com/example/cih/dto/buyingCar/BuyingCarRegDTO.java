@@ -13,4 +13,6 @@ public class BuyingCarRegDTO {
     private int requestPrice;
     private String phoneNumber;
     private String offerType;
+    private String consultText;
+
 }
