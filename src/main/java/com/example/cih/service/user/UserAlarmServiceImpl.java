@@ -1,5 +1,6 @@
 package com.example.cih.service.user;
 
+import com.example.cih.common.exception.ItemNotFoundException;
 import com.example.cih.domain.user.*;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.PageResponseDTO;
@@ -24,7 +25,16 @@ public class UserAlarmServiceImpl implements UserAlarmService {
     private final UserAlarmRepository userAlarmRepository;
 
     @Override
-    public PageResponseDTO<UserAlarmDTO> getAlarmInfo(PageRequestDTO pageRequestDTO, User user){
+    public UserAlarmDTO getAlarmInfo(Long alarmId) {
+
+        UserAlarm userAlarm = userAlarmRepository.findById(alarmId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 알림 정보가 존재하지않습니다"));
+
+        return entityToDTO(userAlarm);
+    }
+
+    @Override
+    public PageResponseDTO<UserAlarmDTO> getListAlarm(PageRequestDTO pageRequestDTO, User user){
 
         Pageable pageable = pageRequestDTO.getPageable("userAlarmId");
 

@@ -76,6 +76,15 @@ async function sendChangePassword(formObj) {
 }
 
 // 고객 알림 정보 가져오기
+async function getAlarmDetail({alarmId}){
+
+    const response = await axios.get(`/alarm/${alarmId}`)
+
+    console.log(response.data)
+    return response.data
+}
+
+// 고객 알림 정보 가져오기
 async function getAlarmList({page, size}){
 
     const response = await axios.get(`/alarm/list`, {params: {page, size}})

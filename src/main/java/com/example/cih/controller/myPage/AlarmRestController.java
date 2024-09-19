@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
@@ -25,14 +26,24 @@ public class AlarmRestController {
     private final UserAlarmService userAlarmService;
     private final UserService userService;
 
-    @ApiOperation(value = "알림 내역 조회", notes = "")
+    @ApiOperation(value = "알림 세부 내용 조회", notes = "")
+    @GetMapping("/{alarmId}")
+    public UserAlarmDTO getAlarmDetail(@PathVariable(name="alarmId") Long alarmId
+            , Principal principal){
+
+        User user = userService.findUser(principal.getName());
+
+        return userAlarmService.getAlarmInfo(alarmId);
+    }
+
+    @ApiOperation(value = "알림 리스트 내역 조회", notes = "")
     @GetMapping("/list")
     public PageResponseDTO<UserAlarmDTO> getUserAlarm(PageRequestDTO pageRequestDTO,
                                            Principal principal){
 
         User user = userService.findUser(principal.getName());
 
-        return userAlarmService.getAlarmInfo(pageRequestDTO, user);
+        return userAlarmService.getListAlarm(pageRequestDTO, user);
     }
 
 

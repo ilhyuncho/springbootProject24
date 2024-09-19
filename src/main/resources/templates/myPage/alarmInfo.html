@@ -41,6 +41,29 @@
         </div>
     </div>
 
+    <!-- 상세 알림 내용 모달창-->
+    <div class="modal alarmDetailModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">알림</h5>
+                    <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="h5" id="modalAlarmTitle"></div>
+                    <hr class="my-4">
+                    <div id="modalAlarmContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark closeModalBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- 상세 알림 내용 모달창-->
+
+
+
 
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -48,19 +71,30 @@
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
     <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/utilEventHandler.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
 
+    const alarmDetailModal = new bootstrap.Modal(document.querySelector(".alarmDetailModal"))
+
     const tableAlarms = document.getElementById("tableAlarms");
     const alarmsListPaging = document.querySelector('.alarmsListPaging')  // 페이지 목록 DOM
+
+    const modalAlarmTitle = document.getElementById("modalAlarmTitle");
+    const modalAlarmContent = document.getElementById("modalAlarmContent");
+
 
     // 페이지 번호 클릭
     let page = 1
     let size = 5
 
     getListAlarms(page, size)
+
+
+
+
 
     function getListAlarms(page, size){
 
@@ -80,6 +114,18 @@
         arr[2] = stringToDateFormat(dtoData.regDate)
     }
 
+    function showAlarmDetailModal(alarmId){
+        getAlarmDetail({alarmId}).then(data => {
+
+            modalAlarmTitle.innerHTML = data.alarmTitle
+            modalAlarmContent.innerHTML = data.alarmContent.replace(/(?:\r\n|\r|\n)/g, '<br />');   // 문장 개행 처리
+
+            alarmDetailModal.show()
+
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
     function printAlarmList(dtoList, tableRef) {    // 목록 출력
         // 기존 행 삭제
         while (tableRef.firstChild) {
@@ -101,17 +147,21 @@
                         let newCell = newRow.insertCell(k);
                         let newText = document.createTextNode(arr[j]);
 
-                        // if( j === 1 ){
-                        //     const url="/notification/show/" + pathName + "/" + arr[0];
-                        //     const link = document.createElement("a");
-                        //     link.setAttribute("href",url);
-                        //     link.appendChild(newText);
-                        //
-                        //     newCell.appendChild(link);
-                        // }
-                        // else{
+                        if( j === 1 ){
+                            //const url="/notification/show/" + "/" + arr[0];
+                            //link.setAttribute("href",url);
+                            const link = document.createElement("a");
+                            link.setAttribute("style","cursor:pointer")
+                            link.addEventListener("click", function () {    // 함수에 arg 전달
+                                showAlarmDetailModal(arr[0]);
+                            });
+
+                            link.appendChild(newText);
+                            newCell.appendChild(link);
+                        }
+                        else{
                             newCell.appendChild(newText);
-                        //}
+                        }
                         k++;
                     }
                 }
@@ -133,5 +183,11 @@
         getListAlarms(page,size)
 
     },false)
+
+    // 모달 창 값 초기화
+    function initModalData(obj){
+        console.log('alarmInfo.html - initModalData()!!!!')
+        alarmDetailModal.hide()
+    }
 
 </script>

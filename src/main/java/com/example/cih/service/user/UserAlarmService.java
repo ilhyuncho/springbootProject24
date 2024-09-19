@@ -7,7 +7,9 @@ import com.example.cih.dto.user.UserAlarmDTO;
 
 
 public interface UserAlarmService {
-    PageResponseDTO<UserAlarmDTO> getAlarmInfo(PageRequestDTO pageRequestDTO, User user);
+    UserAlarmDTO getAlarmInfo(Long alarmId);
+
+    PageResponseDTO<UserAlarmDTO> getListAlarm(PageRequestDTO pageRequestDTO, User user);
 
     void registerAlarm(User user, String alarmTitle, String alarmContent);
 }

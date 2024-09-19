@@ -20,7 +20,7 @@ import java.security.Principal;
 public class AlarmController {
     private final UserService userService;
 
-    @ApiOperation(value = "[공지사항] 클릭 or 상세 화면에서 list클릭시", notes = "고객 접근")
+    @ApiOperation(value = "[메인화면]에서 알림 아이콘 클릭 ", notes = "고객 접근")
     @GetMapping("/get")
     public String getNews(Model model, Principal principal){
 
