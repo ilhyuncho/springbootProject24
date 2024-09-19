@@ -23,9 +23,15 @@ public class UserAlarm extends BaseEntity {
     private String alarmTitle;
     private String alarmContent;
 
+    private boolean alarmCheck;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="UserId")   // pk(외래키)가 user테이블(주테이블)에 생성
     private User user;
 
+
+    public void readAlarm(){
+        this.alarmCheck = true;
+    }
 
 }

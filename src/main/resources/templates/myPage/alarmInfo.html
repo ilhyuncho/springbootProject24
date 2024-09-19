@@ -51,7 +51,7 @@
                     <button type="button" class="btn-close closeModalBtn" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="h5" id="modalAlarmTitle"></div>
+                    <div class="h5" id="modalAlarmTitle" style="font-weight: bolder"></div>
                     <hr class="my-4">
                     <div id="modalAlarmContent"></div>
                 </div>
@@ -115,10 +115,15 @@
     }
 
     function showAlarmDetailModal(alarmId){
+
         getAlarmDetail({alarmId}).then(data => {
 
             modalAlarmTitle.innerHTML = data.alarmTitle
             modalAlarmContent.innerHTML = data.alarmContent.replace(/(?:\r\n|\r|\n)/g, '<br />');   // 문장 개행 처리
+
+            // 알림 제목 읽음으로 표시
+            const selectedAlarm = document.getElementById("alarm" + alarmId);
+            selectedAlarm.setAttribute("style","cursor:pointer")
 
             alarmDetailModal.show()
 
@@ -151,7 +156,17 @@
                             //const url="/notification/show/" + "/" + arr[0];
                             //link.setAttribute("href",url);
                             const link = document.createElement("a");
-                            link.setAttribute("style","cursor:pointer")
+
+                            console.log(e)
+
+                            link.setAttribute("id", "alarm" + arr[0])
+                            if(e.alarmCheck === true){
+                                link.setAttribute("style","cursor:pointer")
+
+                            }else{
+                                link.setAttribute("style","cursor:pointer; font-weight:bolder")
+                            }
+
                             link.addEventListener("click", function () {    // 함수에 arg 전달
                                 showAlarmDetailModal(arr[0]);
                             });
@@ -187,6 +202,7 @@
     // 모달 창 값 초기화
     function initModalData(obj){
         console.log('alarmInfo.html - initModalData()!!!!')
+
         alarmDetailModal.hide()
     }
 

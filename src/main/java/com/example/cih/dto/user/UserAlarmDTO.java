@@ -16,6 +16,7 @@ public class UserAlarmDTO {
     private Long userAlarmID;
     private String alarmTitle;
     private String alarmContent;
+    private boolean alarmCheck;
     private LocalDateTime regDate;
 
 }
