@@ -8,5 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserAlarmRepository extends JpaRepository<UserAlarm, Long> {
 
     Page<UserAlarm> findByUser(User user, Pageable pageable);
+
+
+    Long countByUserAndAlarmCheck(User user, boolean alarmCheck);
 }
 

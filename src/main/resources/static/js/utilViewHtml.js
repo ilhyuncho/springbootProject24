@@ -204,3 +204,11 @@ function selectAddress(){
         errorResponse(e)
     })
 }
+
+function changeAlarmMark(){
+    const selectedAlarm = document.getElementById("alarmMark");
+    selectedAlarm.setAttribute("style","font-size:36px;color:red")
+
+
+    //localStorage.setItem("newAlarm", "true");
+}

@@ -167,3 +167,16 @@ async function callRemoveFiles() {
     }
     return removeFailResult
 }
+
+// 고객에게 온 새로운 알림이 있는지 체크
+function checkNewAlarm(){
+    getNewAlarm().then(data=>{
+        console.log(data)
+        if(data === true){
+            // 새로운 알림 표시
+            changeAlarmMark()
+        }
+    }).catch(e=>{
+        console.error(e)
+    })
+}

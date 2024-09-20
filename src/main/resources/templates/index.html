@@ -78,6 +78,8 @@
     <script src="/js/sellingCar.js"></script>
     <script src="/js/event.js"></script>
     <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
+    <script src="/js/myInfo.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -96,7 +98,7 @@
    console.log("session.greeting : " +  greeting)
 
 
-   printMainView()
+   getMainPageInfo()
 
    const eventDTO = [[${eventDTO}]]
    if(eventDTO != null && eventDTO.notiId > 0){
@@ -105,7 +107,7 @@
        eventModal.show()
    }
 
-    function printMainView(page,size){
+    function getMainPageInfo(page,size){
        // 추천 차 정보 요청
         getRecommendSellingCar({page, size}).then(data=> {
             printList(data, RecommendCarList) // 목록 처리
@@ -113,6 +115,7 @@
         }).catch(e=>{
             console.error(e)
         })
+
         // 최근 본 차 정보 요청
         getRecentlySeenSellingCar({page, size}).then(data=> {
             printList(data, RecentlySeenCarList) // 목록 처리
@@ -120,6 +123,9 @@
         }).catch(e=>{
             console.error(e)
         })
+
+        // 새로운 알림 정보 있는지 요청
+        checkNewAlarm()
     }
 
    function printList(dtoList, form){
@@ -154,7 +160,7 @@
        e.preventDefault()
        e.stopPropagation()
 
-       printMainView()
+       getMainPageInfo()
 
    }, false)
 

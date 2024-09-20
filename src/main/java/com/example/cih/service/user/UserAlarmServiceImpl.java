@@ -60,6 +60,14 @@ public class UserAlarmServiceImpl implements UserAlarmService {
     }
 
     @Override
+    public boolean isNewAlarm(User user) {
+
+        Long newCount = userAlarmRepository.countByUserAndAlarmCheck(user, false);
+
+        return newCount > 0;
+    }
+
+    @Override
     public void registerAlarm(User user, String alarmTitle, String alarmContent) {
 
         UserAlarm userAlarm = UserAlarm.builder()

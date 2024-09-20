@@ -46,6 +46,15 @@ public class AlarmRestController {
         return userAlarmService.getListAlarm(pageRequestDTO, user);
     }
 
+    @ApiOperation(value = "새로운 알림이 있는지 조회", notes = "")
+    @GetMapping("/new")
+    public boolean getNewAlarm(Principal principal){
+
+        User user = userService.findUser(principal.getName());
+
+        return userAlarmService.isNewAlarm(user);
+    }
+
 
 
 }

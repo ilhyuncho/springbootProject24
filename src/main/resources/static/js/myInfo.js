@@ -92,3 +92,12 @@ async function getAlarmList({page, size}){
     console.log(response.data)
     return response.data
 }
+
+// 고객이 안읽은 알림 정보 있는지
+async function getNewAlarm(){
+
+    const response = await axios.get(`/alarm/new`)
+
+    console.log(response.data)
+    return response.data
+}

@@ -28,8 +28,12 @@
             <button class="btn btn-primary" id="btnNavbarSearch"
                     type="submit"><i class="fas fa-search"></i></button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <!-- 메인 화면 알림 표시-->
             <a class="icon-link" th:href="|@{/myPage/alarmInfo}|">
-                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div class="sb-nav-link-icon">
+                    <i class="fas fa-tachometer-alt" id="alarmMark"></i>
+                </div>
             </a>
         </div>
     </form>
@@ -184,8 +188,8 @@
 <th:block layout:fragment="script">
 
 
-
 </th:block>
+
 
 
 </body>

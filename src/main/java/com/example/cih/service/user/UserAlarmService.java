@@ -11,5 +11,7 @@ public interface UserAlarmService {
 
     PageResponseDTO<UserAlarmDTO> getListAlarm(PageRequestDTO pageRequestDTO, User user);
 
+    boolean isNewAlarm(User user);
+
     void registerAlarm(User user, String alarmTitle, String alarmContent);
 }
