@@ -168,15 +168,54 @@ async function callRemoveFiles() {
     return removeFailResult
 }
 
-// 고객에게 온 새로운 알림이 있는지 체크
-function checkNewAlarm(){
-    getNewAlarm().then(data=>{
-        console.log(data)
+async function resetNewAlarmInfo(){
+    let isNewAlarm = false
+
+    await getNewAlarm().then(data=>{
         if(data === true){
-            // 새로운 알림 표시
-            changeAlarmMark()
+            isNewAlarm = true
         }
+
+        // localStorage 에 새롭게 등록
+        const now = new Date()
+        const item= {
+            value:data,
+            expiry:now.getTime() + ( 1000 * 10 )    // 10초
+        }
+
+        localStorage.setItem("newAlarm", JSON.stringify(item));
+
     }).catch(e=>{
         console.error(e)
     })
+
+    return isNewAlarm
+}
+// 고객에게 온 새로운 알림이 있는지 체크
+async function checkNewAlarm(){
+    let isNewAlarm = false
+
+    const now = new Date()
+    const newAlarm = localStorage.getItem("newAlarm");
+
+    if(!newAlarm){
+        isNewAlarm = await resetNewAlarmInfo()
+    }else{
+        const item = JSON.parse(newAlarm)
+
+        if(now > item.expiry){
+            isNewAlarm = await resetNewAlarmInfo()
+        }else{
+            console.log('item.value : ' + item.value)
+            if(item.value === true){
+                isNewAlarm = true
+            }
+        }
+    }
+
+    if(isNewAlarm === true){
+        // 새로운 알림 표시
+        changeAlarmMark()
+    }
+
 }

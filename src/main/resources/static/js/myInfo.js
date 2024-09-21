@@ -98,6 +98,5 @@ async function getNewAlarm(){
 
     const response = await axios.get(`/alarm/new`)
 
-    console.log(response.data)
     return response.data
 }
