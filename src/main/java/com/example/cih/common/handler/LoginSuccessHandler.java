@@ -1,8 +1,9 @@
 package com.example.cih.common.handler;
 
+import com.example.cih.common.message.MessageCode;
+import com.example.cih.common.message.MessageHandler;
 import com.example.cih.domain.user.UserActionType;
 import com.example.cih.service.user.UserPointHistoryService;
-import com.example.cih.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 @AllArgsConstructor
@@ -21,6 +24,8 @@ import java.io.IOException;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 
     private final UserPointHistoryService userPointHistoryService;
+
+    private final MessageHandler messageHandler;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,10 +35,16 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 
         // 포인트 획득 처리
         userPointHistoryService.gainUserPoint(authentication.getName(), UserActionType.ACTION_LOGIN);
-        
+
         // 메인 페이지에서 출력
         HttpSession session = request.getSession();
-        session.setAttribute("greeting", authentication.getName() + "님 반갑습니다.");
+
+        // Locale 메시지 정보 가져오기
+        List<String> listArgs = new ArrayList<>();
+        listArgs.add(authentication.getName());
+        String message = messageHandler.getMessage(MessageCode.WELCOME_GREETING, listArgs);
+
+        session.setAttribute("greeting", message);
         response.sendRedirect("/");
     }
 }
