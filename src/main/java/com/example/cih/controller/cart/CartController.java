@@ -1,6 +1,7 @@
 package com.example.cih.controller.cart;
 
 
+import com.example.cih.config.ConfigProperties;
 import com.example.cih.domain.user.User;
 import com.example.cih.dto.PageRequestDTO;
 import com.example.cih.dto.cart.CartDetailResDTO;
@@ -29,10 +30,21 @@ public class CartController {
     private final UserService userService;
     private final UserAddressBookService userAddressBookService;
 
+    private final ConfigProperties configProperties;
+
     @ApiOperation(value = "장바구니 조회", notes = "장바구니에 있는 모든 상품을 조회")
     @GetMapping("/list")
     public String getCart(@ModelAttribute("pageRequestDto") PageRequestDTO pageRequestDTO,
                        Model model, Principal principal){
+
+        // test
+        log.error(configProperties.getHostName());
+        log.error(configProperties.getSendName());
+        log.error(configProperties.getPort());
+
+        // 속성 변경이 가능
+        configProperties.setPort(8090);
+
 
         User user = userService.findUser(principal.getName());
 

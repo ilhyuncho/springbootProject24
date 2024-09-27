@@ -23,7 +23,7 @@ import java.util.UUID;
 public class FileHandler {
 
 
-    @Value("${com.cih.upload.path}")
+    @Value("${com.cih.upload.path}")        // 초기 환경 객체를 호출하는 방법
     private String uploadPath;
 
 

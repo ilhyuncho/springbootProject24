@@ -104,6 +104,11 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
+    // 프로젝트 빌드 할떄 새로운 속성에 대한 메타데이터가 자동으로 생성되고, META-INF/spring-configuration-metadata.json에 저장됨
+    // annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' 경고문 해제 (24.09.27)
+    // application.propeties 파일의     Cannot resolve configuration property 'mail.hostname'   경고문 해제
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
 }
 
 tasks.named('test') {

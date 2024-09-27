@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class Projection {
     public interface CarSummary{
         String getCarNumber();
-        @Value("#{target.carNumber} #{target.carModel}")
+        @Value("#{target.carNumber} #{target.carModel}")    // 초기 환경 객체를 호출하는 방법
         String getCarInfo();
     }
 
