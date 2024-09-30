@@ -1,14 +1,13 @@
 package com.example.cih.dto.car;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+//@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@ToString
 public class CarKmUpdateReqDTO {
     private Long carId;
     private Long updateKmValue;
