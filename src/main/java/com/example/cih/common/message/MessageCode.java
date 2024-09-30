@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 public enum MessageCode {
 
     ALARM_REQUEST_CONSULT(1, "alarm.request.consult", "consultRequest"),
-    WELCOME_GREETING(2, "welcome.greeting", "none")
+    AUCTION_REQUEST_AUCTION(2, "alarm.request.auction", "auctionRequest"),
+    WELCOME_GREETING(3, "welcome.greeting", "none")
     ;
     private final int msgType;
     private final String msgCode;

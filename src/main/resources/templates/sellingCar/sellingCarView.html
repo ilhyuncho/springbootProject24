@@ -49,7 +49,7 @@
         <hr class="my-4">
         <div class="h3 text-primary" >
          <span th:text="${#strings.equals(responseDTO.sellType, 'SELL_CONSULT')} ? '판매 가격:' : '경매 가격:' "></span>
-         <span th:text="|${#numbers.formatCurrency(responseDTO.requiredPrice)}원|"></span>
+         <span th:text="|${#numbers.formatInteger(responseDTO.requiredPrice, 3, 'COMMA')}원|"></span>
 
         </div>
         <hr class="my-4">
@@ -80,7 +80,7 @@
 
             <div class="h4 text-warning" >
               <input type="hidden" class="form-control userProposalPrice" th:value="${responseDTO.proposalPrice}">
-              <span th:text="|당신의 응찰가 : ${#numbers.formatCurrency(responseDTO.proposalPrice)}원|"></span>
+              <span th:text="|당신의 응찰가 : ${#numbers.formatInteger(responseDTO.proposalPrice, 3, 'COMMA')}원|"></span>
             </div>
 
             <div class="input-group mb-3">

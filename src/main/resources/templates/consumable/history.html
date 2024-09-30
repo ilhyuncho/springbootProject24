@@ -34,7 +34,7 @@
                 <a th:href="|@{/consumable/modify(consumableId=${dto.consumableId})}|"
                    class="text-decoration-none">[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</a>
               </th>
-              <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice)}"></td>
+              <td th:text="${#numbers.formatInteger(dto.replacePrice, (dto.replacePrice == 0 ? 1 : 3), 'COMMA') + '원'}"></td>
               <td>[[${dto.accumKm == 0 ? '' : dto.accumKm + ' km' }]]</td>
               <td>[[${dto.replaceShop}]]</td>
             </tr>

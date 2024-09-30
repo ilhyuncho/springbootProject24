@@ -42,8 +42,7 @@
               <td>[[${dto.replaceCycleMonth}]]</td>
 
               <td th:text="${#strings.equals(dto.replaceAlarm, 'READY_CYCLE') ? '점검 필요':''}" style="color: red"></td>
-
-              <td th:text="${#numbers.formatCurrency(dto.replacePrice == 0 ? '' : dto.replacePrice )}"></td>
+              <td th:text="${dto.replaceShop == null ? '' : #numbers.formatInteger(dto.replacePrice, (dto.replacePrice == 0 ? 1 : 3), 'COMMA') + '원'}"></td>
               <td>[[${dto.replaceShop}]]</td>
               <td>[[${dto.accumKm == 0 ? '' : dto.accumKm + ' km' }]]</td>
               <td>[[${#temporals.format(dto.replaceDate,'yyyy-MM-dd')}]]</td>
