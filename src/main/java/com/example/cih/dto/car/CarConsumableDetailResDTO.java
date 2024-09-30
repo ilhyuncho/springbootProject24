@@ -4,11 +4,12 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+//@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Getter
 public class CarConsumableDetailResDTO {
     private Long carId;
     private Long refConsumableId;
