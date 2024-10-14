@@ -80,7 +80,7 @@ async function getAlarmDetail({alarmId}){
 
     const response = await axios.get(`/alarm/${alarmId}`)
 
-    console.log(response.data)
+    //console.log(response.data)
     return response.data
 }
 
@@ -89,7 +89,7 @@ async function getAlarmList({page, size}){
 
     const response = await axios.get(`/alarm/list`, {params: {page, size}})
 
-    console.log(response.data)
+  //  console.log(response.data)
     return response.data
 }
 

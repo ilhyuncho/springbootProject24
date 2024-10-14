@@ -205,10 +205,13 @@ function selectAddress(){
     })
 }
 
-function changeAlarmMark(){
+function changeAlarmMark(isNew){
+
     const selectedAlarm = document.getElementById("alarmMark");
-    selectedAlarm.setAttribute("style","font-size:36px;color:red")
-
-
-    //localStorage.setItem("newAlarm", "true");
+    if(isNew){
+        selectedAlarm.setAttribute("style","font-size:36px;color:red")
+    }
+    else{
+        selectedAlarm.setAttribute("style","font-size:24px;color:blue")
+    }
 }

@@ -191,31 +191,32 @@ async function resetNewAlarmInfo(){
 
     return isNewAlarm
 }
+
 // 고객에게 온 새로운 알림이 있는지 체크
-async function checkNewAlarm(){
+async function checkNewAlarm(checkLocal){
+    // console.log('checkNewAlarm()~~~~~~~~~~~~~~~')
+
     let isNewAlarm = false
 
-    const now = new Date()
     const newAlarm = localStorage.getItem("newAlarm");
 
-    if(!newAlarm){
+    if(!newAlarm || checkLocal === false){
         isNewAlarm = await resetNewAlarmInfo()
     }else{
+        const now = new Date()
         const item = JSON.parse(newAlarm)
 
         if(now > item.expiry){
+           // console.log('time over~~~ : ' + item.value)
             isNewAlarm = await resetNewAlarmInfo()
         }else{
-            console.log('item.value : ' + item.value)
+           // console.log('item.value : ' + item.value)
             if(item.value === true){
                 isNewAlarm = true
             }
         }
     }
 
-    if(isNewAlarm === true){
-        // 새로운 알림 표시
-        changeAlarmMark()
-    }
-
+    // 알림 마크 변경
+    changeAlarmMark(isNewAlarm)
 }

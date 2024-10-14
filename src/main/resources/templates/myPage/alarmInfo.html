@@ -92,7 +92,8 @@
 
     getListAlarms(page, size)
 
-
+    // 새로운 알림 정보 있는지 요청
+    checkNewAlarm(true)
 
 
 
@@ -157,8 +158,6 @@
                             //link.setAttribute("href",url);
                             const link = document.createElement("a");
 
-                            console.log(e)
-
                             link.setAttribute("id", "alarm" + arr[0])
                             if(e.alarmCheck === true){
                                 link.setAttribute("style","cursor:pointer")
@@ -204,6 +203,9 @@
         console.log('alarmInfo.html - initModalData()!!!!')
 
         alarmDetailModal.hide()
+
+        // 새로운 알림 정보 있는지 요청
+        checkNewAlarm(false)
     }
 
 </script>
