@@ -85,16 +85,14 @@
     const modalAlarmTitle = document.getElementById("modalAlarmTitle");
     const modalAlarmContent = document.getElementById("modalAlarmContent");
 
-
     // 페이지 번호 클릭
     let page = 1
     let size = 5
 
+    // 최초 페이지 로딩
+    pageInit()
+
     getListAlarms(page, size)
-
-    // 새로운 알림 정보 있는지 요청
-    checkNewAlarm(true)
-
 
 
     function getListAlarms(page, size){
@@ -200,10 +198,8 @@
 
     // 모달 창 값 초기화
     function initModalData(obj){
-        console.log('alarmInfo.html - initModalData()!!!!')
 
         alarmDetailModal.hide()
-
         // 새로운 알림 정보 있는지 요청
         checkNewAlarm(false)
     }

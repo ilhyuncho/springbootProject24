@@ -208,10 +208,11 @@ function selectAddress(){
 function changeAlarmMark(isNew){
 
     const selectedAlarm = document.getElementById("alarmMark");
+
     if(isNew){
-        selectedAlarm.setAttribute("style","font-size:36px;color:red")
+        selectedAlarm.style.color = "red"
     }
     else{
-        selectedAlarm.setAttribute("style","font-size:24px;color:blue")
+        selectedAlarm.style.color = "blue"
     }
 }

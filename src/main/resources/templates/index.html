@@ -97,6 +97,8 @@
    const greeting = [[${session.greeting}]]
    console.log("session.greeting : " +  greeting)
 
+   // 최초 페이지 로딩
+   pageInit()
 
    getMainPageInfo()
 
@@ -123,9 +125,6 @@
         }).catch(e=>{
             console.error(e)
         })
-
-        // 새로운 알림 정보 있는지 요청
-        checkNewAlarm(false)
     }
 
    function printList(dtoList, form){

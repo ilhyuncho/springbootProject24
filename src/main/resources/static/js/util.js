@@ -149,13 +149,6 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-// html 페이지 로딩시 호출
-async function pageInit(){
-
-    // 새로운 알림 정보 있는지 요청
-    await checkNewAlarm(true)
-}
-
 async function callRemoveFiles() {
 
     const removeFailResult = []
@@ -172,56 +165,55 @@ async function callRemoveFiles() {
     return removeFailResult
 }
 
-async function resetNewAlarmInfo(){
-    let isNewAlarm = false
+// html 페이지 로딩시 호출
+function pageInit(){
 
-    await getNewAlarm().then(data=>{
-        if(data === true){
-            isNewAlarm = true
+    // 새로운 알림 정보 있는지 요청
+    checkNewAlarm(true)
+}
+
+// 고객에게 온 새로운 알림이 있는지 체크
+function checkNewAlarm(checkLocal){
+
+    let isRefreshNewAlarm = false;
+    const newAlarm = localStorage.getItem("newAlarm");
+
+    if(!newAlarm || checkLocal === false){
+        isRefreshNewAlarm = true
+    }else{
+        const now = new Date()
+        const item = JSON.parse(newAlarm)
+        if(now < item.expiry){
+            // 알림 마크 설정
+            changeAlarmMark(item.value)
         }
+        else{
+            isRefreshNewAlarm = true
+        }
+    }
+    // DB에서 새로운 알림 있는지 체크
+    if(isRefreshNewAlarm){
+        resetNewAlarmInfo()
+    }
+}
 
+function resetNewAlarmInfo(){
+
+     getNewAlarm().then(data=>{
         // localStorage 에 새롭게 등록
         const now = new Date()
         const item= {
             value:data,
             expiry:now.getTime() + ( 1000 * 10 )    // 10초
         }
-
         localStorage.setItem("newAlarm", JSON.stringify(item));
+
+        changeAlarmMark(data)
 
     }).catch(e=>{
         console.error(e)
     })
-
-    return isNewAlarm
 }
 
-// 고객에게 온 새로운 알림이 있는지 체크
-async function checkNewAlarm(checkLocal){
-    //console.log('checkNewAlarm()~~~~~~~~~~~~~~~')
 
-    let isNewAlarm = false
-
-    const newAlarm = localStorage.getItem("newAlarm");
-
-    if(!newAlarm || checkLocal === false){
-        isNewAlarm = await resetNewAlarmInfo()
-    }else{
-        const now = new Date()
-        const item = JSON.parse(newAlarm)
-
-        if(now > item.expiry){
-            console.log('time over~~~ : ' + item.value)
-            isNewAlarm = await resetNewAlarmInfo()
-        }else{
-           // console.log('item.value : ' + item.value)
-            if(item.value === true){
-                isNewAlarm = true
-            }
-        }
-    }
-
-    // 알림 마크 변경
-    changeAlarmMark(isNewAlarm)
-}
 
