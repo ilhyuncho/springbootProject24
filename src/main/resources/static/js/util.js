@@ -137,8 +137,6 @@ function getNumber(strNumber){
 // [포인트 전액 사용] 버튼 클릭
 function useAllPoint(){
 
-    console.log('useAllPoint()~')
-
     const expectedPriceValue = parseInt(expectedPrice.value.replaceAll(",",""))
     const totalMPointValue = parseInt(totalMPoint.value.replaceAll(",",""))
     useMPoint.value = expectedPriceValue > totalMPointValue ? totalMPointValue.toLocaleString('ko-KR') : expectedPriceValue.toLocaleString('ko-KR')
@@ -151,6 +149,12 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+// html 페이지 로딩시 호출
+async function pageInit(){
+
+    // 새로운 알림 정보 있는지 요청
+    await checkNewAlarm(true)
+}
 
 async function callRemoveFiles() {
 
@@ -194,7 +198,7 @@ async function resetNewAlarmInfo(){
 
 // 고객에게 온 새로운 알림이 있는지 체크
 async function checkNewAlarm(checkLocal){
-    // console.log('checkNewAlarm()~~~~~~~~~~~~~~~')
+    //console.log('checkNewAlarm()~~~~~~~~~~~~~~~')
 
     let isNewAlarm = false
 
@@ -207,7 +211,7 @@ async function checkNewAlarm(checkLocal){
         const item = JSON.parse(newAlarm)
 
         if(now > item.expiry){
-           // console.log('time over~~~ : ' + item.value)
+            console.log('time over~~~ : ' + item.value)
             isNewAlarm = await resetNewAlarmInfo()
         }else{
            // console.log('item.value : ' + item.value)
@@ -220,3 +224,4 @@ async function checkNewAlarm(checkLocal){
     // 알림 마크 변경
     changeAlarmMark(isNewAlarm)
 }
+

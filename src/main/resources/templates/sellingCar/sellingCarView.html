@@ -191,6 +191,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/sellingCar.js"></script>
   <script src="/js/buyingCar.js"></script>
+  <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/utilViewHtml.js"></script>
   <script src="/js/utilEventHandler.js"></script>
@@ -217,6 +218,9 @@
 
   const checkSolid = document.getElementById("checkSolid");
   const checkRegular = document.getElementById("checkRegular");
+
+  // 최초 페이지 로딩
+  pageInit()
 
   // 좋아요 표시 결정
   viewCarLike([[${responseDTO.isLike}]])

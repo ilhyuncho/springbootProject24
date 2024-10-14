@@ -79,7 +79,9 @@
     <!--    axios 라이브러리 추가-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/myPage.js"></script>
-
+    <script src="/js/myInfo.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -110,6 +112,9 @@
         alert(errorMsg)
     }
     // 에러 처리 부분 end ----------------------------
+
+    // 최초 페이지 로딩
+    pageInit()
 
 
     // 내차 찾기 요청

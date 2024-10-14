@@ -300,8 +300,10 @@
     const modalTitle = document.querySelector('.modalTitle');
     const modalType = document.querySelector('.modalType');
 
-
     const currentUser = [[${#authentication.principal.username}]]
+
+    // 최초 페이지 로딩
+    pageInit()
 
     // 결제 금액 계산 호출
     reCalculation()

@@ -244,8 +244,9 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/sellingCar.js"></script>
   <script src="/js/myPage.js"></script>
+  <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
-
+  <script src="/js/utilViewHtml.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -266,14 +267,14 @@
 
   const priceTagText = document.getElementById("priceTagText")
 
-
   //const userName = [[${userName}]]
   const carId = [[${responseDTO.carId}]]
   const sellingCarId = [[${responseDTO.sellingCarId}]]
   const carNumber = [[${responseDTO.carNumber}]]
   const listFileNames = [[${responseDTO.fileNames}]]
 
-
+  // 최초 페이지 로딩
+  pageInit()
 
   // [모달창] 차량 판매 방식 라디오 버튼 클릭시
   sellTypeRadios.forEach((radio) => {

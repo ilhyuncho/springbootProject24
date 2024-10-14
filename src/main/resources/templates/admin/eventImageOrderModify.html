@@ -87,6 +87,9 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/event.js"></script>
+  <script src="/js/myInfo.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
   <script src="/js/utilEventHandler.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
@@ -111,6 +114,10 @@
   // 에러 처리 부분 end ----------------------------
 
   const uploadResult = document.querySelector(".uploadResult")
+
+  // 최초 페이지 로딩
+  pageInit()
+
 
   // 화면 재 갱신
   function resetlocation(notiId){

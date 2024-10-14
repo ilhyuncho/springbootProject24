@@ -177,6 +177,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/order.js"></script>
+    <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
     <script src="/js/upload.js"></script>
     <script src="/js/utilViewHtml.js"></script>
@@ -213,6 +214,9 @@
 
      const checkCount = document.getElementById("checkCount");
 
+
+     // 최초 페이지 로딩
+     pageInit()
 
      function selectStar(selected){
          if(selected === true){

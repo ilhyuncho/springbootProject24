@@ -312,13 +312,11 @@
 
     const currentUser = [[${#authentication.principal.username}]]
 
+    // 최초 페이지 로딩
+    pageInit()
+
     // 결제 금액 계산 호출
     reCalculation()
-
-    // 새로운 알림 정보 있는지 요청
-    checkNewAlarm(true)
-
-
 
 
     // 상품 선택 변경 ( checkbox )

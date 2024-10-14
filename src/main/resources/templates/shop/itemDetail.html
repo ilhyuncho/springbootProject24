@@ -226,7 +226,9 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/cart.js"></script>
   <script src="/js/order.js"></script>
+  <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
 
 </div> <!--<div layout:fragment="content">-->
 
@@ -264,6 +266,8 @@
   const reviewViewCount = 5    // 한번에 보여줄 댓글 갯수
   ///////////////////////////////////////////////////////////////////
 
+  // 최초 페이지 로딩
+  pageInit()
 
   reCalculation()
 

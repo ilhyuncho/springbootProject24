@@ -113,8 +113,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/consumable.js"></script>
+  <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/utilEventHandler.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
 
 </div>
 
@@ -130,6 +132,9 @@
   const modalReplacePrice = document.querySelector("#modalReplacePrice")
   const modalAccumKm = document.querySelector("#modalAccumKm")
   const modalReplaceShop = document.querySelector("#modalReplaceShop")
+
+  // 최초 페이지 로딩
+  pageInit()
 
   function modifyBtnClick(refConsumableId){
 

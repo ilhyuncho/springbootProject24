@@ -89,7 +89,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/myInfo.js"></script>
-
+  <script src="/js/util.js"></script>
+  <script src="/js/utilViewHtml.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
@@ -101,8 +102,13 @@
   const tableMyPoint = document.getElementById("tableMyPoint");
   const myMPoint = document.querySelector('.myMPoint');
 
+
+  // 최초 페이지 로딩
+  pageInit()
+
   // 조회 기간 셋팅 (기본 현재 날짜 기준 90일 전 부터 조회)
   changePeriodSelect()
+
   // 조회 요청
   getMyPointInfo()
 

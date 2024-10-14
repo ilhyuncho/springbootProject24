@@ -123,7 +123,9 @@
     <script src="/js/order.js"></script>
     <script src="/js/myInfo.js"></script>
     <script src="/js/util.js"></script>
+    <script src="/js/utilViewHtml.js"></script>
     <script src="/js/utilEventHandler.js"></script>
+
 </div>
 
 
@@ -134,6 +136,12 @@
     const modalRecipientName = document.querySelector(".modalRecipientName")
     const modalRecipientPhoneNumber = document.querySelector(".modalRecipientPhoneNumber")
     const modalFullAddress = document.querySelector(".modalFullAddress")
+
+
+    // 최초 페이지 로딩
+    pageInit()
+
+
 
     function cancelOrder(orderId, object){
         if(!confirm("정말로 구매를 취소 하겠습니까?")){

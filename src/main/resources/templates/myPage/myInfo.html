@@ -158,17 +158,13 @@
   <script src="/js/myInfo.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/utilEventHandler.js"></script>
-
+  <script src="/js/utilViewHtml.js"></script>
 </div> <!--<div layout:fragment="content">-->
 
 <script layout:fragment="script" th:inline="javascript">
 
   const registerAddressModal = new bootstrap.Modal(document.querySelector(".registerAddressModal"))
   const changePasswordModal = new bootstrap.Modal(document.querySelector(".changePasswordModal"))
-
-  const userDTO = [[${userDTO}]]
-
-  console.log('userDTO : ' + userDTO.address)
 
   const userAddress = document.querySelector('.userAddress');
   const updateAddress = document.querySelector('.updateAddress');
@@ -184,6 +180,14 @@
   const modalCurrentPassword = document.querySelector('#modalCurrentPassword');
   const modalNewPassword = document.querySelector('#modalNewPassword');
   const modalNewPasswordConfirm = document.querySelector('#modalNewPasswordConfirm');
+
+  const userDTO = [[${userDTO}]]
+
+  //console.log('userDTO : ' + userDTO.address)
+
+  // 최초 페이지 로딩
+  pageInit()
+
 
   function selectModalOpen(){
     if(userAddress.value.length === 0){
